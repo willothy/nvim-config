@@ -18,6 +18,9 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
 	["<C-Space>"] = cmp.mapping.complete(),
 })
 
+local format = require('lsp-format')
+format.setup()
+
 lsp.set_preferences({
 	sign_icons = { }
 })
@@ -28,6 +31,7 @@ lsp.setup_nvim_cmp({
 
 lsp.on_attach(function(client, bufnr) 
 	local opts = {buffer = bufnr, remap = false}
+    format.on_attach(client)
 
 	vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
 	vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
