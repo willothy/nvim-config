@@ -2,14 +2,23 @@ vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
-
     use {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.0',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
-
+    use('nvim-tree/nvim-web-devicons')
+    use('lvimuser/lsp-inlayhints.nvim')
     use('connorholyday/vim-snazzy')
+
+    -- mini.nvim
+    use('echasnovski/mini.trailspace')
+    use('echasnovski/mini.tabline')
+    use('echasnovski/mini.sessions')
+    use('echasnovski/mini.map')
+    use('echasnovski/mini.jump')
+    use('echasnovski/mini.indentscope')
+    use('echasnovski/mini.cursorword')
 
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
     use('nvim-treesitter/playground')
@@ -33,6 +42,8 @@ return require('packer').startup(function(use)
 
     use('andweeb/presence.nvim')
 
+    -- use('unblevable/quick-scope')
+
     use {
         'VonHeikemen/lsp-zero.nvim',
         requires = {
@@ -54,6 +65,11 @@ return require('packer').startup(function(use)
             { 'rafamadriz/friendly-snippets' },
         }
     }
+
+    use({
+        "folke/trouble.nvim",
+        requires = "kyazdani42/nvim-web-devicons",
+    })
 
     use('windwp/nvim-autopairs')
 

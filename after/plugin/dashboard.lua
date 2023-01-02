@@ -5,33 +5,41 @@ local db_session = require('dashboard.session')
 
 vim.g.dashboard_default_executive = 'telescope'
 
+db.session_verbose = false
+db.custom_header = {
+    '', '', '',
+    '███▄    █ ▓█████  ▒█████   ██▒   █▓ ██▓ ███▄ ▄███▓ ',
+    '██ ▀█   █ ▓█   ▀ ▒██▒  ██▒▓██░   █▒▓██▒▓██▒▀█▀ ██▒ ',
+    '▓██  ▀█ ██▒▒███   ▒██░  ██▒ ▓██  █▒░▒██▒▓██    ▓██░',
+    '▓██▒  ▐▌██▒▒▓█  ▄ ▒██   ██░  ▒██ █░░░██░▒██    ▒██ ',
+    '▒██░   ▓██░░▒████▒░ ████▓▒░   ▒▀█░  ░██░▒██▒   ░██▒',
+    '░ ▒░   ▒ ▒ ░░ ▒░ ░░ ▒░▒░▒░    ░ ▐░  ░▓  ░ ▒░   ░  ░',
+    '░ ░░   ░ ▒░ ░ ░  ░  ░ ▒ ▒░    ░ ░░   ▒ ░░  ░      ░',
+    '░   ░ ░    ░   ░ ░ ░ ▒       ░░   ▒ ░░      ░      ',
+    '░    ░  ░    ░ ░        ░   ░         ░            ',
+    '░                                                  ',
+    '', '',
+}
+
+vim.api.nvim_set_hl(0, "DashboardHeader", { fg = "#5089fa", bg = "none" })
 
 db.custom_center = {
-        {
-        --icon = '🗎  ',
-        desc = 'Recently latest session                 ',
+    {
+        desc = 'Create a new file                       ',
+        shortcut = 'SPC f n',
+        action = 'DashboardNewFile'
+    },
+    {
+        desc = 'Open last session                       ',
         shortcut = 'SPC s l',
-        action ='SessionLoad'
+        action = 'SessionLoad'
     },
     {
-        --icon = '🗎  ',
-        desc = 'Find File                               ',
-        action = 'Telescope find_files',
-        shortcut = 'SPC f f'
+        desc = 'Projects                                ',
+        action = 'Projects',
+        shortcut = 'SPC p f'
     },
     {
-        --icon = '🗎  ',
-        desc ='Projects                                ',
-        action =  'Projects',
-        shortcut = 'SPC f b'
-    },
-    {
-        desc = 'Edit .bashrc                            ',
-        action = 'edit ~/.bashrc',
-        shortcut = 'SPC r c'
-    },
-    {
-        -- icon = '🗎  ',
         desc = 'Edit Neovim Config                      ',
         action = 'edit ~/.config/nvim/',
         shortcut = 'SPC n v'
@@ -40,7 +48,6 @@ db.custom_center = {
 
 db.session_directory = home .. '/.vim/sessions'
 db.session_auto_save_on_exit = true
-
 
 local dashboard_start = api.nvim_create_augroup('dashboard_start', { clear = true })
 
@@ -101,4 +108,15 @@ end, {})
 api.nvim_create_user_command('DashboardNewFile', function()
     require('dashboard').new_file()
 end, {})
-api.nvim_create_user_command('SessionSave', function() require('dashboard.session').session_save() end, { nargs = '?', complete = require('dashboard.session').session_list, })
+
+api.nvim_create_user_command('SessionSave', function()
+    require('dashboard.session').session_save()
+end,
+    { nargs = '?', complete = require('dashboard.session').session_list, }
+)
+
+vim.keymap.set("n", "<leader>fn", ":DashboardNewFile<CR>")
+vim.keymap.set("n", "<leader>sl", ":SessionLoad<CR>")
+vim.keymap.set("n", "<leader>pf", ":Projects<CR>")
+vim.keymap.set("n", "<leader>nv", ":edit ~/.config/nvim/<CR>")
+vim.keymap.set("n", "<leader>D", ":Dashboard<CR>")

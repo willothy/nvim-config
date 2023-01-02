@@ -25,6 +25,10 @@ vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
-vim.opt.colorcolumn = "80"
+vim.opt.colorcolumn = "0"
 
-
+vim.api.nvim_create_autocmd("BufEnter", {
+    callback = function()
+        vim.cmd("lcd %:p:h")
+    end
+})

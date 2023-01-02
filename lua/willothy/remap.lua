@@ -1,4 +1,7 @@
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
+function n_map(mapping, func)
+    vim.keymap.set("n", mapping, func)
+end
 
+n_map("<leader>pv", vim.cmd.Ex)
