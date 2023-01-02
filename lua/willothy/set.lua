@@ -29,6 +29,9 @@ vim.opt.colorcolumn = "0"
 
 vim.api.nvim_create_autocmd("BufEnter", {
     callback = function()
+        if HasValue({ "floaterm", "toggleterm", "dashboard" }, GetBufType()) then
+
+        end
         vim.cmd("lcd %:p:h")
     end
 })

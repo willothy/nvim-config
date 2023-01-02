@@ -29,7 +29,7 @@ require('mini.cursorword').setup()
 function HandleMiniDisable()
     local buf_ty = GetBufType()
     if HasValue({
-        "dashboard", "netrw"
+        "dashboard", "netrw", "help", "toggleterm", "floaterm"
     }, buf_ty) then
         vim.b.minicursorword_disable = true
         vim.b.miniindentscope_disable = true
@@ -39,19 +39,6 @@ function HandleMiniDisable()
         vim.b.miniindentscope_disable = false
         vim.b.minimap_disable = false
     end
-end
-
-function GetBufType()
-    return vim.bo.filetype
-end
-
-function HasValue(arr, val)
-    for index, value in ipairs(arr) do
-        if value == val then
-            return true
-        end
-    end
-    return false
 end
 
 vim.api.nvim_create_autocmd("FileType", {
