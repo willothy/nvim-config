@@ -11,5 +11,6 @@ function HasValue(arr, val)
     return false
 end
 
+require('willothy.packer')
 require("willothy.remap")
 require("willothy.set")

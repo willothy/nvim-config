@@ -35,6 +35,17 @@ return require('packer').startup(function(use)
 
     use {
         'glepnir/dashboard-nvim',
+        requires = { 'nvim-tree/nvim-web-devicons' }
+    }
+    use {
+        'glepnir/dbsession.nvim',
+        event = 'BufRead',
+        cmd = 'SessionSave',
+        config = function()
+            require('dbsession').setup({
+                auto_save_on_exit = true
+            })
+        end
     }
 
     use('lukas-reineke/lsp-format.nvim')
