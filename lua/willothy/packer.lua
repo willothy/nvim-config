@@ -11,6 +11,24 @@ return require('packer').startup(function(use)
     use('lvimuser/lsp-inlayhints.nvim')
     use('connorholyday/vim-snazzy')
 
+    use('nvim-telescope/telescope-ui-select.nvim')
+
+    -- tmux-navigator
+    use('christoomey/vim-tmux-navigator')
+
+    -- sessions
+    use('Shatur/neovim-session-manager', {
+        requires = { 'nvim-lua/plenary.nvim' }
+    })
+
+    use('famiu/bufdelete.nvim')
+
+    -- surround
+    use('tpope/vim-surround')
+
+    -- transparent
+    use('xiyaowong/nvim-transparent')
+
     -- mini.nvim
     use('echasnovski/mini.trailspace')
     use('echasnovski/mini.tabline')
@@ -33,10 +51,16 @@ return require('packer').startup(function(use)
         requires = { 'kyazdani42/nvim-web-devicons', opt = true }
     }
 
-    use {
+    -- buggy
+    --[[ use {
         'glepnir/dashboard-nvim',
         requires = { 'nvim-tree/nvim-web-devicons' }
-    }
+    } ]]
+
+    use('goolord/alpha-nvim', {
+        requires = { 'nvim-tree/nvim-web-devicons' },
+    })
+
     use {
         'glepnir/dbsession.nvim',
         event = 'BufRead',
@@ -50,7 +74,9 @@ return require('packer').startup(function(use)
 
     use('lukas-reineke/lsp-format.nvim')
 
-    use('terrortylor/nvim-comment')
+    -- Didn't have support for visual select
+    -- use('terrortylor/nvim-comment')
+    use('numToStr/Comment.nvim')
 
     use('andweeb/presence.nvim')
 

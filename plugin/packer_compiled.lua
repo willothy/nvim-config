@@ -74,10 +74,25 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
+  ["Comment.nvim"] = {
+    loaded = true,
+    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/Comment.nvim",
+    url = "https://github.com/numToStr/Comment.nvim"
+  },
   LuaSnip = {
     loaded = true,
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/LuaSnip",
     url = "https://github.com/L3MON4D3/LuaSnip"
+  },
+  ["alpha-nvim"] = {
+    loaded = true,
+    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/alpha-nvim",
+    url = "https://github.com/goolord/alpha-nvim"
+  },
+  ["bufdelete.nvim"] = {
+    loaded = true,
+    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/bufdelete.nvim",
+    url = "https://github.com/famiu/bufdelete.nvim"
   },
   ["cmp-buffer"] = {
     loaded = true,
@@ -103,11 +118,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/cmp_luasnip",
     url = "https://github.com/saadparwaiz1/cmp_luasnip"
-  },
-  ["dashboard-nvim"] = {
-    loaded = true,
-    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/dashboard-nvim",
-    url = "https://github.com/glepnir/dashboard-nvim"
   },
   ["dbsession.nvim"] = {
     commands = { "SessionSave" },
@@ -193,6 +203,11 @@ _G.packer_plugins = {
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/mini.trailspace",
     url = "https://github.com/echasnovski/mini.trailspace"
   },
+  ["neovim-session-manager"] = {
+    loaded = true,
+    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/neovim-session-manager",
+    url = "https://github.com/Shatur/neovim-session-manager"
+  },
   ["nvim-autopairs"] = {
     loaded = true,
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/nvim-autopairs",
@@ -203,15 +218,15 @@ _G.packer_plugins = {
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/nvim-cmp",
     url = "https://github.com/hrsh7th/nvim-cmp"
   },
-  ["nvim-comment"] = {
-    loaded = true,
-    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/nvim-comment",
-    url = "https://github.com/terrortylor/nvim-comment"
-  },
   ["nvim-lspconfig"] = {
     loaded = true,
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
     url = "https://github.com/neovim/nvim-lspconfig"
+  },
+  ["nvim-transparent"] = {
+    loaded = true,
+    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/nvim-transparent",
+    url = "https://github.com/xiyaowong/nvim-transparent"
   },
   ["nvim-treesitter"] = {
     loaded = true,
@@ -242,6 +257,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/presence.nvim",
     url = "https://github.com/andweeb/presence.nvim"
+  },
+  ["telescope-ui-select.nvim"] = {
+    loaded = true,
+    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/telescope-ui-select.nvim",
+    url = "https://github.com/nvim-telescope/telescope-ui-select.nvim"
   },
   ["telescope.nvim"] = {
     loaded = true,
@@ -277,6 +297,16 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/vim-snazzy",
     url = "https://github.com/connorholyday/vim-snazzy"
+  },
+  ["vim-surround"] = {
+    loaded = true,
+    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/vim-surround",
+    url = "https://github.com/tpope/vim-surround"
+  },
+  ["vim-tmux-navigator"] = {
+    loaded = true,
+    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/vim-tmux-navigator",
+    url = "https://github.com/christoomey/vim-tmux-navigator"
   }
 }
 

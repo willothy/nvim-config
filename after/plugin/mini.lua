@@ -1,6 +1,6 @@
-require('mini.trailspace').setup({
+--[[ require('mini.trailspace').setup({
     only_in_normal_buffers = true
-})
+}) ]]
 require('mini.tabline').setup({
     show_icons = true,
     set_vim_settings = true,
@@ -29,7 +29,7 @@ require('mini.cursorword').setup()
 function HandleMiniDisable()
     local buf_ty = GetBufType()
     if HasValue({
-        "dashboard", "netrw", "help", "toggleterm", "floaterm"
+        "dashboard", "netrw", "help", "toggleterm", "floaterm", "alpha"
     }, buf_ty) then
         vim.b.minicursorword_disable = true
         vim.b.miniindentscope_disable = true
