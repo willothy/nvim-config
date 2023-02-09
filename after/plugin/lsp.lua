@@ -86,11 +86,61 @@ local lsp_attach = function(client, bufnr)
     vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
     vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
     vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-    vim.keymap.set("n", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+    vim.keymap.set("n", "<leader>hs", function() vim.lsp.buf.signature_help() end, opts)
 end
+
+
 local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 lsp.on_attach(lsp_attach)
+
+lsp.configure('rust_analyzer', {
+    settings = {
+        ["rust-analyzer"] = {
+            imports = {
+                prefix = "self",
+            },
+            inlayHints = {
+                lifetimeElisionHints = {
+                    enable = "skip_trivial",
+                    useParemeterNames = true
+                },
+                closureReturnTypeHints = {
+                    enable = "with_block"
+                },
+                discriminantHints = {
+                    enable = "fieldless"
+                },
+                bindingModeHints = {
+                    enable = true
+                }
+            },
+            lens = {
+                references = {
+                    adt = {
+                        enable = true
+                    },
+                    enumVariant = {
+                        enable = true
+                    },
+                    method = {
+                        enable = true
+                    },
+                    trait = {
+                        enable = true
+                    },
+                }
+            },
+            hover = {
+                actions = {
+                    references = {
+                        enable = true
+                    }
+                }
+            }
+        },
+    },
+})
 
 lsp.setup()
 

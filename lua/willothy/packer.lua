@@ -14,7 +14,11 @@ return require('packer').startup(function(use)
     use('nvim-telescope/telescope-ui-select.nvim')
 
     -- tmux-navigator
-    use('christoomey/vim-tmux-navigator')
+    use('christoomey/vim-tmux-navigator', {
+        config = function()
+
+        end
+    })
 
     -- sessions
     use('Shatur/neovim-session-manager', {
