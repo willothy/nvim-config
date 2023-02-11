@@ -2,90 +2,44 @@ vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
-    use {
-        'nvim-telescope/telescope.nvim',
-        tag = '0.1.0',
-        requires = { { 'nvim-lua/plenary.nvim' } }
-    }
+
+    -- devicons
     use('nvim-tree/nvim-web-devicons')
-    use('lvimuser/lsp-inlayhints.nvim')
+
+    -- Color themes
     use('connorholyday/vim-snazzy')
-
-    use('nvim-telescope/telescope-ui-select.nvim')
-
-    -- tmux-navigator
-    use('christoomey/vim-tmux-navigator', {
-        config = function()
-
-        end
+    use('AlexvZyl/nordic.nvim')
+    use('olivercederborg/poimandres.nvim')
+    use('rktjmp/lush.nvim')
+    use('uloco/bluloco.nvim', {
+        requires = { 'rktjmp/lush.nvim' }
     })
 
-    -- sessions
-    use('Shatur/neovim-session-manager', {
-        requires = { 'nvim-lua/plenary.nvim' }
-    })
-
-    use('famiu/bufdelete.nvim')
-
-    -- surround
-    use('tpope/vim-surround')
-
-    -- transparent
+    -- Transparency
     use('xiyaowong/nvim-transparent')
 
-    -- mini.nvim
-    use('echasnovski/mini.trailspace')
-    use('echasnovski/mini.tabline')
-    use('echasnovski/mini.sessions')
-    use('echasnovski/mini.map')
-    use('echasnovski/mini.jump')
-    use('echasnovski/mini.indentscope')
-    use('echasnovski/mini.cursorword')
+    -- Dashboard
+    use('goolord/alpha-nvim', {
+        requires = { 'nvim-tree/nvim-web-devicons' },
+    })
 
-    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
-    use('nvim-treesitter/playground')
-
-    use('voldikss/vim-floaterm')
-    use('theprimeagen/harpoon')
-    use('mbbill/undotree')
-    use('tpope/vim-fugitive')
-
+    -- Status line
     use {
         'nvim-lualine/lualine.nvim',
         requires = { 'kyazdani42/nvim-web-devicons', opt = true }
     }
 
-    -- buggy
-    --[[ use {
-        'glepnir/dashboard-nvim',
-        requires = { 'nvim-tree/nvim-web-devicons' }
-    } ]]
-
-    use('goolord/alpha-nvim', {
-        requires = { 'nvim-tree/nvim-web-devicons' },
-    })
-
+    -- Telescope
     use {
-        'glepnir/dbsession.nvim',
-        event = 'BufRead',
-        cmd = 'SessionSave',
-        config = function()
-            require('dbsession').setup({
-                auto_save_on_exit = true
-            })
-        end
+        'nvim-telescope/telescope.nvim',
+        tag = '0.1.0',
+        requires = { { 'nvim-lua/plenary.nvim' } }
     }
+    use('nvim-telescope/telescope-ui-select.nvim')
 
+    -- LSP
+    use('lvimuser/lsp-inlayhints.nvim')
     use('lukas-reineke/lsp-format.nvim')
-
-    -- Didn't have support for visual select
-    -- use('terrortylor/nvim-comment')
-    use('numToStr/Comment.nvim')
-
-    use('andweeb/presence.nvim')
-
-    -- use('unblevable/quick-scope')
-
     use {
         'VonHeikemen/lsp-zero.nvim',
         requires = {
@@ -108,12 +62,60 @@ return require('packer').startup(function(use)
         }
     }
 
+    -- tmux-navigator
+    use('christoomey/vim-tmux-navigator', {
+        config = function()
+
+        end
+    })
+
+    -- sessions
+    use('Shatur/neovim-session-manager', {
+        requires = { 'nvim-lua/plenary.nvim' }
+    })
+
+    -- bufdelete (used to open dash when all buffers are closed)
+    use('famiu/bufdelete.nvim')
+
+    -- surround
+    use('tpope/vim-surround')
+
+    -- mini.nvim
+    use('echasnovski/mini.trailspace')
+    use('echasnovski/mini.tabline')
+    use('echasnovski/mini.sessions')
+    use('echasnovski/mini.map')
+    use('echasnovski/mini.jump')
+    use('echasnovski/mini.indentscope')
+    use('echasnovski/mini.cursorword')
+
+    -- treesitter
+    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    use('nvim-treesitter/playground')
+
+    -- terminal (TODO: Find a better terminal plugin)
+    use('voldikss/vim-floaterm')
+    use { "akinsho/toggleterm.nvim" }
+
+    -- Shortcuts
+    use('theprimeagen/harpoon')
+
+    -- Undos
+    use('mbbill/undotree')
+
+    -- Git integration
+    use('tpope/vim-fugitive')
     use({
         "folke/trouble.nvim",
         requires = "kyazdani42/nvim-web-devicons",
     })
 
+
+
+    -- Utils / misc
+    use('numToStr/Comment.nvim')
     use('windwp/nvim-autopairs')
 
-    use { "akinsho/toggleterm.nvim", tag = '*' }
+    -- Discord rich presence (for the lols)
+    use('andweeb/presence.nvim')
 end)

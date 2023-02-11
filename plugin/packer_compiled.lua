@@ -89,6 +89,11 @@ _G.packer_plugins = {
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/alpha-nvim",
     url = "https://github.com/goolord/alpha-nvim"
   },
+  ["bluloco.nvim"] = {
+    loaded = true,
+    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/bluloco.nvim",
+    url = "https://github.com/uloco/bluloco.nvim"
+  },
   ["bufdelete.nvim"] = {
     loaded = true,
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/bufdelete.nvim",
@@ -119,15 +124,6 @@ _G.packer_plugins = {
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/cmp_luasnip",
     url = "https://github.com/saadparwaiz1/cmp_luasnip"
   },
-  ["dbsession.nvim"] = {
-    commands = { "SessionSave" },
-    config = { "\27LJ\2\nQ\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\22auto_save_on_exit\2\nsetup\14dbsession\frequire\0" },
-    loaded = false,
-    needs_bufread = false,
-    only_cond = false,
-    path = "/home/willothy/.local/share/nvim/site/pack/packer/opt/dbsession.nvim",
-    url = "https://github.com/glepnir/dbsession.nvim"
-  },
   ["friendly-snippets"] = {
     loaded = true,
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/friendly-snippets",
@@ -157,6 +153,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/lualine.nvim",
     url = "https://github.com/nvim-lualine/lualine.nvim"
+  },
+  ["lush.nvim"] = {
+    loaded = true,
+    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/lush.nvim",
+    url = "https://github.com/rktjmp/lush.nvim"
   },
   ["mason-lspconfig.nvim"] = {
     loaded = true,
@@ -208,6 +209,11 @@ _G.packer_plugins = {
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/neovim-session-manager",
     url = "https://github.com/Shatur/neovim-session-manager"
   },
+  ["nordic.nvim"] = {
+    loaded = true,
+    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/nordic.nvim",
+    url = "https://github.com/AlexvZyl/nordic.nvim"
+  },
   ["nvim-autopairs"] = {
     loaded = true,
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/nvim-autopairs",
@@ -252,6 +258,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/willothy/.local/share/nvim/site/pack/packer/start/plenary.nvim",
     url = "https://github.com/nvim-lua/plenary.nvim"
+  },
+  ["poimandres.nvim"] = {
+    loaded = true,
+    path = "/home/willothy/.local/share/nvim/site/pack/packer/start/poimandres.nvim",
+    url = "https://github.com/olivercederborg/poimandres.nvim"
   },
   ["presence.nvim"] = {
     loaded = true,
@@ -311,25 +322,6 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
-
--- Command lazy-loads
-time([[Defining lazy-load commands]], true)
-pcall(vim.api.nvim_create_user_command, 'SessionSave', function(cmdargs)
-          require('packer.load')({'dbsession.nvim'}, { cmd = 'SessionSave', l1 = cmdargs.line1, l2 = cmdargs.line2, bang = cmdargs.bang, args = cmdargs.args, mods = cmdargs.mods }, _G.packer_plugins)
-        end,
-        {nargs = '*', range = true, bang = true, complete = function()
-          require('packer.load')({'dbsession.nvim'}, {}, _G.packer_plugins)
-          return vim.fn.getcompletion('SessionSave ', 'cmdline')
-      end})
-time([[Defining lazy-load commands]], false)
-
-vim.cmd [[augroup packer_load_aucmds]]
-vim.cmd [[au!]]
-  -- Event lazy-loads
-time([[Defining lazy-load event autocommands]], true)
-vim.cmd [[au BufRead * ++once lua require("packer.load")({'dbsession.nvim'}, { event = "BufRead *" }, _G.packer_plugins)]]
-time([[Defining lazy-load event autocommands]], false)
-vim.cmd("augroup END")
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then

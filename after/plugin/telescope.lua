@@ -4,4 +4,14 @@ n_map('<C-p>', builtin.git_files, {})
 n_map('<leader>fs', builtin.grep_string)
 n_map("<leader>fb", builtin.buffers)
 
+require("telescope").setup({
+    extensions = {
+        ["ui-select"] = {
+            require("telescope.themes").get_dropdown({
+
+            })
+        }
+    }
+})
+
 require("telescope").load_extension("ui-select")
