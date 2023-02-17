@@ -11,6 +11,9 @@ function HasValue(arr, val)
     return false
 end
 
+require("willothy.util")
 require("willothy.remap")
 require("willothy.set")
 require('willothy.lazy')
+
+require("impatient")

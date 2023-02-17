@@ -141,23 +141,22 @@ vim.api.nvim_set_hl(0, "NonText", { bg = "none" })
 
 local dashboard_start = api.nvim_create_augroup('dashboard_start', { clear = true })
 
-require("color-picker").setup({
-    require('color-picker').setup({
-        ["icons"] = { "ﱢ", "" },
-        ["border"] = "rounded", -- none | single | double | rounded | solid | shadow
-        ["keymap"] = { -- mapping example:
-            ["U"] = "<Plug>ColorPickerSlider5Decrease",
-            ["O"] = "<Plug>ColorPickerSlider5Increase",
-        },
-        ["background_highlight_group"] = "Normal", -- default
-        ["border_highlight_group"] = "FloatBorder", -- default
-    })
-})
+-- require("color-picker").setup({
+--     require('color-picker').setup({
+--         ["icons"] = { "ﱢ", "" },
+--         ["border"] = "rounded", -- none | single | double | rounded | solid | shadow
+--         ["keymap"] = { -- mapping example:
+--             ["U"] = "<Plug>ColorPickerSlider5Decrease",
+--             ["O"] = "<Plug>ColorPickerSlider5Increase",
+--         },
+--         ["background_highlight_group"] = "Normal", -- default
+--         ["border_highlight_group"] = "FloatBorder", -- default
+--     })
+-- })
+-- vim.keymap.set("n", "<C-c>", "<cmd>PickColor<CR>")
+-- vim.keymap.set("i", "<C-c>", "<cmd>PickColorInsert<CR>")
 
---vim.keymap.set("n", "<C-c>", "<cmd>PickColor<CR>")
---vim.keymap.set("i", "<C-c>", "<cmd>PickColorInsert<CR>")
-
---[[ vim.api.nvim_create_augroup('alpha_on_empty', { clear = true })
+vim.api.nvim_create_augroup('alpha_on_empty', { clear = true })
 vim.api.nvim_create_autocmd("User", {
     pattern = "BDeletePost*",
     group = "alpha_on_empty",
@@ -170,17 +169,7 @@ vim.api.nvim_create_autocmd("User", {
             vim.cmd("Alpha")
         end
     end,
-}) ]]
+})
 api.nvim_create_user_command('Bd', function()
     require('bufdelete').bufdelete(0, true)
 end, {})
-
-api.nvim_create_user_command('Browse', function(args)
-    local target
-    if args and args["args"] then
-        target = args["args"]
-    else
-        target = vim.fn.getcwd()
-    end
-    require('telescope').extensions.file_browser.file_browser({ cwd = target })
-end, { nargs = "?" })

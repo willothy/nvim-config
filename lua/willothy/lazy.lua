@@ -15,6 +15,9 @@ return require('lazy').setup({
     -- devicons
     'nvim-tree/nvim-web-devicons',
 
+    -- Impatient
+    'lewis6991/impatient.nvim',
+
     -- Color themes
     'connorholyday/vim-snazzy',
     'AlexvZyl/nordic.nvim',
