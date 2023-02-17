@@ -49,10 +49,10 @@ return require('lazy').setup({
 
     -- Status line
     {
-        --dir = '~/vendor/lualine.nvim/',
         'willothy/lualine.nvim',
         branch = "active",
         --'nvim-lualine/lualine.nvim',
+        --dir = '~/vendor/lualine.nvim/',
         dependencies = { 'nvim-tree/nvim-web-devicons' }
     },
 
