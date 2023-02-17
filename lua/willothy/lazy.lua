@@ -28,10 +28,6 @@ return require('lazy').setup({
         'catppuccin/nvim',
         as = 'catppuccin'
     },
-    {
-        'mcchrish/zenbones.nvim',
-        dependencies = { 'rktjmp/lush.nvim' }
-    },
 
     -- Transparency
     'xiyaowong/nvim-transparent',
@@ -45,7 +41,7 @@ return require('lazy').setup({
     {
         'norcalli/nvim-colorizer.lua',
         config = function()
-            require('colorizer').setup()
+            --require('colorizer').setup()
         end
     },
 
