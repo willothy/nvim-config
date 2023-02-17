@@ -1,11 +1,5 @@
-n_map("<leader>t", function()
-    vim.cmd("FloatermNew")
-end)
+require("toggleterm").setup()
 
-n_map("<C-t>", function()
-    vim.cmd("FloatermNew")
-end)
-
-t_map("<C-t>", function()
-    vim.cmd("FloatermKill")
+N_map("<leader>t", function()
+    vim.cmd("ToggleTerm direction=horizontal size=15")
 end)

@@ -141,42 +141,23 @@ vim.api.nvim_set_hl(0, "NonText", { bg = "none" })
 
 local dashboard_start = api.nvim_create_augroup('dashboard_start', { clear = true })
 
-local ft = function()
-    if db.hide_statusline then
-        vim.opt.laststatus = 0
-    end
-
-    if db.hide_tabline then
-        vim.opt.showtabline = 0
-    end
-
-    if vim.fn.has('nvim-0.8') == 1 then
-        if db.hide_winbar then
-            vim.opt.winbar = ''
-        end
-    end
-end
-
-api.nvim_create_autocmd('FileType', {
-    group = dashboard_start,
-    pattern = 'dashboard',
-    callback = ft,
+require("color-picker").setup({
+    require('color-picker').setup({
+        ["icons"] = { "ﱢ", "" },
+        ["border"] = "rounded", -- none | single | double | rounded | solid | shadow
+        ["keymap"] = { -- mapping example:
+            ["U"] = "<Plug>ColorPickerSlider5Decrease",
+            ["O"] = "<Plug>ColorPickerSlider5Increase",
+        },
+        ["background_highlight_group"] = "Normal", -- default
+        ["border_highlight_group"] = "FloatBorder", -- default
+    })
 })
 
-local function get_listed_buffers()
-    local buffers = {}
-    local len = 0
-    for buffer = 1, vim.fn.bufnr('$') do
-        if vim.fn.buflisted(buffer) == 1 then
-            len = len + 1
-            buffers[len] = buffer
-        end
-    end
+--vim.keymap.set("n", "<C-c>", "<cmd>PickColor<CR>")
+--vim.keymap.set("i", "<C-c>", "<cmd>PickColorInsert<CR>")
 
-    return buffers
-end
-
-vim.api.nvim_create_augroup('alpha_on_empty', { clear = true })
+--[[ vim.api.nvim_create_augroup('alpha_on_empty', { clear = true })
 vim.api.nvim_create_autocmd("User", {
     pattern = "BDeletePost*",
     group = "alpha_on_empty",
@@ -189,21 +170,17 @@ vim.api.nvim_create_autocmd("User", {
             vim.cmd("Alpha")
         end
     end,
-})
-
+}) ]]
 api.nvim_create_user_command('Bd', function()
     require('bufdelete').bufdelete(0, true)
 end, {})
 
-api.nvim_create_user_command('Projects', function()
-    api.nvim_set_current_dir("~/Projects")
-    vim.cmd.Ex()
-end, {})
-
-vim.keymap.set("n", "<leader>fn", ":enew<CR>")
-vim.keymap.set("n", "<leader>ls", ":SessionManager load_session<CR>")
-vim.keymap.set("n", "<leader>ll", ":SessionManager load_last_session<CR>")
-vim.keymap.set("n", "<leader>ss", ":SessionManager save_current_session<CR>")
-vim.keymap.set("n", "<leader>pf", ":Projects<CR>")
-vim.keymap.set("n", "<leader>nv", ":edit ~/.config/nvim/<CR>")
-vim.keymap.set("n", "<leader>D", ":Alpha<CR>")
+api.nvim_create_user_command('Browse', function(args)
+    local target
+    if args and args["args"] then
+        target = args["args"]
+    else
+        target = vim.fn.getcwd()
+    end
+    require('telescope').extensions.file_browser.file_browser({ cwd = target })
+end, { nargs = "?" })

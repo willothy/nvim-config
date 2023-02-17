@@ -11,6 +11,7 @@ require('Comment').setup({
     },
     opleader = { -- Visual Mode
         block = '<leader>c',
+        line = '<leader>C'
     },
     extra = {
         eol = '<leader>l$',
