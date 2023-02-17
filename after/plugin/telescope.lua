@@ -27,8 +27,8 @@ local function add_selected_to_harpoon(prompt_bufnr)
     end
 end
 
-local function create_and_add_to_harpoon()
-    local path = fb_actions.create()
+local function create_and_add_to_harpoon(prompt_bufnr)
+    local path = fb_actions.create(prompt_bufnr)
     if path ~= nil then
         require("harpoon.mark").add_file(path)
         print("Added " .. get_filename(path) .. " to harpoon")

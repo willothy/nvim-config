@@ -18,6 +18,27 @@ return require('lazy').setup({
     -- Impatient
     'lewis6991/impatient.nvim',
 
+    -- Sessionista
+    -- {
+    --     dir = '~/projects/rust/sessionista/',
+    --     as = 'sessionista'
+    -- },
+
+    -- Possession (session management)
+    {
+        "gennaro-tedesco/nvim-possession",
+        dependencies = {
+            "ibhagwan/fzf-lua",
+        },
+        config = true,
+    },
+
+    -- SessionManager
+    {
+        'Shatur/neovim-session-manager',
+        dependencies = { 'nvim-lua/plenary.nvim' }
+    },
+
     -- Color themes
     'connorholyday/vim-snazzy',
     'AlexvZyl/nordic.nvim',
@@ -173,11 +194,6 @@ return require('lazy').setup({
         end
     },
 
-    -- sessions
-    {
-        'Shatur/neovim-session-manager',
-        dependencies = { 'nvim-lua/plenary.nvim' }
-    },
 
     -- Noice
     'MunifTanjim/nui.nvim',

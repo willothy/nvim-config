@@ -15,9 +15,6 @@ vim.g.maplocalleader = " "
 
 -- Normal
 N_map("<leader>fn", ":enew<CR>")
-N_map("<leader>ls", ":SessionManager load_session<CR>")
-N_map("<leader>ll", ":SessionManager load_last_session<CR>")
-N_map("<leader>ss", ":SessionManager save_current_session<CR>")
 N_map("<leader>pf", Wrap(Browse, "~/projects"))
 N_map("<leader>nv", Wrap(Browse, Wrap(vim.fn.stdpath, 'config')))
 N_map("<leader>fv", function() Browse(GetParentPath(vim.fn.expand('%'))) end)
