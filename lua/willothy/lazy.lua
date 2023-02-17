@@ -160,7 +160,11 @@ return require('lazy').setup({
             "nvim-tree/nvim-web-devicons",
         },
     },
-    'lvimuser/lsp-inlayhints.nvim', -- LSP inlay hints
+    -- LSP inlay hints
+    {
+        'lvimuser/lsp-inlayhints.nvim',
+        branch = "anticonceal"
+    },
     'lukas-reineke/lsp-format.nvim', -- LSP formatting
     'j-hui/fidget.nvim', -- LSP progress
     {

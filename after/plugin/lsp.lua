@@ -20,16 +20,35 @@ inlayhints.setup({
     inlay_hints = {
         parameter_hints = {
             show = true,
-            separator = ', ',
+            separator = '',
             remove_colon_start = true,
             remove_colon_end = true,
         },
         type_hints = {
             show = true,
-            separator = ', ',
+            separator = '',
             remove_colon_start = true,
             remove_colon_end = true,
         },
+        label_formatter = function(labels, kind, opts, client_name)
+            return table.concat(labels or {}, "")
+        end,
+        virt_text_formatter = function(label, hint, opts, client_name)
+            if client_name == "lua_ls" then
+                if hint.kind == 2 then
+                    hint.paddingLeft = false
+                else
+                    hint.paddingRight = false
+                end
+            end
+
+            local virt_text = {}
+            virt_text[#virt_text + 1] = hint.paddingLeft and { " ", "Normal" } or nil
+            virt_text[#virt_text + 1] = { label, opts.highlight }
+            virt_text[#virt_text + 1] = hint.paddingRight and { " ", "Normal" } or nil
+
+            return virt_text
+        end,
         highlight = "LspInlayHint",
         priority = 0,
     },
@@ -71,7 +90,7 @@ lsp.configure('lua_ls', {
     }
 })
 
---[[ lsp.configure('rust_analyzer', {
+lsp.configure('rust_analyzer', {
     settings = {
         ["rust-analyzer"] = {
             imports = {
@@ -117,14 +136,14 @@ lsp.configure('lua_ls', {
             }
         },
     },
-}) ]]
+})
 lsp.setup()
 
 vim.diagnostic.config({
     virtual_text = true,
     signs = true,
-    update_in_insert = false,
+    update_in_insert = true,
     underline = true,
-    severity_sort = false,
+    severity_sort = true,
     float = true,
 })
