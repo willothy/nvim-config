@@ -19,10 +19,9 @@ return require('lazy').setup({
     'lewis6991/impatient.nvim',
 
     -- Sessionista
-    -- {
-    --     dir = '~/projects/rust/sessionista/',
-    --     as = 'sessionista'
-    -- },
+    {
+        dir = '~/projects/rust/sessionista/',
+    },
 
     -- Possession (session management)
     {
