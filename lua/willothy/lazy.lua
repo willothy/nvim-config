@@ -15,12 +15,40 @@ return require('lazy').setup({
     -- devicons
     'nvim-tree/nvim-web-devicons',
 
+    'dstein64/vim-startuptime',
+
     -- Impatient
-    'lewis6991/impatient.nvim',
+    {
+        'lewis6991/impatient.nvim',
+        config = function()
+            require('impatient')
+        end,
+        lazy = false,
+    },
 
     -- Sessionista
     {
         dir = '~/projects/rust/sessionista/',
+    },
+    -- Moveline
+    {
+        dir = '~/projects/rust/moveline/',
+    },
+
+    -- Copilot
+    --'github/copilot.vim',
+    {
+        'zbirenbaum/copilot.lua',
+        cmd = 'Copilot',
+        event = 'InsertEnter',
+        lazy = true,
+    },
+    {
+        'zbirenbaum/copilot-cmp',
+        dependencies = {
+            'copilot.lua'
+        },
+        lazy = true,
     },
 
     -- Possession (session management)
@@ -30,12 +58,14 @@ return require('lazy').setup({
             "ibhagwan/fzf-lua",
         },
         config = true,
+        lazy = true,
     },
 
     -- SessionManager
     {
         'Shatur/neovim-session-manager',
-        dependencies = { 'nvim-lua/plenary.nvim' }
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        lazy = true,
     },
 
     -- Color themes
@@ -58,15 +88,6 @@ return require('lazy').setup({
         dependencies = { 'nvim-tree/nvim-web-devicons' },
     },
 
-    {
-        'norcalli/nvim-colorizer.lua',
-        config = function()
-            --require('colorizer').setup()
-        end
-    },
-
-    'ziontee113/color-picker.nvim',
-
     -- Status line
     {
         'willothy/lualine.nvim',
@@ -85,19 +106,23 @@ return require('lazy').setup({
             "nvim-tree/nvim-web-devicons",
             "MunifTanjim/nui.nvim",
         },
+        enabled = false,
+        lazy = true,
     },
 
     -- Neoclip
     {
         'kkharji/sqlite.lua',
-        module = 'sqlite'
+        module = 'sqlite',
+        lazy = true,
     },
     {
         'AckslD/nvim-neoclip.lua',
         dependencies = { 'kkharji/sqlite.lua', module = 'sqlite' },
         config = function()
             require('neoclip').setup()
-        end
+        end,
+        lazy = true,
     },
     {
         'lewis6991/gitsigns.nvim',
@@ -108,7 +133,8 @@ return require('lazy').setup({
                     vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame)
                 end
             })
-        end
+        end,
+        lazy = true,
     },
 
     -- Telescope
@@ -119,7 +145,8 @@ return require('lazy').setup({
     },
     {
         'gbrlsnchs/telescope-lsp-handlers.nvim',
-        dependencies = { 'nvim-telescope/telescope.nvim' }
+        dependencies = { 'nvim-telescope/telescope.nvim' },
+        lazy = true,
     },
     {
         'nvim-telescope/telescope-ui-select.nvim',
@@ -145,10 +172,11 @@ return require('lazy').setup({
         end
     },
 
-    -- Copilot
-    'github/copilot.vim',
-
     -- LSP
+    {
+        'folke/neodev.nvim',
+        lazy = true,
+    },
     'stevearc/aerial.nvim',
     'SmiteshP/nvim-navic',
     {
@@ -162,10 +190,15 @@ return require('lazy').setup({
     -- LSP inlay hints
     {
         'lvimuser/lsp-inlayhints.nvim',
-        branch = "anticonceal"
+        branch = "anticonceal",
+        lazy = true,
     },
     'lukas-reineke/lsp-format.nvim', -- LSP formatting
     'j-hui/fidget.nvim', -- LSP progress
+    {
+        'williamboman/mason.nvim',
+        lazy = true,
+    },
     {
         'VonHeikemen/lsp-zero.nvim',
         dependencies = {
@@ -186,7 +219,8 @@ return require('lazy').setup({
             -- Snippets
             'L3MON4D3/LuaSnip',
             'rafamadriz/friendly-snippets',
-        }
+        },
+        lazy = true,
     },
 
     -- tmux-navigator

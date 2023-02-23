@@ -27,7 +27,7 @@ end)
 N_map("<leader>D", ":Alpha<CR>")
 
 -- Insert
-vim.keymap.set('i', '<S-Tab>', '<Plug>(copilot-suggest)', { silent = true })
+-- vim.keymap.set('i', '<S-Tab>', '<Plug>(copilot-suggest)', { silent = true })
 
 -- Terminal
 T_map("<Esc>", "<C-\\><C-n>")

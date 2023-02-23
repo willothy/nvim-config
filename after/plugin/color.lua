@@ -54,7 +54,7 @@ function SetupColor(color)
     Highlight(0, 'TabLineSel', { bg = "none", underline = true })
 
     Highlight(0, 'LspInlayHint', {
-        fg = "#9294a0", bg = "none", italic = true
+        fg = "#9294a0", bg = "none", italic = false
     })
 
     Highlight(0, 'Comment', { fg = "#a6accd", bg = "none", italic = false })
@@ -68,6 +68,15 @@ function SetupColor(color)
 
     Highlight(0, "NonText", { bg = "none" })
     Highlight(0, "NormalFloat", { bg = "none" })
+
+    Highlight(0, "CopilotStatusOk", {
+        fg = require('poimandres.palette').teal1,
+        bg = require('poimandres.palette').background1,
+    })
+    Highlight(0, "CopilotStatusError", {
+        fg = require('poimandres.palette').red1,
+        bg = require('poimandres.palette').background1,
+    })
 end
 
 SetupColor()

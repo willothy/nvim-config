@@ -64,13 +64,30 @@ require('lualine').setup({
         } },
         -- right side
         lualine_x = { { 'encoding' } },
-        lualine_y = { {
-            'filetype',
-            separator = {
-                left = sep_options.circle_left,
-                right = ''
+        lualine_y = {
+            {
+                'filetype',
+                separator = {
+                    left = sep_options.circle_left,
+                    right = ''
+                },
             },
-        } },
+            {
+                function()
+                    local client = require('copilot.client').get(true)
+                    if client == nil then
+                        return ''
+                    end
+                    local status = client
+                        and require('copilot.api').check_status(client, {}, function()
+                        end)
+                        or false
+                    local hl = status and '%#CopilotStatusOk#' or '%#CopilotStatusError#'
+                    local icon = require('nvim-web-devicons').get_icon_by_filetype('zig', {})
+                    return string.format('%s%s ', hl, icon)
+                end
+            },
+        },
         lualine_z = { {
             'location',
             separator = separators,
@@ -127,11 +144,13 @@ require('lualine').setup({
             },
         } },
         -- right side
-        lualine_x = { {
-            'diagnostics',
-            separator = '',
-            update_in_insert = true,
-        } },
+        lualine_x = {
+            {
+                'diagnostics',
+                separator = '',
+                update_in_insert = true,
+            },
+        },
         lualine_y = { {
             'diff',
             show_all_if_any = true,
