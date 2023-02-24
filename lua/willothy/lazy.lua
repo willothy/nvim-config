@@ -17,22 +17,14 @@ return require('lazy').setup({
 
     'dstein64/vim-startuptime',
 
-    -- Impatient
-    {
-        'lewis6991/impatient.nvim',
-        config = function()
-            require('impatient')
-        end,
-        lazy = false,
-    },
-
     -- Sessionista
     {
         dir = '~/projects/rust/sessionista/',
     },
     -- Moveline
     {
-        dir = '~/projects/rust/moveline/',
+        'willothy/moveline.nvim',
+        build = 'make build'
     },
 
     -- Copilot
