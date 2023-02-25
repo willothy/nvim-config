@@ -24,7 +24,7 @@ return require('lazy').setup({
     -- Moveline
     {
         'willothy/moveline.nvim',
-        build = 'make build'
+        build = 'make',
     },
 
     -- Copilot

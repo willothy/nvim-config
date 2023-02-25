@@ -65,7 +65,6 @@ local function calc_indent(target, dir)
     end
 end
 
-
 local function swap_line(line, target)
     local line_text = vim.fn.getline(line)
     local target_text = vim.fn.getline(target)
