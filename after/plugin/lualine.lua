@@ -10,20 +10,6 @@ local separators = {
     right = sep_options.circle_right,
 }
 
-local function time()
-    return os.date(" %H:%M %p"):gsub(" 0", "")
-end
-
-local globalstatus = true
-vim.api.nvim_create_user_command("ToggleGlobalStatus", function()
-    globalstatus = not globalstatus
-    require("lualine").setup({
-        options = {
-            globalstatus = globalstatus,
-        }
-    })
-end, { nargs = 0 })
-
 require('lualine').setup({
     options = {
         theme = 'poimandres',
@@ -85,7 +71,7 @@ require('lualine').setup({
                     local hl = status and '%#CopilotStatusOk#' or '%#CopilotStatusError#'
                     local icon = require('nvim-web-devicons').get_icon_by_filetype('zig', {})
                     return string.format('%s%s ', hl, icon)
-                end
+                end,
             },
         },
         lualine_z = { {

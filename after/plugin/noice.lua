@@ -37,7 +37,7 @@ require("noice").setup({
                 cursorline = false,
             },
             size = {
-                width = 60,
+                width = 80,
                 height = "auto"
             }
         },
@@ -54,7 +54,7 @@ require("noice").setup({
                 col = "50%",
             },
             size = {
-                width = 60,
+                width = 80,
                 height = 10,
             },
             border = {
@@ -77,7 +77,7 @@ require("noice").setup({
             enabled = false
         },
         signature = {
-            enabled = true,
+            enabled = false,
         },
         hover = {
             enabled = true

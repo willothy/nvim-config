@@ -15,10 +15,6 @@ require("willothy.util")
 require("willothy.remap")
 require("willothy.set")
 require('willothy.lazy')
-require("willothy.ui")
 
-local moveline = require("moveline")
-
-vim.keymap.set("n", "<M-j>", moveline.move_line_down)
-vim.keymap.set("n", "<M-k>", moveline.move_line_up)
---require('willothy.move')
+-- File for messing around with lua
+require("willothy.scratchpad")

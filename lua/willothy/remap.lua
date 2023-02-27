@@ -25,9 +25,9 @@ N_map("<leader>vv", function()
     end)
 end)
 N_map("<leader>D", ":Alpha<CR>")
+N_map("<leader>w", function() vim.api.nvim_exec("w", true) end)
 
 -- Insert
--- vim.keymap.set('i', '<S-Tab>', '<Plug>(copilot-suggest)', { silent = true })
 
 -- Terminal
 T_map("<Esc>", "<C-\\><C-n>")

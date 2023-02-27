@@ -1,10 +1,4 @@
--- require('nvim_comment').setup({
---     -- line_mapping = "<leader>cl",
---     -- operator_mapping = "<leader>c",
---     comment_empty = false,
--- })
-
-require('Comment').setup({
+local opt = {
     toggler = { -- Normal Mode
         line = '<leader>cc',
         block = '<leader>cb'
@@ -16,4 +10,9 @@ require('Comment').setup({
     extra = {
         eol = '<leader>l$',
     },
-})
+} 
+
+return {{
+    'numToStr/Comment.nvim',
+    opts = opt
+}}

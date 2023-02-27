@@ -1,7 +1,3 @@
---[[ require('mini.trailspace').setup({
-    only_in_normal_buffers = true
-}) ]]
--- require('mini.sessions').setup()
 require('mini.jump').setup({
     -- Disable on dashboard
 })
@@ -9,17 +5,22 @@ require('mini.indentscope').setup()
 require('mini.cursorword').setup()
 
 function HandleMiniDisable()
-    local buf_ty = GetBufType()
-    if HasValue({
-        "dashboard", "netrw", "help", "toggleterm", "floaterm", "alpha"
-    }, buf_ty) then
+    local bufinfo = vim.fn.getbufinfo(vim.api.nvim_win_get_buf(0))
+    if bufinfo == nil then
+        return
+    end
+    local buf = bufinfo[0] or bufinfo[1]
+    if buf == nil then
+        return
+    end
+
+    local listed = buf.listed
+    if listed == 0 then
         vim.b.minicursorword_disable = true
         vim.b.miniindentscope_disable = true
-        vim.b.minimap_disable = true
     else
         vim.b.minicursorword_disable = false
         vim.b.miniindentscope_disable = false
-        vim.b.minimap_disable = false
     end
 end
 
