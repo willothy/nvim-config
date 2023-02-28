@@ -76,6 +76,14 @@ nmenu PopUp.Rename              :lua vim.lsp.buf.rename()<CR>")
 nmenu PopUp.Signature\\ Help    :lua vim.lsp.buf.signature_help()
 ]], true)
 
+    lsp.configure('bash-language-server', {
+        settings = {
+            bashIde = {
+                includeAllWorkspaceSymbols = true
+            }
+        }
+    })
+
     lsp.configure('rust_analyzer', {
         settings = {
             ["rust-analyzer"] = {
