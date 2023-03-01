@@ -4,11 +4,13 @@ vim.opt.relativenumber = true
 vim.opt.tabstop = 4
 vim.opt.softtabstop = -1
 vim.opt.shiftwidth = 0
-vim.opt.expandtab = true
+vim.opt.expandtab = false
 
-vim.smartindent = true
+vim.opt.smartindent = true
 
-vim.opt.wrap = false
+vim.opt.wrap = true
+
+vim.g.rust_recommended_style = 1
 
 vim.opt.swapfile = false
 vim.opt.backup = false
@@ -28,14 +30,14 @@ vim.opt.updatetime = 50
 vim.opt.colorcolumn = "0"
 
 vim.api.nvim_create_autocmd("BufEnter", {
-  callback = function()
-    if HasValue({ "floaterm", "toggleterm", "dashboard", "alpha" }, GetBufType()) then
-      return
-    end
+    callback = function()
+        if HasValue({ "floaterm", "toggleterm", "dashboard", "alpha" }, GetBufType()) then
+            return
+        end
 
-    local ok, result = pcall(vim.cmd, 'Gcd')
-    if ok == false then
-      vim.cmd("lcd %:p:h")
+        local ok, _ = pcall(vim.cmd, 'Gcd')
+        if ok == false then
+            vim.cmd("lcd %:p:h")
+        end
     end
-  end
 })

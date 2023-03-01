@@ -18,3 +18,6 @@ require('willothy.lazy')
 
 -- File for messing around with lua
 require("willothy.scratchpad")
+
+vim.g.rust_conceal = 1
+vim.g.rust_recommended_style = 0

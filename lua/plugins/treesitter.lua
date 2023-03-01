@@ -15,6 +15,9 @@ local opts = {
         -- list of language that will be disabled
         additional_vim_regex_highlighting = false
     },
+    indent = {
+        enable = true,
+    },
     textobjects = {
         select = {
             enable = true,

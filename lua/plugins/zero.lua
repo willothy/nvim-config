@@ -96,6 +96,11 @@ nmenu PopUp.Signature\\ Help    :lua vim.lsp.buf.signature_help()
                 },
                 procMacro = {
                     enable = true,
+                    enabled = true
+                },
+                procMacros = {
+                    enable = true,
+                    enabled = true,
                 },
                 imports = {
                     prefix = "self",
