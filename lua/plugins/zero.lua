@@ -57,21 +57,41 @@ local function lspzero()
 		})
 		inlayhints.on_attach(client, bufnr)
 
+		opts.desc = "Go to definition"
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+		opts.desc = "Go to declaration"
+		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+		opts.desc = "Go to type definition"
+		vim.keymap.set("n", "gT", vim.lsp.buf.type_definition, opts)
+		opts.desc = "Go to implementation"
+		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+		opts.desc = "Hover"
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-		vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
+		opts.desc = "Find workspace symbol"
+		vim.keymap.set("n", "<leader>ws", vim.lsp.buf.workspace_symbol, opts)
+		opts.desc = "Open diagnostic in float"
 		vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
+		opts.desc = "Go to next diagnostic"
 		vim.keymap.set("n", "[d", vim.diagnostic.goto_next, opts)
+		opts.desc = "Go to previous diagnostic"
 		vim.keymap.set("n", "]d", vim.diagnostic.goto_prev, opts)
-		vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, opts)
+		opts.desc = "Code actions"
+		-- vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+		vim.keymap.set("n", "<leader>ca", function()
+			vim.api.nvim_exec("CodeActionMenu", true)
+		end, opts)
 		-- vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, opts)
-		vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
+		opts.desc = "Signature help"
 		vim.keymap.set("n", "<leader>hs", vim.lsp.buf.signature_help, opts)
 
 		local glance = require("glance").actions
+		opts.desc = "Glance references"
 		vim.keymap.set("n", "<leader>rr", utils.bind(glance.open, "references"), opts)
+		opts.desc = "Glance definitions"
 		vim.keymap.set("n", "<leader>vd", utils.bind(glance.open, "definitions"), opts)
+		opts.desc = "Glance type definitions"
 		vim.keymap.set("n", "<leader>vd", utils.bind(glance.open, "type_definitions"), opts)
+		opts.desc = "Glance implementations"
 		vim.keymap.set("n", "<leader>vi", utils.bind(glance.open, "implementations"), opts)
 	end)
 
@@ -175,6 +195,41 @@ nmenu PopUp.Signature\\ Help    :lua vim.lsp.buf.signature_help()
 	})
 	lsp.setup()
 
+	local handler = function(virtText, lnum, endLnum, width, truncate)
+		local newVirtText = {}
+		local suffix = ('  %d '):format(endLnum - lnum)
+		local sufWidth = vim.fn.strdisplaywidth(suffix)
+		local targetWidth = width - sufWidth
+		local curWidth = 0
+		for _, chunk in ipairs(virtText) do
+			local chunkText = chunk[1]
+			local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+			if targetWidth > curWidth + chunkWidth then
+				table.insert(newVirtText, chunk)
+			else
+				chunkText = truncate(chunkText, targetWidth - curWidth)
+				local hlGroup = chunk[2]
+				table.insert(newVirtText, { chunkText, hlGroup })
+				chunkWidth = vim.fn.strdisplaywidth(chunkText)
+				-- str width returned from truncate() may less than 2nd argument, need padding
+				if curWidth + chunkWidth < targetWidth then
+					suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+				end
+				break
+			end
+			curWidth = curWidth + chunkWidth
+		end
+		table.insert(newVirtText, { suffix, 'MoreMsg' })
+		return newVirtText
+	end
+
+	-- global handler
+	-- `handler` is the 2nd parameter of `setFoldVirtTextHandler`,
+	-- check out `./lua/ufo.lua` and search `setFoldVirtTextHandler` for detail.
+	require('ufo').setup({
+		fold_virt_text_handler = handler,
+	})
+
 	vim.diagnostic.config({
 		virtual_text = true,
 		signs = true,
@@ -193,7 +248,9 @@ local aerial_opt = {
 local function aerial_cfg()
 	vim.keymap.set("n", "<leader>o", function()
 		require('aerial').toggle()
-	end)
+	end, {
+		desc = "Toggle aerial window"
+	})
 end
 
 local fidget = {
@@ -207,11 +264,12 @@ local fidget = {
 		blend = 0
 	}
 }
-
 local function inc_rename()
-	vim.keymap.set("n", "<leader>rn", function()
+	local increname = function()
 		return ":IncRename " .. vim.fn.expand("<cword>")
-	end, { expr = true })
+	end
+	vim.keymap.set("n", "<leader>rn", increname, { expr = true, desc = "Rename" })
+	vim.keymap.set("n", "<F2>", increname, { expr = true, desc = "Rename" })
 end
 
 local neodev = {
@@ -237,7 +295,7 @@ local glance = {
 	},
 	detached = true,
 	winbar = {
-		enable = false
+		enable = true
 	}
 }
 
@@ -257,7 +315,6 @@ return {
 			'lvimuser/lsp-inlayhints.nvim',
 			'lukas-reineke/lsp-format.nvim',
 			'SmiteshP/nvim-navic',
-			'utilyre/barbecue.nvim',
 			'folke/neodev.nvim',
 		},
 		init = lspzero,
@@ -315,5 +372,47 @@ return {
 		dependencies = {
 			'antoinemadec/FixCursorHold.nvim'
 		}
-	}
+	},
+	{
+		'utilyre/barbecue.nvim',
+		dependencies = {
+			"SmiteshP/nvim-navic",
+			"nvim-tree/nvim-web-devicons", -- optional dependency
+			dir = '~/projects/lua/minimus/'
+		},
+		lazy = true,
+		event = 'BufEnter',
+		config = function()
+			local p = require('minimus.palette').hex
+			require("barbecue").setup({
+				attach_navic = true,
+				theme = 'minimus',
+				exclude_filetypes = {
+					"gitcommit",
+					"toggleterm",
+					"Glance",
+					"mason",
+					"alpha"
+				}
+			})
+		end
+	},
+	{
+		'kevinhwang91/nvim-ufo',
+		name = 'ufo',
+		dependencies = {
+			'kevinhwang91/promise-async',
+			'VonHeikemen/lsp-zero.nvim'
+		},
+		init = function()
+			vim.o.foldcolumn = '1'
+			vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+			vim.o.foldlevel = 99
+			vim.o.foldenable = true
+			vim.o.foldlevelstart = 99
+		end
+	}, {
+	'weilbith/nvim-code-action-menu',
+	cmd = 'CodeActionMenu',
+}
 }

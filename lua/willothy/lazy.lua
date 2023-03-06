@@ -27,9 +27,6 @@ require('lazy').setup({
 	--     dir = '~/projects/rust/sessionista/',
 	--     lazy = true,
 	-- },
-	{
-		dir = '~/projects/rust/oxi-test/'
-	},
 	-- Crates
 	{
 		'saecki/crates.nvim',
@@ -40,12 +37,6 @@ require('lazy').setup({
 
 	-- Transparency
 
-	-- Dashboard
-	{
-		'goolord/alpha-nvim',
-		dependencies = { 'nvim-tree/nvim-web-devicons' },
-		lazy = true,
-	},
 
 	-- Status line
 	{
@@ -53,7 +44,10 @@ require('lazy').setup({
 		branch = "active",
 		--'nvim-lualine/lualine.nvim',
 		--dir = '~/vendor/lualine.nvim/',
-		dependencies = { 'nvim-tree/nvim-web-devicons' },
+		dependencies = {
+			'nvim-tree/nvim-web-devicons',
+			dir = '~/projects/lua/minimus/',
+		},
 		event = "VeryLazy",
 		lazy = true,
 	},
@@ -139,22 +133,6 @@ require('lazy').setup({
 	-- surround
 	'tpope/vim-surround',
 
-	-- mini.nvim
-	{
-		'echasnovski/mini.jump',
-		lazy = true,
-		event = "VeryLazy",
-	},
-	{
-		'echasnovski/mini.indentscope',
-		lazy = true,
-		event = "VeryLazy",
-	},
-	{
-		'echasnovski/mini.cursorword',
-		lazy = true,
-		event = "VeryLazy"
-	},
 
 	-- Util for commands requiring password for sudo, ssh etc.
 	'lambdalisue/askpass.vim',

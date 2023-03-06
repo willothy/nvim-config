@@ -77,16 +77,28 @@ local function config()
 		t.load_extension("toggleterm")
 	end, function()
 		local menufacture = telescope.extensions.menufacture
-		vim.keymap.set('n', '<leader>ff', menufacture.find_files)
-		vim.keymap.set('n', '<C-p>', menufacture.git_files)
-		vim.keymap.set('n', '<leader>fs', menufacture.grep_string)
-		vim.keymap.set('n', "<leader>fb", require('telescope.builtin').buffers)
+		vim.keymap.set('n', '<leader>ff', menufacture.find_files, {
+			desc = "Find files",
+		})
+		vim.keymap.set('n', '<C-p>', menufacture.git_files, {
+			desc = "Find files in git",
+		})
+		vim.keymap.set('n', '<leader>fs', menufacture.grep_string, {
+			desc = "Grep string",
+		})
+		vim.keymap.set('n', "<leader>fb", require('telescope.builtin').buffers, {
+			desc = "Find buffers",
+		})
 	end)
 
 	vim.api.nvim_create_autocmd("FileType", {
 		pattern = "gitcommit",
 		callback = function()
-			vim.keymap.set('n', '<leader>cc', ':Telescope conventional_commits<CR>', { buffer = true })
+			vim.api.nvim_exec("Telescope conventional_commits", true)
+			-- vim.keymap.set('n', '<leader>cc', ':Telescope conventional_commits<CR>', {
+			-- 	buffer = true,
+			-- 	
+			-- })
 		end
 	})
 end

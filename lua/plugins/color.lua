@@ -9,6 +9,10 @@ return {
 		dependencies = {
 			'rktjmp/lush.nvim'
 		},
+		config = function()
+			require("lush")(require("minimus"))
+		end,
+		lazy = false,
 	},
 	{
 		'catppuccin/nvim',

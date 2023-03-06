@@ -1,11 +1,19 @@
 local function setup()
 	local moveline = require("moveline")
 
-	vim.keymap.set("n", "<M-j>", moveline.down)
-	vim.keymap.set("n", "<M-k>", moveline.up)
+	vim.keymap.set("n", "<M-j>", moveline.down, {
+		desc = "Move line down",
+	})
+	vim.keymap.set("n", "<M-k>", moveline.up, {
+		desc = "Move line up",
+	})
 
-	vim.keymap.set("v", "<M-k>", moveline.block_up)
-	vim.keymap.set("v", "<M-j>", moveline.block_down)
+	vim.keymap.set("v", "<M-k>", moveline.block_up, {
+		desc = "Move block up",
+	})
+	vim.keymap.set("v", "<M-j>", moveline.block_down, {
+		desc = "Move block down",
+	})
 end
 
 -- Moveline
