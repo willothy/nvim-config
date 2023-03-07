@@ -69,26 +69,12 @@ local function config()
 		t.load_extension("neoclip")
 		t.load_extension("harpoon")
 		t.load_extension("lsp_handlers")
-		t.load_extension("command_center")
 		t.load_extension("aerial")
 		t.load_extension("file_browser")
 		t.load_extension("menufacture")
 		t.load_extension("conventional_commits")
 		t.load_extension("toggleterm")
 	end, function()
-		local menufacture = telescope.extensions.menufacture
-		vim.keymap.set('n', '<leader>ff', menufacture.find_files, {
-			desc = "Find files",
-		})
-		vim.keymap.set('n', '<C-p>', menufacture.git_files, {
-			desc = "Find files in git",
-		})
-		vim.keymap.set('n', '<leader>fs', menufacture.grep_string, {
-			desc = "Grep string",
-		})
-		vim.keymap.set('n', "<leader>fb", require('telescope.builtin').buffers, {
-			desc = "Find buffers",
-		})
 	end)
 
 	vim.api.nvim_create_autocmd("FileType", {
@@ -147,13 +133,8 @@ return {
 		event = 'VeryLazy',
 	},
 	{
-		'FeiyouG/command_center.nvim',
-		lazy = true,
-		event = 'VeryLazy',
-	},
-	{
 		'molecule-man/telescope-menufacture',
 		lazy = true,
 		event = 'VeryLazy'
-	}
+	},
 }

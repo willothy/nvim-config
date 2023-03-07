@@ -70,7 +70,7 @@ local function lspzero()
 		opts.desc = "Find workspace symbol"
 		vim.keymap.set("n", "<leader>ws", vim.lsp.buf.workspace_symbol, opts)
 		opts.desc = "Open diagnostic in float"
-		vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
+		vim.keymap.set("n", "<leader>fd", vim.diagnostic.open_float, opts)
 		opts.desc = "Go to next diagnostic"
 		vim.keymap.set("n", "[d", vim.diagnostic.goto_next, opts)
 		opts.desc = "Go to previous diagnostic"

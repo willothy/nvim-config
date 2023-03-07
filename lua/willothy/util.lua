@@ -7,6 +7,62 @@ function Browse(target)
 	require('telescope').extensions.file_browser.file_browser({ cwd = target })
 end
 
+local function is_root(pathname)
+	if package.config:sub(1, 1) == "\\" then
+		return string.match(pathname, "^[A-Z]:\\?$")
+	end
+	return pathname == "/"
+end
+
+local function find_crate_root(path)
+	local Path = require('plenary.path')
+	local dir = path and Path:new(path) or Path:new(vim.fn.expand('%')):parent()
+
+	while #dir:_split() > 2 do
+		if dir:joinpath('Cargo.toml'):exists() then
+			return dir
+		else
+			dir = dir:parent()
+		end
+	end
+	return nil
+end
+
+function ParentCrate()
+	local Path = require('plenary.path')
+	local root = find_crate_root()
+	if root == nil then
+		return
+	end
+	local parent = find_crate_root(root .. '../')
+	if parent == nil then
+		return
+	else
+		local p = string.format("%s", parent)
+		Browse(p)
+	end
+end
+
+function OpenCargoToml()
+	local Path = require('plenary.path')
+	local root = find_crate_root()
+	if root == nil then
+		return
+	end
+
+	vim.api.nvim_command('edit ' .. string.format('%s', root) .. '/Cargo.toml')
+end
+
+function BrowseCrateRoot()
+	local Path = require('plenary.path')
+	local root = find_crate_root()
+	if root == nil then
+		return
+	end
+
+	Browse('' .. root)
+end
+
 vim.api.nvim_create_user_command('Browse', function(args)
 	local target
 	if args and args["args"] then
