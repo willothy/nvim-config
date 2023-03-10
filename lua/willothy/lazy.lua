@@ -53,18 +53,18 @@ require('lazy').setup({
 	},
 
 	-- Neotree
-	{
-		'nvim-neo-tree/neo-tree.nvim',
-		branch = "v2.x",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-tree/nvim-web-devicons",
-			"MunifTanjim/nui.nvim",
-		},
-		enabled = false,
-		lazy = true,
-		event = 'VeryLazy',
-	},
+	-- {
+	-- 	'nvim-neo-tree/neo-tree.nvim',
+	-- 	branch = "v2.x",
+	-- 	dependencies = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 		"nvim-tree/nvim-web-devicons",
+	-- 		"MunifTanjim/nui.nvim",
+	-- 	},
+	-- 	enabled = false,
+	-- 	lazy = true,
+	-- 	event = 'VeryLazy',
+	-- },
 
 	-- Neoclip
 	{

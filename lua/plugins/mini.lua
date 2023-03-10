@@ -46,7 +46,11 @@ return {
 		version = false,
 		lazy = true,
 		event = "VeryLazy",
-		config = function() require("mini.indentscope").setup() end,
+		config = function()
+			require("mini.indentscope").setup({
+				symbol = '▏'
+			})
+		end,
 	},
 	{
 		'echasnovski/mini.cursorword',
