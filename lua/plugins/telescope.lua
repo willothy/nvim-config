@@ -77,16 +77,16 @@ local function config()
 	end, function()
 	end)
 
-	vim.api.nvim_create_autocmd("FileType", {
-		pattern = "gitcommit",
-		callback = function()
-			vim.api.nvim_exec("Telescope conventional_commits", true)
-			-- vim.keymap.set('n', '<leader>cc', ':Telescope conventional_commits<CR>', {
-			-- 	buffer = true,
-			-- 	
-			-- })
-		end
-	})
+	-- vim.api.nvim_create_autocmd("FileType", {
+	-- 	pattern = "gitcommit",
+	-- 	callback = function()
+	-- 		vim.api.nvim_exec("Telescope conventional_commits", true)
+	-- 		-- vim.keymap.set('n', '<leader>cc', ':Telescope conventional_commits<CR>', {
+	-- 		-- 	buffer = true,
+	-- 		-- 	
+	-- 		-- })
+	-- 	end
+	-- })
 end
 
 return {
