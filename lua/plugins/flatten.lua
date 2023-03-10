@@ -13,11 +13,11 @@ return { {
 						once = true,
 						callback = function()
 							vim.api.nvim_buf_delete(bufnr, {
-								-- unload = true
+								unload = true
 							})
-							-- vim.defer_fn(function()
-							-- 	vim.api.nvim_buf_delete(bufnr, {})
-							-- end, 500)
+							vim.defer_fn(function()
+								vim.api.nvim_buf_delete(bufnr, {})
+							end, 50)
 						end
 					})
 				else
