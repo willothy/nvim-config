@@ -1,6 +1,6 @@
-return { --[[ {
-	-- 'willothy/flatten.nvim',
-	dir = '~/projects/lua/flatten/',
+return { {
+	'willothy/flatten.nvim',
+	-- dir = '~/projects/lua/flatten/',
 	opts = {
 		callbacks = {
 			pre_open = function()
@@ -12,9 +12,9 @@ return { --[[ {
 						buffer = bufnr,
 						once = true,
 						callback = function()
-							vim.api.nvim_buf_delete(bufnr, {
-								unload = true
-							})
+							-- vim.api.nvim_buf_delete(bufnr, {
+							-- 	unload = true
+							-- })
 							vim.defer_fn(function()
 								vim.api.nvim_buf_delete(bufnr, {})
 							end, 50)
@@ -30,4 +30,4 @@ return { --[[ {
 			end
 		}
 	},
-} ]] }
+} }

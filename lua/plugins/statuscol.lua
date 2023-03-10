@@ -14,8 +14,12 @@ return { {
 		statuscol.setup({
 			relculright = true,
 			segments = {
-				{ text = { "%C" },  click = "v:lua.ScFa" },
-				{ text = { " %s" }, click = "v:lua.ScSa" },
+				{ text = { "%C" }, click = "v:lua.ScFa" },
+				{
+					text = { " %s" },
+					condition = { true, builtin.not_empty },
+					click = "v:lua.ScSa"
+				},
 				{
 					text = { lnf, " " },
 					condition = { true, builtin.not_empty },
