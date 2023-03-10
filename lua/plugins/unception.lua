@@ -11,17 +11,34 @@ return { {
 				callback = function()
 					-- Toggle the terminal off.
 					require('toggleterm').toggle(0)
-					local autoenter
-					autoenter = vim.api.nvim_create_autocmd("BufEnter", {
-						pattern = "*",
-						callback = function()
-							-- Toggle the terminal back on.
-							local winnr = vim.api.nvim_get_current_win()
-							require('toggleterm').toggle(0)
-							vim.api.nvim_set_current_win(winnr)
-							vim.api.nvim_del_autocmd(autoenter)
-						end
-					})
+					local ft = vim.bo.filetype
+					if ft == "gitcommit" then
+						local autoreturn
+						autoreturn = vim.api.nvim_create_autocmd("BufWritePost", {
+							pattern = "gitcommit",
+							callback = function()
+								-- Toggle the terminal back on.
+								-- local winnr = vim.api.nvim_get_current_win()
+								-- local bufnr = vim.api.nvim_get_current_buf()
+								vim.api.nvim_buf_delete(0, {})
+								require('toggleterm').toggle(0)
+								-- vim.api.nvim_set_current_win(winnr)
+								vim.api.nvim_del_autocmd(autoreturn)
+							end
+						})
+					else
+						local autoenter
+						autoenter = vim.api.nvim_create_autocmd("BufEnter", {
+							pattern = "*",
+							callback = function()
+								-- Toggle the terminal back on.
+								local winnr = vim.api.nvim_get_current_win()
+								require('toggleterm').toggle(0)
+								vim.api.nvim_set_current_win(winnr)
+								vim.api.nvim_del_autocmd(autoenter)
+							end
+						})
+					end
 				end
 			}
 		)
