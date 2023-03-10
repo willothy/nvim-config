@@ -19,6 +19,10 @@ wk.register({
 			vim.api.nvim_exec("WinShift", true)
 		end, 'Enter WinShift mode' }
 	},
+	-- z = {
+	-- 	name = 'folds',
+	-- 	p = { require('fold-preview').toggle_preview, "Toggle fold preview" }
+	-- },
 	T = { "<Cmd>TroubleToggle document_diagnostics<CR>", "Toggle trouble" },
 }, {})
 

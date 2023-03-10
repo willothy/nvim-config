@@ -58,12 +58,12 @@ local function cmp_opt()
 			end, { "i", "c" }),
 			['<Tab>'] = cmp.mapping(function(fallback)
 				local suggestion = require("copilot.suggestion")
-				if cmp.visible() then
+				if suggestion.is_visible() then
+					suggestion.accept()
+				elseif cmp.visible() then
 					cmp.confirm({ select = true })
 				elseif luasnip.expand_or_jumpable() then
 					luasnip.expand_or_jump()
-				elseif suggestion.is_visible() then
-					suggestion.accept()
 				elseif has_words_before() then
 					cmp.complete()
 				else

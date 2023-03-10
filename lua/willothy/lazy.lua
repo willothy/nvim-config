@@ -5,7 +5,7 @@ if not vim.loop.fs_stat(lazypath) then
 		"clone",
 		"--filter=blob:none",
 		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable",
+		"--branch=main",
 		lazypath
 	})
 end
@@ -86,7 +86,11 @@ require('lazy').setup({
 		'lewis6991/gitsigns.nvim',
 		lazy = true,
 		event = 'VeryLazy',
-		opt = {
+		opts = {
+			signs = {
+				untracked = { text = '●' }
+			},
+			trouble = true,
 			on_attach = function(_)
 				local gs = package.loaded.gitsigns
 				vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame)
