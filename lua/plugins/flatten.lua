@@ -8,7 +8,7 @@ return { {
 			end,
 			post_open = function(bufnr, winnr, ft)
 				if ft == "gitcommit" then
-					vim.api.nvim_create_autocmd("FileChangedShell", {
+					vim.api.nvim_create_autocmd("BufWritePost", {
 						buffer = bufnr,
 						once = true,
 						callback = function()
