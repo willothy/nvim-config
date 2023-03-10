@@ -72,15 +72,14 @@ local function cmp_opt()
 			end, { "i", "c" }),
 		},
 		sources = cmp.config.sources({
-			{ name = 'nvim_lsp_signature_help',  priority = 1, max_item_count = 2 },
-			{ name = 'nvim_lsp',                 priority = 1, max_item_count = 20 },
-			{ name = 'nvim_lsp_document_symbol', priority = 2, max_item_count = 5 },
-			{ name = 'nvim_lua',                 priority = 2, max_item_count = 10 },
-			{ name = 'luasnip',                  priority = 2, max_item_count = 2 },
-			{ name = 'path',                     priority = 2, max_item_count = 8 },
-			{ name = 'nerdfont',                 priority = 3, max_item_count = 8 },
-			{ name = 'calc',                     priority = 3, max_item_count = 8 },
-			{ name = 'dictionary',               priority = 2, max_item_count = 5, keyword_length = 2 },
+			{ name = 'nvim_lsp_signature_help', priority = 1, max_item_count = 1 },
+			{ name = 'nvim_lsp',                priority = 1, max_item_count = 20 },
+			{ name = 'nvim_lua',                priority = 2, max_item_count = 10 },
+			{ name = 'luasnip',                 priority = 2, max_item_count = 2 },
+			{ name = 'path',                    priority = 2, max_item_count = 8 },
+			{ name = 'nerdfont',                priority = 3, max_item_count = 8 },
+			{ name = 'calc',                    priority = 3, max_item_count = 8 },
+			{ name = 'dictionary',              priority = 2, max_item_count = 5, keyword_length = 2 },
 		}),
 		formatting = {
 			format = lspkind.cmp_format({

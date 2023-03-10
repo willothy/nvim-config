@@ -96,12 +96,12 @@ local function lspzero()
 	end)
 
 	vim.api.nvim_exec([[
-nmenu PopUp.Show\\ References   :lua vim.lsp.buf.references()
-nmenu PopUp.Goto\\ Definition   :lua vim.lsp.buf.definition()
-nmenu PopUp.Goto\\ Declaration  :lua vim.lsp.buf.declaration()
-nmenu PopUp.Code\\ Actions      :lua vim.lsp.buf.code_action()
+nmenu PopUp.Show\ References   :lua vim.lsp.buf.references()
+nmenu PopUp.Goto\ Definition   :lua vim.lsp.buf.definition()
+nmenu PopUp.Goto\ Declaration  :lua vim.lsp.buf.declaration()
+nmenu PopUp.Code\ Actions      :lua vim.lsp.buf.code_action()
 nmenu PopUp.Rename              :lua vim.lsp.buf.rename()<CR>")
-nmenu PopUp.Signature\\ Help    :lua vim.lsp.buf.signature_help()
+nmenu PopUp.Signature\ Help    :lua vim.lsp.buf.signature_help()
 ]], true)
 
 	lsp.configure('bash-language-server', {
