@@ -240,7 +240,7 @@ nmenu PopUp.Signature\ Help    :lua vim.lsp.buf.signature_help()
 			show_header = false,
 			source = 'always',
 			border = 'rounded',
-			focusable = false
+			-- focusable = false
 		},
 	})
 end
@@ -278,7 +278,7 @@ local function inc_rename()
 end
 
 local neodev = {
-	library = { plugins = { "willothy", "neotest" }, types = true }
+	library = { plugins = { "willothy", "plugins" }, types = true }
 }
 
 local glance = {
@@ -417,8 +417,9 @@ return {
 			vim.o.foldlevelstart = 99
 			vim.o.foldopen = "block,mark,percent,quickfix,search,tag,undo"
 		end
-	}, {
-	'weilbith/nvim-code-action-menu',
-	cmd = 'CodeActionMenu',
-}
+	},
+	{
+		'weilbith/nvim-code-action-menu',
+		cmd = 'CodeActionMenu',
+	}
 }

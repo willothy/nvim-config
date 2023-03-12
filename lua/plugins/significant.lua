@@ -1,0 +1,3 @@
+return { {
+	'ElPiloto/significant.nvim',
+} }

@@ -1,4 +1,4 @@
-return { {
+return { --[[ {
 	"ellisonleao/glow.nvim",
 	config = function()
 		require("glow").setup({
@@ -8,4 +8,4 @@ return { {
 	enabled = false,
 	lazy = true,
 	event = "VeryLazy"
-} }
+} ]] }

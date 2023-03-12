@@ -59,7 +59,6 @@ return {
 		lazy = true,
 		event = "VeryLazy",
 		config = function() require("mini.cursorword").setup() end,
-		enabled = false,
 	},
 	{
 		'echasnovski/mini.bracketed',

@@ -88,7 +88,7 @@ require('lazy').setup({
 		event = 'VeryLazy',
 		opts = {
 			signs = {
-				untracked = { text = '●' }
+				untracked = { text = '•' }
 			},
 			trouble = true,
 			on_attach = function(_)
@@ -128,7 +128,7 @@ require('lazy').setup({
 			'MunifTanjim/nui.nvim',
 			'rcarriga/nvim-notify'
 		},
-		lazy = true,
+		-- lazy = true,
 	},
 
 	-- bufdelete (used to open dash when all buffers are closed)

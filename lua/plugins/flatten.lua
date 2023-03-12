@@ -1,6 +1,6 @@
 return { {
 	'willothy/flatten.nvim',
-	-- dir = '~/projects/lua/flatten/',
+	dir = '~/projects/neovim/flatten/',
 	opts = {
 		callbacks = {
 			pre_open = function()
@@ -12,9 +12,6 @@ return { {
 						buffer = bufnr,
 						once = true,
 						callback = function()
-							-- vim.api.nvim_buf_delete(bufnr, {
-							-- 	unload = true
-							-- })
 							vim.defer_fn(function()
 								vim.api.nvim_buf_delete(bufnr, {})
 							end, 50)
