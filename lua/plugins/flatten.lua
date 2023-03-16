@@ -25,6 +25,10 @@ return { {
 			block_end = function()
 				require("toggleterm").toggle(0)
 			end
+		},
+		window = {
+			open = "current"
 		}
 	},
+	-- config = true
 } }

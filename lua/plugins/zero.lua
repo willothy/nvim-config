@@ -269,6 +269,7 @@ local fidget = {
 		blend = 0
 	}
 }
+
 local function inc_rename()
 	local increname = function()
 		return ":IncRename " .. vim.fn.expand("<cword>")
@@ -325,7 +326,7 @@ return {
 		init = lspzero,
 		lazy = true,
 		config = true,
-		event = 'VeryLazy',
+		event = 'BufEnter',
 	},
 	{
 		'stevearc/aerial.nvim',
@@ -388,7 +389,7 @@ return {
 		lazy = true,
 		event = 'BufEnter',
 		config = function()
-			local p = require('minimus.palette').hex
+			-- local p = require('minimus.palette').hex
 			require("barbecue").setup({
 				attach_navic = true,
 				theme = 'minimus',

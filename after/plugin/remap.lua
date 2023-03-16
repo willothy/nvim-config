@@ -5,6 +5,7 @@ local menufacture = telescope.extensions.menufacture
 local moveline = require('moveline')
 local mark = require('harpoon.mark')
 local hui = require('harpoon.ui')
+local terms = require('willothy.terminals')
 
 wk.register({
 	['<C-e>'] = { hui.toggle_quick_menu, 'Toggle harpoon quick menu' },
@@ -29,11 +30,40 @@ wk.register({
 wk.register({
 	a = { mark.add_file, 'Add file to harpoon' },
 	t = {
-		function()
-			-- require("toggleterm").toggle()
-			vim.api.nvim_exec("ToggleTerm direction=horizontal size=15", true)
-		end,
-		"Toggle terminal"
+		name = "terminal",
+		t = {
+			function()
+				require('toggleterm').toggle(vim.v.count)
+			end,
+			"Toggle terminal"
+		},
+		p = {
+			function()
+				terms.py:toggle()
+			end,
+			"Python repl"
+		},
+		l = {
+			function()
+				terms.lua:toggle()
+			end,
+			"Lua repl"
+		},
+		c = {
+			name = "cargo",
+			r = {
+				function()
+					terms.cargo_run:toggle()
+				end,
+				"Cargo run"
+			},
+			t = {
+				function()
+					terms.cargo_test:toggle()
+				end,
+				"Cargo test"
+			}
+		}
 	},
 	b = { require('blam').peek, 'Peek line blame' },
 	u = { vim.cmd.UndotreeToggle, "Toggle undotree" },
@@ -68,12 +98,28 @@ wk.register({
 		s = { vim.cmd.Git, 'Open fugitive' }
 	},
 	l = {
+		name = 'comment',
 		['$'] = 'Block comment to end of line'
 	},
 	n = {
 		name = 'neovim',
 		v = { Wrap(Browse, Wrap(vim.fn.stdpath, 'config')), 'Browse nvim config' },
 		s = { ":so %", 'Source current file' },
+		u = {
+			name = "utils",
+			r = {
+				function()
+					local plugin = vim.ui.input({
+						prompt = "plugin: ",
+					}, function(input)
+						if not input then return end
+
+						require('willothy.util').reload(input)
+					end)
+				end,
+				"Reload plugin"
+			}
+		},
 	},
 	w = { Wrap(vim.api.nvim_exec, "w", true), 'Save' },
 	D = { ':Alpha<CR>', 'Return to dashboard' }

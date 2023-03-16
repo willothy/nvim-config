@@ -45,11 +45,12 @@ end
 -- 	}
 -- })
 
--- function SetupColor(color)
--- 	-- color = color or "catppuccin"
---
--- 	-- vim.g.transparent_enabled = true
--- 	vim.cmd.colorscheme(color)
--- end
---
--- SetupColor("minimus")
+function SetupColor(color)
+	local p = require("minimus.palette").hex
+	local ns = vim.api.nvim_create_namespace("willothy-hl")
+	vim.api.nvim_set_hl(ns, "ToggleTermName", {
+		fg = p.cool_gray, bg = p.none
+	})
+end
+
+SetupColor("minimus")

@@ -100,16 +100,19 @@ function M.bind(func, ...)
 	end
 end
 
-function M.reload(plugin)
+function M.reload(plugin_name)
+	if plugin_name == nil then
+		return
+	end
+	local plugin = require('lazy.core.config').plugins[plugin_name]
 	if plugin == nil then
-		plugin = "willothy.util"
+		print("Plugin " .. plugin_name .. " was not found")
+		return require(plugin_name)
 	end
-	for k, v in pairs(package.loaded) do
-		if string.match(k, "^" .. plugin) then
-			package.loaded[k] = nil
-		end
-	end
-	return require(plugin)
+	require('lazy.core.loader').reload(plugin)
+	local p = require(plugin_name)
+	require('lazy.core.config').plugins[plugin_name]:config()
+	return p
 end
 
 function M.quickHarpoon()
