@@ -1,8 +1,9 @@
 vim.api.nvim_create_autocmd("TermOpen", {
 	pattern = "term://*",
 	callback = function()
-		-- vim.api.nvim_feedkeys("i", "n", true)
-		vim.cmd("startinsert!")
+		if vim.fn.mode() ~= "t" then
+			vim.api.nvim_feedkeys("i", "n", true)
+		end
 	end
 })
 

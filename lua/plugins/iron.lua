@@ -56,7 +56,8 @@ end
 
 return { {
 	'hkupty/iron.nvim',
-	event = 'VeryLazy',
+	-- event = 'VeryLazy',
+	-- cmd = "IronFocus",
 	lazy = true,
 	opts = opt,
 	config = function(_, opts)

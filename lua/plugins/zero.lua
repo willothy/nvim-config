@@ -326,7 +326,7 @@ return {
 		init = lspzero,
 		lazy = true,
 		config = true,
-		event = 'BufEnter',
+		event = 'VeryLazy',
 	},
 	{
 		'stevearc/aerial.nvim',
@@ -338,7 +338,7 @@ return {
 		'folke/neodev.nvim',
 		lazy = true,
 		opts = neodev,
-		event = 'BufEnter',
+		event = "UiEnter"
 	},
 	{
 		'j-hui/fidget.nvim',
@@ -417,7 +417,9 @@ return {
 			vim.o.foldenable = true
 			vim.o.foldlevelstart = 99
 			vim.o.foldopen = "block,mark,percent,quickfix,search,tag,undo"
-		end
+		end,
+		lazy = true,
+		event = "UiEnter"
 	},
 	{
 		'weilbith/nvim-code-action-menu',

@@ -25,6 +25,8 @@ wk.register({
 	-- 	p = { require('fold-preview').toggle_preview, "Toggle fold preview" }
 	-- },
 	T = { "<Cmd>TroubleToggle document_diagnostics<CR>", "Toggle trouble" },
+	['<Tab>'] = { "V>", "Indent line" },
+	['<S-Tab>'] = { "V<", "Unindent line" },
 }, {})
 
 wk.register({
@@ -128,6 +130,8 @@ wk.register({
 wk.register({
 	['<M-k>'] = { moveline.block_up, "Move block up" },
 	['<M-j>'] = { moveline.block_down, "Move block down" },
+	['<Tab>'] = { ">gv", "Indent line" },
+	['<S-Tab>'] = { "<gv", "Unindent line" },
 }, {
 	mode = 'v'
 })
