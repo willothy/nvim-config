@@ -1,6 +1,6 @@
 return { {
 	'willothy/flatten.nvim',
-	-- dir = '~/projects/neovim/flatten/',
+	dir = '~/projects/neovim/flatten/',
 	opts = {
 		callbacks = {
 			pre_open = function()

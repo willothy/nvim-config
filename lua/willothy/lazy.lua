@@ -50,7 +50,7 @@ require('lazy').setup({
 		},
 		event = "VeryLazy",
 		lazy = true,
-		enabled = true,
+		enabled = false,
 	},
 
 	-- Neotree

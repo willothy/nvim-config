@@ -12,7 +12,7 @@ vim.opt.wrap = true
 
 vim.g.rust_recommended_style = 1
 
-vim.opt.swapfile = false
+vim.opt.swapfile = true
 vim.opt.backup = false
 --vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
@@ -30,14 +30,14 @@ vim.opt.updatetime = 50
 vim.opt.colorcolumn = "0"
 
 vim.api.nvim_create_autocmd("BufEnter", {
-    callback = function()
-        if HasValue({ "floaterm", "toggleterm", "dashboard", "alpha" }, GetBufType()) then
-            return
-        end
+	callback = function()
+		if HasValue({ "floaterm", "toggleterm", "dashboard", "alpha" }, GetBufType()) then
+			return
+		end
 
-        local ok, _ = pcall(vim.cmd, 'Gcd')
-        if ok == false then
-            vim.cmd("lcd %:p:h")
-        end
-    end
+		local ok, _ = pcall(vim.cmd, 'Gcd')
+		if ok == false then
+			vim.cmd("lcd %:p:h")
+		end
+	end
 })
