@@ -1,40 +1,40 @@
 local utils = require("willothy.util")
 
-local function lspzero()
-	local lsp = require('lsp-zero')
+local function lsp_zero()
+	local lsp = require("lsp-zero")
 	lsp.preset({
-		name = 'recommended',
+		name = "recommended",
 		set_lsp_keymaps = false,
 		manage_nvim_cmp = false,
 		suggest_lsp_servers = true,
 	})
 
-	lsp.on_attach(function(client, bufnr)
-		local opts = { buffer = bufnr, remap = false }
+	lsp.on_attach(function(client, buffer)
+		local opts = { buffer = buffer, remap = false }
 
-		local format = require('lsp-format')
+		local format = require("lsp-format")
 		format.setup()
 		format.on_attach(client)
 
-		local inlayhints = require('lsp-inlayhints')
+		local inlayhints = require("lsp-inlayhints")
 		inlayhints.setup({
 			inlay_hints = {
 				parameter_hints = {
 					show = true,
-					separator = '',
+					separator = "",
 					remove_colon_start = true,
 					remove_colon_end = true,
 				},
 				type_hints = {
 					show = true,
-					separator = '',
+					separator = "",
 					remove_colon_start = true,
 					remove_colon_end = true,
 				},
-				label_formatter = function(labels, kind, opts, client_name)
+				label_formatter = function(labels, _kind, _opts, _client_name)
 					return table.concat(labels or {}, "")
 				end,
-				virt_text_formatter = function(label, hint, opts, client_name)
+				virt_text_formatter = function(label, hint, _opts, client_name)
 					if client_name == "lua_ls" then
 						if hint.kind == 2 then
 							hint.paddingLeft = false
@@ -51,11 +51,10 @@ local function lspzero()
 					return virt_text
 				end,
 				highlight = "LspInlayHint",
-				--priority = 0,
 			},
 			enabled_at_startup = true,
 		})
-		inlayhints.on_attach(client, bufnr)
+		inlayhints.on_attach(client, buffer, false)
 
 		opts.desc = "Go to definition"
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
@@ -95,24 +94,81 @@ local function lspzero()
 		vim.keymap.set("n", "<leader>vi", utils.bind(glance.open, "implementations"), opts)
 	end)
 
-	vim.api.nvim_exec([[
+	vim.api.nvim_exec(
+		[[
 nmenu PopUp.Show\ References   :lua vim.lsp.buf.references()
 nmenu PopUp.Goto\ Definition   :lua vim.lsp.buf.definition()
 nmenu PopUp.Goto\ Declaration  :lua vim.lsp.buf.declaration()
 nmenu PopUp.Code\ Actions      :lua vim.lsp.buf.code_action()
 nmenu PopUp.Rename              :lua vim.lsp.buf.rename()<CR>")
 nmenu PopUp.Signature\ Help    :lua vim.lsp.buf.signature_help()
-]], true)
+]],
+		true
+	)
 
-	lsp.configure('bash-language-server', {
+	lsp.configure("bash-language-server", {
 		settings = {
 			bashIde = {
-				includeAllWorkspaceSymbols = true
-			}
-		}
+				includeAllWorkspaceSymbols = true,
+			},
+		},
 	})
 
-	lsp.configure('rust_analyzer', {
+	lsp.configure("lua_ls", {
+		settings = {
+			Lua = {
+				format = {
+					enable = false,
+				},
+				["completion.enable"] = true,
+				diagnostics = {
+					enable = false,
+					globals = { "vim" },
+					-- ["unused-vararg"]
+					-- disable = { "unused-local" },
+				},
+			},
+		},
+	})
+
+	local null_ls = require("null-ls")
+
+	local null_opts = lsp.build_options("null-ls", {
+		on_attach = function(client)
+			if client.server_capabilities.documentFormattingProvider then
+				vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.format()")
+			end
+		end,
+	})
+
+	local null = {
+		fmt = null_ls.builtins.formatting,
+		cmp = null_ls.builtins.completion,
+		diag = null_ls.builtins.diagnostics,
+		ca = null_ls.builtins.code_actions,
+	}
+
+	null_ls.setup({
+		on_attach = null_opts.on_attach,
+		sources = {
+			null.fmt.stylua,
+			null.fmt.prettier,
+			-- null.fmt.rustfmt,
+			-- null.cmp.spell,
+			-- null.cmp.luasnip,
+			-- null.diag.cspell,
+			-- null.diag.luacheck,
+			null.diag.selene,
+			null.diag.todo_comments,
+			-- null.diag.trailspace,
+			-- null.ca.cspell,
+			null.ca.gitrebase,
+			null.ca.gitsigns,
+			null.ca.refactoring,
+		},
+	})
+
+	lsp.configure("rust_analyzer", {
 		settings = {
 			["rust-analyzer"] = {
 				assist = {
@@ -124,7 +180,7 @@ nmenu PopUp.Signature\ Help    :lua vim.lsp.buf.signature_help()
 				},
 				procMacro = {
 					enable = true,
-					enabled = true
+					enabled = true,
 				},
 				procMacros = {
 					enable = true,
@@ -147,49 +203,49 @@ nmenu PopUp.Signature\ Help    :lua vim.lsp.buf.signature_help()
 					},
 					lifetimeElisionHints = {
 						enable = "always",
-						useParemeterNames = true
+						useParemeterNames = true,
 					},
 					closureReturnTypeHints = {
-						enable = "always"
+						enable = "always",
 					},
 					discriminantHints = {
-						enable = "fieldless"
+						enable = "fieldless",
 					},
 					bindingModeHints = {
-						enable = true
-					}
+						enable = true,
+					},
 				},
 				lens = {
 					run = true,
 					enable = true,
 					implementations = {
-						enable = true
+						enable = true,
 					},
 					method_refs = {
-						enable = true
+						enable = true,
 					},
 					references = {
 						adt = {
-							enable = true
+							enable = true,
 						},
 						enumVariant = {
-							enable = true
+							enable = true,
 						},
 						method = {
-							enable = true
+							enable = true,
 						},
 						trait = {
-							enable = true
+							enable = true,
 						},
-					}
+					},
 				},
 				hover = {
 					actions = {
 						references = {
-							enable = true
-						}
-					}
-				}
+							enable = true,
+						},
+					},
+				},
 			},
 		},
 	})
@@ -197,7 +253,7 @@ nmenu PopUp.Signature\ Help    :lua vim.lsp.buf.signature_help()
 
 	local handler = function(virtText, lnum, endLnum, width, truncate)
 		local newVirtText = {}
-		local suffix = ('  %d '):format(endLnum - lnum)
+		local suffix = ("  %d "):format(endLnum - lnum)
 		local sufWidth = vim.fn.strdisplaywidth(suffix)
 		local targetWidth = width - sufWidth
 		local curWidth = 0
@@ -213,20 +269,20 @@ nmenu PopUp.Signature\ Help    :lua vim.lsp.buf.signature_help()
 				chunkWidth = vim.fn.strdisplaywidth(chunkText)
 				-- str width returned from truncate() may less than 2nd argument, need padding
 				if curWidth + chunkWidth < targetWidth then
-					suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+					suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
 				end
 				break
 			end
 			curWidth = curWidth + chunkWidth
 		end
-		table.insert(newVirtText, { suffix, 'MoreMsg' })
+		table.insert(newVirtText, { suffix, "MoreMsg" })
 		return newVirtText
 	end
 
 	-- global handler
 	-- `handler` is the 2nd parameter of `setFoldVirtTextHandler`,
 	-- check out `./lua/ufo.lua` and search `setFoldVirtTextHandler` for detail.
-	require('ufo').setup({
+	require("ufo").setup({
 		fold_virt_text_handler = handler,
 	})
 
@@ -234,40 +290,48 @@ nmenu PopUp.Signature\ Help    :lua vim.lsp.buf.signature_help()
 		virtual_text = true,
 		signs = true,
 		update_in_insert = true,
-		underline = true,
+		underline = false,
 		severity_sort = true,
 		float = {
 			show_header = false,
-			source = 'always',
-			border = 'rounded',
-			-- focusable = false
+			source = "always",
+			border = "rounded",
+			focusable = false,
 		},
 	})
 end
 
 local aerial_opt = {
 	dense = true,
-	depth = 5
+	depth = 5,
 }
 
 local function aerial_cfg()
 	vim.keymap.set("n", "<leader>o", function()
-		require('aerial').toggle()
+		require("aerial").toggle()
 	end, {
-		desc = "Toggle aerial window"
+		desc = "Toggle aerial window",
 	})
 end
 
 local fidget = {
 	text = {
-		spinner = "dots",
+		spinner = "pipe", --"dots",
 		done = "✓",
-		commenced = "",
+		commenced = "+",
 		completed = "✓",
 	},
+	fmt = {
+		stack_upwards = false,
+	},
+	align = {
+		bottom = false,
+		right = true,
+	},
 	window = {
-		blend = 0
-	}
+		blend = 0,
+		relative = "editor",
+	},
 }
 
 local function inc_rename()
@@ -278,14 +342,10 @@ local function inc_rename()
 	vim.keymap.set("n", "<F2>", increname, { expr = true, desc = "Rename" })
 end
 
-local neodev = {
-	library = { plugins = { "willothy", "plugins" }, types = true }
-}
-
 local glance = {
 	theme = {
 		enable = false,
-		mode = 'darken'
+		mode = "darken",
 	},
 	border = {
 		enable = false,
@@ -297,121 +357,119 @@ local glance = {
 		-- vertical = "│",
 		-- horizontal = "─",
 		top_char = "─",
-		bottom_char = "─"
+		bottom_char = "─",
 	},
 	detached = true,
 	winbar = {
-		enable = true
-	}
+		enable = true,
+	},
 }
 
 local lightbulb = {
-	autocmd = { enabled = true }
+	autocmd = { enabled = true },
 }
 
 return {
 	{
-		'VonHeikemen/lsp-zero.nvim',
+		"VonHeikemen/lsp-zero.nvim",
 		dependencies = {
-			'neovim/nvim-lspconfig',
-			'williamboman/mason.nvim',
-			'williamboman/mason-lspconfig.nvim',
+			"neovim/nvim-lspconfig",
+			"williamboman/mason.nvim",
+			"williamboman/mason-lspconfig.nvim",
 
 			-- Config dependencies
-			'lvimuser/lsp-inlayhints.nvim',
-			'lukas-reineke/lsp-format.nvim',
-			'SmiteshP/nvim-navic',
-			'folke/neodev.nvim',
+			"lvimuser/lsp-inlayhints.nvim",
+			"lukas-reineke/lsp-format.nvim",
+			"SmiteshP/nvim-navic",
+			"folke/neodev.nvim",
 		},
-		init = lspzero,
+		init = lsp_zero,
 		lazy = true,
 		config = true,
-		event = 'VeryLazy',
+		event = "VeryLazy",
 	},
 	{
-		'stevearc/aerial.nvim',
+		"stevearc/aerial.nvim",
 		opts = aerial_opt,
 		init = aerial_cfg,
-		event = 'LSPAttach',
+		event = "LSPAttach",
 	},
 	{
-		'folke/neodev.nvim',
-		lazy = true,
-		opts = neodev,
-		event = "UiEnter"
+		"folke/neodev.nvim",
+		config = true,
 	},
 	{
-		'j-hui/fidget.nvim',
+		"j-hui/fidget.nvim",
 		opts = fidget,
 		lazy = true,
-		event = 'VeryLazy',
+		event = "VeryLazy",
 		config = true,
 	},
 	{
-		'smjonas/inc-rename.nvim',
+		"smjonas/inc-rename.nvim",
 		init = inc_rename,
 		config = true,
-		event = 'LSPAttach',
+		event = "LSPAttach",
 	},
 	{
-		'lvimuser/lsp-inlayhints.nvim',
+		"lvimuser/lsp-inlayhints.nvim",
 		branch = "anticonceal",
 		lazy = true,
-		event = 'LSPAttach',
+		event = "LSPAttach",
 	},
 	{
-		'williamboman/mason.nvim',
+		"williamboman/mason.nvim",
 		lazy = true,
-		event = 'VeryLazy',
+		event = "VeryLazy",
 	},
 	{
-		'dnlhc/glance.nvim',
+		"dnlhc/glance.nvim",
 		lazy = true,
-		event = 'LSPAttach',
+		event = "LSPAttach",
 		opts = glance,
 	},
 	{
-		'kosayoda/nvim-lightbulb',
+		"kosayoda/nvim-lightbulb",
 		lazy = true,
-		event = 'LSPAttach',
+		event = "LSPAttach",
 		opts = lightbulb,
 		dependencies = {
-			'antoinemadec/FixCursorHold.nvim'
-		}
+			"antoinemadec/FixCursorHold.nvim",
+		},
 	},
 	{
-		'utilyre/barbecue.nvim',
+		"utilyre/barbecue.nvim",
 		dependencies = {
 			"SmiteshP/nvim-navic",
 			"nvim-tree/nvim-web-devicons", -- optional dependency
-			dir = '~/projects/lua/minimus/'
+			dir = "~/projects/lua/minimus/",
 		},
 		lazy = true,
-		event = 'BufEnter',
+		event = "BufEnter",
 		config = function()
 			-- local p = require('minimus.palette').hex
 			require("barbecue").setup({
 				attach_navic = true,
-				theme = 'minimus',
+				theme = "minimus",
 				exclude_filetypes = {
 					"gitcommit",
 					"toggleterm",
 					"Glance",
 					"mason",
-					"alpha"
-				}
+					"alpha",
+				},
 			})
-		end
+		end,
 	},
 	{
-		'kevinhwang91/nvim-ufo',
-		name = 'ufo',
+		"kevinhwang91/nvim-ufo",
+		name = "ufo",
 		dependencies = {
-			'kevinhwang91/promise-async',
-			'VonHeikemen/lsp-zero.nvim'
+			"kevinhwang91/promise-async",
+			"VonHeikemen/lsp-zero.nvim",
 		},
 		init = function()
-			vim.o.foldcolumn = '1'
+			vim.o.foldcolumn = "1"
 			vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 			vim.o.foldlevel = 99
 			vim.o.foldenable = true
@@ -419,10 +477,21 @@ return {
 			vim.o.foldopen = "block,mark,percent,quickfix,search,tag,undo"
 		end,
 		lazy = true,
-		event = "UiEnter"
+		event = "UiEnter",
 	},
 	{
-		'weilbith/nvim-code-action-menu',
-		cmd = 'CodeActionMenu',
-	}
+		"weilbith/nvim-code-action-menu",
+		cmd = "CodeActionMenu",
+	},
+	{
+		"jose-elias-alvarez/null-ls.nvim",
+		lazy = true,
+	},
+	{
+		"ThePrimeagen/refactoring.nvim",
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+		},
+	},
 }

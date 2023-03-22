@@ -1,4 +1,5 @@
 return { {
 	dir = "~/projects/neovim/twitch/",
-	build = "make"
+	build = "make",
+	enabled = false
 } }

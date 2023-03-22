@@ -20,11 +20,11 @@ require("noice").setup({
 		cmdline_popup = {
 			position = {
 				row = "35%",
-				col = "50%"
+				col = "50%",
 			},
 			border = {
 				style = "single",
-				padding = { 1, 1 }
+				padding = { 1, 1 },
 			},
 			filter_options = {},
 			win_options = {
@@ -36,8 +36,8 @@ require("noice").setup({
 			},
 			size = {
 				width = 80,
-				height = "auto"
-			}
+				height = "auto",
+			},
 		},
 		hover = {
 			border = {
@@ -62,7 +62,7 @@ require("noice").setup({
 			win_options = {
 				winhighlight = { Normal = "Normal", FloatBorder = "FloatBorder" },
 			},
-		}
+		},
 	},
 	lsp = {
 		--override markdown rendering so that **cmp** and other plugins use **Treesitter**
@@ -72,25 +72,25 @@ require("noice").setup({
 			["cmp.entry.get_documentation"] = true,
 		},
 		progress = {
-			enabled = false
+			enabled = false,
 		},
 		signature = {
 			enabled = false,
 		},
 		hover = {
-			enabled = true
+			enabled = true,
 		},
 	},
 	cmdline = {
 		view = "cmdline_popup",
 		format = {
 			search_down = {
-				view = "cmdline"
+				view = "cmdline",
 			},
 			search_up = {
-				view = "cmdline"
+				view = "cmdline",
 			},
-		}
+		},
 	},
 	popupmenu = {
 		enabled = true,
@@ -108,6 +108,6 @@ require("noice").setup({
 	},
 	redirect = {
 		view = "popup",
-		filter = { event = "msg_show" }
+		filter = { event = "msg_show" },
 	},
 })

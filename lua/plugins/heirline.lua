@@ -1,37 +1,36 @@
-local p = require('minimus.palette').hex
+local p = require("minimus.palette").hex
 local mode_colors = {
 	normal = {
 		{ fg = p.raisin_black, bg = p.turquoise },
-		{ fg = p.text,         bg = p.gunmetal },
-		{ fg = p.cool_gray,    bg = p.none },
+		{ fg = p.text, bg = p.gunmetal },
+		{ fg = p.cool_gray, bg = p.none },
 	},
 	insert = {
 		{ fg = p.raisin_black, bg = p.pale_azure },
-		{ fg = p.text,         bg = p.gunmetal },
-		{ fg = p.cool_gray,    bg = p.none },
+		{ fg = p.text, bg = p.gunmetal },
+		{ fg = p.cool_gray, bg = p.none },
 	},
 	visual = {
 		{ fg = p.raisin_black, bg = p.lemon_chiffon },
-		{ fg = p.text,         bg = p.gunmetal },
-		{ fg = p.cool_gray,    bg = p.none },
+		{ fg = p.text, bg = p.gunmetal },
+		{ fg = p.cool_gray, bg = p.none },
 	},
 	replace = {
 		{ fg = p.raisin_black, bg = p.lavender_pink },
-		{ fg = p.text,         bg = p.gunmetal },
-		{ fg = p.cool_gray,    bg = p.none },
+		{ fg = p.text, bg = p.gunmetal },
+		{ fg = p.cool_gray, bg = p.none },
 	},
 	command = {
 		{ fg = p.raisin_black, bg = p.peach },
-		{ fg = p.text,         bg = p.gunmetal },
-		{ fg = p.cool_gray,    bg = p.none },
+		{ fg = p.text, bg = p.gunmetal },
+		{ fg = p.cool_gray, bg = p.none },
 	},
 	inactive = {
 		{ fg = p.blueGray3, bg = p.gunmetal },
 		{ fg = p.blueGray3, bg = p.gunmetal },
 		{ fg = p.blueGray3, bg = p.none },
-	}
+	},
 }
-
 
 local mode_map = {
 	n = mode_colors.normal,
@@ -49,10 +48,9 @@ local mode_map = {
 	t = mode_colors.command,
 }
 
-
 local function heirline()
-	local utils = require('heirline.utils')
-	local conditions = require('heirline.conditions')
+	local utils = require("heirline.utils")
+	local conditions = require("heirline.conditions")
 
 	local function hl(section)
 		return function(self)
@@ -62,26 +60,34 @@ local function heirline()
 	end
 
 	local A = function(Component)
-		return utils.surround({ '', '' }, function() return hl(1)().bg end, Component)
+		return utils.surround({ "", "" }, function()
+			return hl(1)().bg
+		end, Component)
 	end
 
 	local B = function(Component)
-		return utils.surround({ '', '' }, function() return hl(2)().bg end, Component)
+		return utils.surround({ "", "" }, function()
+			return hl(2)().bg
+		end, Component)
 	end
 
 	local C = function(Component)
-		return utils.surround({ '', '' }, function() return hl(3)().bg end, Component)
+		return utils.surround({ "", "" }, function()
+			return hl(3)().bg
+		end, Component)
 	end
 
 	local BG = function(Component)
 		return {
 			hl = hl(3),
-			Component
+			Component,
 		}
 	end
 
 	local Align = { provider = "%=" }
-	local Space = { provider = " " }
+	local Space = function(count)
+		return { provider = string.rep(" ", count) }
+	end
 
 	local Mode = {
 		static = {
@@ -121,7 +127,7 @@ local function heirline()
 				["r?"] = "?",
 				["!"] = "!",
 				t = "Terminal",
-			}
+			},
 		},
 		init = function(self)
 			self.mode = vim.fn.mode(1) -- :h mode()
@@ -136,56 +142,93 @@ local function heirline()
 			callback = vim.schedule_wrap(function()
 				vim.cmd("redrawstatus")
 			end),
-		}
+		},
 	}
 
-	local FileIcon = {
+	local Location = {
+		provider = function(_self)
+			local line = vim.fn.line(".")
+			local col = vim.fn.col(".")
+			return string.format(" %d:%d ", line, col)
+		end,
+		hl = hl(1),
+	}
+
+	local Copilot = {
+		provider = function(_self)
+			local client = require("copilot.client").get(true)
+			if client == nil then
+				return ""
+			end
+			local status = client and require("copilot.api").check_status(client, {}, function() end) or false
+			local copilot_hl = status and "%#CopilotStatusOk#" or "%#CopilotStatusError#"
+			local icon = require("nvim-web-devicons").get_icon_by_filetype("zig", {})
+			return string.format("%s%s", copilot_hl, icon)
+		end,
+		hl = hl(2),
+	}
+
+	local Filetype = {
+		provider = function(_self)
+			return vim.bo.filetype
+		end,
+		hl = hl(2),
+	}
+
+	local Devicon = {
 		init = function(self)
-			local filename = self.filename
+			local filename = vim.fn.expand("%")
 			local extension = vim.fn.fnamemodify(filename, ":e")
-			self.icon, self.icon_color = require('nvim-web-devicons').get_icon_color(filename, extension,
-				{ default = true })
+			self.icon, self.icon_color =
+				require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
 		end,
 		provider = function(self)
-			return self.icon and (self.icon .. ' ')
+			return self.icon and (self.icon .. " ")
 		end,
 		hl = function(self)
 			return { fg = self.icon_color }
-		end
-	}
-
-	local FileName = {
-		provider = function(self)
-			local filename = vim.fn.fnamemodify(self.filename, ':.')
-			if filename == '' then return '[No Name]' end
-			if not conditions.width_percent_below(#filename, 0.25) then
-				filename = vim.fn.pathshorten(filename)
-			end
-			return filename
 		end,
-		hl = { fg = utils.get_highlight("Directory").fg },
 	}
 
-	local Buffer = {
-		init = function(self)
-			self.filename = vim.api.nvim_buf_get_name(0)
-		end,
-		FileIcon,
-		FileName,
-		-- { provider = '%<' } -- statusline is cut here if there's not enough space
-	}
-
-	local Buffers = {
-
-	}
-
-	local TabLine = {
-		Buffers
+	local Harpoon = {
+		Index = {
+			provider = function(_self)
+				local harpoon = require("harpoon.mark")
+				local idx = harpoon.get_current_index()
+				return idx or ""
+			end,
+			hl = hl(3),
+		},
+		Count = {
+			provider = function(_self)
+				local harpoon = require("harpoon.mark")
+				local count = harpoon.get_length()
+				return count or ""
+			end,
+			hl = hl(3),
+		},
+		Hook = {
+			provider = "ﯠ",
+			hl = hl(3),
+		},
 	}
 
 	local StatusLine = {
 		A(Mode),
+		Space(1),
+		Harpoon.Hook,
+		Harpoon.Index,
 		BG(Align),
+		B({
+			Space(1),
+			Devicon,
+			Space(1),
+			Filetype,
+			Space(2),
+			Copilot,
+			Space(1),
+		}),
+		A(Location),
 	}
 
 	return {
@@ -194,15 +237,17 @@ local function heirline()
 	}
 end
 
-return { {
-	"rebelot/heirline.nvim",
-	config = function()
-		require('heirline').setup(heirline())
-	end,
-	init = function()
-		vim.cmd("set laststatus=3")
-	end,
-	lazy = true,
-	event = 'UiEnter',
-	enabled = true
-} }
+return {
+	{
+		"rebelot/heirline.nvim",
+		config = function()
+			require("heirline").setup(heirline())
+		end,
+		init = function()
+			vim.cmd("set laststatus=3")
+		end,
+		lazy = true,
+		event = "UiEnter",
+		enabled = true,
+	},
+}
