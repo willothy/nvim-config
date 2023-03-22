@@ -2,6 +2,7 @@ local function cokeline()
 	local p = require("minimus.palette").hex
 	local get_hex = require("cokeline.utils").get_hex
 	local mappings = require("cokeline.mappings")
+	local builtin = require("cokeline.builtin")
 
 	local errors_fg = get_hex("DiagnosticError", "fg")
 	local warnings_fg = get_hex("DiagnosticWarn", "fg")
@@ -11,6 +12,22 @@ local function cokeline()
 
 	local circle_left = ""
 	local circle_right = ""
+
+	local A = {
+		fg = p.raisin_black,
+		bg = p.turquoise,
+		style = "bold",
+	}
+
+	local B = {
+		fg = p.cool_gray,
+		bg = p.gunmetal,
+	}
+
+	local C = {
+		fg = p.cool_gray,
+		bg = "none",
+	}
 
 	local components = {
 		space = {
@@ -75,8 +92,13 @@ local function cokeline()
 			text = function(buffer)
 				return buffer.unique_prefix
 			end,
-			fg = p.cool_gray,
-			style = "italic",
+			fg = function(buffer)
+				if buffer.is_focused then
+					return p.gunmetal
+				else
+					return p.cool_gray
+				end
+			end,
 			truncation = {
 				priority = 3,
 				direction = "left",
@@ -145,6 +167,17 @@ local function cokeline()
 		},
 	}
 
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "SidebarNvim",
+		callback = function(opt)
+			-- vim.api.nvim_buf_add_highlight(opt.buf, vim.api.nvim_create_namespace("SidebarWH"), "WinSeparator", )
+			local ns = vim.api.nvim_create_namespace("SidebarWH")
+			vim.api.nvim_set_hl(ns, "WinSeparator", { fg = "none", bg = "none" })
+			local win = vim.fn.bufwinid(opt.buf)
+			vim.api.nvim_win_set_hl_ns(win, ns)
+		end,
+	})
+
 	return {
 		show_if_buffers_are_at_least = 1,
 		buffers = {
@@ -163,13 +196,37 @@ local function cokeline()
 				return buffer.is_focused and p.turquoise or p.gunmetal
 			end,
 		},
+		rhs = {
+			components = {
+				{
+					text = function()
+						return circle_left
+					end,
+					fg = A.bg,
+					bg = "none",
+				},
+				{
+					text = function()
+						return " " .. builtin.time() .. " "
+					end,
+					fg = A.fg,
+					bg = A.bg,
+					style = A.style,
+				},
+				{
+					text = function()
+						return circle_right
+					end,
+					fg = A.bg,
+					bg = "none",
+				},
+			},
+			context = {},
+		},
 		components = {
 			components.separator("left"),
-			components.space,
-			components.space,
+			components.two_spaces,
 			components.devicon,
-			-- components.space,
-			-- components.index,
 			components.unique_prefix,
 			components.filename,
 			components.diagnostics,
@@ -179,13 +236,23 @@ local function cokeline()
 			components.separator("right"),
 			components.padding,
 		},
+		sidebar = {
+			filetype = "SidebarNvim",
+			components = {
+				{
+					text = "  ",
+					bg = "none",
+					fg = "none",
+				},
+			},
+		},
 	}
 end
 
 return {
 	{
 		"willothy/nvim-cokeline",
-		-- dir = '~/projects/neovim/nvim-cokeline/',
+		dir = "~/projects/neovim/nvim-cokeline/",
 		config = function()
 			require("cokeline").setup(cokeline())
 		end,

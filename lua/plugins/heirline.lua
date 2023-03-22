@@ -59,20 +59,38 @@ local function heirline()
 		end
 	end
 
-	local A = function(Component)
-		return utils.surround({ "", "" }, function()
+	local A = function(Component, opt)
+		local opts = opt or {
+			first = true,
+			last = true,
+		}
+		local left = opts.first and "" or ""
+		local right = opts.last and "" or ""
+		return utils.surround({ left, right }, function()
 			return hl(1)().bg
 		end, Component)
 	end
 
-	local B = function(Component)
-		return utils.surround({ "", "" }, function()
+	local B = function(Component, opt)
+		local opts = opt or {
+			first = true,
+			last = true,
+		}
+		local left = opts.first and "" or ""
+		local right = opts.last and "" or ""
+		return utils.surround({ left, right }, function()
 			return hl(2)().bg
 		end, Component)
 	end
 
-	local C = function(Component)
-		return utils.surround({ "", "" }, function()
+	local C = function(Component, opt)
+		local opts = opt or {
+			first = true,
+			last = true,
+		}
+		local left = opts.first and "" or ""
+		local right = opts.last and "" or ""
+		return utils.surround({ left, right }, function()
 			return hl(3)().bg
 		end, Component)
 	end
@@ -227,6 +245,8 @@ local function heirline()
 			Space(2),
 			Copilot,
 			Space(1),
+		}, {
+			first = true,
 		}),
 		A(Location),
 	}

@@ -1,10 +1,10 @@
 local function get_filename(path)
-	local start, _ = path:find('[%w%s!-={-|]+[_%.].+')
+	local start, _ = path:find("[%w%s!-={-|]+[_%.].+")
 	return path:sub(start, #path)
 end
 
 local function add_selected_to_harpoon(prompt_bufnr)
-	local fb_utils = require('telescope._extensions.file_browser.utils')
+	local fb_utils = require("telescope._extensions.file_browser.utils")
 	local files = fb_utils.get_selected_files(prompt_bufnr) -- get selected files
 	if #files == 0 then
 		print("No files selected")
@@ -37,9 +37,7 @@ local function opt()
 	return {
 		extensions = {
 			["ui-select"] = {
-				require("telescope.themes").get_dropdown({
-
-				})
+				require("telescope.themes").get_dropdown({}),
 			},
 			file_browser = {
 				theme = "ivy",
@@ -52,15 +50,15 @@ local function opt()
 					["n"] = {
 						["%"] = create_and_add_to_harpoon,
 						["a"] = add_selected_to_harpoon,
-					}
-				}
-			}
-		}
+					},
+				},
+			},
+		},
 	}
 end
 
 local function config()
-	local a = require('plenary.async')
+	local a = require("plenary.async")
 	local telescope = require("telescope")
 	a.run(function()
 		local t = require("telescope")
@@ -74,8 +72,7 @@ local function config()
 		t.load_extension("menufacture")
 		t.load_extension("conventional_commits")
 		t.load_extension("toggleterm")
-	end, function()
-	end)
+	end, function() end)
 
 	-- vim.api.nvim_create_autocmd("FileType", {
 	-- 	pattern = "gitcommit",
@@ -83,7 +80,7 @@ local function config()
 	-- 		vim.api.nvim_exec("Telescope conventional_commits", true)
 	-- 		-- vim.keymap.set('n', '<leader>cc', ':Telescope conventional_commits<CR>', {
 	-- 		-- 	buffer = true,
-	-- 		-- 	
+	-- 		--
 	-- 		-- })
 	-- 	end
 	-- })
@@ -91,15 +88,15 @@ end
 
 return {
 	{
-		'nvim-telescope/telescope.nvim',
+		"nvim-telescope/telescope.nvim",
 		dependencies = {
-			'nvim-lua/plenary.nvim',
-			'stevearc/aerial.nvim',
+			"nvim-lua/plenary.nvim",
+			"stevearc/aerial.nvim",
 		},
 		lazy = true,
 		opts = opt,
 		init = config,
-		event = 'VeryLazy',
+		event = "VeryLazy",
 	},
 	{
 		"https://git.sr.ht/~havi/telescope-toggleterm.nvim",
@@ -113,28 +110,28 @@ return {
 		},
 	},
 	{
-		'olacin/telescope-cc.nvim',
+		"olacin/telescope-cc.nvim",
 		lazy = true,
-		event = 'VeryLazy'
+		event = "VeryLazy",
 	},
 	{
-		'gbrlsnchs/telescope-lsp-handlers.nvim',
+		"gbrlsnchs/telescope-lsp-handlers.nvim",
 		lazy = true,
-		event = 'VeryLazy',
+		event = "VeryLazy",
 	},
 	{
-		'nvim-telescope/telescope-ui-select.nvim',
+		"nvim-telescope/telescope-ui-select.nvim",
 		lazy = true,
-		event = 'VeryLazy',
+		event = "VeryLazy",
 	},
 	{
-		'nvim-telescope/telescope-file-browser.nvim',
+		"nvim-telescope/telescope-file-browser.nvim",
 		lazy = true,
-		event = 'VeryLazy',
+		event = "VeryLazy",
 	},
 	{
-		'molecule-man/telescope-menufacture',
+		"molecule-man/telescope-menufacture",
 		lazy = true,
-		event = 'VeryLazy'
+		event = "VeryLazy",
 	},
 }

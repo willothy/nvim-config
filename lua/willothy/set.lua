@@ -29,15 +29,31 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 vim.opt.colorcolumn = "0"
 
+vim.api.nvim_create_autocmd({
+	"ModeChanged",
+	"BufEnter",
+	"TermResponse",
+}, {
+	callback = function()
+		vim.cmd("checktime")
+	end,
+})
+
 vim.api.nvim_create_autocmd("BufEnter", {
 	callback = function()
-		if HasValue({ "floaterm", "toggleterm", "dashboard", "alpha" }, GetBufType()) then
+		if vim.bo.filetype == "lua" then
+			vim.opt.tabstop = 2
+		else
+			vim.opt.tabstop = 4
+		end
+
+		if HasValue({ "toggleterm", "dashboard", "alpha" }, GetBufType()) then
 			return
 		end
 
-		local ok, _ = pcall(vim.cmd, 'Gcd')
+		local ok, _ = pcall(vim.cmd, "Gcd")
 		if ok == false then
 			vim.cmd("lcd %:p:h")
 		end
-	end
+	end,
 })

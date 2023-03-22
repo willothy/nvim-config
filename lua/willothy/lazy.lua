@@ -6,20 +6,21 @@ if not vim.loop.fs_stat(lazypath) then
 		"--filter=blob:none",
 		"https://github.com/folke/lazy.nvim.git",
 		"--branch=main",
-		lazypath
+		lazypath,
 	})
 end
 vim.opt.rtp:prepend(lazypath)
 
-require('lazy').setup({
+require("lazy").setup({
 	{ import = "plugins" },
+	{ import = "willothy.dev" },
 	-- devicons
-	'nvim-tree/nvim-web-devicons',
+	"nvim-tree/nvim-web-devicons",
 
 	{
-		'dstein64/vim-startuptime',
+		"dstein64/vim-startuptime",
 		lazy = true,
-		event = 'VeryLazy',
+		event = "VeryLazy",
 	},
 
 	-- Sessionista
@@ -29,24 +30,23 @@ require('lazy').setup({
 	-- },
 	-- Crates
 	{
-		'saecki/crates.nvim',
-		tag = 'v0.3.0',
+		"saecki/crates.nvim",
+		tag = "v0.3.0",
 		lazy = true,
 		enabled = false,
 	},
 
 	-- Transparency
 
-
 	-- Status line
 	{
-		'willothy/lualine.nvim',
+		"willothy/lualine.nvim",
 		branch = "active",
 		--'nvim-lualine/lualine.nvim',
 		--dir = '~/vendor/lualine.nvim/',
 		dependencies = {
-			'nvim-tree/nvim-web-devicons',
-			dir = '~/projects/lua/minimus/',
+			"nvim-tree/nvim-web-devicons",
+			dir = "~/projects/lua/minimus/",
 		},
 		event = "VeryLazy",
 		lazy = true,
@@ -69,79 +69,75 @@ require('lazy').setup({
 
 	-- Neoclip
 	{
-		'kkharji/sqlite.lua',
-		module = 'sqlite',
+		"kkharji/sqlite.lua",
+		module = "sqlite",
 		lazy = true,
-		event = 'VeryLazy',
+		event = "VeryLazy",
 	},
 	{
-		'AckslD/nvim-neoclip.lua',
-		dependencies = { 'kkharji/sqlite.lua', module = 'sqlite' },
+		"AckslD/nvim-neoclip.lua",
+		dependencies = { "kkharji/sqlite.lua", module = "sqlite" },
 		config = function()
-			require('neoclip').setup()
+			require("neoclip").setup()
 		end,
 		lazy = true,
-		event = 'VeryLazy',
+		event = "VeryLazy",
 	},
 	{
-		'lewis6991/gitsigns.nvim',
+		"lewis6991/gitsigns.nvim",
 		lazy = true,
-		event = 'VeryLazy',
+		event = "VeryLazy",
 		opts = {
 			signs = {
-				untracked = { text = '•' }
+				untracked = { text = "•" },
 			},
 			trouble = true,
 			on_attach = function(_)
 				local gs = package.loaded.gitsigns
 				vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame)
-			end
-		}
+			end,
+		},
 	},
 
 	-- Telescope
-	'nvim-lua/popup.nvim',
+	"nvim-lua/popup.nvim",
 	{
-		'sudormrfbin/cheatsheet.nvim',
+		"sudormrfbin/cheatsheet.nvim",
 		config = function()
-			require('cheatsheet').setup({
+			require("cheatsheet").setup({
 				bundled_cheatsheets = {
-					enabled = { 'default' },
-				}
+					enabled = { "default" },
+				},
 			})
-		end
+		end,
 	},
 
 	-- tmux-navigator
 	{
-		'christoomey/vim-tmux-navigator',
-		config = function()
-
-		end
+		"christoomey/vim-tmux-navigator",
+		config = function() end,
 	},
 
 	-- Noice
-	'MunifTanjim/nui.nvim',
-	'rcarriga/nvim-notify',
+	"MunifTanjim/nui.nvim",
+	"rcarriga/nvim-notify",
 	{
-		'folke/noice.nvim',
+		"folke/noice.nvim",
 		dependencies = {
-			'MunifTanjim/nui.nvim',
-			'rcarriga/nvim-notify'
+			"MunifTanjim/nui.nvim",
+			"rcarriga/nvim-notify",
 		},
 		-- lazy = true,
 	},
 
 	-- bufdelete (used to open dash when all buffers are closed)
-	'famiu/bufdelete.nvim',
+	"famiu/bufdelete.nvim",
 
 	-- surround
-	'tpope/vim-surround',
-
+	"tpope/vim-surround",
 
 	-- Util for commands requiring password for sudo, ssh etc.
-	'lambdalisue/askpass.vim',
-
+	"lambdalisue/askpass.vim",
 }, {
 	-- Options
 })

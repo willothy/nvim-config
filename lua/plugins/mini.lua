@@ -20,52 +20,58 @@ function HandleMiniDisable()
 end
 
 vim.api.nvim_create_autocmd("FileType", {
-	callback = function() HandleMiniDisable() end
+	callback = function()
+		HandleMiniDisable()
+	end,
 })
 
 return {
 	-- mini.nvim
 	{
-		'echasnovski/mini.jump',
-		name = 'mini.jump',
+		"echasnovski/mini.jump",
+		name = "mini.jump",
 		version = false,
 		lazy = true,
 		event = "VeryLazy",
 		config = function()
 			require("mini.jump").setup({
 				mappings = {
-					backward_till = '',
-					forward_till = '',
-				}
+					backward_till = "",
+					forward_till = "",
+				},
 			})
 		end,
 	},
 	{
-		'echasnovski/mini.indentscope',
-		name = 'mini.indentscope',
+		"echasnovski/mini.indentscope",
+		name = "mini.indentscope",
 		version = false,
 		lazy = true,
 		event = "VeryLazy",
 		config = function()
 			require("mini.indentscope").setup({
-				symbol = '▏'
+				symbol = "▏",
 			})
 		end,
 	},
 	{
-		'echasnovski/mini.cursorword',
-		name = 'mini.cursorword',
+		"echasnovski/mini.cursorword",
+		name = "mini.cursorword",
 		version = false,
 		lazy = true,
 		event = "VeryLazy",
-		config = function() require("mini.cursorword").setup() end,
+		config = function()
+			require("mini.cursorword").setup()
+		end,
 	},
 	{
-		'echasnovski/mini.bracketed',
-		name = 'mini.bracketed',
+		"echasnovski/mini.bracketed",
+		name = "mini.bracketed",
 		version = false,
 		lazy = true,
 		event = "VeryLazy",
-		config = function() require("mini.bracketed").setup() end,
+		config = function()
+			require("mini.bracketed").setup()
+		end,
 	},
 }

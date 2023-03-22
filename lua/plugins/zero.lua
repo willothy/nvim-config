@@ -2,6 +2,7 @@ local utils = require("willothy.util")
 
 local function lsp_zero()
 	local lsp = require("lsp-zero")
+	vim.lsp.set_log_level("off")
 	lsp.preset({
 		name = "recommended",
 		set_lsp_keymaps = false,

@@ -7,6 +7,28 @@ local mark = require("harpoon.mark")
 local hui = require("harpoon.ui")
 local terms = require("willothy.terminals")
 
+-- wk.register({
+-- 	name = "cycle",
+-- 	["["] = {
+-- 		name = "prev",
+-- 		b = {
+-- 			function()
+-- 				require("cybu").cycle("prev", "default")
+-- 			end,
+-- 			"Cycle previous buffer",
+-- 		},
+-- 	},
+-- 	["]"] = {
+-- 		name = "next",
+-- 		b = {
+-- 			function()
+-- 				require("cybu").cycle("next", "default")
+-- 			end,
+-- 			"Cycle next buffer",
+-- 		},
+-- 	},
+-- }, {})
+
 wk.register({
 	["<C-e>"] = { hui.toggle_quick_menu, "Toggle harpoon quick menu" },
 	["<M-k>"] = { moveline.up, "Move line up" },
@@ -41,9 +63,21 @@ wk.register({
 		name = "terminal",
 		t = {
 			function()
-				require("toggleterm").toggle(vim.v.count)
+				-- require("toggleterm").toggle(vim.v.count)
+				require("nvterm.terminal").toggle("horizontal")
 			end,
 			"Toggle terminal",
+		},
+		s = {
+			function()
+				local term = require("nvterm.terminal")
+				vim.ui.input({
+					prompt = "$ ",
+				}, function(input)
+					term.send(input, "horizontal")
+				end)
+			end,
+			"Send to terminal",
 		},
 		p = {
 			function()
@@ -98,6 +132,19 @@ wk.register({
 		v = { Wrap(Browse), "Browse current directory" },
 		r = { Wrap(BrowseCrateRoot), "Browse crate root" },
 		p = { Wrap(ParentCrate), "Browse parent crate" },
+		-- s = {
+		-- 	function()
+		-- 		vim.ui.select(require("possession").list(), {}, function() end)
+		-- 	end,
+		-- 	"List sessions",
+		-- },
+		-- l = { require("possession").last, "Load last session" },
+		-- c = {
+		-- 	function()
+		-- 		require("posession").load(vim.fn.getcwd())
+		-- 	end,
+		-- 	"List sessions",
+		-- },
 	},
 	c = {
 		name = "comment",
@@ -109,7 +156,6 @@ wk.register({
 		s = { vim.cmd.Git, "Open fugitive" },
 	},
 	l = {
-		name = "comment",
 		["$"] = "Block comment to end of line",
 	},
 	n = {
