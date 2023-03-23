@@ -19,19 +19,23 @@ return {
 	{
 		-- terminal
 		"akinsho/toggleterm.nvim",
-		opts = {
-			start_in_insert = true,
-			winbar = {
-				enabled = true,
-				name_formatter = function(term)
-					local id = term.name:sub(-1)
-					local shellpath, _name = unpack(split(term.name, ";"))
-					local shell = split(shellpath, "/")
-					local hl = "%#ToggleTermName#"
-					return hl .. id .. " • " .. shell[#shell]
-				end,
-			},
-		},
+		lazy = true,
+		config = function()
+			require("toggleterm").setup({
+				start_in_insert = true,
+				winbar = {
+					enabled = true,
+					name_formatter = function(term)
+						local id = term.name:sub(-1)
+						local shellpath, _name = unpack(split(term.name, ";"))
+						local shell = split(shellpath, "/")
+						local hl = "%#ToggleTermName#"
+						return hl .. id .. " • " .. shell[#shell]
+					end,
+				},
+			})
+			require("telescope").load_extension("toggleterm")
+		end,
 	},
 	{
 		"NvChad/nvterm",

@@ -1,9 +1,9 @@
-if require('lazy.core.config').plugins['lualine.nvim'] then
+if require("lazy.core.config").plugins["lualine.nvim"] then
 	local sep_options = {
-		circle_left = '',
-		circle_right = '',
-		moon_left = '',
-		moon_right = '',
+		circle_left = "",
+		circle_right = "",
+		moon_left = "",
+		moon_right = "",
 	}
 
 	local separators = {
@@ -11,17 +11,17 @@ if require('lazy.core.config').plugins['lualine.nvim'] then
 		right = sep_options.circle_right,
 	}
 
-	require('lualine').setup({
+	require("lualine").setup({
 		options = {
-			theme = 'minimus',
+			theme = "minimus",
 			icons_enabled = true,
 			ignore_focus = {
-				'netrw',
-				'Floaterm',
-				'ToggleTerm',
-				'Trouble',
-				'telescopeprompt',
-				'Mason',
+				"netrw",
+				"Floaterm",
+				"ToggleTerm",
+				"Trouble",
+				"telescopeprompt",
+				"Mason",
 			},
 			disabled_filetypes = {},
 			always_divide_middle = true,
@@ -30,68 +30,66 @@ if require('lazy.core.config').plugins['lualine.nvim'] then
 		sections = {
 			-- left side
 			lualine_a = { {
-				'mode',
+				"mode",
 				separator = separators,
 			} },
-			lualine_b = { {
-				'branch',
-				separator = {
-					left = '',
-					right = sep_options.circle_right,
-				}
-			} },
-			lualine_c = { {
-				'filename',
-				symbols = {
-					modified = '●',
-					readonly = '',
-					unnamed = ' [No Name]',
-					newfile = ' [New File]',
+			lualine_b = {
+				{
+					"branch",
+					separator = {
+						left = "",
+						right = sep_options.circle_right,
+					},
 				},
-			} },
+			},
+			lualine_c = {
+				{
+					"filename",
+					symbols = {
+						modified = "●",
+						readonly = "",
+						unnamed = " [No Name]",
+						newfile = " [New File]",
+					},
+				},
+			},
 			-- right side
-			lualine_x = { { 'encoding' } },
+			lualine_x = { { "encoding" } },
 			lualine_y = {
 				{
-					'filetype',
+					"filetype",
 					separator = {
 						left = sep_options.circle_left,
-						right = ''
+						right = "",
 					},
 				},
 				{
 					function()
-						local client = require('copilot.client').get(true)
+						local client = require("copilot.client").get(true)
 						if client == nil then
-							return ''
+							return ""
 						end
-						local status = client
-							and require('copilot.api')
-							.check_status(client, {}, function()
-							end)
+						local status = client and require("copilot.api").check_status(client, {}, function() end)
 							or false
-						local hl = status
-							and '%#CopilotStatusOk#'
-							or '%#CopilotStatusError#'
-						local icon = require('nvim-web-devicons')
-							.get_icon_by_filetype('zig', {})
-						return string.format('%s%s ', hl, icon)
+						local hl = status and "%#CopilotStatusOk#" or "%#CopilotStatusError#"
+						local icon = require("nvim-web-devicons").get_icon_by_filetype("zig", {})
+						return string.format("%s%s ", hl, icon)
 					end,
 				},
 			},
 			lualine_z = { {
-				'location',
+				"location",
 				separator = separators,
 			} },
 		},
 		inactive_sections = {
 			-- left side
 			lualine_a = { {
-				'mode',
+				"mode",
 				separator = separators,
 			} },
 			lualine_b = { {
-				'branch',
+				"branch",
 				separator = separators,
 			} },
 			lualine_c = { {} },
@@ -104,13 +102,13 @@ if require('lazy.core.config').plugins['lualine.nvim'] then
 			-- left side
 			lualine_a = {
 				{
-					'buffers',
+					"buffers",
 					use_mode_colors = true,
 					--buffers_color = {
 					--    active = active_buf_color_gen('a'),
 					--},
 					component_separators = {
-						left = '',
+						left = "",
 						right = sep_options.circle_right,
 					},
 					section_separators = {
@@ -119,46 +117,50 @@ if require('lazy.core.config').plugins['lualine.nvim'] then
 					},
 					separator = {
 						left = sep_options.circle_left,
-						right = sep_options.circle_right
+						right = sep_options.circle_right,
 					},
 					symbols = {
-						modified = ' ●',
-						alternate_file = ' ',
-						directory = '',
-					}
-				}
+						modified = " ●",
+						alternate_file = " ",
+						directory = "",
+					},
+				},
 			},
 			lualine_b = { {} },
-			lualine_c = { {
-				'harpoon',
-				separator = {
-					left = sep_options.circle_left,
-					right = sep_options.circle_right,
+			lualine_c = {
+				{
+					"harpoon",
+					separator = {
+						left = sep_options.circle_left,
+						right = sep_options.circle_right,
+					},
 				},
-			} },
+			},
 			-- right side
 			lualine_x = {
 				{
-					'diagnostics',
-					separator = '',
+					"diagnostics",
+					separator = "",
 					update_in_insert = true,
 				},
 			},
-			lualine_y = { {
-				'diff',
-				show_all_if_any = true,
-				separator = {
-					left = sep_options.circle_left,
-					right = '',
+			lualine_y = {
+				{
+					"diff",
+					show_all_if_any = true,
+					separator = {
+						left = sep_options.circle_left,
+						right = "",
+					},
+					symbols = {
+						added = " ",
+						modified = " ",
+						removed = " ",
+					},
 				},
-				symbols = {
-					added = ' ',
-					modified = ' ',
-					removed = ' ',
-				}
-			} },
+			},
 			lualine_z = { {
-				'datetime',
+				"datetime",
 				style = "%H:%M",
 				separator = separators,
 			} },

@@ -1,3 +1,8 @@
+if vim.g.minimal ~= nil then
+	require("willothy.minimal")
+	return
+end
+
 function GetBufType()
 	return vim.bo.filetype
 end

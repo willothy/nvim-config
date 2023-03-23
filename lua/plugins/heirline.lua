@@ -188,7 +188,8 @@ local function heirline()
 
 	local Filetype = {
 		provider = function(_self)
-			return vim.bo.filetype
+			return vim.bo.filetype ~= "" and vim.bo.filetype
+				or vim.fn.fnamemodify(string.lower(vim.api.nvim_buf_get_name(0)), ":t")
 		end,
 		hl = hl(2),
 	}

@@ -101,16 +101,16 @@ require("lazy").setup({
 
 	-- Telescope
 	"nvim-lua/popup.nvim",
-	{
-		"sudormrfbin/cheatsheet.nvim",
-		config = function()
-			require("cheatsheet").setup({
-				bundled_cheatsheets = {
-					enabled = { "default" },
-				},
-			})
-		end,
-	},
+	-- {
+	-- 	"sudormrfbin/cheatsheet.nvim",
+	-- 	config = function()
+	-- 		require("cheatsheet").setup({
+	-- 			bundled_cheatsheets = {
+	-- 				enabled = { "default" },
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
 
 	-- tmux-navigator
 	{
@@ -119,16 +119,6 @@ require("lazy").setup({
 	},
 
 	-- Noice
-	"MunifTanjim/nui.nvim",
-	"rcarriga/nvim-notify",
-	{
-		"folke/noice.nvim",
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-			"rcarriga/nvim-notify",
-		},
-		-- lazy = true,
-	},
 
 	-- bufdelete (used to open dash when all buffers are closed)
 	"famiu/bufdelete.nvim",

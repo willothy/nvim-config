@@ -1,4 +1,3 @@
 return { {
-	-- 'theprimeagen/harpoon',
-	'willothy/harpoon',
+	"theprimeagen/harpoon",
 } }

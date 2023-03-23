@@ -384,33 +384,36 @@ return {
 			"SmiteshP/nvim-navic",
 			"folke/neodev.nvim",
 		},
-		init = lsp_zero,
+		config = lsp_zero,
 		lazy = true,
-		config = true,
 		event = "VeryLazy",
 	},
 	{
 		"stevearc/aerial.nvim",
 		opts = aerial_opt,
 		init = aerial_cfg,
-		event = "LSPAttach",
+		lazy = true,
+		cmd = "AerialToggle",
 	},
 	{
 		"folke/neodev.nvim",
+		lazy = true,
+		event = "LspAttach",
 		config = true,
 	},
 	{
 		"j-hui/fidget.nvim",
 		opts = fidget,
 		lazy = true,
-		event = "VeryLazy",
 		config = true,
+		event = "LspAttach",
 	},
 	{
 		"smjonas/inc-rename.nvim",
 		init = inc_rename,
 		config = true,
-		event = "LSPAttach",
+		lazy = true,
+		cmd = "IncRename",
 	},
 	{
 		"lvimuser/lsp-inlayhints.nvim",
@@ -443,7 +446,6 @@ return {
 		dependencies = {
 			"SmiteshP/nvim-navic",
 			"nvim-tree/nvim-web-devicons", -- optional dependency
-			dir = "~/projects/lua/minimus/",
 		},
 		lazy = true,
 		event = "BufEnter",
@@ -478,10 +480,10 @@ return {
 			vim.o.foldopen = "block,mark,percent,quickfix,search,tag,undo"
 		end,
 		lazy = true,
-		event = "UiEnter",
 	},
 	{
 		"weilbith/nvim-code-action-menu",
+		lazy = true,
 		cmd = "CodeActionMenu",
 	},
 	{
@@ -490,6 +492,7 @@ return {
 	},
 	{
 		"ThePrimeagen/refactoring.nvim",
+		lazy = true,
 		requires = {
 			"nvim-lua/plenary.nvim",
 			"nvim-treesitter/nvim-treesitter",

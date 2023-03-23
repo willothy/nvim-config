@@ -94,6 +94,7 @@ end
 
 local function cmp_setup()
 	local cmp = require("cmp")
+	cmp.setup(cmp_opt())
 	local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 	cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
@@ -184,16 +185,17 @@ return {
 			"windwp/nvim-autopairs",
 		},
 		lazy = true,
-		opts = cmp_opt,
-		init = cmp_setup,
+		event = "InsertEnter",
+		config = cmp_setup,
 	},
 	{
 		"windwp/nvim-autopairs",
+		lazy = true,
 		opts = autopairs,
 	},
 	{
 		"zbirenbaum/copilot.lua",
-		event = "VeryLazy",
+		lazy = true,
 		opts = copilot_opt,
 	},
 	{
@@ -202,7 +204,6 @@ return {
 			"zbirenbaum/copilot.lua",
 			"hrsh7th/nvim-cmp",
 		},
-		event = "VeryLazy",
 		lazy = true,
 		config = true,
 	},

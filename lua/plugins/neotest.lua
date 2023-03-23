@@ -1,29 +1,30 @@
 return {
 	{
-		'nvim-neotest/neotest',
+		"nvim-neotest/neotest",
 		dependencies = {
-			'nvim-lua/plenary.nvim',
-			'nvim-treesitter/nvim-treesitter',
-			'rouge8/neotest-rust'
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"rouge8/neotest-rust",
 		},
+		lazy = true,
 		config = function()
-			require('neotest').setup({
+			require("neotest").setup({
 				adapters = {
-					require('neotest-rust')
+					require("neotest-rust"),
 				},
 				summary = {
 					enabled = true,
 				},
 				diagnostic = {
 					enabled = true,
-					severity = 1
+					severity = 1,
 				},
 				status = {
 					enabled = true,
 					virtual_text = true,
-					signs = false
-				}
+					signs = false,
+				},
 			})
-		end
-	}
+		end,
+	},
 }

@@ -58,21 +58,18 @@ local function opt()
 end
 
 local function config()
-	local a = require("plenary.async")
-	local telescope = require("telescope")
-	a.run(function()
-		local t = require("telescope")
-		t.load_extension("noice")
-		t.load_extension("ui-select")
+	local t = require("telescope")
+	t.setup(opt())
+	t.load_extension("file_browser")
+	t.load_extension("ui-select")
+	vim.defer_fn(function()
 		t.load_extension("neoclip")
 		t.load_extension("harpoon")
 		t.load_extension("lsp_handlers")
 		t.load_extension("aerial")
-		t.load_extension("file_browser")
 		t.load_extension("menufacture")
 		t.load_extension("conventional_commits")
-		t.load_extension("toggleterm")
-	end, function() end)
+	end, 5000)
 
 	-- vim.api.nvim_create_autocmd("FileType", {
 	-- 	pattern = "gitcommit",
@@ -89,14 +86,9 @@ end
 return {
 	{
 		"nvim-telescope/telescope.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"stevearc/aerial.nvim",
-		},
-		lazy = true,
-		opts = opt,
-		init = config,
-		event = "VeryLazy",
+		dependencies = {},
+		lazy = false,
+		config = config,
 	},
 	{
 		"https://git.sr.ht/~havi/telescope-toggleterm.nvim",
@@ -112,26 +104,26 @@ return {
 	{
 		"olacin/telescope-cc.nvim",
 		lazy = true,
-		event = "VeryLazy",
+		-- event = "VeryLazy",
 	},
 	{
 		"gbrlsnchs/telescope-lsp-handlers.nvim",
 		lazy = true,
-		event = "VeryLazy",
+		-- event = "VeryLazy",
 	},
 	{
 		"nvim-telescope/telescope-ui-select.nvim",
 		lazy = true,
-		event = "VeryLazy",
+		-- event = "VeryLazy",
 	},
 	{
 		"nvim-telescope/telescope-file-browser.nvim",
 		lazy = true,
-		event = "VeryLazy",
+		-- event = "VeryLazy",
 	},
 	{
 		"molecule-man/telescope-menufacture",
 		lazy = true,
-		event = "VeryLazy",
+		-- event = "VeryLazy",
 	},
 }

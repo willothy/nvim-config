@@ -1,97 +1,91 @@
-function Browse(target)
+local M = {}
+
+function M.browse(target)
 	if target == nil then
 		target = vim.fn.getcwd()
-	elseif type(target) == 'function' then
+	elseif type(target) == "function" then
 		target = target()
 	end
-	require('telescope').extensions.file_browser.file_browser({ cwd = target })
+	require("telescope").extensions.file_browser.file_browser({ cwd = target })
 end
 
-local function is_root(pathname)
+function M.is_root(pathname)
 	if package.config:sub(1, 1) == "\\" then
 		return string.match(pathname, "^[A-Z]:\\?$")
 	end
 	return pathname == "/"
 end
 
-local function find_crate_root(path)
-	local Path = require('plenary.path')
-	local dir = path and Path:new(path) or Path:new(vim.fn.expand('%')):parent()
+-- WIP
+-- local function find_crate_root(path)
+-- 	local Path = require("plenary.path")
+-- 	local dir = path and Path:new(path) or Path:new(vim.fn.expand("%")):parent()
+--
+-- 	while #dir:_split() > 2 do
+-- 		if dir:joinpath("Cargo.toml"):exists() then
+-- 			return dir
+-- 		else
+-- 			dir = dir:parent()
+-- 		end
+-- 	end
+-- 	return nil
+-- end
+--
+-- function M.parent_crate()
+-- 	local Path = require("plenary.path")
+-- 	local root = find_crate_root()
+-- 	if root == nil then
+-- 		return
+-- 	end
+-- 	local parent = find_crate_root(root .. "../")
+-- 	if parent == nil then
+-- 		return
+-- 	else
+-- 		local p = string.format("%s", parent)
+-- 		Browse(p)
+-- 	end
+-- end
+--
+-- function M.open_cargo_toml()
+-- 	local Path = require("plenary.path")
+-- 	local root = find_crate_root()
+-- 	if root == nil then
+-- 		return
+-- 	end
+--
+-- 	vim.api.nvim_command("edit " .. string.format("%s", root) .. "/Cargo.toml")
+-- end
+--
+-- function BrowseCrateRoot()
+-- 	local Path = require("plenary.path")
+-- 	local root = find_crate_root()
+-- 	if root == nil then
+-- 		return
+-- 	end
+--
+-- 	Browse("" .. root)
+-- end
 
-	while #dir:_split() > 2 do
-		if dir:joinpath('Cargo.toml'):exists() then
-			return dir
-		else
-			dir = dir:parent()
-		end
-	end
-	return nil
-end
-
-function ParentCrate()
-	local Path = require('plenary.path')
-	local root = find_crate_root()
-	if root == nil then
-		return
-	end
-	local parent = find_crate_root(root .. '../')
-	if parent == nil then
-		return
-	else
-		local p = string.format("%s", parent)
-		Browse(p)
-	end
-end
-
-function OpenCargoToml()
-	local Path = require('plenary.path')
-	local root = find_crate_root()
-	if root == nil then
-		return
-	end
-
-	vim.api.nvim_command('edit ' .. string.format('%s', root) .. '/Cargo.toml')
-end
-
-function BrowseCrateRoot()
-	local Path = require('plenary.path')
-	local root = find_crate_root()
-	if root == nil then
-		return
-	end
-
-	Browse('' .. root)
-end
-
-vim.api.nvim_create_user_command('Browse', function(args)
+vim.api.nvim_create_user_command("Browse", function(args)
 	local target
 	if args and args["args"] then
 		target = args["args"]
 	else
 		target = vim.fn.getcwd()
 	end
-	require('telescope').extensions.file_browser.file_browser({ cwd = target })
+	require("telescope").extensions.file_browser.file_browser({ cwd = target })
 end, { nargs = "?" })
 
-function Wrap(fn, ...)
-	local arg = ...
-	return function()
-		return fn(arg)
-	end
-end
+function M.get_parent_path(path)
+	local pattern1 = "^(.+)//"
+	local pattern2 = "^(.+)\\"
 
-function GetParentPath(path)
-	pattern1 = "^(.+)//"
-	pattern2 = "^(.+)\\"
-
-	if (string.match(path, pattern1) == nil) then
+	if string.match(path, pattern1) == nil then
 		return string.match(path, pattern2)
 	else
 		return string.match(path, pattern1)
 	end
 end
-
-local M = {}
 
 function M.bind(func, ...)
 	local args = ...
@@ -104,14 +98,14 @@ function M.reload(plugin_name)
 	if plugin_name == nil then
 		return
 	end
-	local plugin = require('lazy.core.config').plugins[plugin_name]
+	local plugin = require("lazy.core.config").plugins[plugin_name]
 	if plugin == nil then
 		print("Plugin " .. plugin_name .. " was not found")
 		return require(plugin_name)
 	end
-	require('lazy.core.loader').reload(plugin)
+	require("lazy.core.loader").reload(plugin)
 	local p = require(plugin_name)
-	require('lazy.core.config').plugins[plugin_name]:config()
+	require("lazy.core.config").plugins[plugin_name]:config()
 	return p
 end
 
@@ -146,7 +140,7 @@ function M.quickHarpoon()
 		},
 		position = {
 			col = 0,
-			row = 0
+			row = 0,
 		},
 		size = {
 			width = maxlen + 1,
@@ -162,7 +156,7 @@ function M.quickHarpoon()
 
 	local nav_to_line = function(bufnr)
 		local line = vim.api.nvim_win_get_cursor(0)[1]
-		require('harpoon.ui').nav_file(line)
+		require("harpoon.ui").nav_file(line)
 	end
 
 	-- unmount component when cursor leaves buffer
@@ -187,7 +181,7 @@ function M.quickHarpoon()
 	-- set content
 	vim.api.nvim_buf_set_lines(popup.bufnr, 0, 1, false, qflines)
 
-	vim.api.nvim_buf_set_option(popup.bufnr, 'modifiable', false)
+	vim.api.nvim_buf_set_option(popup.bufnr, "modifiable", false)
 	-- mount/open the component
 	popup:mount()
 end
