@@ -1,13 +1,11 @@
 return {
 	-- Color themes
-	'connorholyday/vim-snazzy',
-	'AlexvZyl/nordic.nvim',
-	'olivercederborg/poimandres.nvim',
-	'rktjmp/lush.nvim',
+	"olivercederborg/poimandres.nvim",
+	"rktjmp/lush.nvim",
 	{
-		dir = '~/projects/lua/minimus/',
+		"willothy/minimus",
 		dependencies = {
-			'rktjmp/lush.nvim'
+			"rktjmp/lush.nvim",
 		},
 		config = function()
 			require("lush")(require("minimus"))
@@ -15,8 +13,7 @@ return {
 		lazy = false,
 	},
 	{
-		'catppuccin/nvim',
-		name = 'catppuccin'
+		"catppuccin/nvim",
+		name = "catppuccin",
 	},
-	-- 'xiyaowong/nvim-transparent',
 }

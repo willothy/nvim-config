@@ -15,7 +15,7 @@ local function window_config(conf)
 	local col
 	local row
 
-	if type(conf.col) == 'string' then
+	if type(conf.col) == "string" then
 		if conf.col == "left" then
 			col = 0
 		elseif conf.col == "right" then
@@ -23,13 +23,13 @@ local function window_config(conf)
 		else
 			col = (ui.width - conf.width) / 2
 		end
-	elseif type(conf.col) == 'number' then
+	elseif type(conf.col) == "number" then
 		col = conf.col
 	else
 		col = (ui.width - conf.width) / 2
 	end
 
-	if type(conf.row) == 'string' then
+	if type(conf.row) == "string" then
 		if conf.row == "top" then
 			row = 0
 		elseif conf.row == "bottom" then
@@ -37,7 +37,7 @@ local function window_config(conf)
 		else
 			row = (ui.height - conf.height) / 2
 		end
-	elseif type(conf.row) == 'number' then
+	elseif type(conf.row) == "number" then
 		row = conf.row
 	else
 		row = (ui.height - conf.height) / 2
@@ -51,7 +51,7 @@ local function window_config(conf)
 		row = row,
 		focusable = conf.focusable ~= nil and conf.focusable or true,
 		style = "minimal",
-		border = "single"
+		border = "single",
 	}
 end
 
@@ -59,8 +59,8 @@ end
 ---@param bufnr number
 ---@param enter boolean
 ---@param config table
-function OpenWin(bufnr, enter, config)
-	if type(enter) == 'table' then
+local function OpenWin(bufnr, enter, config)
+	if type(enter) == "table" then
 		config = enter
 		enter = false
 	end
@@ -72,7 +72,7 @@ function OpenWin(bufnr, enter, config)
 		callback = function()
 			vim.api.nvim_win_close(window, true)
 			vim.api.nvim_del_autocmd(autocmd)
-		end
+		end,
 	})
 	return window
 end
@@ -82,26 +82,28 @@ end
 ---@param col number | string | nil
 ---@param width number | nil
 ---@param height number | nil
-function WindowPopup(bufnr, row, col, width, height)
-	if type(width) == 'string' then
+local function WindowPopup(bufnr, row, col, width, height)
+	if type(width) == "string" then
 		width = round(ui.width * (width:gsub("%%", "") / 100))
-	elseif type(width) == 'number' then
+	elseif type(width) == "number" then
 		width = round(ui.width * (width / 100))
 	else
 		vim.notify(
 			string.format("Could not open window: width is %s, expected percentage string or number", type(width)),
-			"error")
+			"error"
+		)
 		return
 	end
 
-	if type(height) == 'string' then
+	if type(height) == "string" then
 		height = round(ui.height * (height:gsub("%%", "") / 100))
-	elseif type(height) == 'number' then
+	elseif type(height) == "number" then
 		height = round(ui.height * (height / 100))
 	else
 		vim.notify(
 			string.format("Could not open window: height is %s, expected percentage string or number", type(height)),
-			"error")
+			"error"
+		)
 		return
 	end
 	width = width or round(ui.width * 0.25)
@@ -116,13 +118,13 @@ function WindowPopup(bufnr, row, col, width, height)
 end
 
 ---@param bufnr number
-function CursorPopup(bufnr)
+local function CursorPopup(bufnr)
 	local conf = window_config({
 		width = 10,
 		height = 5,
 		row = 0,
 		col = 0,
-		relative = "cursor"
+		relative = "cursor",
 	})
 	OpenWin(bufnr, true, conf)
 end
@@ -130,10 +132,10 @@ end
 -- Creates a temporary buffer with the given string or lines
 ---@param contents string | table
 ---@return integer|buffer
-function TempBufWith(contents)
+local function TempBufWith(contents)
 	local bufnr = vim.api.nvim_create_buf(true, false)
 	local lines = {}
-	if type(contents) == 'table' then
+	if type(contents) == "table" then
 		lines = contents
 	else
 		for line in contents:gmatch("([^\n]*)\n?") do
@@ -147,14 +149,14 @@ function TempBufWith(contents)
 		callback = function()
 			vim.api.nvim_buf_delete(bufnr, { force = true })
 			--buffer_number = -1
-		end
+		end,
 	})
 	return bufnr
 end
 
 -- Gets LSP info and displays it in a temporary buffer
 ---@return nil
-function GetLSPInfo()
+local function GetLSPInfo()
 	local lsp = vim.inspect(vim.lsp.get_active_clients())
 	local lines = {}
 	for line in lsp:gmatch("([^\n]*)\n?") do

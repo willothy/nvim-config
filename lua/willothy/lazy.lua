@@ -23,11 +23,6 @@ require("lazy").setup({
 		event = "VeryLazy",
 	},
 
-	-- Sessionista
-	-- {
-	--     dir = '~/projects/rust/sessionista/',
-	--     lazy = true,
-	-- },
 	-- Crates
 	{
 		"saecki/crates.nvim",
@@ -42,30 +37,13 @@ require("lazy").setup({
 	{
 		"willothy/lualine.nvim",
 		branch = "active",
-		--'nvim-lualine/lualine.nvim',
-		--dir = '~/vendor/lualine.nvim/',
 		dependencies = {
 			"nvim-tree/nvim-web-devicons",
-			dir = "~/projects/lua/minimus/",
 		},
 		event = "VeryLazy",
 		lazy = true,
 		enabled = false,
 	},
-
-	-- Neotree
-	-- {
-	-- 	'nvim-neo-tree/neo-tree.nvim',
-	-- 	branch = "v2.x",
-	-- 	dependencies = {
-	-- 		"nvim-lua/plenary.nvim",
-	-- 		"nvim-tree/nvim-web-devicons",
-	-- 		"MunifTanjim/nui.nvim",
-	-- 	},
-	-- 	enabled = false,
-	-- 	lazy = true,
-	-- 	event = 'VeryLazy',
-	-- },
 
 	-- Neoclip
 	{
@@ -101,24 +79,12 @@ require("lazy").setup({
 
 	-- Telescope
 	"nvim-lua/popup.nvim",
-	-- {
-	-- 	"sudormrfbin/cheatsheet.nvim",
-	-- 	config = function()
-	-- 		require("cheatsheet").setup({
-	-- 			bundled_cheatsheets = {
-	-- 				enabled = { "default" },
-	-- 			},
-	-- 		})
-	-- 	end,
-	-- },
 
 	-- tmux-navigator
 	{
 		"christoomey/vim-tmux-navigator",
 		config = function() end,
 	},
-
-	-- Noice
 
 	-- bufdelete (used to open dash when all buffers are closed)
 	"famiu/bufdelete.nvim",
