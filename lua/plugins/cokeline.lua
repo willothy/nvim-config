@@ -252,7 +252,7 @@ end
 return {
 	{
 		"willothy/nvim-cokeline",
-		dir = "~/projects/neovim/nvim-cokeline/",
+		branch = "rhs-components",
 		config = function()
 			require("cokeline").setup(cokeline())
 		end,
