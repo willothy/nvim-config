@@ -131,7 +131,12 @@ wk.register({
 			"Find buffers",
 		},
 		n = { "<cmd>enew<CR>", "Create a new buffer" },
-		v = { "<cmd>cd %:p:h<CR>", "Browse current file's directory" },
+		v = {
+			function()
+				util.browse(vim.expand("%:p:h"))
+			end,
+			"Browse current file's directory",
+		},
 		p = {
 			function()
 				vim.ui.input({ prompt = "Path: " }, function(input)
@@ -145,9 +150,9 @@ wk.register({
 		name = "project",
 		f = { util.bind(util.browse, "~/projects/"), "Browse projects" },
 		v = { util.bind(util.browse), "Browse current directory" },
-		-- FIXME
-		-- r = { util.bind(util.browseCrateRoot), "Browse crate root" },
-		-- p = { util.bind(ParentCrate), "Browse parent crate" },
+		r = { util.bind(util.browse, util.project_root), "Browse project root" },
+		cr = { util.bind(util.browse, util.crate_root), "Browse crate root" },
+		pc = { util.bind(util.browse, util.parent_crate), "Browse parent crate" },
 	},
 	c = {
 		name = "comment",
@@ -163,7 +168,7 @@ wk.register({
 	},
 	n = {
 		name = "neovim",
-		v = { util.bind(util.browse, util.bind(vim.fn.stdpath, "config")), "Browse nvim config" },
+		v = { util.bind(util.browse, vim.fn.stdpath("config")), "Browse nvim config" },
 		s = { ":so %", "Source current file" },
 		u = {
 			name = "utils",
