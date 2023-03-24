@@ -9,7 +9,7 @@ end
 return {
 	{
 		"willothy/flatten.nvim",
-		dir = "~/projects/neovim/flatten/",
+		dir = vim.g.dev and "~/projects/neovim/flatten/" or nil,
 		opts = {
 			callbacks = {
 				pre_open = function()
