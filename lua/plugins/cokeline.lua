@@ -2,7 +2,7 @@ local function cokeline()
 	local p = require("minimus.palette").hex
 	local get_hex = require("cokeline.utils").get_hex
 	local mappings = require("cokeline.mappings")
-	local builtin = require("cokeline.builtin")
+	-- local builtin = require("cokeline.builtin")
 
 	local errors_fg = get_hex("DiagnosticError", "fg")
 	local warnings_fg = get_hex("DiagnosticWarn", "fg")
@@ -207,7 +207,8 @@ local function cokeline()
 				},
 				{
 					text = function()
-						return " " .. builtin.time() .. " "
+						local r, builtin = pcall(require, "cokeline.builtin")
+						return " " .. (r == true and builtin.time() or os.time()) .. " "
 					end,
 					fg = A.fg,
 					bg = A.bg,
@@ -253,6 +254,7 @@ return {
 	{
 		"willothy/nvim-cokeline",
 		branch = "rhs-components",
+		dir = vim.g.dev and "~/projects/neovim/nvim-cokeline" or nil,
 		config = function()
 			require("cokeline").setup(cokeline())
 		end,

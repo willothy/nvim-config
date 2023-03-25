@@ -133,7 +133,7 @@ wk.register({
 		n = { "<cmd>enew<CR>", "Create a new buffer" },
 		v = {
 			function()
-				util.browse(vim.expand("%:p:h"))
+				util.browse(vim.fn.expand("%:p:h"))
 			end,
 			"Browse current file's directory",
 		},
