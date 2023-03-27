@@ -184,6 +184,8 @@ local function cokeline()
 			-- filter_valid = function(buffer) return buffer.type ~= 'terminal' end,
 			-- filter_visible = function(buffer) return buffer.type ~= 'terminal' end,
 			new_buffers_position = "next",
+			focus_on_delete = "prev",
+			-- new_buffers_position = "number",
 		},
 		-- rendering = {
 		-- 	max_buffer_width = 30,
@@ -196,34 +198,31 @@ local function cokeline()
 				return buffer.is_focused and p.turquoise or p.gunmetal
 			end,
 		},
-		rhs = {
-			components = {
-				{
-					text = function()
-						return circle_left
-					end,
-					fg = A.bg,
-					bg = "none",
-				},
-				{
-					text = function()
-						local r, builtin = pcall(require, "cokeline.builtin")
-						return " " .. (r == true and builtin.time() or os.time()) .. " "
-					end,
-					fg = A.fg,
-					bg = A.bg,
-					style = A.style,
-				},
-				{
-					text = function()
-						return circle_right
-					end,
-					fg = A.bg,
-					bg = "none",
-				},
-			},
-			context = {},
-		},
+		-- rhs = {
+		-- 	{
+		-- 		text = function()
+		-- 			return circle_left
+		-- 		end,
+		-- 		fg = A.bg,
+		-- 		bg = "none",
+		-- 	},
+		-- 	{
+		-- 		text = function()
+		-- 			local r, builtin = pcall(require, "cokeline.builtin")
+		-- 			return " " .. (r == true and builtin.time() or os.time()) .. " "
+		-- 		end,
+		-- 		fg = A.fg,
+		-- 		bg = A.bg,
+		-- 		style = A.style,
+		-- 	},
+		-- 	{
+		-- 		text = function()
+		-- 			return circle_right
+		-- 		end,
+		-- 		fg = A.bg,
+		-- 		bg = "none",
+		-- 	},
+		-- },
 		components = {
 			components.separator("left"),
 			components.two_spaces,
@@ -253,11 +252,13 @@ end
 return {
 	{
 		"willothy/nvim-cokeline",
-		branch = "rhs-components",
-		dir = vim.g.dev and "~/projects/neovim/nvim-cokeline" or nil,
+		-- branch = "rhs-components",
+		-- dir = vim.g.dev == "cokeline" and "~/projects/neovim/cokeline" or nil,
+		dir = "~/projects/neovim/cokeline/",
 		config = function()
 			require("cokeline").setup(cokeline())
 		end,
+		-- config = true,
 		lazy = false,
 	},
 }

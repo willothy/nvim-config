@@ -20,6 +20,7 @@ require("willothy.util")
 require("willothy.remap")
 require("willothy.set")
 require("willothy.lazy")
+require("willothy.lsp")
 
 -- File for messing around with lua
 require("willothy.scratchpad")

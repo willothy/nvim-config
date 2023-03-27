@@ -4,6 +4,9 @@ end
 local wk = require("which-key")
 local util = require("willothy.util")
 
+-- unbind f1 help bc it's ANNOYING
+vim.api.nvim_set_keymap("n", "<F1>", "<NOP>", { silent = true })
+
 wk.register({
 	["<C-e>"] = {
 		function()
@@ -96,6 +99,12 @@ wk.register({
 				"Cargo test",
 			},
 		},
+	},
+	s = {
+		function()
+			require("cokeline.mappings").pick("focus")
+		end,
+		"Focus buffer",
 	},
 	b = {
 		function()

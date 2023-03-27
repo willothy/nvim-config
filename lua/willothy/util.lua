@@ -107,4 +107,16 @@ function M.reload(plugin_name)
 	return p
 end
 
+function M.list_bufs()
+	local bufs = vim.api.nvim_list_bufs()
+	local buf_list = {}
+	for _, buf in ipairs(bufs) do
+		local name = vim.api.nvim_buf_get_name(buf)
+		if name ~= "" then
+			table.insert(buf_list, name)
+		end
+	end
+	return buf_list
+end
+
 return M
