@@ -81,6 +81,11 @@ local function cokeline()
 				return (mappings.is_picking_focus() or mappings.is_picking_close()) and "italic,bold" or nil
 			end,
 			truncation = { priority = 1 },
+			---@param buffer Buffer
+			on_click = function(_id, _clicks, _button, _modifiers, buffer)
+				print(buffer.filename)
+				-- Do things here
+			end,
 		},
 		index = {
 			text = function(buffer)
@@ -184,7 +189,7 @@ local function cokeline()
 			-- filter_valid = function(buffer) return buffer.type ~= 'terminal' end,
 			-- filter_visible = function(buffer) return buffer.type ~= 'terminal' end,
 			new_buffers_position = "next",
-			focus_on_delete = "prev",
+			focus_on_delete = "next",
 			-- new_buffers_position = "number",
 		},
 		-- rendering = {
@@ -254,7 +259,7 @@ return {
 		"willothy/nvim-cokeline",
 		-- branch = "rhs-components",
 		-- dir = vim.g.dev == "cokeline" and "~/projects/neovim/cokeline" or nil,
-		dir = "~/projects/neovim/cokeline/",
+		-- dir = "~/projects/neovim/cokeline/",
 		config = function()
 			require("cokeline").setup(cokeline())
 		end,

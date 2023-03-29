@@ -92,20 +92,40 @@ function M.bind(func, ...)
 	end
 end
 
-function M.reload(plugin_name)
-	if plugin_name == nil then
+function M.reload(mod)
+	if mod == nil then
 		return
 	end
-	local plugin = require("lazy.core.config").plugins[plugin_name]
-	if plugin == nil then
-		print("Plugin " .. plugin_name .. " was not found")
-		return require(plugin_name)
+	local lazy = require("lazy.core.config")
+	local plugin = vim.tbl_filter(function(p)
+		return p.name == mod
+	end, lazy.plugins)[1]
+	if plugin then
+		require("lazy.core.loader").reload(plugin)
+		-- local reloaded = require(mod)
+		return require("lazy.core.loader").load(plugin)
+		-- return require(mod)
+	else
+		package.loaded[mod] = nil
+		return require(mod)
 	end
-	require("lazy.core.loader").reload(plugin)
-	local p = require(plugin_name)
-	require("lazy.core.config").plugins[plugin_name]:config()
-	return p
 end
+
+function M.current_mod()
+	return string.gsub(
+		vim.fn.expand("%:p:r:s?" .. vim.fn.stdpath("config") .. "/lua/??"),
+		string.sub(package["config"], 1, 1),
+		"."
+	)
+end
+
+vim.api.nvim_create_user_command("Reload", function(args)
+	if args and args["args"] ~= "" then
+		M.reload(args["args"])
+	else
+		M.reload(M.current_mod())
+	end
+end, { nargs = "?" })
 
 function M.list_bufs()
 	local bufs = vim.api.nvim_list_bufs()

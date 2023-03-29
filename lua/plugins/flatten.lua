@@ -16,9 +16,10 @@ return {
 			},
 			callbacks = {
 				post_open = function(bufnr, winnr, ft, is_blocking)
-					if is_blocking then
+					if is_blocking or ft == "gitcommit" then
 						-- Hide the terminal while it's blocking
-						toggle_terminal()
+						-- toggle_terminal()
+						require("nvterm.terminal").hide("horizontal")
 					else
 						-- If it's a normal file, just switch to its window
 						vim.api.nvim_set_current_win(winnr)
@@ -42,7 +43,7 @@ return {
 				end,
 				block_end = function()
 					-- After blocking ends (for a git commit, etc), reopen the terminal
-					toggle_terminal()
+					require("nvterm.terminal").show("horizontal")
 				end,
 			},
 		},

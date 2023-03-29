@@ -6,6 +6,7 @@ return {
 			"rcarriga/nvim-notify",
 			"VonHeikemen/lsp-zero.nvim",
 		},
+		-- enabled = false,
 		lazy = true,
 		event = "VeryLazy",
 		config = function()
@@ -25,8 +26,8 @@ return {
 							col = "50%",
 						},
 						border = {
-							style = "single",
-							padding = { 1, 1 },
+							style = "rounded",
+							padding = { 0, 0 },
 						},
 						filter_options = {},
 						win_options = {
@@ -37,7 +38,7 @@ return {
 							cursorline = false,
 						},
 						size = {
-							width = 80,
+							width = "auto",
 							height = "auto",
 						},
 					},

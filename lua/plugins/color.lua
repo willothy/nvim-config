@@ -1,5 +1,6 @@
 return {
 	-- Color themes
+	"folke/tokyonight.nvim",
 	"olivercederborg/poimandres.nvim",
 	"rktjmp/lush.nvim",
 	{

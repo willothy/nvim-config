@@ -4,10 +4,46 @@ end
 local wk = require("which-key")
 local util = require("willothy.util")
 
--- unbind f1 help bc it's ANNOYING
-vim.api.nvim_set_keymap("n", "<F1>", "<NOP>", { silent = true })
+local function register(modes, mappings, opts)
+	if type(modes) == "table" then
+		for _, mode in ipairs(modes) do
+			wk.register(mappings, vim.tbl_deep_extend("keep", { mode = mode }, opts or {}))
+		end
+	else
+		wk.register(mappings, vim.tbl_deep_extend("keep", { mode = modes }, opts or {}))
+	end
+end
 
-wk.register({
+-- Spider
+register({ "n", "o", "x" }, {
+	name = "spider",
+	w = {
+		function()
+			require("spider").motion("w")
+		end,
+		"Spider-w",
+	},
+	e = {
+		function()
+			require("spider").motion("e")
+		end,
+		"Spider-e",
+	},
+	b = {
+		function()
+			require("spider").motion("b")
+		end,
+		"Spider-b",
+	},
+	ge = {
+		function()
+			require("spider").motion("ge")
+		end,
+		"Spider-ge",
+	},
+})
+
+register("n", {
 	["<C-e>"] = {
 		function()
 			require("harpoon.ui").toggle_quick_menu()
@@ -26,25 +62,46 @@ wk.register({
 		end,
 		"Move line down",
 	},
+	T = { "<Cmd>TroubleToggle document_diagnostics<CR>", "Toggle trouble" },
+	["<Tab>"] = { "V>", "Indent line" },
+	["<S-Tab>"] = { "V<", "Unindent line" },
+	["<F1>"] = {
+		function()
+			require("cokeline.mappings").pick("buffer")
+		end,
+		"Pick buffer",
+	},
+})
+
+register({ "n", "t" }, {
 	["<C-w>"] = {
 		name = "window",
+		["<Up>"] = { util.bind(vim.cmd, "wincmd k"), "Move to window up" },
+		["<Down>"] = { util.bind(vim.cmd, "wincmd j"), "Move to window down" },
+		["<Left>"] = { util.bind(vim.cmd, "wincmd h"), "Move to window left" },
+		["<Right>"] = { util.bind(vim.cmd, "wincmd l"), "Move to window right" },
+		["k"] = { util.bind(vim.cmd, "wincmd k"), "Move to window up" },
+		["j"] = { util.bind(vim.cmd, "wincmd j"), "Move to window down" },
+		["h"] = { util.bind(vim.cmd, "wincmd h"), "Move to window left" },
+		["l"] = { util.bind(vim.cmd, "wincmd l"), "Move to window right" },
 		x = {
 			function()
 				vim.api.nvim_exec("WinShift swap", true)
 			end,
 			"Swap windows",
 		},
-		w = {
+		["<C-w>"] = {
 			function()
 				vim.api.nvim_exec("WinShift", true)
 			end,
 			"Enter WinShift mode",
 		},
 	},
-	T = { "<Cmd>TroubleToggle document_diagnostics<CR>", "Toggle trouble" },
-	["<Tab>"] = { "V>", "Indent line" },
-	["<S-Tab>"] = { "V<", "Unindent line" },
-}, {})
+})
+
+register("t", {
+	["<Esc>"] = { "<C-\\><C-n>", "Exit terminal" },
+})
 
 wk.register({
 	a = {
@@ -100,17 +157,31 @@ wk.register({
 			},
 		},
 	},
+	b = {
+		p = {
+			function()
+				require("cokeline.mappings").pick("buffer")
+			end,
+			"Pick buffer",
+		},
+		cp = {
+			function()
+				require("cokeline.mappings").by_step("close", -1)
+			end,
+			"Close previous",
+		},
+		cn = {
+			function()
+				require("cokeline.mappings").by_step("close", 1)
+			end,
+			"Close next",
+		},
+	},
 	s = {
 		function()
 			require("cokeline.mappings").pick("focus")
 		end,
 		"Focus buffer",
-	},
-	b = {
-		function()
-			require("blam").peek()
-		end,
-		"Peek line blame",
 	},
 	u = { vim.cmd.UndotreeToggle, "Toggle undotree" },
 	f = {
@@ -135,7 +206,7 @@ wk.register({
 		},
 		b = {
 			function()
-				require("telescope").builtin.buffers()
+				require("telescope.builtin").buffers()
 			end,
 			"Find buffers",
 		},
@@ -171,6 +242,12 @@ wk.register({
 	g = {
 		name = "git",
 		s = { vim.cmd.Git, "Open fugitive" },
+		b = {
+			function()
+				require("blam").peek()
+			end,
+			"Peek line blame",
+		},
 	},
 	l = {
 		["$"] = "Block comment to end of line",
@@ -219,18 +296,3 @@ wk.register({
 }, {
 	mode = "v",
 })
-
-wk.register({
-	["<Esc>"] = { "<C-\\><C-n>", "Exit terminal" },
-	["<C-w>"] = {
-		name = "window",
-		["<Up>"] = { "<C-\\><C-n><C-w>k", "Move to window up" },
-		["<Down>"] = { "<C-\\><C-n><C-w>j", "Move to window down" },
-		["<Left>"] = { "<C-\\><C-n><C-w>h", "Move to window left" },
-		["<Right>"] = { "<C-\\><C-n><C-w>l", "Move to window right" },
-		["k"] = { "<C-\\><C-n><C-w>k", "Move to window up" },
-		["j"] = { "<C-\\><C-n><C-w>j", "Move to window down" },
-		["h"] = { "<C-\\><C-n><C-w>h", "Move to window left" },
-		["l"] = { "<C-\\><C-n><C-w>l", "Move to window right" },
-	},
-}, { mode = "t" })
