@@ -1,7 +1,9 @@
 -- Moveline
-return { {
-	'willothy/moveline.nvim',
-	-- dir = '~/projects/neovim/moveline/',
-	build = 'make',
-	lazy = false,
-} }
+return {
+	{
+		"willothy/moveline.nvim",
+		-- dir = '~/projects/neovim/moveline/',
+		build = "make",
+		lazy = false,
+	},
+}

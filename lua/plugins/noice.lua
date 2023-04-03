@@ -17,8 +17,11 @@ return {
 					--command_palette = true, -- position the cmdline and popupmenu together
 					long_message_to_split = true, -- long messages will be sent to a split
 					inc_rename = true, -- enables an input dialog for inc-rename.nvim
-					--lsp_doc_border = true, -- add a border to hover docs and signature help
+					-- lsp_doc_border = true, -- add a border to hover docs and signature help
 				},
+				-- smart_move = {
+				-- 	enabled = true,
+				-- },
 				views = {
 					cmdline_popup = {
 						position = {
@@ -44,7 +47,7 @@ return {
 					},
 					hover = {
 						border = {
-							style = "single",
+							style = "rounded",
 							padding = { 0, 0 },
 						},
 					},
@@ -59,7 +62,7 @@ return {
 							height = 10,
 						},
 						border = {
-							style = "single",
+							style = "rounded",
 							padding = { 0, 1 },
 						},
 						win_options = {
@@ -78,7 +81,15 @@ return {
 						enabled = false,
 					},
 					signature = {
-						enabled = false,
+						enabled = true,
+						auto_open = {
+							enabled = true,
+							trigger = true,
+							luasnip = true,
+							throttle = 50,
+						},
+						view = nil,
+						opts = {},
 					},
 					hover = {
 						enabled = true,

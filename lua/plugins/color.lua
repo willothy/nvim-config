@@ -1,5 +1,6 @@
 return {
 	-- Color themes
+	"rktjmp/shipwright.nvim",
 	"folke/tokyonight.nvim",
 	"olivercederborg/poimandres.nvim",
 	"rktjmp/lush.nvim",
@@ -8,9 +9,6 @@ return {
 		dependencies = {
 			"rktjmp/lush.nvim",
 		},
-		config = function()
-			require("lush")(require("minimus"))
-		end,
 		lazy = false,
 	},
 	{

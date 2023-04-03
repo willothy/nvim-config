@@ -14,6 +14,11 @@ local function register(modes, mappings, opts)
 	end
 end
 
+vim.api.nvim_set_keymap("", ",", " ", {
+	noremap = true,
+	desc = "Leader 2",
+})
+
 -- Spider
 register({ "n", "o", "x" }, {
 	name = "spider",
@@ -43,6 +48,13 @@ register({ "n", "o", "x" }, {
 	},
 })
 
+register("i", {
+	["<F1>"] = {
+		"<nop>",
+		"Pick buffer",
+	},
+})
+
 register("n", {
 	["<C-e>"] = {
 		function()
@@ -67,12 +79,17 @@ register("n", {
 	["<S-Tab>"] = { "V<", "Unindent line" },
 	["<F1>"] = {
 		function()
-			require("cokeline.mappings").pick("buffer")
+			require("cokeline.mappings").pick("focus")
 		end,
 		"Pick buffer",
 	},
+	["<C-s>"] = {
+		function()
+			vim.cmd("write")
+		end,
+		"Save",
+	},
 })
-
 register({ "n", "t" }, {
 	["<C-w>"] = {
 		name = "window",
@@ -275,7 +292,7 @@ wk.register({
 		},
 	},
 	w = { util.bind(vim.api.nvim_exec, "w", true), "Save" },
-	D = { ":Alpha<CR>", "Return to dashboard" },
+	D = { ":Veil<CR>", "Return to dashboard" },
 }, { prefix = "<leader>" })
 
 wk.register({

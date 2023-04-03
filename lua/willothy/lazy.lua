@@ -12,38 +12,38 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	{ import = "plugins" },
-	{ import = "willothy.dev" },
+	-- { import = "willothy.dev" },
 	-- devicons
 	"nvim-tree/nvim-web-devicons",
 
+	{ import = "plugins" },
 	{
 		"dstein64/vim-startuptime",
 		lazy = true,
 		event = "VeryLazy",
 	},
-
-	-- Crates
-	{
-		"saecki/crates.nvim",
-		tag = "v0.3.0",
-		lazy = true,
-		enabled = false,
-	},
+	--
+	-- -- Crates
+	-- {
+	-- 	"saecki/crates.nvim",
+	-- 	tag = "v0.3.0",
+	-- 	lazy = true,
+	-- 	enabled = false,
+	-- },
 
 	-- Transparency
 
 	-- Status line
-	{
-		"willothy/lualine.nvim",
-		branch = "active",
-		dependencies = {
-			"nvim-tree/nvim-web-devicons",
-		},
-		event = "VeryLazy",
-		lazy = true,
-		enabled = false,
-	},
+	-- {
+	-- 	"willothy/lualine.nvim",
+	-- 	branch = "active",
+	-- 	dependencies = {
+	-- 		"nvim-tree/nvim-web-devicons",
+	-- 	},
+	-- 	event = "VeryLazy",
+	-- 	lazy = true,
+	-- 	enabled = false,
+	-- },
 
 	-- Neoclip
 	{
@@ -61,30 +61,15 @@ require("lazy").setup({
 		lazy = true,
 		event = "VeryLazy",
 	},
-	{
-		"lewis6991/gitsigns.nvim",
-		lazy = true,
-		event = "VeryLazy",
-		opts = {
-			signs = {
-				untracked = { text = "•" },
-			},
-			trouble = true,
-			on_attach = function(_)
-				local gs = package.loaded.gitsigns
-				vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame)
-			end,
-		},
-	},
 
 	-- Telescope
-	"nvim-lua/popup.nvim",
+	-- "nvim-lua/popup.nvim",
 
 	-- tmux-navigator
-	{
-		"christoomey/vim-tmux-navigator",
-		config = function() end,
-	},
+	-- {
+	-- 	"christoomey/vim-tmux-navigator",
+	-- 	config = function() end,
+	-- },
 
 	-- bufdelete (used to open dash when all buffers are closed)
 	"famiu/bufdelete.nvim",
@@ -93,7 +78,15 @@ require("lazy").setup({
 	"tpope/vim-surround",
 
 	-- Util for commands requiring password for sudo, ssh etc.
-	"lambdalisue/askpass.vim",
+	-- "lambdalisue/askpass.vim",
 }, {
 	-- Options
+	-- colorscheme = { "minimus" },
+	ui = {
+		-- a number <1 is a percentage., >1 is a fixed size
+		size = { width = 0.8, height = 0.8 },
+		wrap = false, -- wrap the lines in the ui
+		-- The border to use for the UI window. Accepts same border values as |nvim_open_win()|.
+		border = "rounded",
+	},
 })

@@ -72,7 +72,7 @@ local function cmp_opt()
 			end, { "i", "c" }),
 		},
 		sources = cmp.config.sources({
-			{ name = "nvim_lsp_signature_help", priority = 1, max_item_count = 1 },
+			-- { name = "nvim_lsp_signature_help", priority = 1, max_item_count = 1 },
 			{ name = "nvim_lsp", priority = 1, max_item_count = 20 },
 			{ name = "nvim_lua", priority = 2, max_item_count = 10 },
 			{ name = "luasnip", priority = 2, max_item_count = 2 },
@@ -107,6 +107,13 @@ local function cmp_setup()
 	--         cmp.setup.buffer({ sources = { { name = "crates" } } })
 	--     end,
 	-- })
+
+	local function words_before()
+		local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+		local words = vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]
+		return col ~= 0 and words:sub(col, col):match("%s") == nil, words
+	end
+
 	cmp.setup.cmdline(":", {
 		sources = cmp.config.sources({
 			{ name = "path", group_index = 1 },
@@ -114,6 +121,15 @@ local function cmp_setup()
 			{ name = "cmdline_history", group_index = 2 },
 			{ name = "copilot", group_index = 2 },
 		}),
+		enabled = function()
+			-- Set of disable commands
+			local disabled = {
+				IncRename = true,
+			}
+			-- get first word of cmdline
+			local cmd = vim.fn.getcmdline():match("%S+")
+			return not disabled[cmd] or cmp.close()
+		end,
 	})
 
 	cmp.setup.cmdline("harpoon", {
@@ -164,7 +180,7 @@ return {
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-nvim-lsp-signature-help",
+			-- "hrsh7th/cmp-nvim-lsp-signature-help",
 			"hrsh7th/cmp-nvim-lsp-document-symbol",
 			"hrsh7th/cmp-nvim-lua",
 			"hrsh7th/cmp-calc",
@@ -172,7 +188,7 @@ return {
 			"dmitmel/cmp-cmdline-history",
 			"chrisgrieser/cmp-nerdfont",
 			"saadparwaiz1/cmp_luasnip",
-			"uga-rosa/cmp-dictionary",
+			-- "uga-rosa/cmp-dictionary",
 
 			-- Copilot
 			"zbirenbaum/copilot.lua",

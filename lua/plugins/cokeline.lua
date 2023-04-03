@@ -1,3 +1,29 @@
+local function findwinbyBufType(types)
+	function types:has(type)
+		for _, t in ipairs(self) do
+			if t == type then
+				return true
+			end
+		end
+	end
+	local bufs = vim.api.nvim_list_bufs()
+	for _, buf in pairs(bufs) do
+		if vim.api.nvim_buf_is_valid(buf) then
+			if types:has(vim.bo[buf].filetype) then
+				return vim.fn.win_findbuf(buf)
+			end
+		end
+	end
+	return nil
+end
+
+local function is_window_sidebar(winnr)
+	local layout = vim.fn.winlayout()
+	if layout[1] ~= "row" then
+		return false
+	end
+end
+
 local function cokeline()
 	local p = require("minimus.palette").hex
 	local get_hex = require("cokeline.utils").get_hex
@@ -53,7 +79,7 @@ local function cokeline()
 					end
 				end,
 				bg = function(buffer)
-					if (side == "left" and buffer.is_first) or (side == "right" and buffer.is_last) then
+					if not true and (side == "left" and buffer.is_first) or (side == "right" and buffer.is_last) then
 						return "none"
 					else
 						return p.gunmetal
@@ -68,8 +94,10 @@ local function cokeline()
 		},
 		devicon = {
 			text = function(buffer)
-				return (mappings.is_picking_focus() or mappings.is_picking_close()) and buffer.pick_letter .. " "
-					or buffer.devicon.icon
+				if mappings.is_picking_focus() or mappings.is_picking_close() then
+					return buffer.pick_letter .. " "
+				end
+				return buffer.devicon.icon
 			end,
 			fg = function(buffer)
 				return buffer.is_focused and p.raisin_black
@@ -195,6 +223,9 @@ local function cokeline()
 		-- rendering = {
 		-- 	max_buffer_width = 30,
 		-- },
+		pick = {
+			use_filename = true,
+		},
 		default_hl = {
 			fg = function(buffer)
 				return buffer.is_focused and p.raisin_black or p.cool_gray
@@ -245,10 +276,23 @@ local function cokeline()
 			filetype = "SidebarNvim",
 			components = {
 				{
-					text = "  ",
+					text = circle_left,
+					fg = p.gunmetal,
 					bg = "none",
+				},
+				{
+					text = " ",
+					bg = p.gunmetal,
 					fg = "none",
 				},
+				-- {
+				-- 	text = function()
+				-- 		local names = require("willothy.state").lsp.clients or {}
+				-- 		return (#names > 0 and "⚡ " or "") .. table.concat(names, " • ")
+				-- 	end,
+				-- 	bg = p.gunmetal,
+				-- 	fg = p.cool_gray,
+				-- },
 			},
 		},
 	}
@@ -259,11 +303,12 @@ return {
 		"willothy/nvim-cokeline",
 		-- branch = "rhs-components",
 		-- dir = vim.g.dev == "cokeline" and "~/projects/neovim/cokeline" or nil,
-		-- dir = "~/projects/neovim/cokeline/",
+		dir = "~/projects/neovim/cokeline/",
 		config = function()
 			require("cokeline").setup(cokeline())
 		end,
 		-- config = true,
 		lazy = false,
+		enabled = false,
 	},
 }

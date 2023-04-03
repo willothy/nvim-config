@@ -19,11 +19,11 @@ function HandleMiniDisable()
 	end
 end
 
-vim.api.nvim_create_autocmd("FileType", {
-	callback = function()
-		HandleMiniDisable()
-	end,
-})
+-- vim.api.nvim_create_autocmd("FileType", {
+-- 	callback = function()
+-- 		HandleMiniDisable()
+-- 	end,
+-- })
 
 return {
 	-- mini.nvim
@@ -51,6 +51,10 @@ return {
 		config = function()
 			require("mini.indentscope").setup({
 				symbol = "▏",
+				options = {
+					-- border = "bottom",
+					try_as_border = true,
+				},
 			})
 		end,
 	},

@@ -1,20 +1,7 @@
-if vim.g.minimal ~= nil then
-	require("willothy.minimal")
-	return
-end
-
-function GetBufType()
-	return vim.bo.filetype
-end
-
-function HasValue(arr, val)
-	for _, value in ipairs(arr) do
-		if value == val then
-			return true
-		end
-	end
-	return false
-end
+-- if vim.g.minimal ~= nil then
+-- 	require("willothy.minimal")
+-- 	return
+-- end
 
 require("willothy.util")
 require("willothy.remap")
@@ -23,8 +10,8 @@ require("willothy.lazy")
 require("willothy.lsp")
 
 -- File for messing around with lua
-require("willothy.scratchpad")
+--require("willothy.scratchpad")
 -- require("willothy.sessions")
 
-vim.g.rust_conceal = 1
-vim.g.rust_recommended_style = 0
+--vim.g.rust_conceal = 1
+--vim.g.rust_recommended_style = 0

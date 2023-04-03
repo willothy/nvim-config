@@ -26,6 +26,32 @@ function M.request(bufnr, method, params, handler)
 	return vim.lsp.buf_request(bufnr, method, params, M.mk_handler(handler))
 end
 
+function M.get_active_client(bufnr, required)
+	local clients = vim.lsp.get_active_clients({ bufnr = bufnr or 0 })
+	local active = nil
+	for _, client in pairs(clients) do
+		if client.supports_method(required) then
+			active = client
+			break
+		end
+	end
+
+	return active
+end
+
+function M.if_defined_in_workspace(f)
+	local position_params = vim.lsp.util.make_position_params()
+	vim.lsp.buf_request(0, "textDocument/definition", position_params, function(err, result, ctx, ...)
+		if not result then
+			return
+		end
+		local res = result[1]
+		if res.targetUri:find(vim.fn.getcwd()) then
+			f()
+		end
+	end)
+end
+
 function M.parent_module()
 	local function get_params()
 		return vim.lsp.util.make_position_params(0, nil)

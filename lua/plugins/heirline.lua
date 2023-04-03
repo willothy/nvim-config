@@ -48,63 +48,98 @@ local mode_map = {
 	t = mode_colors.command,
 }
 
+local function handler(f, name)
+	return {
+		callback = f,
+		name = name or ("handler_" .. (math.random() * 100)),
+	}
+end
+
 local function heirline()
 	local utils = require("heirline.utils")
 	local conditions = require("heirline.conditions")
 
-	local function hl(section)
-		return function(self)
+	local with = {
+		__index = function(self, k)
+			if k == "with" then
+				return function(Component, opts)
+					return utils.clone(Component, opts)
+				end
+			else
+				return rawget(self, k)
+			end
+		end,
+	}
+
+	local hl = {
+		A = function(self)
 			local mode = vim.fn.mode(1):sub(1, 1)
-			return mode_map[mode][section]
-		end
-	end
+			return mode_map[mode][1]
+		end,
+		ANOBG = function(self)
+			local mode = vim.fn.mode(1):sub(1, 1)
+			return {
+				fg = mode_map[mode][1].bg,
+				bg = "none",
+			}
+		end,
+		AB = function(self)
+			local mode = vim.fn.mode(1):sub(1, 1)
+			return {
+				fg = mode_map[mode][1].bg,
+				bg = mode_map[mode][2].bg,
+			}
+		end,
+		B = function(self)
+			local mode = vim.fn.mode(1):sub(1, 1)
+			return mode_map[mode][2]
+		end,
+		BC = function(self)
+			local mode = vim.fn.mode(1):sub(1, 1)
+			return {
+				fg = mode_map[mode][2].bg,
+				bg = mode_map[mode][3].bg,
+			}
+		end,
+		C = function(self)
+			local mode = vim.fn.mode(1):sub(1, 1)
+			return mode_map[mode][3]
+		end,
+		NONE = { fg = "none", bg = "none", style = "none" },
+	}
+	setmetatable(hl, {
+		__call = function(self, component, highlight)
+			return utils.clone(component, {
+				hl = highlight,
+			})
+		end,
+	})
 
-	local A = function(Component, opt)
-		local opts = opt or {
-			first = true,
-			last = true,
-		}
-		local left = opts.first and "" or ""
-		local right = opts.last and "" or ""
-		return utils.surround({ left, right }, function()
-			return hl(1)().bg
-		end, Component)
-	end
-
-	local B = function(Component, opt)
-		local opts = opt or {
-			first = true,
-			last = true,
-		}
-		local left = opts.first and "" or ""
-		local right = opts.last and "" or ""
-		return utils.surround({ left, right }, function()
-			return hl(2)().bg
-		end, Component)
-	end
-
-	local C = function(Component, opt)
-		local opts = opt or {
-			first = true,
-			last = true,
-		}
-		local left = opts.first and "" or ""
-		local right = opts.last and "" or ""
-		return utils.surround({ left, right }, function()
-			return hl(3)().bg
-		end, Component)
-	end
+	local separators = {
+		left = function(hl)
+			return setmetatable({
+				provider = "",
+				hl = hl,
+			}, with)
+		end,
+		right = function(hl)
+			return setmetatable({
+				provider = "",
+				hl = hl,
+			}, with)
+		end,
+	}
 
 	local BG = function(Component)
 		return {
-			hl = hl(3),
+			hl = hl.C,
 			Component,
 		}
 	end
 
 	local Align = { provider = "%=" }
 	local Space = function(count)
-		return { provider = string.rep(" ", count) }
+		return setmetatable({ provider = string.rep(" ", count) }, with)
 	end
 
 	local Mode = {
@@ -153,7 +188,7 @@ local function heirline()
 		provider = function(self)
 			return "%2( " .. self.mode_names[self.mode] .. " %)"
 		end,
-		hl = hl(1),
+		hl = hl.A,
 		update = {
 			"ModeChanged",
 			pattern = "*:*",
@@ -162,6 +197,7 @@ local function heirline()
 			end),
 		},
 	}
+	setmetatable(Mode, with)
 
 	local Location = {
 		provider = function(_self)
@@ -169,8 +205,9 @@ local function heirline()
 			local col = vim.fn.col(".")
 			return string.format(" %d:%d ", line, col)
 		end,
-		hl = hl(1),
+		hl = hl.A,
 	}
+	setmetatable(Location, with)
 
 	local Copilot = {
 		provider = function(_self)
@@ -183,16 +220,21 @@ local function heirline()
 			local icon = require("nvim-web-devicons").get_icon_by_filetype("zig", {})
 			return string.format("%s%s", copilot_hl, icon)
 		end,
-		hl = hl(2),
+		hl = hl.B,
+		on_click = handler(function()
+			require("copilot.panel").open()
+		end),
 	}
+	setmetatable(Copilot, with)
 
 	local Filetype = {
 		provider = function(_self)
 			return vim.bo.filetype ~= "" and vim.bo.filetype
 				or vim.fn.fnamemodify(string.lower(vim.api.nvim_buf_get_name(0)), ":t")
 		end,
-		hl = hl(2),
+		hl = hl.B,
 	}
+	setmetatable(Filetype, with)
 
 	local Devicon = {
 		init = function(self)
@@ -208,6 +250,7 @@ local function heirline()
 			return { fg = self.icon_color }
 		end,
 	}
+	setmetatable(Devicon, with)
 
 	local Harpoon = {
 		Index = {
@@ -216,7 +259,7 @@ local function heirline()
 				local idx = harpoon.get_current_index()
 				return idx or ""
 			end,
-			hl = hl(3),
+			hl = hl.C,
 		},
 		Count = {
 			provider = function(_self)
@@ -224,21 +267,156 @@ local function heirline()
 				local count = harpoon.get_length()
 				return count or ""
 			end,
-			hl = hl(3),
+			hl = hl.C,
+			on_click = handler(function()
+				require("harpoon.ui").toggle_quick_menu()
+			end),
 		},
 		Hook = {
 			provider = "ﯠ",
-			hl = hl(3),
+			hl = hl.C,
+			on_click = handler(function()
+				require("harpoon.ui").toggle_quick_menu()
+			end),
 		},
 	}
+	setmetatable(Harpoon, with)
+
+	local Git = {
+		static = {
+			icons = { branch = " ", added = " ", modified = " ", removed = " " },
+		},
+		condition = conditions.is_git_repo,
+
+		init = function(self)
+			self.status_dict = vim.b.gitsigns_status_dict
+			self.has_changes = self.status_dict.added ~= 0
+				or self.status_dict.removed ~= 0
+				or self.status_dict.changed ~= 0
+		end,
+
+		hl = hl.B,
+
+		{ -- git branch name
+			provider = function(self)
+				return self.icons.branch .. self.status_dict.head
+			end,
+			hl = { fg = p.cool_gray },
+		},
+		{
+			provider = " ",
+		},
+		{
+			provider = function(self)
+				local count = self.status_dict.added or 0
+				return count > 0 and (self.icons.added .. count)
+			end,
+			hl = { fg = p.pale_turquoise },
+		},
+		{
+			provider = function(self)
+				return (
+					(self.status_dict.added or 0) > 0
+					and ((self.status_dict.removed or 0) > 0 or (self.status_dict.changed or 0) > 0)
+				)
+						and " "
+					or ""
+			end,
+		},
+		{
+			provider = function(self)
+				local count = self.status_dict.removed or 0
+				return count > 0 and (self.icons.removed .. count)
+			end,
+			hl = { fg = p.red },
+		},
+		{
+			provider = function(self)
+				return ((self.status_dict.removed or 0) > 0 and (self.status_dict.changed or 0) > 0) and " " or ""
+			end,
+		},
+		{
+			provider = function(self)
+				local count = self.status_dict.changed or 0
+				return count > 0 and (self.icons.modified .. count)
+			end,
+			hl = { fg = p.lemon_chiffon },
+		},
+		{
+			provider = " ",
+			condition = function(self)
+				return self.has_changes
+			end,
+		},
+	}
+	setmetatable(Git, with)
+
+	local FileName = {
+		provider = function(_self)
+			local filename = vim.fn.expand("%:t")
+			local extension = vim.fn.expand("%:e")
+			local icon, _icon_color =
+				require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+			return icon and string.format("%s %s", icon, filename) or filename
+		end,
+		hl = hl.B,
+	}
+	setmetatable(FileName, with)
+
+	local function flip(f)
+		return function()
+			return not f()
+		end
+	end
 
 	local StatusLine = {
-		A(Mode),
+		separators.left(hl.ANOBG),
+		hl(Mode, hl.A),
+		separators.right(hl.AB):with({ condition = conditions.is_git_repo }),
+		separators.right(hl.ANOBG):with({ condition = flip(conditions.is_git_repo) }),
+		hl({
+			Space(1),
+			Git,
+			condition = conditions.is_git_repo,
+		}, hl.B),
+		separators.right(hl.BC):with({ condition = conditions.is_git_repo }),
 		Space(1),
 		Harpoon.Hook,
-		Harpoon.Index,
+		Harpoon.Count,
 		BG(Align),
-		B({
+		setmetatable({
+			hl(FileName, { fg = p.colombia_blue }),
+			{
+				update = { "LspAttach", "LspDetach" },
+				provider = function(self)
+					local names = {}
+					for i, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
+						if server.name ~= "copilot" and server.name ~= "null-ls" then
+							table.insert(names, server.name)
+						end
+					end
+					local state = require("willothy.state")
+					state.lsp.clients = names
+					state.lsp.attached = #names > 0
+
+					--[[ " " .. ]]
+					return string.format(" • %s", table.concat(names, ", "))
+				end,
+				condition = function()
+					return #require("willothy.state").lsp.clients > 0
+				end,
+				hl = { fg = p.colombia_blue, bg = "none" },
+				flexible = 1,
+			},
+			BG(Align),
+		}, with):with({
+			condition = function()
+				return vim.bo.buflisted
+			end,
+			hl = { fg = p.colombia_blue, bg = "none" },
+		}),
+		separators.left(hl.BC),
+		hl({
 			Space(1),
 			Devicon,
 			Space(1),
@@ -246,10 +424,10 @@ local function heirline()
 			Space(2),
 			Copilot,
 			Space(1),
-		}, {
-			first = true,
-		}),
-		A(Location),
+		}, hl.B),
+		separators.left(hl.AB),
+		hl(Location, hl.A),
+		separators.right(hl.ANOBG),
 	}
 
 	return {
@@ -264,11 +442,6 @@ return {
 		config = function()
 			require("heirline").setup(heirline())
 		end,
-		init = function()
-			vim.cmd("set laststatus=3")
-		end,
-		lazy = true,
-		event = "UiEnter",
-		enabled = true,
+		enabled = false,
 	},
 }

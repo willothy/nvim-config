@@ -166,7 +166,7 @@ local function GetLSPInfo()
 end
 
 -- This doesn't work!
-function quickHarpoon()
+local function quickHarpoon()
 	local Popup = require("nui.popup")
 	-- local Layout = require("nui.layout")
 	local event = require("nui.utils.autocmd").event

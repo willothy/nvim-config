@@ -5,7 +5,6 @@ return {
 			"nvim-tree/nvim-web-devicons",
 			"jedrzejboczar/possession.nvim",
 		},
-		-- enabled = false,
 		lazy = true,
 		cmd = "Alpha",
 		config = function()
@@ -147,10 +146,6 @@ return {
 			vim.api.nvim_set_hl(0, "DashboardShotCut", { bg = "none" })
 			vim.api.nvim_set_hl(0, "EndOfBuf", { bg = "none" })
 			vim.api.nvim_set_hl(0, "NonText", { bg = "none" })
-
-			vim.api.nvim_create_user_command("Bd", function()
-				require("bufdelete").bufdelete(0, true)
-			end, {})
 		end,
 	},
 }

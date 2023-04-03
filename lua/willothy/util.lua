@@ -139,4 +139,16 @@ function M.list_bufs()
 	return buf_list
 end
 
+vim.api.nvim_create_user_command("Bd", function()
+	require("bufdelete").bufdelete(0, true)
+end, {})
+
+vim.api.nvim_create_user_command("LuaAttach", function()
+	require("luapad").attach()
+end, {})
+
+vim.api.nvim_create_user_command("LuaDetach", function()
+	require("luapad").detach()
+end, {})
+
 return M
