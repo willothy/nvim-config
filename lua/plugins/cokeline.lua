@@ -315,7 +315,7 @@ return {
 		"willothy/nvim-cokeline",
 		-- branch = "rhs-components",
 		-- dir = vim.g.dev == "cokeline" and "~/projects/neovim/cokeline" or nil,
-		dir = "~/projects/neovim/cokeline/",
+		-- dir = "~/projects/neovim/cokeline/",
 		config = function()
 			require("cokeline").setup(cokeline())
 		end,

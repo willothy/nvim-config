@@ -2,5 +2,5 @@ return {
 	"willothy/blam.nvim",
 	build = "make",
 	config = true,
-	dir = "~/projects/neovim/blam/",
+	-- dir = "~/projects/neovim/blam/",
 }

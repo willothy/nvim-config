@@ -375,7 +375,7 @@ local function lsp_setup()
 
 	local sign = function(opts)
 		vim.fn.sign_define(opts.name, {
-			texthl = opts.name,
+			texthl = opts.hl or opts.name,
 			text = opts.text,
 		})
 	end
@@ -384,7 +384,7 @@ local function lsp_setup()
 	sign({ name = "DiagnosticSignWarn", text = icons.diagnostics.warnings })
 	sign({ name = "DiagnosticSignHint", text = icons.diagnostics.hints })
 	sign({ name = "DiagnosticSignInfo", text = icons.diagnostics.info })
-	sign({ name = "LightBulbSign", text = icons.lsp.action_hint })
+	sign({ name = "LightBulbSign", text = icons.lsp.action_hint, hl = "DiagnosticSignWarn" })
 
 	diagnostic.config({
 		virtual_text = {
@@ -623,7 +623,7 @@ return {
 					text = icons.lsp.action_hint,
 				},
 			})
-			vim.api.nvim_create_autocmd("CursorHold", {
+			vim.api.nvim_create_autocmd({ "CursorHold", "CursorMoved" }, {
 				pattern = "*",
 				callback = function()
 					require("nvim-lightbulb").update_lightbulb()

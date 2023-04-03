@@ -1,5 +1,6 @@
 return { {
-	dir = "~/projects/neovim/twitch/",
+  'willothy/twitch.nvim',
+	--dir = "~/projects/neovim/twitch/",
 	build = "make",
 	enabled = false
 } }

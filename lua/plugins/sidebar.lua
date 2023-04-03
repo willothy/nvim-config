@@ -40,10 +40,10 @@ return {
 			},
 		},
 	},
-	{
-		"willothy/luacrates",
-		build = "make",
-	},
+	-- {
+	-- 	"willothy/luacrates",
+	-- 	build = "make",
+	-- },
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		lazy = true,

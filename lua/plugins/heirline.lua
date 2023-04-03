@@ -452,8 +452,8 @@ local function heirline()
 		-- flexible = 4,
 		Left,
 		Align,
-		Center,
-		Align,
+		-- Center,
+		-- Align,
 		Right, --:with({ flexible = 2 }),
 	}
 
