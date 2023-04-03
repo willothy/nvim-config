@@ -8,7 +8,8 @@ local function cmp_opt()
 	end
 
 	local luasnip = require("luasnip")
-	local lspkind = require("lspkind")
+
+	local icons = require("willothy.icons")
 
 	return {
 		snippet = {
@@ -82,12 +83,10 @@ local function cmp_opt()
 			{ name = "dictionary", priority = 2, max_item_count = 5, keyword_length = 2 },
 		}),
 		formatting = {
-			format = lspkind.cmp_format({
-				mode = "symbol_text",
-				maxwidth = 40,
-				preset = "codicons",
-				ellipsis_char = "...",
-			}),
+			format = function(_entry, vim_item)
+				vim_item.kind = string.format("%s %s", icons[vim_item.kind], vim_item.kind)
+				return vim_item
+			end,
 		},
 	}
 end

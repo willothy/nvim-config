@@ -1,12 +1,4 @@
--- local lnf = function(args)
--- 	local res = require("statuscol.builtin").lnumfunc(args)
--- 	if vim.v.relnum == 0 then
--- 		res = res .. " "
--- 	end
--- 	return res
--- end
---
--- return {}
+local icons = require("willothy.icons")
 
 return {
 	{
@@ -14,21 +6,20 @@ return {
 		lazy = false,
 		opts = {
 			signs = {
-				untracked = { text = "•" },
+				untracked = { text = icons.git.signs.bar },
+				add = { text = icons.git.signs.bar },
+				change = { text = icons.git.signs.bar },
+				delete = { text = icons.git.signs.bar },
+				topdelete = { text = icons.git.signs.bar },
+				changedelete = { text = icons.git.signs.bar },
 			},
-			trouble = true,
+			trouble = false,
 			signcolumn = true,
-			-- on_attach = function(_)
-			-- 	local gs = package.loaded.gitsigns
-			-- 	vim.keymap.set("n", "<leader>tb", gs.toggle_current_line_blame)
-			-- end,
 		},
 		config = true,
-		-- event = { "LspAttach" },
 	},
 	{
 		"luukvbaal/statuscol.nvim",
-		-- dir = "~/projects/neovim/statuscol.nvim",
 		dependencies = {
 			"lewis6991/gitsigns.nvim",
 		},
@@ -38,6 +29,7 @@ return {
 			local blame = function(args)
 				local line = args.mousepos.line
 				peek(line)
+				return false
 			end
 
 			local builtin = require("statuscol.builtin")
@@ -48,17 +40,13 @@ return {
 						sign = {
 							name = { "GitSigns*" },
 							maxwidth = 1,
-							-- colwidth = 1,
 						},
 						click = "v:lua.ScSa",
 					},
 					{
 						sign = {
-							-- name = { "Diagnostic" },
 							name = { ".*" },
 							maxwidth = 1,
-							-- colwidth = 1,
-							-- auto = true,
 						},
 						click = "v:lua.ScSa",
 					},
@@ -73,17 +61,17 @@ return {
 					},
 				},
 				clickhandlers = {
-					-- Lnum = builtin.lnum_click,
-					-- FoldClose = builtin.foldclose_click,
-					-- FoldOpen = builtin.foldopen_click,
-					-- FoldOther = builtin.foldother_click,
-					-- DapBreakpointRejected = false, -- builtin.toggle_breakpoint,
-					-- DapBreakpoint = false, --builtin.toggle_breakpoint,
-					-- DapBreakpointCondition = false, -- builtin.toggle_breakpoint,
-					-- DiagnosticSignError = builtin.diagnostic_click,
-					-- DiagnosticSignHint = builtin.diagnostic_click,
-					-- DiagnosticSignInfo = builtin.diagnostic_click,
-					-- DiagnosticSignWarn = builtin.diagnostic_click,
+					Lnum = builtin.lnum_click,
+					FoldClose = builtin.foldclose_click,
+					FoldOpen = builtin.foldopen_click,
+					FoldOther = false, --builtin.foldother_click,
+					DapBreakpointRejected = builtin.toggle_breakpoint,
+					DapBreakpoint = builtin.toggle_breakpoint,
+					DapBreakpointCondition = builtin.toggle_breakpoint,
+					DiagnosticSignError = builtin.diagnostic_click,
+					DiagnosticSignHint = builtin.diagnostic_click,
+					DiagnosticSignInfo = builtin.diagnostic_click,
+					DiagnosticSignWarn = builtin.diagnostic_click,
 					GitSignsTopdelete = blame,
 					GitSignsUntracked = blame,
 					GitSignsAdd = blame,
@@ -98,6 +86,24 @@ return {
 					-- end,
 				},
 			})
+
+			-- local ScSa = _G.ScSa
+			-- _G.ScSa = function(...)
+			-- 	ScSa(...)
+			-- end
+			--
+			-- local ScLa = _G.ScLa
+			-- _G.ScLa = function(...)
+			-- 	vim.o.mousemodel = ""
+			-- 	ScLa(...)
+			-- 	vim.o.mousemodel = "extend"
+			-- end
+			--
+			-- local ScFa = _G.ScFa
+			-- _G.ScFa = function(...)
+			-- 	ScFa(...)
+			-- 	vim.o.mousemodel = "extend"
+			-- end
 		end,
 	},
 }

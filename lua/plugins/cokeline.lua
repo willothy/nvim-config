@@ -1,3 +1,5 @@
+local icons = require("willothy.icons")
+
 local function findwinbyBufType(types)
 	function types:has(type)
 		for _, t in ipairs(self) do
@@ -30,14 +32,11 @@ local function cokeline()
 	local mappings = require("cokeline.mappings")
 	-- local builtin = require("cokeline.builtin")
 
-	local errors_fg = get_hex("DiagnosticError", "fg")
-	local warnings_fg = get_hex("DiagnosticWarn", "fg")
+	local errors_fg = p.red
+	local warnings_fg = p.lemon_chiffon
 
 	local red = vim.g.terminal_color_1
 	local yellow = vim.g.terminal_color_3
-
-	local circle_left = ""
-	local circle_right = ""
 
 	local A = {
 		fg = p.raisin_black,
@@ -60,13 +59,23 @@ local function cokeline()
 			text = " ",
 			truncation = { priority = 1 },
 		},
+		space_if_not_focused = {
+			text = function(buffer)
+				if not buffer.is_focused then
+					return " "
+				else
+					return ""
+				end
+			end,
+			truncation = { priority = 1 },
+		},
 		separator = function(side)
 			return {
 				text = function(buffer)
 					if side == "left" and (buffer.is_focused or buffer.is_first) then
-						return circle_left
+						return icons.separators.circle.left
 					elseif side == "right" and (buffer.is_focused or buffer.is_last) then
-						return circle_right
+						return icons.separators.circle.right
 					else
 						return ""
 					end
@@ -165,8 +174,8 @@ local function cokeline()
 		},
 		diagnostics = {
 			text = function(buffer)
-				return (buffer.diagnostics.errors ~= 0 and "  " .. buffer.diagnostics.errors)
-					or (buffer.diagnostics.warnings ~= 0 and "  " .. buffer.diagnostics.warnings)
+				return (buffer.diagnostics.errors ~= 0 and icons.diagnostics.errors .. buffer.diagnostics.errors)
+					or (buffer.diagnostics.warnings ~= 0 and icons.diagnostics.warnings .. buffer.diagnostics.warnings)
 					or ""
 			end,
 			fg = function(buffer)
@@ -178,7 +187,7 @@ local function cokeline()
 		},
 		close_or_unsaved = {
 			text = function(buffer)
-				return buffer.is_modified and "●" or ""
+				return buffer.is_modified and icons.misc.modified or icons.actions.close
 			end,
 			fg = function(_buffer)
 				return nil
@@ -261,14 +270,17 @@ local function cokeline()
 		-- },
 		components = {
 			components.separator("left"),
-			components.two_spaces,
+			components.space,
+			components.space_if_not_focused,
 			components.devicon,
 			components.unique_prefix,
 			components.filename,
+			components.space,
 			components.diagnostics,
 			components.two_spaces,
 			components.close_or_unsaved,
 			components.space,
+			components.space_if_not_focused,
 			components.separator("right"),
 			components.padding,
 		},
@@ -276,7 +288,7 @@ local function cokeline()
 			filetype = "SidebarNvim",
 			components = {
 				{
-					text = circle_left,
+					text = icons.separators.circle.left,
 					fg = p.gunmetal,
 					bg = "none",
 				},
@@ -309,6 +321,5 @@ return {
 		end,
 		-- config = true,
 		lazy = false,
-		enabled = false,
 	},
 }

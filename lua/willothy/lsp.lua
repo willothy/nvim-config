@@ -1,3 +1,7 @@
+local event = require("nui.utils.autocmd").event
+local Menu = require("nui.menu")
+local Iter = require("willothy.iter")
+
 local M = {}
 
 -- a lot of this is from https://github.com/simrat39/rust-tools.nvim
@@ -41,7 +45,7 @@ end
 
 function M.if_defined_in_workspace(f)
 	local position_params = vim.lsp.util.make_position_params()
-	vim.lsp.buf_request(0, "textDocument/definition", position_params, function(err, result, ctx, ...)
+	vim.lsp.buf_request(0, "textDocument/definition", position_params, function(_, result)
 		if not result then
 			return
 		end
@@ -49,6 +53,96 @@ function M.if_defined_in_workspace(f)
 		if res.targetUri:find(vim.fn.getcwd()) then
 			f()
 		end
+	end)
+end
+
+local ActionMenu = Menu:extend("ActionMenu")
+
+function ActionMenu:init(items)
+	local max_width = vim.api.nvim_win_get_width(0) - 4
+	local max_height = vim.api.nvim_win_get_height(0)
+	local exec = function(item)
+		if item then
+			if type(item) == "table" and item.edit then
+				local client = vim.lsp.get_client_by_id(item.index)
+				local action = item
+				-- local changes = {}
+				-- for uri, edits in pairs(item.edit.changes) do
+				-- 	table.insert(changes, {
+				-- 		text_document = {
+				-- 			uri = uri,
+				-- 		},
+				-- 		edits = edits[1],
+				-- 	})
+				-- end
+				-- for _, change in ipairs(changes) do
+				-- 	---@diagnostic disable-next-line: missing-parameter
+				-- 	vim.lsp.util.apply_text_document_edit(change)
+				-- end
+			elseif type(item) == "string" then
+				vim.api.nvim_exec(item)
+			elseif type(item) == "function" then
+				item()
+			end
+		end
+		self:unmount()
+	end
+
+	local popup_opts = {
+		relative = "cursor",
+		position = {
+			row = 1,
+			col = 0,
+		},
+		border = { style = "rounded" },
+		zindex = 100,
+	}
+
+	local menu_items = Iter.new(items):map(function(i, v)
+		v.index = i
+		return Menu.item(v.title, v)
+	end)
+
+	local menu_opts = {
+		min_width = 4,
+		max_width = max_width,
+		min_height = 1,
+		max_height = max_height,
+		lines = menu_items,
+		on_close = function()
+			exec()
+		end,
+		on_submit = function(item)
+			exec(item)
+		end,
+	}
+
+	ActionMenu.super.init(self, popup_opts, menu_opts)
+
+	self:on(event.BufLeave, function()
+		exec()
+	end, { once = true })
+end
+
+function M.code_actions()
+	local context = {}
+	context.diagnostics = vim.lsp.diagnostic.get_line_diagnostics()
+	local params = vim.lsp.util.make_range_params()
+	params.context = context
+	vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(results)
+		local items = Iter.new(results)
+			:filter(function(_c, res)
+				return type(res) == "table" and res.result ~= nil
+			end)
+			:map(function(client, res)
+				Iter.new(res):map(function(i, v)
+					v.index = i
+					v.client = client
+					_G.dbg(v)
+					return v
+				end)
+			end)
+		ActionMenu(items):mount()
 	end)
 end
 

@@ -53,6 +53,11 @@ local function opt()
 					},
 				},
 			},
+			lsp_handlers = {
+				code_action = {
+					telescope = require("telescope.themes").get_dropdown({}),
+				},
+			},
 		},
 	}
 end

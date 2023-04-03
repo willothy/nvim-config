@@ -87,8 +87,8 @@ end
 
 function M.bind(func, ...)
 	local args = ...
-	return function()
-		func(args)
+	return function(...)
+		func(args, ...)
 	end
 end
 
@@ -150,5 +150,27 @@ end, {})
 vim.api.nvim_create_user_command("LuaDetach", function()
 	require("luapad").detach()
 end, {})
+
+function M.longest_line(lines)
+	local longest = 0
+	for _, line in ipairs(lines) do
+		local len = string.len(line)
+		if len > longest then
+			longest = len
+		end
+	end
+	return longest
+end
+
+function M.create_float(lines, lang)
+	local longest = M.longest_line(lines)
+	local win_width = vim.api.nvim_win_get_width(0)
+	vim.lsp.util.open_floating_preview(lines, lang or "markdown", {
+		height = #lines,
+		width = longest > win_width and win_width or longest,
+		focus = false,
+		border = "rounded",
+	})
+end
 
 return M

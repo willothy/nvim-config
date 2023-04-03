@@ -1,5 +1,5 @@
 local utils = require("willothy.util")
-local autocmd = vim.api.nvim_create_autocmd
+local icons = require("willothy.icons")
 local augroup = vim.api.nvim_create_augroup
 local setmap = vim.keymap.set
 local buf = vim.lsp.buf
@@ -18,18 +18,14 @@ local function lsp_maps(bufnr)
 	map("n", "gT", buf.type_definition, "Go to type definition")
 	map("n", "gi", buf.implementation, "Go to implementation")
 	map("n", "K", function()
-		if vim.bo.filetype == "rust" then
-			require("rust-tools").hover_actions.hover_actions()
-		else
-			buf.hover()
-		end
+		require("rust-tools").hover_actions.hover_actions()
 	end, "Hover docs")
 	map("n", "<leader>ws", buf.workspace_symbol, "Find workspace symbol")
 	map("n", "<leader>fd", diagnostic.open_float, "Diagnostic float")
 	map("n", "[d", diagnostic.goto_next, "Next diagnostic")
 	map("n", "]d", diagnostic.goto_prev, "Previous diagnostic")
 	-- map("n", "<leader>ca", buf.code_action, opts)
-	map("n", "<leader>ca", "CodeActionMenu", "Code actions")
+	map("n", "<leader>ca", require("willothy.lsp").code_actions, "Code actions")
 	-- map("n", "<leader>vrr", buf.references, opts)
 	map("n", "<leader>hs", buf.signature_help, "Signature help")
 
@@ -47,7 +43,7 @@ local function lsp_maps(bufnr)
 		local node = ts_utils.get_node_at_cursor()
 
 		local type = node:type()
-		if string.match(type, "identifier") ~= nil then
+		if type ~= nil and string.match(type, "identifier") ~= nil then
 			require("willothy.lsp").if_defined_in_workspace(function()
 				vim.api.nvim_feedkeys(":IncRename " .. cword, "n", false)
 			end)
@@ -144,7 +140,6 @@ local lsp_settings = {
 			format = {
 				enable = false,
 			},
-			["completion.enable"] = true,
 			diagnostics = {
 				enable = false,
 				globals = { "vim" },
@@ -152,6 +147,21 @@ local lsp_settings = {
 			workspace = {
 				checkThirdParty = false,
 			},
+			completion = {
+				enable = true,
+				autoRequire = true,
+				callSnippet = "Replace",
+				-- workspaceDelay = 1000,
+			},
+			-- hint = {
+			-- 	enable = false,
+			-- 	arrayIndex = "Enable",
+			-- 	await = true,
+			-- 	paramName = "All",
+			-- 	paramType = true,
+			-- 	semicolon = "SameLine",
+			-- 	setType = true,
+			-- },
 		},
 	},
 }
@@ -177,6 +187,7 @@ local function setup_null()
 			-- null.ca.gitsigns,
 			-- null.ca.refactoring,
 		},
+		on_attach = lsp_attach,
 	})
 end
 
@@ -310,32 +321,9 @@ local function setup_rust()
 end
 
 local function lsp_setup()
+	-- require("neodev").setup({})
+
 	vim.lsp.set_log_level("off")
-	local sign = function(opts)
-		fn.sign_define(opts.name, {
-			texthl = opts.name,
-			text = opts.text,
-			numhl = "",
-		})
-	end
-
-	sign({ name = "DiagnosticSignError", text = "✘" })
-	sign({ name = "DiagnosticSignWarn", text = "▲" })
-	sign({ name = "DiagnosticSignHint", text = "⚑" })
-	sign({ name = "DiagnosticSignInfo", text = "" })
-
-	diagnostic.config({
-		virtual_text = true,
-		signs = true,
-		update_in_insert = true,
-		underline = false,
-		severity_sort = true,
-		float = {
-			source = "always",
-			border = "rounded",
-			focusable = false,
-		},
-	})
 
 	require("mason").setup({})
 	local mason_lspconfig = require("mason-lspconfig")
@@ -345,8 +333,6 @@ local function lsp_setup()
 	})
 	local lspconfig = require("lspconfig")
 	local cmp_lsp = require("cmp_nvim_lsp")
-
-	local get_servers = mason_lspconfig.get_installed_servers
 
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
 
@@ -386,6 +372,45 @@ local function lsp_setup()
 	setup_ufo()
 	setup_format()
 	setup_inlayhints()
+
+	local sign = function(opts)
+		vim.fn.sign_define(opts.name, {
+			texthl = opts.name,
+			text = opts.text,
+		})
+	end
+
+	sign({ name = "DiagnosticSignError", text = icons.diagnostics.errors })
+	sign({ name = "DiagnosticSignWarn", text = icons.diagnostics.warnings })
+	sign({ name = "DiagnosticSignHint", text = icons.diagnostics.hints })
+	sign({ name = "DiagnosticSignInfo", text = icons.diagnostics.info })
+	sign({ name = "LightBulbSign", text = icons.lsp.action_hint })
+
+	diagnostic.config({
+		virtual_text = {
+			prefix = "",
+			format = function(diag)
+				local severity = "Info"
+				if diag.severity == 1 then
+					severity = "Error"
+				elseif diag.severity == 2 then
+					severity = "Warn"
+				elseif diag.severity == 3 then
+					severity = "Hint"
+				end
+				return string.format("%s %s", icons.diagnostics[severity], diag.message)
+			end,
+		},
+		signs = true,
+		update_in_insert = true,
+		underline = false,
+		severity_sort = true,
+		float = {
+			source = "always",
+			border = "rounded",
+			focusable = false,
+		},
+	})
 end
 
 local aerial_opt = {
@@ -418,20 +443,6 @@ local fidget = {
 	window = {
 		blend = 0,
 		relative = "editor",
-	},
-}
-
-local glance = {
-	theme = {
-		enable = true,
-		mode = "auto",
-	},
-	border = {
-		enable = false,
-	},
-	detached = true,
-	winbar = {
-		enable = true,
 	},
 }
 
@@ -483,6 +494,7 @@ return {
 		dependencies = {
 			"williamboman/mason-lspconfig.nvim",
 			"jay-babu/mason-null-ls.nvim",
+			"folke/neodev.nvim",
 		},
 	},
 	{
@@ -495,18 +507,53 @@ return {
 		"dnlhc/glance.nvim",
 		lazy = true,
 		event = "LSPAttach",
-		opts = glance,
+		config = function()
+			local glance = require("glance")
+			local actions = glance.actions
+
+			local cfg = {
+				theme = {
+					enable = true,
+					mode = "auto",
+				},
+				border = {
+					enable = true,
+				},
+				preview_win_opts = {
+					wrap = false,
+				},
+				mappings = {
+					list = {
+						["<Tab>"] = actions.enter_win("preview"),
+					},
+					preview = {
+						["<Tab>"] = actions.enter_win("list"),
+					},
+				},
+				-- detached = true,
+				hooks = {
+					before_open = function(results, open, _jump, _method)
+						open(results)
+					end,
+				},
+				winbar = {
+					enable = true,
+				},
+			}
+
+			glance.setup(cfg)
+		end,
 	},
 	{
 		"utilyre/barbecue.nvim",
 		dependencies = {
 			"SmiteshP/nvim-navic",
-			"nvim-tree/nvim-web-devicons", -- optional dependency
 		},
 		config = function()
 			require("barbecue").setup({
 				attach_navic = true,
 				theme = "minimus",
+				show_modified = true,
 				exclude_filetypes = {
 					"gitcommit",
 					"toggleterm",
@@ -514,6 +561,14 @@ return {
 					"mason",
 					"alpha",
 				},
+				modified = function()
+					return true
+				end,
+				symbols = {
+					separator = icons.separators.angle_quote.right,
+					modified = icons.kinds.Package,
+				},
+				kinds = require("willothy.icons").kinds,
 			})
 		end,
 	},
@@ -550,5 +605,32 @@ return {
 			"nvim-lua/plenary.nvim",
 			"nvim-treesitter/nvim-treesitter",
 		},
+	},
+	{
+		"kosayoda/nvim-lightbulb",
+		config = function()
+			local l = require("nvim-lightbulb")
+			l.setup({
+				-- ignore = { "null-ls" },
+				autocmd = {
+					enabled = false,
+				},
+				virtual_text = {
+					enabled = false,
+					text = icons.lsp.action_hint,
+				},
+				status_text = {
+					text = icons.lsp.action_hint,
+				},
+			})
+			vim.api.nvim_create_autocmd("CursorHold", {
+				pattern = "*",
+				callback = function()
+					require("nvim-lightbulb").update_lightbulb()
+				end,
+			})
+		end,
+		lazy = true,
+		event = "LspAttach",
 	},
 }

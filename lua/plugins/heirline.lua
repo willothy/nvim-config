@@ -1,4 +1,5 @@
 local p = require("minimus.palette").hex
+local icons = require("willothy.icons")
 local mode_colors = {
 	normal = {
 		{ fg = p.raisin_black, bg = p.turquoise },
@@ -70,70 +71,76 @@ local function heirline()
 			end
 		end,
 	}
+	local Component = function(init)
+		return setmetatable(init, with)
+	end
 
 	local hl = {
-		A = function(self)
+		A = function(_self)
 			local mode = vim.fn.mode(1):sub(1, 1)
 			return mode_map[mode][1]
 		end,
-		ANOBG = function(self)
+		ANOBG = function(_self)
 			local mode = vim.fn.mode(1):sub(1, 1)
 			return {
 				fg = mode_map[mode][1].bg,
 				bg = "none",
 			}
 		end,
-		AB = function(self)
+		AB = function(_self)
 			local mode = vim.fn.mode(1):sub(1, 1)
 			return {
 				fg = mode_map[mode][1].bg,
 				bg = mode_map[mode][2].bg,
 			}
 		end,
-		B = function(self)
+		B = function(_self)
 			local mode = vim.fn.mode(1):sub(1, 1)
 			return mode_map[mode][2]
 		end,
-		BC = function(self)
+		BC = function(_self)
 			local mode = vim.fn.mode(1):sub(1, 1)
 			return {
 				fg = mode_map[mode][2].bg,
 				bg = mode_map[mode][3].bg,
 			}
 		end,
-		C = function(self)
+		C = function(_self)
 			local mode = vim.fn.mode(1):sub(1, 1)
 			return mode_map[mode][3]
 		end,
 		NONE = { fg = "none", bg = "none", style = "none" },
 	}
 	setmetatable(hl, {
-		__call = function(self, component, highlight)
-			return utils.clone(component, {
-				hl = highlight,
-			})
+		__call = function(_self, component, highlight)
+			return setmetatable(
+				utils.clone(component, {
+					hl = highlight,
+				}),
+				with
+			)
 		end,
 	})
 
 	local separators = {
-		left = function(hl)
-			return setmetatable({
+		left = function(hl_)
+			return Component({
 				provider = "",
-				hl = hl,
-			}, with)
+				hl = hl_,
+			})
 		end,
-		right = function(hl)
-			return setmetatable({
+		right = function(hl_)
+			return Component({
 				provider = "",
-				hl = hl,
-			}, with)
+				hl = hl_,
+			})
 		end,
 	}
 
-	local BG = function(Component)
+	local BG = function(component)
 		return {
 			hl = hl.C,
-			Component,
+			component,
 		}
 	end
 
@@ -142,7 +149,7 @@ local function heirline()
 		return setmetatable({ provider = string.rep(" ", count) }, with)
 	end
 
-	local Mode = {
+	local Mode = Component({
 		static = {
 			mode_names = {
 				-- change the strings if you like it vvvvverbose!
@@ -196,47 +203,59 @@ local function heirline()
 				vim.cmd("redrawstatus")
 			end),
 		},
-	}
-	setmetatable(Mode, with)
+	})
 
-	local Location = {
+	local Location = Component({
 		provider = function(_self)
 			local line = vim.fn.line(".")
 			local col = vim.fn.col(".")
-			return string.format(" %d:%d ", line, col)
+			local maxline = vim.fn.line("$")
+			local width = (#string.format("%d", maxline)) + 6
+			local s = string.format("%d:%d", line, col)
+
+			local i = 0
+			while true do
+				if #s > width then
+					break
+				end
+				if i % 2 == 0 then
+					s = " " .. s
+				else
+					s = s .. " "
+				end
+				i = i + 1
+			end
+
+			return s
+			-- return lpad(rpad(string.format("%d:%d", line, col), math.ceil(width / 2)), math.floor(width / 2))
 		end,
 		hl = hl.A,
-	}
-	setmetatable(Location, with)
+	})
 
-	local Copilot = {
+	local Copilot = Component({
 		provider = function(_self)
 			local client = require("copilot.client").get(true)
 			if client == nil then
 				return ""
 			end
-			local status = client and require("copilot.api").check_status(client, {}, function() end) or false
-			local copilot_hl = status and "%#CopilotStatusOk#" or "%#CopilotStatusError#"
-			local icon = require("nvim-web-devicons").get_icon_by_filetype("zig", {})
-			return string.format("%s%s", copilot_hl, icon)
+			-- require("nvim-web-devicons").get_icon_by_filetype("zig", {})
+			return client and (icons.git.copilot .. " ") or ""
 		end,
-		hl = hl.B,
+		hl = hl.C,
 		on_click = handler(function()
 			require("copilot.panel").open()
-		end),
-	}
-	setmetatable(Copilot, with)
+		end, "heirline_copilot"),
+	})
 
-	local Filetype = {
+	local Filetype = Component({
 		provider = function(_self)
 			return vim.bo.filetype ~= "" and vim.bo.filetype
 				or vim.fn.fnamemodify(string.lower(vim.api.nvim_buf_get_name(0)), ":t")
 		end,
-		hl = hl.B,
-	}
-	setmetatable(Filetype, with)
+		hl = hl.C,
+	})
 
-	local Devicon = {
+	local Devicon = Component({
 		init = function(self)
 			local filename = vim.fn.expand("%")
 			local extension = vim.fn.fnamemodify(filename, ":e")
@@ -249,10 +268,9 @@ local function heirline()
 		hl = function(self)
 			return { fg = self.icon_color }
 		end,
-	}
-	setmetatable(Devicon, with)
+	})
 
-	local Harpoon = {
+	local Harpoon = Component({
 		Index = {
 			provider = function(_self)
 				local harpoon = require("harpoon.mark")
@@ -273,18 +291,22 @@ local function heirline()
 			end),
 		},
 		Hook = {
-			provider = "ﯠ",
+			provider = "ﯠ ",
 			hl = hl.C,
 			on_click = handler(function()
 				require("harpoon.ui").toggle_quick_menu()
 			end),
 		},
-	}
-	setmetatable(Harpoon, with)
+	})
 
-	local Git = {
+	local Git = Component({
 		static = {
-			icons = { branch = " ", added = " ", modified = " ", removed = " " },
+			icons = {
+				branch = icons.git.branch,
+				added = icons.git.diff.added,
+				modified = icons.git.diff.modified,
+				removed = icons.git.diff.removed,
+			},
 		},
 		condition = conditions.is_git_repo,
 
@@ -295,16 +317,13 @@ local function heirline()
 				or self.status_dict.changed ~= 0
 		end,
 
-		hl = hl.B,
+		hl = hl.C,
 
 		{ -- git branch name
 			provider = function(self)
-				return self.icons.branch .. self.status_dict.head
+				return string.format("%s %s ", self.icons.branch, self.status_dict.head)
 			end,
 			hl = { fg = p.cool_gray },
-		},
-		{
-			provider = " ",
 		},
 		{
 			provider = function(self)
@@ -326,7 +345,7 @@ local function heirline()
 		{
 			provider = function(self)
 				local count = self.status_dict.removed or 0
-				return count > 0 and (self.icons.removed .. count)
+				return count > 0 and string.format("%s %s", self.icons.removed, count) or ""
 			end,
 			hl = { fg = p.red },
 		},
@@ -338,7 +357,7 @@ local function heirline()
 		{
 			provider = function(self)
 				local count = self.status_dict.changed or 0
-				return count > 0 and (self.icons.modified .. count)
+				return count > 0 and string.format("%s %s", self.icons.modified, count) or ""
 			end,
 			hl = { fg = p.lemon_chiffon },
 		},
@@ -348,86 +367,94 @@ local function heirline()
 				return self.has_changes
 			end,
 		},
-	}
-	setmetatable(Git, with)
+	})
 
-	local FileName = {
+	local FileName = Component({
 		provider = function(_self)
 			local filename = vim.fn.expand("%:t")
 			local extension = vim.fn.expand("%:e")
 			local icon, _icon_color =
 				require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
-			return icon and string.format("%s %s", icon, filename) or filename
+			icon = icon and (icon .. " ") or ""
+			local width = (#filename * 2) + #icon - 1 --vim.o.columns
+			return "%-" .. width .. "(" .. string.format("%s%s", icon, filename) .. "%)"
 		end,
-		hl = hl.B,
-	}
-	setmetatable(FileName, with)
+		hl = hl.C,
+	})
 
-	local function flip(f)
-		return function()
-			return not f()
-		end
-	end
-
-	local StatusLine = {
+	local Left = Component({
 		separators.left(hl.ANOBG),
 		hl(Mode, hl.A),
-		separators.right(hl.AB):with({ condition = conditions.is_git_repo }),
-		separators.right(hl.ANOBG):with({ condition = flip(conditions.is_git_repo) }),
+		separators.right(hl.ANOBG),
+		-- separators.right(hl.ANOBG):with({ condition = flip(conditions.is_git_repo) }),
 		hl({
 			Space(1),
 			Git,
 			condition = conditions.is_git_repo,
-		}, hl.B),
-		separators.right(hl.BC):with({ condition = conditions.is_git_repo }),
-		Space(1),
+		}, hl.C),
+		-- separators.right(hl.ANOBG):with({ condition = conditions.is_git_repo }),
 		Harpoon.Hook,
 		Harpoon.Count,
-		BG(Align),
-		setmetatable({
-			hl(FileName, { fg = p.colombia_blue }),
-			{
-				update = { "LspAttach", "LspDetach" },
-				provider = function(self)
-					local names = {}
-					for i, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-						if server.name ~= "copilot" and server.name ~= "null-ls" then
-							table.insert(names, server.name)
-						end
-					end
-					local state = require("willothy.state")
-					state.lsp.clients = names
-					state.lsp.attached = #names > 0
+	})
 
-					--[[ " " .. ]]
-					return string.format(" • %s", table.concat(names, ", "))
-				end,
-				condition = function()
-					return #require("willothy.state").lsp.clients > 0
-				end,
-				hl = { fg = p.colombia_blue, bg = "none" },
-				flexible = 1,
-			},
-			BG(Align),
-		}, with):with({
-			condition = function()
-				return vim.bo.buflisted
-			end,
-			hl = { fg = p.colombia_blue, bg = "none" },
-		}),
-		separators.left(hl.BC),
+	local Center = Component({
+		FileName,
+		--Align,
+		-- setmetatable({
+		-- 	hl(FileName, { fg = p.colombia_blue }),
+		-- 	{
+		-- 		update = { "LspAttach", "LspDetach" },
+		-- 		provider = function(_self)
+		-- 			local names = {}
+		-- 			for _, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
+		-- 				if server.name ~= "copilot" and server.name ~= "null-ls" then
+		-- 					table.insert(names, server.name)
+		-- 				end
+		-- 			end
+		-- 			local state = require("willothy.state")
+		-- 			state.lsp.clients = names
+		-- 			state.lsp.attached = #names > 0
+		--
+		-- 			--[[ " " .. ]]
+		-- 			return string.format(" • %s", table.concat(names, ", "))
+		-- 		end,
+		-- 		condition = function()
+		-- 			return #require("willothy.state").lsp.clients > 0
+		-- 		end,
+		-- 		hl = { fg = p.colombia_blue, bg = "none" },
+		-- 		flexible = 1,
+		-- 	},
+		-- }, with):with({
+		-- 	condition = function()
+		-- 		return vim.bo.buflisted
+		-- 	end,
+		-- 	hl = { fg = p.colombia_blue, bg = "none" },
+		-- }),
+	})
+
+	local Right = Component({
 		hl({
 			Space(1),
 			Devicon,
 			Space(1),
 			Filetype,
-			Space(2),
+			Space(1),
 			Copilot,
 			Space(1),
-		}, hl.B),
-		separators.left(hl.AB),
+		}, hl.C),
+		separators.left(hl.ANOBG),
 		hl(Location, hl.A),
 		separators.right(hl.ANOBG),
+		-- flexible = 3,
+	})
+
+	local StatusLine = {
+		-- flexible = 4,
+		Left,
+		Align,
+		Center,
+		Align,
+		Right, --:with({ flexible = 2 }),
 	}
 
 	return {
@@ -442,6 +469,5 @@ return {
 		config = function()
 			require("heirline").setup(heirline())
 		end,
-		enabled = false,
 	},
 }
