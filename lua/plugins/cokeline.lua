@@ -174,8 +174,8 @@ local function cokeline()
 		},
 		diagnostics = {
 			text = function(buffer)
-				return (buffer.diagnostics.errors ~= 0 and icons.diagnostics.errors .. buffer.diagnostics.errors)
-					or (buffer.diagnostics.warnings ~= 0 and icons.diagnostics.warnings .. buffer.diagnostics.warnings)
+				return (buffer.diagnostics.errors ~= 0 and icons.diagnostics.errors .. " " .. buffer.diagnostics.errors)
+					or (buffer.diagnostics.warnings ~= 0 and icons.diagnostics.warnings .. " " .. buffer.diagnostics.warnings)
 					or ""
 			end,
 			fg = function(buffer)

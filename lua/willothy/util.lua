@@ -93,22 +93,8 @@ function M.bind(func, ...)
 end
 
 function M.reload(mod)
-	if mod == nil then
-		return
-	end
-	local lazy = require("lazy.core.config")
-	local plugin = vim.tbl_filter(function(p)
-		return p.name == mod
-	end, lazy.plugins)[1]
-	if plugin then
-		require("lazy.core.loader").reload(plugin)
-		-- local reloaded = require(mod)
-		return require("lazy.core.loader").load(plugin)
-		-- return require(mod)
-	else
-		package.loaded[mod] = nil
-		return require(mod)
-	end
+	package.loaded[mod] = nil
+	return require(mod)
 end
 
 function M.current_mod()

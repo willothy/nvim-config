@@ -27,7 +27,7 @@ return {
 	{
 		"sidebar-nvim/sidebar.nvim",
 		opts = {
-			open = true,
+			open = true, --vim.fn.argc() ~= 0,
 			section_separator = { " ", " " },
 			sections = {
 				-- "git",

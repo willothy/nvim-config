@@ -12,7 +12,7 @@ require("willothy.lazy")
 -- require("willothy.lsp")
 
 -- File for messing around with lua
-require("willothy.scratchpad")
+-- require("willothy.scratchpad")
 -- require("willothy.sessions")
 
 --vim.g.rust_conceal = 1

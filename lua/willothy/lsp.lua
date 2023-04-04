@@ -64,21 +64,19 @@ function ActionMenu:init(items)
 	local exec = function(item)
 		if item then
 			if type(item) == "table" and item.edit then
-				local client = vim.lsp.get_client_by_id(item.index)
-				local action = item
-				-- local changes = {}
-				-- for uri, edits in pairs(item.edit.changes) do
-				-- 	table.insert(changes, {
-				-- 		text_document = {
-				-- 			uri = uri,
-				-- 		},
-				-- 		edits = edits[1],
-				-- 	})
-				-- end
-				-- for _, change in ipairs(changes) do
-				-- 	---@diagnostic disable-next-line: missing-parameter
-				-- 	vim.lsp.util.apply_text_document_edit(change)
-				-- end
+				local client = vim.lsp.get_client_by_id(item.client)
+				local changes = {}
+				for uri, edits in pairs(item.edit.changes) do
+					table.insert(changes, {
+						textDocument = {
+							uri = uri,
+						},
+						edits = edits,
+					})
+				end
+				for _, change in ipairs(changes) do
+					vim.lsp.util.apply_text_document_edit(change, 1, client.offset_encoding)
+				end
 			elseif type(item) == "string" then
 				vim.api.nvim_exec(item)
 			elseif type(item) == "function" then
@@ -98,9 +96,9 @@ function ActionMenu:init(items)
 		zindex = 100,
 	}
 
-	local menu_items = Iter.new(items):map(function(i, v)
-		v.index = i
-		return Menu.item(v.title, v)
+	local menu_items = Iter:new(items):enumerate():map(function(v)
+		v[2].index = v[1]
+		return Menu.item(v[2].title, v[2])
 	end)
 
 	local menu_opts = {
@@ -109,6 +107,10 @@ function ActionMenu:init(items)
 		min_height = 1,
 		max_height = max_height,
 		lines = menu_items,
+		keymap = {
+			close = { "<Esc>", "<C-c>", "q" },
+			submit = { "<CR>" },
+		},
 		on_close = function()
 			exec()
 		end,
@@ -130,18 +132,22 @@ function M.code_actions()
 	local params = vim.lsp.util.make_range_params()
 	params.context = context
 	vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(results)
-		local items = Iter.new(results)
-			:filter(function(_c, res)
-				return type(res) == "table" and res.result ~= nil
+		local items = Iter:new(results)
+			:enumerate()
+			:filter(function(res)
+				return type(res) == "table" and type(res[2]) == "table" and res[2].result ~= nil
 			end)
-			:map(function(client, res)
-				Iter.new(res):map(function(i, v)
-					v.index = i
-					v.client = client
-					_G.dbg(v)
-					return v
-				end)
+			:map(function(res)
+				local client = res[1]
+				return Iter:new(res[2].result)
+					:map(function(v)
+						v.client = client
+						return v
+					end)
+					:collect()
 			end)
+			:collect()[1]
+		vim.print(items)
 		ActionMenu(items):mount()
 	end)
 end
