@@ -14,6 +14,12 @@ local function register(modes, mappings, opts)
 	end
 end
 
+local function nop(key)
+	vim.keymap.set({ "n" }, key, "<nop>", { noremap = true })
+end
+nop("[s")
+nop("]s")
+
 vim.api.nvim_set_keymap("", ",", " ", {
 	noremap = true,
 	desc = "Leader 2",
@@ -248,6 +254,7 @@ wk.register({
 		f = { util.bind(util.browse, "~/projects/"), "Browse projects" },
 		v = { util.bind(util.browse), "Browse current directory" },
 		r = { util.bind(util.browse, util.project_root), "Browse project root" },
+		h = { util.bind(util.browse, vim.loop.os_homedir()), "Browse home directory" },
 		cr = { util.bind(util.browse, util.crate_root), "Browse crate root" },
 		pc = { util.bind(util.browse, util.parent_crate), "Browse parent crate" },
 	},

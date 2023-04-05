@@ -159,4 +159,82 @@ function M.create_float(lines, lang)
 	})
 end
 
+function M.is_pascal_case(str)
+	return str:match("^%u%w+$") ~= nil and not str:gmatch("_")()
+end
+
+---@param string string
+---@param case "snake"|"SNAKE"|"camel"|"Pascal"
+local function do_make_case(s, case)
+	words = {}
+	for word in s:gsub("%u%w+", " %1"):gsub("[-_]", " "):gmatch("%w+") do
+		table.insert(words, word)
+	end
+
+	---@return string
+	local function snake_case()
+		-- return str:gsub("%s", "_")
+		return table.concat(words, "_")
+	end
+
+	---@return string
+	local function SCREAMING_SNAKE_CASE()
+		-- return snake_case(str):upper()
+		return table.concat(words, "_"):upper()
+	end
+
+	---@return string
+	local function camelCase()
+		-- return str:gsub("%s+(%w)", upper)
+		for i, word in ipairs(words) do
+			if i > 1 then
+				words[i] = word:sub(1, 1):upper() .. word:sub(2)
+			end
+		end
+		return table.concat(words, "")
+	end
+
+	---@return string
+	local function PascalCase()
+		-- return str:gsub("(%w)", upper)
+		for i, word in ipairs(words) do
+			words[i] = word:sub(1, 1):upper() .. word:sub(2)
+		end
+		return table.concat(words, "")
+	end
+
+	if case == "snake" then
+		return snake_case()
+	elseif case == "SNAKE" then
+		return SCREAMING_SNAKE_CASE()
+	elseif case == "camel" then
+		return camelCase()
+	elseif case == "Pascal" then
+		return PascalCase()
+	end
+end
+
+local last_case = nil
+
+M.make_case = setmetatable({}, {
+	__index = function(self, k)
+		local str = vim.fn.expand("<cword>")
+		vim.fn.setreg("+", do_make_case(str, k))
+		vim.api.nvim_feedkeys('viw"+p', "n", false)
+		vim.go.operatorfunc = "v:lua.require'willothy.util'.make_case." .. k
+		return "g@l"
+	end,
+	__call = function()
+		if not last_case then
+			last_case = vim.fn.input("Enter case: ")
+		end
+		return M.make_case[last_case]()
+	end,
+})
+
+vim.api.nvim_create_user_command("MakeCase", function(args)
+	local case = args["args"]
+	local _ = M.make_case[case]
+end, { nargs = 1 })
+
 return M
