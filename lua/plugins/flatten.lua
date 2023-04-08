@@ -9,12 +9,22 @@ end
 return {
 	{
 		"willothy/flatten.nvim",
-		dir = vim.g.dev == "flatten" and "~/projects/neovim/flatten/" or nil,
+		-- dir = vim.g.dev == "flatten" and "~/projects/lua/flatten/" or nil,
+		dir = "~/projects/lua/flatten/",
 		opts = {
 			window = {
 				open = "alternate",
 			},
 			callbacks = {
+				should_block = function(argv)
+					-- If the first argument is "git", block
+					for _, arg in ipairs(argv) do
+						if arg == "-b" then
+							return true
+						end
+					end
+					return false
+				end,
 				post_open = function(bufnr, winnr, ft, is_blocking)
 					if is_blocking or ft == "gitcommit" then
 						-- Hide the terminal while it's blocking
