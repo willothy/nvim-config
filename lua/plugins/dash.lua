@@ -1,7 +1,7 @@
 return {
 	{
 		"startup-nvim/startup.nvim",
-		enabled = true,
+		enabled = false,
 		init = function()
 			vim.api.nvim_create_autocmd("BufEnter", {
 				pattern = "startup",
@@ -73,7 +73,7 @@ return {
 					local b_mod = b_stat.mtime.sec
 					local a_accessed = a_stat.atime.sec
 					local b_accessed = b_stat.atime.sec
-					return a_accessed > b_accessed or a_mod > b_mod
+					return (a_accessed > b_accessed) or (a_mod > b_mod) or false
 				end)
 				local keys = {
 					"w",

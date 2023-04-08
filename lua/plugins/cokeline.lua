@@ -284,29 +284,29 @@ local function cokeline()
 			components.separator("right"),
 			components.padding,
 		},
-		sidebar = {
-			filetype = "SidebarNvim",
-			components = {
-				{
-					text = icons.separators.circle.left,
-					fg = p.gunmetal,
-					bg = "none",
-				},
-				{
-					text = " ",
-					bg = p.gunmetal,
-					fg = "none",
-				},
-				-- {
-				-- 	text = function()
-				-- 		local names = require("willothy.state").lsp.clients or {}
-				-- 		return (#names > 0 and "⚡ " or "") .. table.concat(names, " • ")
-				-- 	end,
-				-- 	bg = p.gunmetal,
-				-- 	fg = p.cool_gray,
-				-- },
-			},
-		},
+		-- sidebar = {
+		-- 	filetype = "SidebarNvim",
+		-- 	components = {
+		-- 		{
+		-- 			text = icons.separators.circle.left,
+		-- 			fg = p.gunmetal,
+		-- 			bg = "none",
+		-- 		},
+		-- 		{
+		-- 			text = " ",
+		-- 			bg = p.gunmetal,
+		-- 			fg = "none",
+		-- 		},
+		-- 		-- {
+		-- 		-- 	text = function()
+		-- 		-- 		local names = require("willothy.state").lsp.clients or {}
+		-- 		-- 		return (#names > 0 and "⚡ " or "") .. table.concat(names, " • ")
+		-- 		-- 	end,
+		-- 		-- 	bg = p.gunmetal,
+		-- 		-- 	fg = p.cool_gray,
+		-- 		-- },
+		-- 	},
+		-- },
 	}
 end
 
