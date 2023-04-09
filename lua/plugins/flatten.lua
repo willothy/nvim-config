@@ -10,7 +10,8 @@ return {
 	{
 		"willothy/flatten.nvim",
 		-- dir = vim.g.dev == "flatten" and "~/projects/lua/flatten/" or nil,
-		dir = "~/projects/lua/flatten/",
+		-- dir = "~/projects/lua/flatten/",
+		cond = true,
 		opts = {
 			window = {
 				open = "alternate",

@@ -89,4 +89,7 @@ require("lazy").setup({
 		-- The border to use for the UI window. Accepts same border values as |nvim_open_win()|.
 		border = "rounded",
 	},
+	-- defaults = {
+	-- 	cond = os.getenv("NVIM") == nil,
+	-- },
 })

@@ -6,7 +6,7 @@ return {
 		},
 		lazy = true,
 		cmd = "Based",
-		init = function()
+		config = function()
 			vim.api.nvim_create_user_command("Based", require("based").convert, {})
 		end,
 	},
