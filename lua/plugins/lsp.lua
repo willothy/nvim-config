@@ -25,7 +25,7 @@ local function lsp_maps(bufnr)
 	map("n", "[d", diagnostic.goto_next, "Next diagnostic")
 	map("n", "]d", diagnostic.goto_prev, "Previous diagnostic")
 	-- map("n", "<leader>ca", buf.code_action, opts)
-	map("n", "<leader>ca", require("willothy.lsp").code_actions, "Code actions")
+	map("n", "<leader>ca", require("willothy.actions").code_actions, "Code actions")
 	-- map("n", "<leader>vrr", buf.references, opts)
 	map("n", "<leader>hs", buf.signature_help, "Signature help")
 
