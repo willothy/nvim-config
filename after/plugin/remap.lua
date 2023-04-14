@@ -165,18 +165,11 @@ wk.register({
 			"Lua repl",
 		},
 		c = {
-			name = "cargo",
-			r = {
-				function()
-					require("willothy.terminals").cargo_run:toggle()
-				end,
-				"Cargo run",
-			},
-			t = {
-				function()
-					require("willothy.terminals").cargo_test:toggle()
-				end,
-				"Cargo test",
+			name = "Actions",
+			a = "Code actions",
+			m = {
+				require("willothy.actions").quickmenu,
+				"Actions menu",
 			},
 		},
 	},
@@ -317,6 +310,7 @@ wk.register({
 	},
 	["<Tab>"] = { ">gv", "Indent line" },
 	["<S-Tab>"] = { "<gv", "Unindent line" },
+	["<C-c>"] = { '"+y', "Copy selection" },
 }, {
 	mode = "v",
 })

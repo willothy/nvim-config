@@ -33,6 +33,7 @@ return {
 		version = false,
 		lazy = true,
 		event = "VeryLazy",
+		enabled = false,
 		config = function()
 			require("mini.jump").setup({
 				mappings = {

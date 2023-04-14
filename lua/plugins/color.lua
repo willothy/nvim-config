@@ -9,6 +9,7 @@ return {
 	},
 	{
 		"willothy/minimus",
+		-- dir = "~/projects/lua/minimus/",
 		dependencies = {
 			"rktjmp/lush.nvim",
 		},

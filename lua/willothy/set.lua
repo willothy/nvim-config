@@ -8,7 +8,7 @@ vim.api.nvim_exec('let &t_Ce = "\\e[4:0m"', true)
 o.tabstop = 4
 o.softtabstop = -1
 o.shiftwidth = 0
-o.expandtab = true
+o.expandtab = false
 
 o.smartindent = false
 

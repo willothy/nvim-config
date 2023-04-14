@@ -237,4 +237,15 @@ vim.api.nvim_create_user_command("MakeCase", function(args)
 	local _ = M.make_case[case]
 end, { nargs = 1 })
 
+function M.synStack()
+	local line = vim.fn.line(".")
+	local col = vim.fn.col(".")
+	local stack = vim.fn.synstack(line, col)
+	for i = 1, #stack do
+		local id = stack[i]
+		local name = vim.fn.synIDattr(id, "name")
+		print(name)
+	end
+end
+
 return M

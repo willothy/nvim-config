@@ -10,12 +10,13 @@ return {
 	{
 		"willothy/flatten.nvim",
 		-- dir = vim.g.dev == "flatten" and "~/projects/lua/flatten/" or nil,
-		-- dir = "~/projects/lua/flatten/",
+		dir = "~/projects/lua/flatten/",
 		cond = true,
 		opts = {
 			window = {
 				open = "alternate",
 			},
+			-- nest_if_no_args = true,
 			callbacks = {
 				should_block = function(argv)
 					-- If the first argument is "git", block

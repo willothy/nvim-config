@@ -25,7 +25,8 @@ local function lsp_maps(bufnr)
 	map("n", "[d", diagnostic.goto_next, "Next diagnostic")
 	map("n", "]d", diagnostic.goto_prev, "Previous diagnostic")
 	-- map("n", "<leader>ca", buf.code_action, opts)
-	map("n", "<leader>ca", require("willothy.actions").code_actions, "Code actions")
+	-- map("n", "<leader>ca", require("willothy.actions").code_actions, "Code actions")
+	map("n", "<leader>ca", require("rust-tools").code_action_group.code_action_group, "Code actions")
 	-- map("n", "<leader>vrr", buf.references, opts)
 	map("n", "<leader>hs", buf.signature_help, "Signature help")
 
@@ -135,6 +136,7 @@ local lsp_settings = {
 			includeAllWorkspaceSymbols = true,
 		},
 	},
+	clangd = {},
 	["lua_ls"] = {
 		Lua = {
 			format = {
@@ -332,6 +334,7 @@ local function lsp_setup()
 		automatic_setup = true,
 	})
 	local lspconfig = require("lspconfig")
+	local lspcfg_cfg = require("lspconfig.configs")
 	local cmp_lsp = require("cmp_nvim_lsp")
 
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -353,6 +356,8 @@ local function lsp_setup()
 	capabilities.textDocument.completion.completionItem.resolveSupport = {
 		properties = { "documentation", "detail", "additionalTextEdits" },
 	}
+
+	capabilities.offsetEncoding = "utf-8"
 
 	cmp_lsp.default_capabilities(capabilities)
 

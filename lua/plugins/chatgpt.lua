@@ -8,6 +8,7 @@ return {
 		},
 		lazy = true,
 		cmd = "ChatGPT",
+		enabled = false,
 		opts = {
 			keymaps = {
 				submit = "<Enter>",
