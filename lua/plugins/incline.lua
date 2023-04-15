@@ -14,56 +14,47 @@ local function get_diagnostic_label(props)
 	return label
 end
 
--- local function get_max_severity_group(props)
--- 	local icons = { "error", "warn", "info", "hint" }
--- 	local max_severity = 0
--- 	for i, severity in ipairs(icons) do
--- 		local n = #vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity[string.upper(severity)] })
--- 		if n > 0 then
--- 			max_severity = i
--- 		end
--- 	end
--- 	local severity_group = {
--- 		0 = "Normal"
--- 		1 = "DiagnosticSignError",
--- 		2 = "DiagnosticSignWarn",
--- 		3 = "DiagnosticSignInfo",
--- 		4 = "DiagnosticSignHint",
--- 	}
--- 	return severity_group[max_severity]
--- end
-
-local function get_git_diff(props)
-	local icons = { removed = "", changed = "", added = "" }
-	local labels = {}
-	local signs = vim.api.nvim_buf_get_var(props.buf, "gitsigns_status_dict")
-	-- local signs = vim.b.gitsigns_status_dict
-	for name, icon in pairs(icons) do
-		if tonumber(signs[name]) and signs[name] > 0 then
-			table.insert(labels, { icon .. " " .. signs[name] .. " ", group = "Diff" .. name })
+local function get_max_severity_group(props)
+	local icons = { "hint", "info", "warn", "error" }
+	local max_severity = 0
+	for i, severity in ipairs(icons) do
+		local n = #vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity[string.upper(severity)] })
+		if n > 0 then
+			max_severity = severity
 		end
 	end
-	if #labels > 0 then
-		table.insert(labels, { "| " })
-	end
-	return labels
+	local severity_group = {
+		"DiagnosticSignError",
+		"DiagnosticSignWarn",
+		"DiagnosticSignInfo",
+		"DiagnosticSignHint",
+	}
+	return severity_group[max_severity]
 end
 
 return {
 	{
 		"b0o/incline.nvim",
+		enabled = false,
 		opts = {
 			render = function(props)
 				local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+				local color = get_max_severity_group({
+					buf = props.buf,
+				})
 				local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
-				local modified = vim.api.nvim_buf_get_option(props.buf, "modified") and "bold,italic" or "bold"
+				local modified = vim.api.nvim_buf_get_option(props.buf, "modified") and "italic" or ""
 
 				local buffer = {
 					-- { get_diagnostic_label(props) },
 					-- { get_git_diff(props) },
-					{ ft_icon, guifg = ft_color },
-					{ " " },
-					{ filename, gui = modified },
+					-- { ft_icon, guifg = ft_color },
+					-- { " " },
+					-- {
+					-- 	filename, --[[ gui = modified,  ]]
+					-- 	guifg = color or "#1f1f1f",
+					-- 	guibg = require("minimus.palette").mode_color(),
+					-- },
 				}
 				return buffer
 			end,

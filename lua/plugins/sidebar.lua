@@ -28,7 +28,7 @@ return {
 		"sidebar-nvim/sidebar.nvim",
 		opts = {
 			side = "right",
-			open = true, --vim.fn.argc() ~= 0,
+			open = vim.o.columns >= 150, --vim.fn.argc() ~= 0,
 			section_separator = { " ", " " },
 			sections = {
 				-- "git",

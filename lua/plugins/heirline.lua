@@ -382,6 +382,12 @@ local function heirline()
 		hl = hl.C,
 	})
 
+	-- local Instant = Component({
+	-- 	provider = function(self)
+	-- 		returnt (#require("instant").get_connected_list() > 1) and " ✦" or ""
+	-- 	end,
+	-- })
+
 	local Left = Component({
 		separators.left(hl.ANOBG),
 		hl(Mode, hl.A),
