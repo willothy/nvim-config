@@ -180,7 +180,7 @@ return {
 		-- personal fork with eyeliner highlighting
 		"willothy/flit.nvim",
 		-- "ggandor/flit.nvim",
-		-- dir = "~/projects/lua/flit.nvim/",
+		dir = "~/projects/lua/flit.nvim/",
 		opts = {
 			keys = { f = "f", F = "F", t = "t", T = "T" },
 			-- A string like "nv", "nvo", "o", etc.
