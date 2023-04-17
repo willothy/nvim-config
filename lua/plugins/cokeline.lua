@@ -88,7 +88,7 @@ local function cokeline()
 					end
 				end,
 				bg = function(buffer)
-					if not true and (side == "left" and buffer.is_first) or (side == "right" and buffer.is_last) then
+					if (side == "left" and buffer.is_first) or (side == "right" and buffer.is_last) then
 						return "none"
 					else
 						return p.gunmetal
