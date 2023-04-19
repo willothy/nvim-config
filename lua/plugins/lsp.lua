@@ -41,16 +41,16 @@ local function lsp_maps(bufnr)
 	local ts_utils = require("nvim-treesitter.ts_utils")
 	local increname = function()
 		local cword = fn.expand("<cword>")
-		local node = ts_utils.get_node_at_cursor()
-
-		local type = node:type()
-		if type ~= nil and string.match(type, "identifier") ~= nil then
-			require("willothy.lsp").if_defined_in_workspace(function()
-				vim.api.nvim_feedkeys(":IncRename " .. cword, "n", false)
-			end)
-		else
-			return
-		end
+		vim.api.nvim_feedkeys(":IncRename " .. cword, "n", false)
+		-- local node = ts_utils.get_node_at_cursor()
+		--
+		-- local type = node:type()
+		-- if type ~= nil and string.match(type, "identifier") ~= nil then
+		-- 	require("willothy.lsp").if_defined_in_workspace(function()
+		-- 	end)
+		-- else
+		-- 	return
+		-- end
 	end
 	setmap("n", "<leader>rn", increname, { expr = true, desc = "Rename" })
 	setmap("n", "<F2>", increname, { expr = true, desc = "Rename" })

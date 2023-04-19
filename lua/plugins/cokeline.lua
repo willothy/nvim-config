@@ -72,7 +72,9 @@ local function cokeline()
 		separator = function(side)
 			return {
 				text = function(buffer)
-					if side == "left" and (buffer.is_focused or buffer.is_first) then
+					if
+						side == "left"--[[  and (buffer.is_focused or buffer.is_first) ]]
+					then
 						return icons.separators.circle.left
 					elseif side == "right" and (buffer.is_focused or buffer.is_last) then
 						return icons.separators.circle.right
