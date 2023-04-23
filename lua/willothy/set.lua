@@ -76,7 +76,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 			vim.opt.tabstop = 4
 		end
 
-		if ({ "toggleterm", "dashboard", "alpha", has = has }):has(vim.bo.filetype) then
+		if ({ "toggleterm", "dashboard", "alpha", has = has }):has(vim.bo.filetype) or vim.bo.buftype == "terminal" then
 			return
 		end
 

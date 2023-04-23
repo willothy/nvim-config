@@ -291,7 +291,17 @@ register("n", {
 		"Save",
 	},
 })
+
+local spl = require("smart-splits")
 register({ "n", "t" }, {
+	["<C-Up>"] = { spl.move_cursor_up, "Move to window up" },
+	["<C-Down>"] = { spl.move_cursor_down, "Move to window down" },
+	["<C-Left>"] = { spl.move_cursor_left, "Move to window left" },
+	["<C-Right>"] = { spl.move_cursor_right, "Move to window right" },
+	["<M-Up>"] = { spl.resize_up, "Resize to window up" },
+	["<M-Down>"] = { spl.resize_down, "Resize to window down" },
+	["<M-Left>"] = { spl.resize_left, "Resize to window left" },
+	["<M-Right>"] = { spl.resize_right, "Resize to window right" },
 	["<C-w>"] = {
 		name = "window",
 		["<Up>"] = { util.bind(vim.cmd, "wincmd k"), "Move to window up" },
