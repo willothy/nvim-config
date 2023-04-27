@@ -247,6 +247,20 @@ local function heirline()
 		end, "heirline_copilot"),
 	})
 
+	local Env = function(var)
+		return Component({
+			provider = function()
+				local val = os.getenv(var)
+				if val == nil or val == "" then
+					return ""
+				else
+					return val .. " "
+				end
+			end,
+			hl = hl.C,
+		})
+	end
+
 	local Filetype = Component({
 		provider = function(_self)
 			return vim.bo.filetype ~= "" and vim.bo.filetype
@@ -447,6 +461,7 @@ local function heirline()
 			Space(1),
 			Copilot,
 			Space(1),
+			Env("SESH_NAME"),
 		}, hl.C),
 		separators.left(hl.ANOBG),
 		hl(Location, hl.A),

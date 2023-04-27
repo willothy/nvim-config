@@ -1,9 +1,12 @@
 return {
 	{
 		"chomosuke/term-edit.nvim",
+		enabled = false,
 		-- lazy = true,
 		-- event = "VeryLazy",
-		config = true,
+		opts = {
+			prompt_end = "✦ -> ",
+		},
 		version = "1.*",
 	},
 }
