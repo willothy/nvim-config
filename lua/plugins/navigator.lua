@@ -6,8 +6,12 @@ return {
 	},
 	{
 		"mrjones2014/smart-splits.nvim",
-		config = true,
-		lazy = true,
-		event = "VimEnter",
+		-- config = true,
+		lazy = false,
+		opts = {
+			multiplexer_integration = "wezterm",
+		},
+		enabled = true,
+		-- event = "VimEnter",
 	},
 }
