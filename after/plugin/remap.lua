@@ -294,6 +294,7 @@ register("n", {
 
 local spl = require("smart-splits")
 register({ "n", "t" }, {
+	name = "window",
 	["<C-Up>"] = { spl.move_cursor_up, "Move to window up" },
 	["<C-Down>"] = { spl.move_cursor_down, "Move to window down" },
 	["<C-Left>"] = { spl.move_cursor_left, "Move to window left" },
@@ -302,6 +303,9 @@ register({ "n", "t" }, {
 	["<M-Down>"] = { spl.resize_down, "Resize to window down" },
 	["<M-Left>"] = { spl.resize_left, "Resize to window left" },
 	["<M-Right>"] = { spl.resize_right, "Resize to window right" },
+})
+
+register({ "n", "t" }, {
 	["<C-w>"] = {
 		name = "window",
 		["<Up>"] = { util.bind(vim.cmd, "wincmd k"), "Move to window up" },
@@ -378,6 +382,12 @@ wk.register({
 			m = {
 				require("willothy.actions").quickmenu,
 				"Actions menu",
+			},
+			o = {
+				function()
+					vim.cmd("Telescope oldfiles")
+				end,
+				"Telescope oldfiles",
 			},
 		},
 	},
