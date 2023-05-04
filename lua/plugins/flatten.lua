@@ -55,7 +55,9 @@ return {
 				end,
 				block_end = function()
 					-- After blocking ends (for a git commit, etc), reopen the terminal
-					require("nvterm.terminal").show("horizontal")
+					vim.defer_fn(function()
+						require("nvterm.terminal").show("horizontal")
+					end, 50)
 				end,
 			},
 		},
