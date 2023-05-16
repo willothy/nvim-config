@@ -220,6 +220,19 @@ vim.api.nvim_set_keymap("", ",", " ", {
 	desc = "Leader 2",
 })
 
+-- Dap
+register({ "n" }, {
+	d = {
+		name = "Debugging",
+		t = {
+			function()
+				require("dapui").toggle()
+			end,
+			"Toggle DAP UI",
+		},
+	},
+})
+
 -- Spider
 register({ "n", "o", "x" }, {
 	name = "spider",
@@ -346,7 +359,7 @@ wk.register({
 		"Add file to harpoon",
 	},
 	t = {
-		name = "terminal",
+		name = "toggle",
 		t = {
 			function()
 				require("nvterm.terminal").toggle("horizontal")
@@ -388,6 +401,18 @@ wk.register({
 					vim.cmd("Telescope oldfiles")
 				end,
 				"Telescope oldfiles",
+			},
+			r = {
+				function()
+					vim.cmd("Telescope registers")
+				end,
+				"Telescope registers",
+			},
+			s = {
+				function()
+					vim.cmd("Telescope lsp_document_symbols")
+				end,
+				"Telescope LSP document symbols",
 			},
 		},
 	},
