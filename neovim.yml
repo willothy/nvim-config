@@ -4,6 +4,9 @@ base: lua51
 globals:
   vim:
     any: true
+  table.iter:
+    args:
+      - type: table
   assert:
     args:
       - type: bool

@@ -44,6 +44,22 @@ function M.crate_root()
 	return nil
 end
 
+function M.find_root(markers)
+	local Path = require("plenary.path")
+	local last
+	local path = Path:new(vim.fn.expand("%"))
+	while path ~= last and not M.is_root(path) do
+		-- for _, marker in ipairs(markers) do
+		-- end
+		if path:joinpath(".git"):exists() then
+			return path
+		end
+		last = path
+		path = path:parent()
+	end
+	return nil
+end
+
 function M.parent_crate()
 	local root = M.crate_root()
 	if root == nil then

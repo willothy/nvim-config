@@ -1,18 +1,10 @@
 local o = vim.o
 local O = vim.opt
 local icons = require("willothy.icons")
+local util = require("willothy.util")
 
 vim.api.nvim_exec('let &t_Cs = "\\e[4:0m"', true)
 vim.api.nvim_exec('let &t_Ce = "\\e[4:0m"', true)
-
-o.tabstop = 4
-o.softtabstop = -1
-o.shiftwidth = 0
-o.expandtab = false
-
-o.smartindent = false
-
-o.wrap = false
 
 o.swapfile = true
 o.backup = false
@@ -33,10 +25,6 @@ o.mousemodel = "extend"
 --o.virtualedit = "all"
 
 o.signcolumn = "auto:2"
-
-o.numberwidth = 1
-o.number = true
-o.relativenumber = true
 
 o.foldcolumn = "1"
 o.fillchars = [[eob: ,fold: ,foldopen:]] .. icons.fold.open .. [[,foldsep: ,foldclose:]] .. icons.fold.closed
@@ -59,30 +47,66 @@ vim.api.nvim_create_autocmd({
 	end,
 })
 
-function has(arr, val)
-	for _, value in ipairs(arr) do
-		if value == val then
-			return true
-		end
-	end
-	return false
+local default = {
+	global = {},
+	window = {
+		wrap = false,
+		numberwidth = 1,
+		number = true,
+		relativenumber = true,
+	},
+	buffer = {
+		tabstop = 4,
+		softtabstop = -1,
+		shiftwidth = 0,
+		expandtab = false,
+		smartindent = false,
+	},
+}
+
+local filetypes = {
+	markdown = {
+		window = {
+			wrap = true,
+		},
+	},
+	lua = {
+		buffer = {
+			tabstop = 2,
+			shiftwidth = 2,
+		},
+	},
+}
+
+for ft, options in pairs(filetypes) do
+	filetypes[ft] = vim.tbl_deep_extend("keep", options, default)
 end
 
 vim.api.nvim_create_autocmd("BufEnter", {
-	callback = function()
-		if vim.bo.filetype == "lua" then
-			vim.opt.tabstop = 2
-		else
-			vim.opt.tabstop = 4
+	pattern = "*",
+	callback = function(ev)
+		local buf = ev.buf
+		local ft = vim.bo[buf].filetype
+		local bt = vim.bo[buf].buftype
+		local options = filetypes[ft] or default
+		for opt, val in pairs(options.buffer) do
+			vim.api.nvim_buf_set_option(buf, opt, val)
 		end
-
-		if ({ "toggleterm", "dashboard", "alpha", has = has }):has(vim.bo.filetype) or vim.bo.buftype == "terminal" then
-			return
+		for opt, val in pairs(options.window) do
+			vim.api.nvim_win_set_option(0, opt, val)
 		end
-
-		local ok, _ = pcall(vim.cmd, "Gcd")
-		if ok == false then
-			vim.cmd("lcd %:p:h")
+		for opt, val in pairs(options.global) do
+			vim.api.nvim_set_option(opt, val)
+		end
+		if bt == "" then
+			-- local root = util.find_root({ "Cargo.toml", "init.lua", ".git/" })
+			-- if root then
+			-- 	vim.api.nvim_set_current_dir
+			-- end
+			local ok, _ = pcall(vim.cmd, "Gcd")
+			if ok == false then
+				vim.cmd("lcd %:p:h")
+			end
 		end
 	end,
 })
