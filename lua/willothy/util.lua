@@ -20,6 +20,7 @@ end
 function M.project_root()
 	local Path = require("plenary.path")
 	local path = Path:new(vim.fn.expand("%"))
+
 	while not M.is_root(path) do
 		if path:joinpath(".git"):exists() then
 			return path

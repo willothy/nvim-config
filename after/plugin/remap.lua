@@ -3,11 +3,12 @@ if vim.g.minimal then
 end
 local wk = require("which-key")
 local util = require("willothy.util")
+
 local function register(modes, mappings, opts)
 	if type(modes) == "table" then
-		for _, mode in ipairs(modes) do
+		table.iter(modes):for_each(function(mode)
 			wk.register(mappings, vim.tbl_deep_extend("keep", { mode = mode }, opts or {}))
-		end
+		end)
 	else
 		wk.register(mappings, vim.tbl_deep_extend("keep", { mode = modes }, opts or {}))
 	end

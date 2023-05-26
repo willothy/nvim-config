@@ -76,6 +76,11 @@ local filetypes = {
 			shiftwidth = 2,
 		},
 	},
+	text = {
+		window = {
+			wrap = true,
+		},
+	},
 }
 
 for ft, options in pairs(filetypes) do
