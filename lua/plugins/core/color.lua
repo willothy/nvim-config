@@ -13,8 +13,9 @@ return {
 		dependencies = {
 			"rktjmp/lush.nvim",
 		},
-		lazy = false,
-		cond = true,
+		lazy = true,
+		event = "VimEnter",
+		-- cond = true,
 	},
 	{
 		"catppuccin/nvim",
