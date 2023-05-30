@@ -8,10 +8,10 @@ _G.dbg = vim.print
 require("willothy.test")
 require("willothy.util")
 require("willothy.remap")
-require("willothy.set")
 require("willothy.lazy")
 require("willothy.lsp")
 require("willothy.actions")
+require("willothy.set")
 
 -- File for messing around with lua
 -- require("willothy.scratchpad")

@@ -1,7 +1,8 @@
 local o = vim.o
 local O = vim.opt
 local icons = require("willothy.icons")
-local util = require("willothy.util")
+local _util = require("willothy.util")
+local Iter = require("litter")
 
 vim.api.nvim_exec('let &t_Cs = "\\e[4:0m"', true)
 vim.api.nvim_exec('let &t_Ce = "\\e[4:0m"', true)
@@ -24,7 +25,7 @@ o.mousemodel = "extend"
 
 --o.virtualedit = "all"
 
-o.signcolumn = "auto:2"
+-- o.signcolumn = "auto:2"
 
 o.foldcolumn = "1"
 o.fillchars = [[eob: ,fold: ,foldopen:]] .. icons.fold.open .. [[,foldsep: ,foldclose:]] .. icons.fold.closed
@@ -35,6 +36,11 @@ o.foldlevelstart = 99
 o.laststatus = 3
 
 O.listchars = { tab = "  ", extends = "", precedes = "" }
+
+o.number = true
+o.relativenumber = true
+
+O.numberwidth._info.default = 1
 
 vim.api.nvim_create_autocmd({
 	"ModeChanged",
@@ -48,7 +54,9 @@ vim.api.nvim_create_autocmd({
 })
 
 local default = {
-	global = {},
+	global = {
+		numberwidth = 1,
+	},
 	window = {
 		wrap = false,
 		numberwidth = 1,
@@ -83,35 +91,56 @@ local filetypes = {
 	},
 }
 
+local terminal = vim.tbl_deep_extend("keep", {
+	window = {
+		number = false,
+		relativenumber = false,
+		numberwidth = 1,
+	},
+	buffer = {
+		tabstop = 4,
+	},
+}, default)
+
 for ft, options in pairs(filetypes) do
 	filetypes[ft] = vim.tbl_deep_extend("keep", options, default)
 end
 
-vim.api.nvim_create_autocmd("BufEnter", {
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufEnter", "TermOpen" }, {
 	pattern = "*",
 	callback = function(ev)
 		local buf = ev.buf
 		local ft = vim.bo[buf].filetype
 		local bt = vim.bo[buf].buftype
-		local options = filetypes[ft] or default
-		for opt, val in pairs(options.buffer) do
-			vim.api.nvim_buf_set_option(buf, opt, val)
-		end
-		for opt, val in pairs(options.window) do
-			vim.api.nvim_win_set_option(0, opt, val)
-		end
-		for opt, val in pairs(options.global) do
-			vim.api.nvim_set_option(opt, val)
-		end
 		if bt == "" then
-			-- local root = util.find_root({ "Cargo.toml", "init.lua", ".git/" })
-			-- if root then
-			-- 	vim.api.nvim_set_current_dir
-			-- end
+			local options = filetypes[ft] or default
+			Iter:from_map(options.buffer)
+				:each(function(v)
+					vim.api.nvim_buf_set_option(buf, v[1], v[2])
+				end)
+				:chain(Iter:from_map(options.window):each(function(v)
+					vim.api.nvim_win_set_option(0, v[1], v[2])
+				end))
+				:chain(Iter:from_map(options.global):each(function(v)
+					vim.api.nvim_set_option(v[1], v[2])
+				end))
+				:collect()
 			local ok, _ = pcall(vim.cmd, "Gcd")
 			if ok == false then
 				vim.cmd("lcd %:p:h")
 			end
+		elseif bt == "terminal" then
+			Iter:from_map(terminal.window)
+				:each(function(v)
+					vim.api.nvim_win_set_option(0, v[1], v[2])
+				end)
+				:chain(Iter:from_map(terminal.buffer):each(function(v)
+					vim.api.nvim_buf_set_option(buf, v[1], v[2])
+				end))
+				:chain(Iter:from_map(terminal.global):each(function(v)
+					vim.api.nvim_set_option(v[1], v[2])
+				end))
+				:collect()
 		end
 	end,
 })
