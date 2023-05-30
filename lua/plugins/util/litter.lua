@@ -1,5 +1,5 @@
 return { {
 	"willothy/litter",
-	dir = "~/projects/lua/iter.lua/",
+	dir = "~/projects/lua/litter/",
 	lazy = false,
 } }
