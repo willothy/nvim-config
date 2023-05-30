@@ -1,6 +1,5 @@
 local event = require("nui.utils.autocmd").event
 local Menu = require("nui.menu")
-local Iter = require("willothy.iter")
 local util = require("willothy.util")
 
 local M = {}

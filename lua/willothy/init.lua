@@ -6,7 +6,6 @@ end
 _G.dbg = vim.print
 
 require("willothy.test")
-require("willothy.iter")
 require("willothy.util")
 require("willothy.remap")
 require("willothy.set")
