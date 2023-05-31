@@ -77,25 +77,6 @@ local function setup_inlayhints()
 				remove_colon_start = true,
 				remove_colon_end = true,
 			},
-			label_formatter = function(labels, _kind, _opts, _client_name)
-				return table.concat(labels or {}, "")
-			end,
-			virt_text_formatter = function(label, hint, _opts, client_name)
-				if client_name == "lua_ls" then
-					if hint.kind == 2 then
-						hint.paddingLeft = false
-					else
-						hint.paddingRight = false
-					end
-				end
-
-				local virt_text = {}
-				virt_text[#virt_text + 1] = hint.paddingLeft and { " ", "Normal" } or nil
-				virt_text[#virt_text + 1] = { label, "NormalNC" }
-				virt_text[#virt_text + 1] = hint.paddingRight and { " ", "Normal" } or nil
-
-				return virt_text
-			end,
 			highlight = "LspInlayHint",
 		},
 		enabled_at_startup = true,
@@ -141,17 +122,20 @@ local lsp_settings = {
 		},
 	},
 	clangd = {},
-	["lua_ls"] = {
+	lua_ls = {
 		Lua = {
 			format = {
 				enable = false,
 			},
 			diagnostics = {
-				enable = false,
+				enabled = false,
 				globals = { "vim" },
 			},
 			workspace = {
-				checkThirdParty = false,
+				-- checkThirdParty = true,
+				-- library = {
+				-- 	"~/projects/lua/veil/lua/",
+				-- },
 			},
 			completion = {
 				enable = true,
@@ -159,15 +143,15 @@ local lsp_settings = {
 				callSnippet = "Replace",
 				-- workspaceDelay = 1000,
 			},
-			-- hint = {
-			-- 	enable = false,
-			-- 	arrayIndex = "Enable",
-			-- 	await = true,
-			-- 	paramName = "All",
-			-- 	paramType = true,
-			-- 	semicolon = "SameLine",
-			-- 	setType = true,
-			-- },
+			hint = {
+				enable = true,
+				arrayIndex = "Enable",
+				await = true,
+				paramName = "All",
+				paramType = true,
+				semicolon = "SameLine",
+				setType = true,
+			},
 		},
 	},
 }
@@ -327,7 +311,9 @@ local function setup_rust()
 end
 
 local function lsp_setup()
-	-- require("neodev").setup({})
+	require("neodev").setup({
+		setup_jsonls = true,
+	})
 
 	vim.lsp.set_log_level("off")
 
@@ -340,6 +326,17 @@ local function lsp_setup()
 	local lspconfig = require("lspconfig")
 	local lspcfg_cfg = require("lspconfig.configs")
 	local cmp_lsp = require("cmp_nvim_lsp")
+
+	-- lspcfg_cfg.luahint = {
+	-- 	default_config = {
+	-- 		cmd = { "luahint" },
+	-- 		filetypes = { "lua" },
+	-- 		root_dir = function()
+	-- 			return vim.fn.getcwd()
+	-- 		end,
+	-- 		settings = {},
+	-- 	},
+	-- }
 
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
 
@@ -366,6 +363,7 @@ local function lsp_setup()
 	cmp_lsp.default_capabilities(capabilities)
 
 	-- local servers = get_servers()
+	setup_inlayhints()
 	mason_lspconfig.setup_handlers({
 		function(server_name)
 			lspconfig[server_name].setup({
@@ -375,12 +373,18 @@ local function lsp_setup()
 			})
 		end,
 	})
+
+	-- lspconfig.luahint.setup({
+	-- 	on_attach = function(client, bufnr)
+	-- 		inlayhints.on_attach(client, bufnr, true)
+	-- 	end,
+	-- 	capabilities = vim.lsp.protocol.make_client_capabilities(),
+	-- })
 	setup_rust()
 
 	setup_null()
 	setup_ufo()
 	setup_format()
-	setup_inlayhints()
 
 	local sign = function(opts)
 		vim.fn.sign_define(opts.name, {
@@ -421,6 +425,18 @@ local function lsp_setup()
 		},
 	})
 end
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "lua",
+	-- once = true,
+	callback = function()
+		require("lspconfig").lua_ls.setup({
+			-- capabilities = capabilities,
+			settings = lsp_settings["lua_ls"],
+			attach = lsp_attach,
+		})
+	end,
+})
 
 local aerial_opt = {
 	dense = true,
@@ -467,7 +483,6 @@ return {
 		"folke/neodev.nvim",
 		lazy = true,
 		ft = "lua",
-		config = true,
 	},
 	{
 		"j-hui/fidget.nvim",
@@ -509,7 +524,7 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		lazy = true,
-		event = "VeryLazy",
+		event = "VimEnter",
 		config = lsp_setup,
 	},
 	{

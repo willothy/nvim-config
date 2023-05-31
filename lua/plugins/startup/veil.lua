@@ -2,8 +2,8 @@ return {
 	{
 		"willothy/veil.nvim",
 		config = true,
-		-- dir = "~/projects/lua/veil.nvim/",
-		enabled = false,
+		dir = "~/projects/lua/veil/",
+		-- enabled = false,
 		-- enabled = false,
 		-- enabled = false,
 		-- dir = vim.g.dev == "veil" and "~/projects/neovim/veil.nvim/" or nil,
