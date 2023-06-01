@@ -9,6 +9,8 @@ local opts = {
 		"lua",
 		"rust",
 		"bash",
+		"markdown",
+		"markdown_inline",
 	},
 	-- Install parsers synchronously (only applied to `ensure_installed`)
 	sync_install = true,
@@ -19,6 +21,7 @@ local opts = {
 		-- `false` will disable the whole extension
 		enable = true,
 		-- list of language that will be disabled
+		-- additional_vim_regex_highlighting = true,
 		additional_vim_regex_highlighting = false,
 	},
 	indent = {

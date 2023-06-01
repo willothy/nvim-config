@@ -22,6 +22,7 @@ o.scrolloff = 16
 
 o.updatetime = 150
 o.mousemodel = "extend"
+o.mousemoveevent = true
 
 --o.virtualedit = "all"
 

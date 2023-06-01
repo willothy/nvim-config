@@ -121,7 +121,7 @@ local function cokeline()
 			end,
 			truncation = { priority = 1 },
 			---@param buffer Buffer
-			on_click = function(_id, _clicks, _button, _modifiers, _buffer)
+			on_click = function(_id, _clicks, _button, _modifiers, buffer)
 				-- Do things here
 			end,
 		},
@@ -186,17 +186,31 @@ local function cokeline()
 			end,
 			truncation = { priority = 1 },
 		},
-		close_or_unsaved = {
-			text = function(buffer)
-				return buffer.is_modified and icons.misc.modified or icons.actions.close
-			end,
-			fg = function(_buffer)
-				return nil
-			end,
-			style = "bold",
-			delete_buffer_on_left_click = true,
-			truncation = { priority = 1 },
-		},
+		close_or_unsaved = (function()
+			local hovered = false
+			return {
+				text = function(buffer)
+					if hovered then
+						return "H"
+					end
+					return buffer.is_modified and icons.misc.modified or icons.actions.close
+				end,
+				fg = function(_buffer)
+					return nil
+				end,
+				style = "bold",
+				truncation = { priority = 1 },
+				on_click = function(_id, _clicks, _button, _modifiers, buffer)
+					buffer:delete()
+				end,
+				on_mouse_enter = function(_buffer)
+					hovered = true
+				end,
+				on_mouse_leave = function(_buffer)
+					hovered = false
+				end,
+			}
+		end)(),
 		padding = {
 			text = function(buffer)
 				return buffer.is_last and " " or ""
@@ -224,13 +238,13 @@ local function cokeline()
 
 	return {
 		show_if_buffers_are_at_least = 1,
-		buffers = {
-			-- filter_valid = function(buffer) return buffer.type ~= 'terminal' end,
-			-- filter_visible = function(buffer) return buffer.type ~= 'terminal' end,
-			-- new_buffers_position = "next",
-			focus_on_delete = "next",
-			new_buffers_position = "number",
-		},
+		-- buffers = {
+		-- filter_valid = function(buffer) return buffer.type ~= 'terminal' end,
+		-- filter_visible = function(buffer) return buffer.type ~= 'terminal' end,
+		-- focus_on_delete = "next",
+		-- new_buffers_position = "next",
+		-- new_buffers_position = "number",
+		-- },
 		-- rendering = {
 		-- 	max_buffer_width = 30,
 		-- },
@@ -317,7 +331,7 @@ return {
 		"willothy/nvim-cokeline",
 		-- branch = "rhs-components",
 		-- dir = vim.g.dev == "cokeline" and "~/projects/neovim/cokeline" or nil,
-		-- dir = "~/projects/neovim/cokeline/",
+		dir = "~/projects/lua/cokeline/",
 		config = function()
 			require("cokeline").setup(cokeline())
 		end,
