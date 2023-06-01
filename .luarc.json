@@ -1,5 +1,5 @@
 {
-  "workspace.checkThirdParty": true,
+  "workspace.checkThirdParty": false,
   "runtime.version": "Lua 5.1",
   "hint.enable": true,
   "workspace.library": [

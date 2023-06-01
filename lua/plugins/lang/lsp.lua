@@ -67,19 +67,30 @@ local function setup_inlayhints()
 		inlay_hints = {
 			parameter_hints = {
 				show = true,
-				separator = "",
+				separator = ", ",
 				remove_colon_start = true,
-				remove_colon_end = true,
+				remove_colon_end = false,
 			},
 			type_hints = {
 				show = true,
-				separator = "",
+				separator = ", ",
 				remove_colon_start = true,
 				remove_colon_end = true,
 			},
 			highlight = "LspInlayHint",
 		},
 		enabled_at_startup = true,
+	})
+
+	vim.api.nvim_create_autocmd("LspAttach", {
+		group = vim.api.nvim_create_augroup("LspAttach_inlayhints", {}),
+		callback = function(args)
+			if not (args.data and args.data.client_id) then
+				return
+			end
+			local client = vim.lsp.get_client_by_id(args.data.client_id)
+			require("lsp-inlayhints").on_attach(client, args.buf, false)
+		end,
 	})
 end
 
@@ -128,7 +139,27 @@ local lsp_settings = {
 				enable = false,
 			},
 			diagnostics = {
-				enabled = false,
+				disable = { "incomplete-signature-doc" },
+				enable = false,
+				groupSeverity = {
+					strong = "Warning",
+					strict = "Warning",
+				},
+				groupFileStatus = {
+					["ambiguity"] = "Opened",
+					["await"] = "Opened",
+					["codestyle"] = "None",
+					["duplicate"] = "Opened",
+					["global"] = "Opened",
+					["luadoc"] = "Opened",
+					["redefined"] = "Opened",
+					["strict"] = "Opened",
+					["strong"] = "Opened",
+					["type-check"] = "Opened",
+					["unbalanced"] = "Opened",
+					["unused"] = "Opened",
+				},
+				unusedLocalExclude = { "_*" },
 				globals = { "vim" },
 			},
 			workspace = {
@@ -145,12 +176,12 @@ local lsp_settings = {
 			},
 			hint = {
 				enable = true,
+				setType = true,
 				arrayIndex = "Enable",
 				await = true,
 				paramName = "All",
 				paramType = true,
 				semicolon = "SameLine",
-				setType = true,
 			},
 		},
 	},
@@ -319,11 +350,72 @@ local function lsp_setup()
 
 	require("mason").setup({})
 	local mason_lspconfig = require("mason-lspconfig")
-	mason_lspconfig.setup({})
+	mason_lspconfig.setup({
+		lua_ls = {
+			single_file_support = true,
+			settings = {
+				Lua = {
+					workspace = {
+						checkThirdParty = false,
+					},
+					completion = {
+						workspaceWord = true,
+						callSnippet = "Both",
+					},
+					misc = {
+						parameters = {
+							"--log-level=trace",
+						},
+					},
+					diagnostics = {
+						disable = { "incomplete-signature-doc" },
+						enable = false,
+						groupSeverity = {
+							strong = "Warning",
+							strict = "Warning",
+						},
+						groupFileStatus = {
+							["ambiguity"] = "Opened",
+							["await"] = "Opened",
+							["codestyle"] = "None",
+							["duplicate"] = "Opened",
+							["global"] = "Opened",
+							["luadoc"] = "Opened",
+							["redefined"] = "Opened",
+							["strict"] = "Opened",
+							["strong"] = "Opened",
+							["type-check"] = "Opened",
+							["unbalanced"] = "Opened",
+							["unused"] = "Opened",
+						},
+						unusedLocalExclude = { "_*" },
+					},
+					format = {
+						enable = false,
+						defaultConfig = {
+							indent_style = "space",
+							indent_size = "2",
+							continuation_indent_size = "2",
+						},
+					},
+					hint = {
+						enable = true,
+						setType = true,
+						arrayIndex = "Enable",
+						await = true,
+						paramName = "All",
+						paramType = true,
+						semicolon = "SameLine",
+					},
+				},
+			},
+		},
+	})
 	require("mason-null-ls").setup({
 		automatic_setup = true,
 	})
 	local lspconfig = require("lspconfig")
+
 	local lspcfg_cfg = require("lspconfig.configs")
 	local cmp_lsp = require("cmp_nvim_lsp")
 
@@ -376,7 +468,7 @@ local function lsp_setup()
 
 	-- lspconfig.luahint.setup({
 	-- 	on_attach = function(client, bufnr)
-	-- 		inlayhints.on_attach(client, bufnr, true)
+	-- 		inlayhints.on_attach(client, bufnr, false)
 	-- 	end,
 	-- 	capabilities = vim.lsp.protocol.make_client_capabilities(),
 	-- })

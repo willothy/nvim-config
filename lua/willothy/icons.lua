@@ -91,7 +91,8 @@ M.dap = {
 M.actions = {
 	close_hexagon = "",
 	close2 = "⌧",
-	close = "",
+	close_round = "",
+	close = "🞫",
 }
 
 M.fold = {
@@ -131,6 +132,7 @@ M.misc = {
 	circle_slash = "",
 	ellipse = "",
 	kebab = "",
+	tent = "⛺",
 }
 
 return M

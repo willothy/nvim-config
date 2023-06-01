@@ -121,8 +121,7 @@ local function cokeline()
 			end,
 			truncation = { priority = 1 },
 			---@param buffer Buffer
-			on_click = function(_id, _clicks, _button, _modifiers, buffer)
-				print(buffer.filename)
+			on_click = function(_id, _clicks, _button, _modifiers, _buffer)
 				-- Do things here
 			end,
 		},
@@ -194,6 +193,7 @@ local function cokeline()
 			fg = function(_buffer)
 				return nil
 			end,
+			style = "bold",
 			delete_buffer_on_left_click = true,
 			truncation = { priority = 1 },
 		},
@@ -227,9 +227,9 @@ local function cokeline()
 		buffers = {
 			-- filter_valid = function(buffer) return buffer.type ~= 'terminal' end,
 			-- filter_visible = function(buffer) return buffer.type ~= 'terminal' end,
-			new_buffers_position = "next",
+			-- new_buffers_position = "next",
 			focus_on_delete = "next",
-			-- new_buffers_position = "number",
+			new_buffers_position = "number",
 		},
 		-- rendering = {
 		-- 	max_buffer_width = 30,
