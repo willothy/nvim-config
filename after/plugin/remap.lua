@@ -365,9 +365,17 @@ wk.register({
 		name = "toggle",
 		t = {
 			function()
-				require("nvterm.terminal").toggle("horizontal")
+				require("willothy.terminals").main:toggle()
+				-- require("toggleterm").toggle(0)
+				-- require("nvterm.terminal").toggle("horizontal")
 			end,
 			"Toggle terminal",
+		},
+		f = {
+			function()
+				require("willothy.terminals").float:toggle()
+			end,
+			"Toggle floating terminal",
 		},
 		s = {
 			function()

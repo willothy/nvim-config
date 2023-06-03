@@ -208,9 +208,9 @@ local function cokeline()
 		close_or_unsaved = {
 			text = function(buffer)
 				if buffer.is_hovered then
-					return buffer.is_modified and icons.misc.modified or icons.actions.close_round
+					return buffer.is_modified and icons.misc.modified or (icons.actions.close_round .. " ")
 				else
-					return buffer.is_modified and icons.misc.modified or icons.actions.close
+					return buffer.is_modified and icons.misc.modified or " " -- icons.actions.close
 				end
 			end,
 			fg = function(_buffer)

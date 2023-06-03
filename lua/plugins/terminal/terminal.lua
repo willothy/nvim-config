@@ -30,7 +30,7 @@ return {
 						local shellpath, _name = unpack(split(term.name, ";"))
 						local shell = split(shellpath, "/")
 						local hl = "%#ToggleTermName#"
-						return hl .. id .. " • " .. shell[#shell]
+						return hl .. id .. " • " .. (term.display_name or shell[#shell])
 					end,
 				},
 			})
