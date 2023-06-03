@@ -155,7 +155,7 @@ local function cokeline()
 				if buffer.is_focused then
 					return "bold"
 				end
-				if buffer.hovered then
+				if buffer.is_hovered then
 					return "underline"
 				end
 				return nil
@@ -207,7 +207,7 @@ local function cokeline()
 		},
 		close_or_unsaved = {
 			text = function(buffer)
-				if buffer.hovered then
+				if buffer.is_hovered then
 					return buffer.is_modified and icons.misc.modified or icons.actions.close_round
 				else
 					return buffer.is_modified and icons.misc.modified or icons.actions.close
@@ -342,11 +342,10 @@ return {
 		"willothy/nvim-cokeline",
 		-- branch = "rhs-components",
 		-- dir = vim.g.dev == "cokeline" and "~/projects/neovim/cokeline" or nil,
-		dir = "~/projects/lua/cokeline/",
+		-- dir = "~/projects/lua/cokeline/",
 		config = function()
 			require("cokeline").setup(cokeline())
 		end,
-		-- config = true,
 		lazy = false,
 	},
 }
