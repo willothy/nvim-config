@@ -155,6 +155,9 @@ local function cokeline()
 				if buffer.is_focused then
 					return "bold"
 				end
+				if buffer.hovered then
+					return "underline"
+				end
 				return nil
 			end,
 			fg = function(buffer)
@@ -185,32 +188,40 @@ local function cokeline()
 					or nil
 			end,
 			truncation = { priority = 1 },
-		},
-		close_or_unsaved = (function()
-			local hovered = false
-			return {
-				text = function(buffer)
-					if hovered then
-						return "H"
+			on_click = function(_id, _clicks, _button, _modifiers, buffer)
+				local trouble = require("trouble")
+				if buffer.is_focused then
+					trouble.toggle()
+				elseif trouble.is_open() then
+					if vim.bo.filetype == "Trouble" then
+						buffer:focus()
+						trouble.close()
+					else
+						buffer:focus()
 					end
+				else
+					buffer:focus()
+					trouble.open()
+				end
+			end,
+		},
+		close_or_unsaved = {
+			text = function(buffer)
+				if buffer.hovered then
+					return buffer.is_modified and icons.misc.modified or icons.actions.close_round
+				else
 					return buffer.is_modified and icons.misc.modified or icons.actions.close
-				end,
-				fg = function(_buffer)
-					return nil
-				end,
-				style = "bold",
-				truncation = { priority = 1 },
-				on_click = function(_id, _clicks, _button, _modifiers, buffer)
-					buffer:delete()
-				end,
-				on_mouse_enter = function(_buffer)
-					hovered = true
-				end,
-				on_mouse_leave = function(_buffer)
-					hovered = false
-				end,
-			}
-		end)(),
+				end
+			end,
+			fg = function(_buffer)
+				return nil
+			end,
+			style = "bold",
+			truncation = { priority = 1 },
+			on_click = function(_id, _clicks, _button, _modifiers, buffer)
+				buffer:delete()
+			end,
+		},
 		padding = {
 			text = function(buffer)
 				return buffer.is_last and " " or ""
@@ -238,13 +249,13 @@ local function cokeline()
 
 	return {
 		show_if_buffers_are_at_least = 1,
-		-- buffers = {
-		-- filter_valid = function(buffer) return buffer.type ~= 'terminal' end,
-		-- filter_visible = function(buffer) return buffer.type ~= 'terminal' end,
-		-- focus_on_delete = "next",
-		-- new_buffers_position = "next",
-		-- new_buffers_position = "number",
-		-- },
+		buffers = {
+			-- filter_valid = function(buffer) return buffer.type ~= 'terminal' end,
+			-- filter_visible = function(buffer) return buffer.type ~= 'terminal' end,
+			focus_on_delete = "next",
+			-- new_buffers_position = "next",
+			new_buffers_position = "number",
+		},
 		-- rendering = {
 		-- 	max_buffer_width = 30,
 		-- },
@@ -287,7 +298,7 @@ local function cokeline()
 		components = {
 			components.separator("left"),
 			components.space,
-			components.space_if_not_focused,
+			-- components.space_if_not_focused,
 			components.devicon,
 			components.unique_prefix,
 			components.filename,
