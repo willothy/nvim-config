@@ -1,4 +1,5 @@
 local icons = require("willothy.icons")
+local ns = vim.api.nvim_create_namespace("cokeline_diagnostics")
 
 local function findwinbyBufType(types)
 	function types:has(type)
@@ -30,7 +31,6 @@ local function cokeline()
 	local p = require("minimus.palette").hex
 	local get_hex = require("cokeline.utils").get_hex
 	local mappings = require("cokeline.mappings")
-	-- local builtin = require("cokeline.builtin")
 
 	local errors_fg = p.red
 	local warnings_fg = p.lemon_chiffon
@@ -176,35 +176,105 @@ local function cokeline()
 				direction = "left",
 			},
 		},
-		diagnostics = {
-			text = function(buffer)
-				return (buffer.diagnostics.errors ~= 0 and icons.diagnostics.errors .. " " .. buffer.diagnostics.errors)
-					or (buffer.diagnostics.warnings ~= 0 and icons.diagnostics.warnings .. " " .. buffer.diagnostics.warnings)
-					or ""
-			end,
-			fg = function(buffer)
-				return (buffer.diagnostics.errors ~= 0 and errors_fg)
-					or (buffer.diagnostics.warnings ~= 0 and warnings_fg)
-					or nil
-			end,
-			truncation = { priority = 1 },
-			on_click = function(_id, _clicks, _button, _modifiers, buffer)
-				local trouble = require("trouble")
-				if buffer.is_focused then
-					trouble.toggle()
-				elseif trouble.is_open() then
-					if vim.bo.filetype == "Trouble" then
-						buffer:focus()
-						trouble.close()
+		diagnostics = (function()
+			local Popup = require("nui.popup")
+
+			local popup = Popup({
+				enter = false,
+				focusable = false,
+				border = {
+					style = "rounded",
+				},
+				position = {
+					row = 1,
+					col = 0,
+				},
+				relative = "editor",
+				size = {
+					width = 20,
+					height = 1,
+				},
+			})
+
+			return {
+				text = function(buffer)
+					return (
+						buffer.diagnostics.errors ~= 0
+						and icons.diagnostics.errors .. " " .. buffer.diagnostics.errors
+					)
+						or (buffer.diagnostics.warnings ~= 0 and icons.diagnostics.warnings .. " " .. buffer.diagnostics.warnings)
+						or ""
+				end,
+				fg = function(buffer)
+					return (buffer.diagnostics.errors ~= 0 and errors_fg)
+						or (buffer.diagnostics.warnings ~= 0 and warnings_fg)
+						or nil
+				end,
+				truncation = { priority = 1 },
+				on_click = function(_id, _clicks, _button, _modifiers, buffer)
+					local trouble = require("trouble")
+					if buffer.is_focused then
+						trouble.toggle()
+					elseif trouble.is_open() then
+						if vim.bo.filetype == "Trouble" then
+							buffer:focus()
+							trouble.close()
+						else
+							buffer:focus()
+						end
 					else
 						buffer:focus()
+						trouble.open()
 					end
-				else
-					buffer:focus()
-					trouble.open()
-				end
-			end,
-		},
+				end,
+				on_mouse_enter = function(buffer, mouse_col)
+					local text = {}
+					local width = 0
+					if buffer.diagnostics.errors > 0 then
+						table.insert(text, {
+							icons.diagnostics.errors .. " " .. buffer.diagnostics.errors .. " ",
+							"DiagnosticSignError",
+						})
+						width = width + #tostring(buffer.diagnostics.errors) + 3
+					end
+					if buffer.diagnostics.warnings > 0 then
+						table.insert(text, {
+							icons.diagnostics.warnings .. " " .. buffer.diagnostics.warnings .. " ",
+							"DiagnosticSignWarn",
+						})
+						width = width + #tostring(buffer.diagnostics.warnings) + 3
+					end
+					if buffer.diagnostics.infos > 0 then
+						table.insert(text, {
+							icons.diagnostics.info .. " " .. buffer.diagnostics.infos .. " ",
+							"DiagnosticSignInfo",
+						})
+						width = width + #tostring(buffer.diagnostics.infos) + 3
+					end
+					if buffer.diagnostics.hints > 0 then
+						table.insert(text, {
+							icons.diagnostics.hints .. " " .. buffer.diagnostics.hints .. " ",
+							"DiagnosticSignHint",
+						})
+						width = width + #tostring(buffer.diagnostics.hints) + 3
+					end
+					popup.win_config.width = width
+					popup.win_config.col = mouse_col - 1
+					popup:mount()
+					if not popup.bufnr then
+						return
+					end
+					vim.api.nvim_buf_set_extmark(popup.bufnr, ns, 0, 0, {
+						id = 1,
+						virt_text = text,
+						virt_text_pos = "overlay",
+					})
+				end,
+				on_mouse_leave = function()
+					popup:unmount()
+				end,
+			}
+		end)(),
 		close_or_unsaved = {
 			text = function(buffer)
 				if buffer.is_hovered then
@@ -234,6 +304,13 @@ local function cokeline()
 				return buffer.is_focused and "" or " "
 			end,
 		},
+		clock = {
+			text = function(cx)
+				return " " .. (cx.is_hovered and os.date("%a %b %d") or os.date("%I:%M"))
+			end,
+			bg = "none",
+			fg = p.blue,
+		},
 	}
 
 	vim.api.nvim_create_autocmd("FileType", {
@@ -253,8 +330,9 @@ local function cokeline()
 			-- filter_valid = function(buffer) return buffer.type ~= 'terminal' end,
 			-- filter_visible = function(buffer) return buffer.type ~= 'terminal' end,
 			focus_on_delete = "next",
-			-- new_buffers_position = "next",
-			new_buffers_position = "number",
+			new_buffers_position = "next",
+			delete_on_right_click = false,
+			-- new_buffers_position = "number",
 		},
 		-- rendering = {
 		-- 	max_buffer_width = 30,
@@ -311,38 +389,46 @@ local function cokeline()
 			components.separator("right"),
 			components.padding,
 		},
-		-- sidebar = {
-		-- 	filetype = "SidebarNvim",
-		-- 	components = {
-		-- 		{
-		-- 			text = icons.separators.circle.left,
-		-- 			fg = p.gunmetal,
-		-- 			bg = "none",
-		-- 		},
-		-- 		{
-		-- 			text = " ",
-		-- 			bg = p.gunmetal,
-		-- 			fg = "none",
-		-- 		},
-		-- 		-- {
-		-- 		-- 	text = function()
-		-- 		-- 		local names = require("willothy.state").lsp.clients or {}
-		-- 		-- 		return (#names > 0 and "⚡ " or "") .. table.concat(names, " • ")
-		-- 		-- 	end,
-		-- 		-- 	bg = p.gunmetal,
-		-- 		-- 	fg = p.cool_gray,
-		-- 		-- },
-		-- 	},
-		-- },
+		rhs = {
+			components.clock,
+		},
+		sidebar = {
+			filetype = "SidebarNvim",
+			components = {
+				{
+					text = icons.separators.circle.left,
+					fg = p.gunmetal,
+					bg = "none",
+				},
+				{
+					text = " ",
+					bg = p.gunmetal,
+					fg = "none",
+				},
+				-- {
+				-- 	text = function()
+				-- 		local names = require("willothy.state").lsp.clients or {}
+				-- 		return (#names > 0 and "⚡ " or "") .. table.concat(names, " • ")
+				-- 	end,
+				-- 	bg = p.gunmetal,
+				-- 	fg = p.cool_gray,
+				-- },
+			},
+		},
 	}
 end
+
+-- 
+-- ﭾ
+-- 
 
 return {
 	{
 		"willothy/nvim-cokeline",
 		-- branch = "rhs-components",
 		-- dir = vim.g.dev == "cokeline" and "~/projects/neovim/cokeline" or nil,
-		-- dir = "~/projects/lua/cokeline/",
+		dir = "~/projects/lua/cokeline/",
+		-- config = true,
 		config = function()
 			require("cokeline").setup(cokeline())
 		end,

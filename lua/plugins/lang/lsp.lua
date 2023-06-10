@@ -98,7 +98,11 @@ local format
 local format_group = augroup("lsp_format_group", {})
 local function setup_format()
 	format = require("lsp-format")
-	format.setup()
+	format.setup({
+		exclude = {
+			clangd = true,
+		},
+	})
 end
 
 local function lsp_attach(client, bufnr)
@@ -113,17 +117,19 @@ local function lsp_attach(client, bufnr)
 	format.on_attach(client)
 	inlayhints.on_attach(client, bufnr, false)
 
-	if client.supports_method("textDocument/formatting") then
-		vim.api.nvim_clear_autocmds({ group = format_group, buffer = bufnr })
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = format_group,
-			buffer = bufnr,
-			callback = function()
-				-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
-				buf.format({ bufnr = bufnr })
-			end,
-		})
-	end
+	-- if client.supports_method("textDocument/formatting") then
+	-- 	vim.api.nvim_clear_autocmds({ group = format_group, buffer = bufnr })
+	-- 	vim.api.nvim_create_autocmd("BufWritePre", {
+	-- 		group = format_group,
+	-- 		buffer = bufnr,
+	-- 		callback = function()
+	-- 			if not _G.noformat then
+	-- 				-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
+	-- 				buf.format({ bufnr = bufnr })
+	-- 			end
+	-- 		end,
+	-- 	})
+	-- end
 end
 
 local lsp_settings = {

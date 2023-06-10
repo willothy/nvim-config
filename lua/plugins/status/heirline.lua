@@ -489,6 +489,12 @@ return {
 		"rebelot/heirline.nvim",
 		config = function()
 			require("heirline").setup(heirline())
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				group = vim.api.nvim_create_augroup("heirline_colorscheme_reset", { clear = true }),
+				callback = function()
+					require("heirline").setup(heirline())
+				end,
+			})
 		end,
 	},
 }

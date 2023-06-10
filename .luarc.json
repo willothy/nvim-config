@@ -103,6 +103,7 @@
     "/home/willothy/projects/lua/litter/lua/",
     "${3rd}/luv/library",
     "${3rd}/luassert/library",
-    "${3rd}/luv/library"
+    "${3rd}/luv/library",
+        "${3rd}/luv/library"
   ]
 }

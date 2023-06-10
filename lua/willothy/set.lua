@@ -68,7 +68,7 @@ local default = {
 		tabstop = 4,
 		softtabstop = -1,
 		shiftwidth = 0,
-		expandtab = false,
+		expandtab = true,
 		smartindent = false,
 	},
 }
@@ -88,6 +88,12 @@ local filetypes = {
 	text = {
 		window = {
 			wrap = true,
+		},
+	},
+	c = {
+		buffer = {
+			tabstop = 2,
+			shiftwidth = 2,
 		},
 	},
 }

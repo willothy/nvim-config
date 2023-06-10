@@ -352,6 +352,39 @@ register("t", {
 })
 
 wk.register({
+	["["] = {
+		name = "prev",
+		b = {
+			function()
+				require("cokeline.mappings").by_step("focus", -1)
+			end,
+			"Focus previous buffer",
+		},
+		B = {
+			function()
+				require("cokeline.mappings").by_step("switch", -1)
+			end,
+			"Move previous buffer",
+		},
+	},
+	["]"] = {
+		name = "next",
+		b = {
+			function()
+				require("cokeline.mappings").by_step("focus", 1)
+			end,
+			"Focus next buffer",
+		},
+		B = {
+			function()
+				require("cokeline.mappings").by_step("switch", 1)
+			end,
+			"Move next buffer",
+		},
+	},
+})
+
+wk.register({
 	h = "help",
 	v = "view",
 	r = "misc",
@@ -435,21 +468,15 @@ wk.register({
 		},
 		p = {
 			function()
-				require("cokeline.mappings").pick("buffer")
+				require("cokeline.mappings").pick("focus")
 			end,
 			"Pick buffer",
 		},
-		cp = {
+		x = {
 			function()
-				require("cokeline.mappings").by_step("close", -1)
+				require("cokeline.mappings").pick("close")
 			end,
-			"Close previous",
-		},
-		cn = {
-			function()
-				require("cokeline.mappings").by_step("close", 1)
-			end,
-			"Close next",
+			"Delete buffer",
 		},
 	},
 	s = {

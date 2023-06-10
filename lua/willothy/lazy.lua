@@ -12,7 +12,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	-- { import = "willothy.dev" },
+	{ import = "willothy.dev" },
 	-- devicons
 	"nvim-tree/nvim-web-devicons",
 

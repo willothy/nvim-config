@@ -27,7 +27,7 @@ return {
 	{
 		"sidebar-nvim/sidebar.nvim",
 		opts = {
-			side = "right",
+			side = "left",
 			-- open = vim.o.columns >= 150, --vim.fn.argc() ~= 0,
 			open = false,
 			section_separator = { " ", " " },

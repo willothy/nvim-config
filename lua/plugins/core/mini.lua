@@ -75,8 +75,8 @@ return {
 		version = false,
 		lazy = true,
 		event = "VeryLazy",
-		config = function()
-			require("mini.bracketed").setup()
-		end,
+		opts = {
+			buffer = { suffix = "" },
+		},
 	},
 }
