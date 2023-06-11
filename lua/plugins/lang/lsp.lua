@@ -6,6 +6,38 @@ local buf = vim.lsp.buf
 local diagnostic = vim.diagnostic
 local fn = vim.fn
 
+local function mkcaps(extra)
+	local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+	if extra then
+		-- snippets
+		capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+		-- send actions with hover request
+		capabilities.experimental = {
+			hoverActions = true,
+			hoverRange = true,
+			serverStatusNotification = true,
+			snippetTextEdit = true,
+			codeActionGroup = true,
+			ssr = true,
+		}
+
+		-- enable auto-import
+		capabilities.textDocument.completion.completionItem.resolveSupport = {
+			properties = { "documentation", "detail", "additionalTextEdits" },
+		}
+
+		capabilities.offsetEncoding = "utf-8"
+	end
+
+	capabilities.textDocument.semanticTokens = {
+		augmentsSyntaxTokens = false,
+	}
+
+	return capabilities
+end
+
 local function lsp_maps(bufnr)
 	local opts = { remap = false, silent = true, buffer = bufnr }
 
@@ -42,7 +74,7 @@ local function lsp_maps(bufnr)
 	map("n", "<leader>vi", utils.bind(glance, "implementations"), "Glance implementations")
 
 	-- IncRename
-	local ts_utils = require("nvim-treesitter.ts_utils")
+	-- local ts_utils = require("nvim-treesitter.ts_utils")
 	local increname = function()
 		local cword = fn.expand("<cword>")
 		vim.api.nvim_feedkeys(":IncRename " .. cword, "n", false)
@@ -268,6 +300,7 @@ local function setup_rust()
 		server = {
 			-- standalone = false,
 			on_attach = lsp_attach,
+			-- capabilities = mkcaps(),
 			settings = {
 				assist = {
 					importGranularity = "module",
@@ -438,27 +471,7 @@ local function lsp_setup()
 	-- 	},
 	-- }
 
-	local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-	-- snippets
-	capabilities.textDocument.completion.completionItem.snippetSupport = true
-
-	-- send actions with hover request
-	capabilities.experimental = {
-		hoverActions = true,
-		hoverRange = true,
-		serverStatusNotification = true,
-		snippetTextEdit = true,
-		codeActionGroup = true,
-		ssr = true,
-	}
-
-	-- enable auto-import
-	capabilities.textDocument.completion.completionItem.resolveSupport = {
-		properties = { "documentation", "detail", "additionalTextEdits" },
-	}
-
-	capabilities.offsetEncoding = "utf-8"
+	local capabilities = mkcaps(true)
 
 	cmp_lsp.default_capabilities(capabilities)
 
@@ -608,7 +621,9 @@ return {
 		event = "LSPAttach",
 	},
 	{
-		"simrat39/rust-tools.nvim",
+		-- "simrat39/rust-tools.nvim",
+		"willothy/rust-tools.nvim",
+		branch = "no-augment",
 		lazy = true,
 	},
 	{

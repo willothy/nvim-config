@@ -6,7 +6,8 @@ return {
 			"neovim/nvim-lspconfig",
 			"nvim-treesitter/nvim-treesitter",
 		},
-		lazy = false,
+		lazy = true,
+		ft = "markdown",
 		config = function()
 			require("otter.config").setup({})
 

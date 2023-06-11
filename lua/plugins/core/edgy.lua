@@ -19,6 +19,9 @@ return {
 					open = function()
 						require("willothy.terminals").main:open()
 					end,
+					filter = function(_buf, win)
+						return vim.api.nvim_win_get_config(win).relative == ""
+					end,
 				},
 			},
 

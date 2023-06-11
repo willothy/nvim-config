@@ -11,10 +11,7 @@ return {
 		enabled = true,
 		config = function()
 			require("chatgpt").setup({
-				api_key_cmd = "lpass show openai_key --password",
-				-- keymaps = {
-				-- 	submit = "<Enter>",
-				-- },
+				async_api_key_cmd = "lpass show openai_key --password",
 			})
 		end,
 	},

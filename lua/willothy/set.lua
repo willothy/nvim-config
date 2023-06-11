@@ -52,7 +52,6 @@ vim.api.nvim_create_autocmd({
 }, {
 	callback = function()
 		vim.cmd("checktime")
-		vim.cmd("redraw")
 	end,
 })
 
