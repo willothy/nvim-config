@@ -1,33 +1,22 @@
-local vpns = vim.api.nvim_create_namespace("yankstack")
-
-function vprint(text, buf)
-	buf = buf or 0
-	if type(text) ~= "string" then
-		text = vim.inspect(text)
-	end
-	local caller_line = debug.getinfo(2).currentline
-	vim.api.nvim_buf_set_extmark(buf, vpns, caller_line - 1, 0, {
-		id = 1,
-		virt_text = { { text, "LspInlayHint" } },
-		virt_text_pos = "eol",
-	})
-end
-
 ---@class Ringbuf
 local Ringbuf = {}
 Ringbuf.__index = Ringbuf
 
-function Ringbuf:new(size)
+function Ringbuf:new(size, grow)
 	local o = {}
 	o.size = size
 	o.buf = {}
 	o.read = 1
 	o.write = 1
+	o.grow = grow or false
 	setmetatable(o, Ringbuf)
 	return o
 end
 
 function Ringbuf:push(item)
+	if self:is_full() and self.grow then
+		self:resize(self.size * 2)
+	end
 	self.buf[self.write] = item
 	self.write = self.write + 1
 	if self.write > self.size then
@@ -44,6 +33,16 @@ function Ringbuf:pop()
 	return item
 end
 
+function Ringbuf:swap(index1, index2)
+	if not index1 then
+		index1 = self.read - 1
+	end
+	if not index2 then
+		index2 = self.read
+	end
+	self.buf[index1], self.buf[index2] = self.buf[index2], self.buf[index1]
+end
+
 function Ringbuf:is_empty()
 	return self.read == self.write
 end
@@ -58,16 +57,7 @@ function Ringbuf:clear()
 end
 
 function Ringbuf:resize(size)
-	local new_buf = {}
-	local i = 1
-	while not self:is_empty() do
-		new_buf[i] = self:pop()
-		i = i + 1
-	end
-	self.buf = new_buf
 	self.size = size
-	self.read = 1
-	self.write = i
 end
 
 return Ringbuf

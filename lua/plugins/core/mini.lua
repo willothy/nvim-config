@@ -74,6 +74,7 @@ return {
 		name = "mini.bracketed",
 		version = false,
 		lazy = true,
+		enabled = false,
 		event = "VeryLazy",
 		opts = {
 			buffer = { suffix = "" },

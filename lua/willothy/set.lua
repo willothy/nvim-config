@@ -36,6 +36,8 @@ o.foldlevelstart = 99
 
 o.laststatus = 3
 
+O.splitkeep = "screen"
+
 O.listchars = { tab = "  ", extends = "", precedes = "" }
 
 o.number = true
@@ -149,5 +151,13 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufEnter", "TermOpen" }, {
 				end))
 				:collect()
 		end
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "c", "h", "cpp", "hpp" },
+	group = vim.api.nvim_create_augroup("ft_set_treesitter", { clear = true }),
+	callback = function()
+		vim.treesitter.start()
 	end,
 })

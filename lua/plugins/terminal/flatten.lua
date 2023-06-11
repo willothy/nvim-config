@@ -1,9 +1,10 @@
 local function toggle_terminal()
-	if vim.bo.filetype == "toggleterm" then
-		require("toggleterm").toggle(0)
-	elseif vim.bo.filetype == "terminal" then
-		require("nvterm.terminal").toggle("horizontal")
-	end
+	require("willothy.terminals").main:toggle()
+	-- if vim.bo.filetype == "toggleterm" then
+	-- 	-- require("toggleterm").toggle(0)
+	-- elseif vim.bo.filetype == "terminal" then
+	-- 	-- require("nvterm.terminal").toggle("horizontal")
+	-- end
 end
 
 return {
@@ -30,8 +31,8 @@ return {
 				post_open = function(bufnr, winnr, ft, is_blocking)
 					if is_blocking or ft == "gitcommit" then
 						-- Hide the terminal while it's blocking
-						-- toggle_terminal()
-						require("nvterm.terminal").hide("horizontal")
+						toggle_terminal()
+						-- require("nvterm.terminal").hide("horizontal")
 					else
 						-- If it's a normal file, just switch to its window
 						vim.api.nvim_set_current_win(winnr)
@@ -56,7 +57,7 @@ return {
 				block_end = function()
 					-- After blocking ends (for a git commit, etc), reopen the terminal
 					vim.defer_fn(function()
-						require("nvterm.terminal").show("horizontal")
+						toggle_terminal()
 					end, 50)
 				end,
 			},

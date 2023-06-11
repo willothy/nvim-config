@@ -1,35 +1,8 @@
 local icons = require("willothy.icons")
 local ns = vim.api.nvim_create_namespace("cokeline_diagnostics")
 
-local function findwinbyBufType(types)
-	function types:has(type)
-		for _, t in ipairs(self) do
-			if t == type then
-				return true
-			end
-		end
-	end
-	local bufs = vim.api.nvim_list_bufs()
-	for _, buf in pairs(bufs) do
-		if vim.api.nvim_buf_is_valid(buf) then
-			if types:has(vim.bo[buf].filetype) then
-				return vim.fn.win_findbuf(buf)
-			end
-		end
-	end
-	return nil
-end
-
-local function is_window_sidebar(winnr)
-	local layout = vim.fn.winlayout()
-	if layout[1] ~= "row" then
-		return false
-	end
-end
-
 local function cokeline()
 	local p = require("minimus.palette").hex
-	local get_hex = require("cokeline.utils").get_hex
 	local mappings = require("cokeline.mappings")
 
 	local errors_fg = p.red
@@ -37,22 +10,6 @@ local function cokeline()
 
 	local red = vim.g.terminal_color_1
 	local yellow = vim.g.terminal_color_3
-
-	local A = {
-		fg = p.raisin_black,
-		bg = p.turquoise,
-		style = "bold",
-	}
-
-	local B = {
-		fg = p.cool_gray,
-		bg = p.gunmetal,
-	}
-
-	local C = {
-		fg = p.cool_gray,
-		bg = "none",
-	}
 
 	local components = {
 		space = {
@@ -120,10 +77,6 @@ local function cokeline()
 				return (mappings.is_picking_focus() or mappings.is_picking_close()) and "italic,bold" or nil
 			end,
 			truncation = { priority = 1 },
-			---@param buffer Buffer
-			on_click = function(_id, _clicks, _button, _modifiers, buffer)
-				-- Do things here
-			end,
 		},
 		index = {
 			text = function(buffer)
@@ -312,17 +265,6 @@ local function cokeline()
 			fg = p.blue,
 		},
 	}
-
-	vim.api.nvim_create_autocmd("FileType", {
-		pattern = "SidebarNvim",
-		callback = function(opt)
-			-- vim.api.nvim_buf_add_highlight(opt.buf, vim.api.nvim_create_namespace("SidebarWH"), "WinSeparator", )
-			local ns = vim.api.nvim_create_namespace("SidebarWH")
-			vim.api.nvim_set_hl(ns, "WinSeparator", { fg = "none", bg = "none" })
-			local win = vim.fn.bufwinid(opt.buf)
-			vim.api.nvim_win_set_hl_ns(win, ns)
-		end,
-	})
 
 	return {
 		show_if_buffers_are_at_least = 1,

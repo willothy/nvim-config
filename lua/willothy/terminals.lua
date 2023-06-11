@@ -10,9 +10,9 @@ M.float = Terminal:new({
 	float_opts = {
 		border = "rounded",
 	},
-	on_open = function(term)
-		vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-	end,
+	-- on_open = function(term)
+	-- 	vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+	-- end,
 })
 
 M.main = Terminal:new({
@@ -21,7 +21,7 @@ M.main = Terminal:new({
 	hidden = false,
 	direction = "horizontal",
 	on_open = function(term)
-		vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+		vim.cmd("startinsert!")
 	end,
 })
 

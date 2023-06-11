@@ -1,7 +1,12 @@
 return {
 	{
 		"tamton-aquib/flirt.nvim",
+		dependencies = {
+			"folke/noice.nvim",
+		},
 		--enabled = false,
+		-- lazy = true,
+		-- event = "VeryLazy",
 		opts = {
 			override_open = false,
 			default_move_mappings = true,

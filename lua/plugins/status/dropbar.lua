@@ -3,7 +3,18 @@ local icons = require("willothy.icons")
 return {
 	{
 		"Bekaboo/dropbar.nvim",
+		dir = "~/projects/lua/dropbar.nvim/",
 		opts = {
+			general = {
+				enable = function(buf, win)
+					return not vim.api.nvim_win_get_config(win).zindex
+						and vim.bo[buf].buftype == ""
+						and vim.api.nvim_buf_get_name(buf) ~= ""
+						and vim.bo[buf].filetype ~= "Trouble"
+						and vim.bo[buf].filetype ~= "toggleterm"
+						and not vim.wo[win].diff
+				end,
+			},
 			icons = {
 				kinds = icons.kinds,
 				ui = {

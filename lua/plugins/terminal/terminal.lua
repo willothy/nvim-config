@@ -24,7 +24,7 @@ return {
 			require("toggleterm").setup({
 				start_in_insert = true,
 				winbar = {
-					enabled = true,
+					enabled = false,
 					name_formatter = function(term)
 						local id = term.name:sub(-1)
 						local shellpath, _name = unpack(split(term.name, ";"))
@@ -40,5 +40,6 @@ return {
 	{
 		"NvChad/nvterm",
 		config = true,
+		enabled = false,
 	},
 }

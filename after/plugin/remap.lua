@@ -223,6 +223,35 @@ vim.api.nvim_set_keymap("", ",", " ", {
 	desc = "Leader 2",
 })
 
+local function toggle_terminal()
+	local term = require("willothy.terminals").main
+	local win = require("edgy").get_win(term.window)
+	if term:is_open() then
+		if win and win.visible then
+			win:close()
+		elseif win then
+			win:open()
+		end
+	else
+		term:open()
+	end
+end
+
+local function with_terminal()
+	local term = require("willothy.terminals").main
+	local win = require("edgy").get_win(term.window)
+	if term:is_open() then
+		if win and not win.visible then
+			win:open()
+		end
+	else
+		term:open()
+	end
+	return term
+end
+
+vim.keymap.set({ "n", "i", "t" }, "<C-Enter>", toggle_terminal)
+
 -- Dap
 register({ "n" }, {
 	d = {
@@ -262,13 +291,6 @@ register({ "n", "o", "x" }, {
 			require("spider").motion("ge")
 		end,
 		"Spider-ge",
-	},
-})
-
-register("i", {
-	["<F1>"] = {
-		"<nop>",
-		"Pick buffer",
 	},
 })
 
@@ -397,26 +419,82 @@ wk.register({
 	t = {
 		name = "toggle",
 		t = {
-			function()
-				require("willothy.terminals").main:toggle()
-				-- require("toggleterm").toggle(0)
-				-- require("nvterm.terminal").toggle("horizontal")
-			end,
+			toggle_terminal,
 			"Toggle terminal",
 		},
-		f = {
+		r = {
 			function()
-				require("willothy.terminals").float:toggle()
+				local Menu = require("menu")
+				local Popup = require("nui.popup")
+
+				Menu:new("Quick run")
+					:with_submenu(Menu:new("Cargo")
+						:with_item("Cargo run", function()
+							with_terminal():send("cargo run")
+						end)
+						:with_item("Cargo test", function()
+							with_terminal():send("cargo test")
+						end))
+					:with_item("Luapad", function()
+						local buf = vim.api.nvim_create_buf(true, true)
+						vim.api.nvim_buf_set_name(buf, "scratchpad.lua")
+						vim.bo[buf].filetype = "lua"
+						vim.bo[buf].bufhidden = "wipe"
+
+						local popup = Popup({
+							position = {
+								row = "75%",
+								col = "10%",
+							},
+							size = {
+								width = "40%",
+								height = "30%",
+							},
+							border = {
+								style = "rounded",
+								text = {
+									top = "Luapad",
+									top_align = "center",
+								},
+							},
+							focusable = true,
+							enter = true,
+							bufnr = buf,
+						})
+
+						popup:map("n", "<Esc>", function()
+							require("luapad").detach()
+							popup:unmount()
+						end)
+
+						popup:map("n", "q", function()
+							require("luapad").detach()
+							popup:unmount()
+						end)
+
+						popup:on({ require("nui.utils.autocmd").event.BufLeave }, function()
+							require("luapad").detach()
+							popup:unmount()
+						end, { once = true })
+
+						popup:mount()
+
+						require("luapad").attach({})
+					end)
+					:build()
+					:mount()
 			end,
-			"Toggle floating terminal",
+			"Open runmenu",
 		},
 		s = {
 			function()
-				local term = require("nvterm.terminal")
 				vim.ui.input({
 					prompt = "$ ",
-				}, function(input)
-					term.send(input, "horizontal")
+					completion = "shellcmd",
+				}, function(v)
+					if v and type(v) == "string" then
+						with_terminal():send(v)
+					end
 				end)
 			end,
 			"Send to terminal",

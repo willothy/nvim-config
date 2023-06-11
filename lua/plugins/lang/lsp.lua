@@ -138,7 +138,9 @@ local lsp_settings = {
 			includeAllWorkspaceSymbols = true,
 		},
 	},
-	clangd = {},
+	clangd = {
+		semanticHighlighting = true,
+	},
 	lua_ls = {
 		Lua = {
 			format = {
