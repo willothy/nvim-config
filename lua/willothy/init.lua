@@ -5,12 +5,11 @@ end
 
 _G.dbg = vim.print
 
-require("willothy.test")
+-- require("willothy.test")
 require("willothy.util")
 require("willothy.remap")
 require("willothy.lazy")
 require("willothy.lsp")
-require("willothy.actions")
 require("willothy.set")
 
 vim.api.nvim_create_user_command("Detach", function()

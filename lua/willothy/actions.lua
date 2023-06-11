@@ -1,4 +1,3 @@
-local event = require("nui.utils.autocmd").event
 local Menu = require("nui.menu")
 local util = require("willothy.util")
 
@@ -50,6 +49,7 @@ function ActionMenu:init(items, handler)
 
 	ActionMenu.super.init(self, popup_opts, menu_opts)
 
+	local event = require("nui.utils.autocmd").event
 	self:on(event.BufLeave, function()
 		exec()
 	end, { once = true })

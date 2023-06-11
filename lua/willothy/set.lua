@@ -98,6 +98,11 @@ local filetypes = {
 			shiftwidth = 2,
 		},
 	},
+	make = {
+		buffer = {
+			expandtab = false,
+		},
+	},
 }
 
 local terminal = vim.tbl_deep_extend("keep", {

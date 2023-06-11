@@ -1,4 +1,5 @@
 {
+  "ChatGPT.nvim": { "branch": "main", "commit": "b4d36ff43c741fcaed6cf8e6de2f3d3adc24bb24" },
   "Comment.nvim": { "branch": "master", "commit": "c8043290f2d77f61025494d839d88e414608c460" },
   "LuaSnip": { "branch": "master", "commit": "51ebb4b6637290e1b8e0fb0d6f38b605d3c24940" },
   "aerial.nvim": { "branch": "master", "commit": "8a59ed2dc9563833ee0277b5bfd2e06faf95c2ab" },
@@ -76,7 +77,6 @@
   "nvim-treesitter": { "branch": "master", "commit": "2d6e73ab2fd1daad1e8134f174d06a869cbc96b4" },
   "nvim-treesitter-textobjects": { "branch": "master", "commit": "23e883b99228f8d438254e5ef8c897e5e60e75d1" },
   "nvim-web-devicons": { "branch": "master", "commit": "2a125024a137677930efcfdf720f205504c97268" },
-  "nvterm": { "branch": "main", "commit": "5ae78fb332e92447121d2af58a6313189a7799fb" },
   "otter.nvim": { "branch": "main", "commit": "83d263d261da404d1d2071ad79c99b8ce97d0cec" },
   "overseer.nvim": { "branch": "master", "commit": "1a7d89cc1ae61199b227a15f077b3a9ca1da2dfa" },
   "plenary.nvim": { "branch": "master", "commit": "499e0743cf5e8075cd32af68baa3946a1c76adf1" },
@@ -108,7 +108,6 @@
   "ufo": { "branch": "main", "commit": "45aede6f5c4981156df3ddeeae01c4290e43e104" },
   "undotree": { "branch": "master", "commit": "485f01efde4e22cb1ce547b9e8c9238f36566f21" },
   "vim-fugitive": { "branch": "master", "commit": "5f0d280b517cacb16f59316659966c7ca5e2bea2" },
-  "vim-lsp-cxx-highlight": { "branch": "master", "commit": "0e7476ff41cd65e55f92fdbc7326335ec33b59b0" },
   "vim-startuptime": { "branch": "master", "commit": "454b3de856b7bd298700de33d79774ca9b9e3875" },
   "vim-surround": { "branch": "master", "commit": "3d188ed2113431cf8dac77be61b842acb64433d9" },
   "which-key.nvim": { "branch": "main", "commit": "e271c28118998c93a14d189af3395812a1aa646c" },

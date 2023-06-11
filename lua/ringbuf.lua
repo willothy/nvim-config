@@ -1,63 +1,67 @@
----@class Ringbuf
-local Ringbuf = {}
-Ringbuf.__index = Ringbuf
+local RingBuffer = {}
 
-function Ringbuf:new(size, grow)
-	local o = {}
-	o.size = size
-	o.buf = {}
-	o.read = 1
-	o.write = 1
-	o.grow = grow or false
-	setmetatable(o, Ringbuf)
-	return o
-end
-
-function Ringbuf:push(item)
-	if self:is_full() and self.grow then
-		self:resize(self.size * 2)
+function RingBuffer.new(size)
+	if size <= 0 then
+		error("RingBuffer.new: size must be positive")
 	end
-	self.buf[self.write] = item
-	self.write = self.write + 1
-	if self.write > self.size then
-		self.write = 1
+
+	local rb = {
+		_size = size,
+		_buffer = {},
+		_read = 1,
+		_write = 1,
+		_len = 0,
+	}
+
+	function rb:push(value)
+		self._buffer[self._write] = value
+		self._write = (self._write % self._size) + 1
+		self._len = self._len + 1
 	end
-end
 
-function Ringbuf:pop()
-	local item = self.buf[self.read]
-	self.read = self.read + 1
-	if self.read > self.size then
-		self.read = 1
+	function rb:pop()
+		if self._len == 0 then
+			return nil
+		end
+		local value = self._buffer[self._read]
+		self._buffer[self._read] = nil
+		self._read = (self._read % self._size) + 1
+		if value then
+			self._len = self._len - 1
+		end
+		return value
 	end
-	return item
-end
 
-function Ringbuf:swap(index1, index2)
-	if not index1 then
-		index1 = self.read - 1
+	function rb:peek()
+		if self._read == self._write then
+			return nil
+		end
+		return self._buffer[self._read]
 	end
-	if not index2 then
-		index2 = self.read
+
+	function rb:is_empty()
+		return self._read == self._write
 	end
-	self.buf[index1], self.buf[index2] = self.buf[index2], self.buf[index1]
+
+	function rb:capacity()
+		return self._size
+	end
+
+	function rb:len()
+		return self._len
+	end
+
+	function rb:resize(new_size)
+		if new_size <= 0 then
+			error("RingBuffer.resize: size must be positive and non-zero")
+		end
+		if new_size < self._len then
+			error("RingBuffer.resize: size must be greater than or equal to the number of elements in the buffer")
+		end
+		self._size = new_size
+	end
+
+	return rb
 end
 
-function Ringbuf:is_empty()
-	return self.read == self.write
-end
-
-function Ringbuf:is_full()
-	return self.read == self.write + 1 or (self.read == 1 and self.write == self.size)
-end
-
-function Ringbuf:clear()
-	self.read = 1
-	self.write = 1
-end
-
-function Ringbuf:resize(size)
-	self.size = size
-end
-
-return Ringbuf
+return RingBuffer

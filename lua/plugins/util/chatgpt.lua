@@ -1,18 +1,21 @@
 return {
 	{
-		"jackMort/ChatGPT.nvim",
+		"dreamsofcode-io/ChatGPT.nvim",
 		dependencies = {
 			"MunifTanjim/nui.nvim",
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope.nvim",
 		},
 		lazy = true,
-		cmd = "ChatGPT",
-		enabled = false,
-		opts = {
-			keymaps = {
-				submit = "<Enter>",
-			},
-		},
+		event = "VeryLazy",
+		enabled = true,
+		config = function()
+			require("chatgpt").setup({
+				api_key_cmd = "lpass show openai_key --password",
+				-- keymaps = {
+				-- 	submit = "<Enter>",
+				-- },
+			})
+		end,
 	},
 }
