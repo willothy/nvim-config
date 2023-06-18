@@ -110,7 +110,7 @@ end
 return {
 	{
 		"Bekaboo/dropbar.nvim",
-		dir = "~/projects/lua/dropbar.nvim/",
+		dir = "~/projects/lua/dropbar/",
 		config = config,
 	},
 }

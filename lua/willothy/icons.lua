@@ -47,15 +47,9 @@ M.kinds.spaced = setmetatable({}, {
 })
 
 M.diagnostics = {
-	-- light = {
-	-- 	errors = "",
-	-- 	warnings = "",
-	-- 	hints = "",
-	-- 	info = "",
-	-- },
-	errors = "",
-	warnings = "",
-	hints = "",
+	errors = "󰞏", --
+	warnings = "", -- "",--
+	hints = "", --"󰮔",
 	info = "",
 }
 M.diagnostics.Error = M.diagnostics.errors
@@ -69,8 +63,8 @@ M.lsp = {
 
 M.git = {
 	diff = {
-		added = " ",
-		modified = "●",
+		added = "",
+		modified = "󰆗",
 		removed = "",
 	},
 	signs = {
@@ -78,26 +72,30 @@ M.git = {
 		untracked = "•",
 	},
 	branch = "",
-	copilot = "",
+	copilot = "", --"",
+	copilot_err = "",
+	copilot_warn = "",
 }
 
 M.dap = {
-	stopped = "",
-	running = "",
-	paused = "",
+	stopped = "",
+	running = "",
+	paused = "",
 	breakpoint = "",
+	start = "", -- 
 }
 
 M.actions = {
-	close_hexagon = "",
+	close_hexagon = "󰅜",
 	close2 = "⌧",
-	close_round = "",
+	close_round = "󰅙",
+	close_outline = "󰅚",
 	close = "🞫",
 }
 
 M.fold = {
-	open = "",
-	closed = "",
+	open = "",
+	closed = "",
 }
 
 M.separators = {
@@ -125,14 +123,19 @@ M.separators = {
 }
 
 M.misc = {
+	datetime = "󱛡 ",
 	modified = "●",
-	newline = "﬋",
+	fold = "⮓",
+	newline = "",
 	circle = "",
 	circle_filled = "",
 	circle_slash = "",
 	ellipse = "",
 	kebab = "",
 	tent = "⛺",
+	comma = "ﯠ",
+	hook = "󰛢",
+	hook_disabled = "󰛣",
 }
 
 return M

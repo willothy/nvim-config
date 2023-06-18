@@ -8,10 +8,10 @@ return {
 		},
 		lazy = true,
 		event = "VeryLazy",
-		enabled = true,
+		enabled = false,
 		config = function()
 			require("chatgpt").setup({
-				async_api_key_cmd = "lpass show openai_key --password",
+				async_api_key_cmd = "lpass show --password openai_key",
 			})
 		end,
 	},

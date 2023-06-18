@@ -4,6 +4,7 @@ end
 local wk = require("which-key")
 local util = require("willothy.util")
 local terminals = require("willothy.terminals")
+local harpoon = require("harpoon.mark")
 local Iter = require("litter")
 
 local function register(modes, mappings, opts)
@@ -449,7 +450,7 @@ wk.register({
 	r = "misc",
 	a = {
 		function()
-			require("harpoon.mark").add_file()
+			harpoon.add_file()
 		end,
 		"Add file to harpoon",
 	},
@@ -466,6 +467,17 @@ wk.register({
 		r = {
 			runmenu,
 			"Open runmenu",
+		},
+		h = {
+			function()
+				local buf = vim.api.nvim_buf_get_name(0)
+				if not harpoon.get_current_index() then
+					harpoon.add_file(buf) -- mark is not in list
+				else
+					harpoon.rm_file(buf) -- mark is in list
+				end
+			end,
+			"Toggle current harpoon mark",
 		},
 		s = {
 			function()

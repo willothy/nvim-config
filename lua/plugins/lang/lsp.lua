@@ -235,18 +235,21 @@ local function setup_null()
 		sources = {
 			builtins.formatting.stylua,
 			builtins.formatting.prettier,
-			-- null.fmt.rustfmt,
-			-- null.cmp.spell,
-			-- null.cmp.luasnip,
-			-- null.diag.cspell,
-			-- null.diag.luacheck,
+			builtins.formatting.asmfmt,
+			builtins.formatting.beautysh,
+			builtins.formatting.pyink,
+			builtins.formatting.markdownlint,
+			builtins.formatting.taplo,
 			builtins.diagnostics.selene,
 			builtins.diagnostics.todo_comments,
-			-- null.diag.trailspace,
-			-- null.ca.cspell,
+			builtins.diagnostics.commitlint,
+			builtins.diagnostics.markdownlint,
+			builtins.diagnostics.semgrep,
+			builtins.diagnostics.shellcheck,
+			builtins.diagnostics.zsh,
+			builtins.code_actions.cspell,
 			builtins.code_actions.gitrebase,
-			-- null.ca.gitsigns,
-			-- null.ca.refactoring,
+			builtins.hover.dictionary,
 		},
 		on_attach = lsp_attach,
 	})
@@ -255,7 +258,7 @@ end
 local function setup_ufo()
 	local handler = function(virtText, lnum, endLnum, width, truncate)
 		local newVirtText = {}
-		local suffix = ("  %d "):format(endLnum - lnum)
+		local suffix = ("  %d "):format(endLnum - lnum)
 		local sufWidth = fn.strdisplaywidth(suffix)
 		local targetWidth = width - sufWidth
 		local curWidth = 0
@@ -599,6 +602,7 @@ return {
 	},
 	{
 		"j-hui/fidget.nvim",
+		branch = "legacy",
 		opts = fidget,
 		lazy = true,
 		config = true,

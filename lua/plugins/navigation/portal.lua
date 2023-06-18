@@ -1,10 +1,6 @@
 return {
 	{
 		"cbochs/portal.nvim",
-		-- Optional dependencies
-		dependencies = {
-			"ThePrimeagen/harpoon",
-		},
 		opts = {
 			labels = { "w", "a", "s", "d" },
 			escape = {

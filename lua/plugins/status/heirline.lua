@@ -52,7 +52,7 @@ local mode_map = {
 local function handler(f, name)
 	return {
 		callback = f,
-		name = name or ("handler_" .. (math.random() * 100)),
+		name = name or ("handler_" .. math.ceil(math.random() * 100)),
 	}
 end
 
@@ -123,16 +123,16 @@ local function heirline()
 	})
 
 	local separators = {
-		left = function(hl_)
+		left = function(highlight)
 			return Component({
-				provider = "",
-				hl = hl_,
+				provider = icons.separators.circle.left,
+				hl = highlight,
 			})
 		end,
-		right = function(hl_)
+		right = function(highlight)
 			return Component({
-				provider = "",
-				hl = hl_,
+				provider = icons.separators.circle.right,
+				hl = highlight,
 			})
 		end,
 	}
@@ -152,7 +152,6 @@ local function heirline()
 	local Mode = Component({
 		static = {
 			mode_names = {
-				-- change the strings if you like it vvvvverbose!
 				n = "Normal",
 				no = "Normal?",
 				nov = "Normal?",
@@ -206,56 +205,60 @@ local function heirline()
 	})
 
 	local Location = Component({
-		provider = function(_self)
-			local line = vim.fn.line(".")
-			local col = vim.fn.col(".")
-			local maxline = vim.fn.line("$")
-			local width = (#string.format("%d", maxline)) + 6
-			local s = string.format("%d:%d", line, col)
+		init = function(self)
+			self.line = vim.fn.line(".")
+			self.col = vim.fn.col(".")
+			self.maxline = vim.fn.line("$")
+		end,
+		provider = function(self)
+			local s = math.floor((self.line / self.maxline) * 100)
+				.. "%%/"
+				.. string.format("%d:%d", self.maxline, self.col)
+			local width = s:len() + math.max(#tostring(self.col), 2)
 
-			local i = 0
-			while true do
-				if #s > width then
-					break
-				end
-				if i % 2 == 0 then
-					s = " " .. s
-				else
-					s = s .. " "
-				end
-				i = i + 1
-			end
-
-			return s
-			-- return lpad(rpad(string.format("%d:%d", line, col), math.ceil(width / 2)), math.floor(width / 2))
+			return "%" .. width .. "=" .. s .. "%" .. width .. ")"
 		end,
 		hl = hl.A,
 	})
 
 	local Copilot = Component({
-		provider = function(_self)
-			local client = require("copilot.client").get(true)
-			if client == nil then
-				return ""
+		init = function(self)
+			self.status = {
+				status = "",
+			}
+			require("copilot.api").register_status_notification_handler(function(data)
+				self.status = data or { status = "InProgress" }
+			end)
+		end,
+		provider = function(self)
+			local icon = icons.git.copilot_err
+			if self.status.status == "InProgress" then
+				icon = require("noice.util.spinners").spin("dots") or icons.git.copilot_warn
+			elseif self.status.status == "Warning" then
+				icon = icons.git.copilot_warn
+			elseif self.status.status == "Normal" then
+				icon = icons.git.copilot
 			end
-			-- require("nvim-web-devicons").get_icon_by_filetype("zig", {})
-			return client and (icons.git.copilot .. " ") or ""
+			return icon .. " "
 		end,
 		hl = hl.C,
-		on_click = handler(function()
-			require("copilot.panel").open()
-		end, "heirline_copilot"),
+		-- update = {
+		-- 	"LspAttach",
+		-- 	callback = function(self, args)
+		-- 		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		--
+		-- 		if client.name == "copilot" and args.buf == vim.api.nvim_get_current_buf() then
+		-- 			self.status.status = "Normal"
+		-- 		end
+		-- 	end,
+		-- },
 	})
 
 	local Env = function(var)
 		return Component({
 			provider = function()
 				local val = os.getenv(var)
-				if val == nil or val == "" then
-					return ""
-				else
-					return val .. " "
-				end
+				return (val and val ~= "") and val .. " " or ""
 			end,
 			hl = hl.C,
 		})
@@ -277,7 +280,7 @@ local function heirline()
 				require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
 		end,
 		provider = function(self)
-			return self.icon and (self.icon .. " ")
+			return self.icon and self.icon or ""
 		end,
 		hl = function(self)
 			return { fg = self.icon_color }
@@ -285,202 +288,166 @@ local function heirline()
 	})
 
 	local Harpoon = Component({
-		Index = {
-			provider = function(_self)
-				local harpoon = require("harpoon.mark")
-				local idx = harpoon.get_current_index()
-				return idx or ""
-			end,
-			hl = hl.C,
-		},
-		Count = {
-			provider = function(_self)
-				local harpoon = require("harpoon.mark")
-				local count = harpoon.get_length()
-				return count or ""
-			end,
-			hl = hl.C,
-			on_click = handler(function()
-				require("harpoon.ui").toggle_quick_menu()
-			end),
-		},
-		Hook = {
-			provider = "ﯠ ",
-			hl = hl.C,
-			on_click = handler(function()
-				require("harpoon.ui").toggle_quick_menu()
-			end),
-		},
+		init = function(self)
+			self.h = require("harpoon.mark")
+			self.current = self.h.get_current_index()
+			self.nfiles = self.h.get_length()
+			self.h.on("changed", function()
+				self.nfiles = self.h.get_length()
+				self.current = self.h.get_current_index()
+			end)
+		end,
+		provider = function(self)
+			if self.nfiles == nil or self.nfiles == 0 then
+				return " " .. icons.misc.hook_disabled
+			elseif self.current == nil then
+				return " " .. icons.misc.hook_disabled .. " " .. self.nfiles
+			end
+			return " " .. icons.misc.hook .. " " .. self.current .. "/" .. self.nfiles
+		end,
+		on_click = handler(function()
+			local buf = vim.api.nvim_buf_get_name(0)
+			require("harpoon.mark").toggle_file(buf)
+			require("harpoon").save()
+		end),
 	})
 
 	local Git = Component({
-		static = {
-			icons = {
-				branch = icons.git.branch,
-				added = icons.git.diff.added,
-				modified = icons.git.diff.modified,
-				removed = icons.git.diff.removed,
-			},
-		},
+		static = {},
 		condition = conditions.is_git_repo,
-
 		init = function(self)
 			self.status_dict = vim.b.gitsigns_status_dict
 			self.has_changes = self.status_dict.added ~= 0
 				or self.status_dict.removed ~= 0
 				or self.status_dict.changed ~= 0
+			self.added = function()
+				return self.status_dict.added or 0
+			end
+			self.removed = function()
+				return self.status_dict.removed or 0
+			end
+			self.modified = function()
+				return self.status_dict.changed or 0
+			end
 		end,
-
 		hl = hl.C,
-
-		{ -- git branch name
+		{
+			-- git branch name
 			provider = function(self)
-				return string.format("%s %s ", self.icons.branch, self.status_dict.head)
+				return string.format("%s %s ", icons.git.branch, self.status_dict.head)
 			end,
 			hl = { fg = p.cool_gray },
 		},
 		{
+			-- git diff added
 			provider = function(self)
-				local count = self.status_dict.added or 0
-				return count > 0 and (self.icons.added .. count)
+				if self.added() > 0 then
+					return string.format("%s %s", icons.git.diff.added, self.added())
+						.. ((self.modified() > 0 or self.removed() > 0) and " " or "")
+				else
+					return ""
+				end
 			end,
 			hl = { fg = p.pale_turquoise },
 		},
 		{
+			-- git diff removed
 			provider = function(self)
-				return (
-					(self.status_dict.added or 0) > 0
-					and ((self.status_dict.removed or 0) > 0 or (self.status_dict.changed or 0) > 0)
-				)
-						and " "
-					or ""
-			end,
-		},
-		{
-			provider = function(self)
-				local count = self.status_dict.removed or 0
-				return count > 0 and string.format("%s %s", self.icons.removed, count) or ""
+				if self.removed() > 0 then
+					return string.format("%s %s", icons.git.diff.removed, self.removed())
+						.. (self.modified() > 0 and " " or "")
+				else
+					return ""
+				end
 			end,
 			hl = { fg = p.red },
 		},
 		{
+			-- git diff changed
 			provider = function(self)
-				return ((self.status_dict.removed or 0) > 0 and (self.status_dict.changed or 0) > 0) and " " or ""
-			end,
-		},
-		{
-			provider = function(self)
-				local count = self.status_dict.changed or 0
-				return count > 0 and string.format("%s %s", self.icons.modified, count) or ""
+				if self.modified() > 0 then
+					return string.format("%s %s", icons.git.diff.modified, self.modified())
+				else
+					return ""
+				end
 			end,
 			hl = { fg = p.lemon_chiffon },
 		},
-		{
-			provider = " ",
-			condition = function(self)
-				return self.has_changes
-			end,
-		},
 	})
 
-	local FileName = Component({
+	---@diagnostic disable-next-line: unused_variable
+	-- selene: allow(unused_variable)
+	local Filename = Component({
 		provider = function(_self)
 			local filename = vim.fn.expand("%:t")
-			local extension = vim.fn.expand("%:e")
-			local icon, _icon_color =
-				require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
-			icon = icon and (icon .. " ") or ""
-			local width = (#filename * 2) + #icon - 1 --vim.o.columns
-			return "%-" .. width .. "(" .. string.format("%s%s", icon, filename) .. "%)"
+			filename = filename == "" and "[No Name]" or filename
+			return filename
 		end,
 		hl = hl.C,
 	})
 
-	-- local Instant = Component({
-	-- 	provider = function(self)
-	-- 		returnt (#require("instant").get_connected_list() > 1) and " ✦" or ""
-	-- 	end,
-	-- })
-
-	local Left = Component({
-		separators.left(hl.ANOBG),
-		hl(Mode, hl.A),
-		separators.right(hl.ANOBG),
-		-- separators.right(hl.ANOBG):with({ condition = flip(conditions.is_git_repo) }),
-		hl({
-			Space(1),
-			Git,
-			condition = conditions.is_git_repo,
-		}, hl.C),
-		-- separators.right(hl.ANOBG):with({ condition = conditions.is_git_repo }),
-		Harpoon.Hook,
-		Harpoon.Count,
-	})
-
-	local Center = Component({
-		FileName,
-		--Align,
-		-- setmetatable({
-		-- 	hl(FileName, { fg = p.colombia_blue }),
-		-- 	{
-		-- 		update = { "LspAttach", "LspDetach" },
-		-- 		provider = function(_self)
-		-- 			local names = {}
-		-- 			for _, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-		-- 				if server.name ~= "copilot" and server.name ~= "null-ls" then
-		-- 					table.insert(names, server.name)
-		-- 				end
-		-- 			end
-		-- 			local state = require("willothy.state")
-		-- 			state.lsp.clients = names
-		-- 			state.lsp.attached = #names > 0
-		--
-		-- 			--[[ " " .. ]]
-		-- 			return string.format(" • %s", table.concat(names, ", "))
-		-- 		end,
-		-- 		condition = function()
-		-- 			return #require("willothy.state").lsp.clients > 0
-		-- 		end,
-		-- 		hl = { fg = p.colombia_blue, bg = "none" },
-		-- 		flexible = 1,
-		-- 	},
-		-- }, with):with({
-		-- 	condition = function()
-		-- 		return vim.bo.buflisted
-		-- 	end,
-		-- 	hl = { fg = p.colombia_blue, bg = "none" },
-		-- }),
-	})
-
-	local Right = Component({
-		hl({
-			Space(1),
-			Devicon,
-			Space(1),
-			Filetype,
-			Space(1),
-			Copilot,
-			Space(1),
-			Env("SESH_NAME"),
-		}, hl.C),
-		separators.left(hl.ANOBG),
-		hl(Location, hl.A),
-		separators.right(hl.ANOBG),
-		-- flexible = 3,
-	})
-
+	-- Statusline item format
+	--
+	-- Usually, the statusline consists of multiple printf style % items for showing various info about current file, e.g., %F is used to show the full path of current file. The complete format for items are as follows:
+	--
+	-- %-0{minWidth}.{maxWidth}{item}
+	--
+	-- '-' means to align the item to the left instead of right (the default).
+	-- '0' is the leading zeros for items that return numeric numbers and is overridden by -.
+	-- 'minWidth' and 'maxWidth' decide the min and max length of the item to be shown.
+	-- All fields are optional except {item} itself.
 	local StatusLine = {
-		-- flexible = 4,
-		Left,
-		Align,
-		-- Center,
-		-- Align,
-		Right, --:with({ flexible = 2 }),
+		{
+			-- Left side
+			separators.left(hl.ANOBG),
+			hl(Mode, hl.A),
+			separators.right(hl.ANOBG),
+			hl({
+				Space(1),
+				{
+					Git,
+					condition = conditions.is_git_repo,
+				},
+			}, hl.C),
+			Harpoon,
+			Space(1),
+			{
+				provider = "%<",
+			},
+		},
+		{
+			-- Align
+			provider = function()
+				local content = ""
+
+				return "%=" .. content .. "%="
+			end,
+			hl = hl.ANOBG,
+		},
+		{
+			-- Right side
+			{
+				provider = "%>",
+			},
+			hl({
+				Space(1),
+				Devicon,
+				Space(1),
+				-- Filename,
+				Filetype,
+				Space(1),
+				Copilot,
+				Space(1),
+				Env("SESH_NAME"),
+			}, hl.C),
+			separators.left(hl.ANOBG),
+			hl(Location, hl.A),
+			separators.right(hl.ANOBG),
+		},
 	}
 
 	return {
 		statusline = BG(StatusLine),
-		-- tabline = BG(TabLine)
 	}
 end
 

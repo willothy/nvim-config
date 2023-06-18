@@ -110,6 +110,13 @@ return {
 					enabled = true,
 					backend = "nui",
 				},
+				-- notify = {
+				-- 	backend = "nui",
+				-- 	enabled = true,
+				-- 	border = {
+				-- 		style = "single",
+				-- 	},
+				-- },
 				messages = {
 					-- NOTE: If you enable messages, then the cmdline is enabled automatically.
 					-- This is a current Neovim limitation.
@@ -130,13 +137,89 @@ return {
 	},
 	{
 		"rcarriga/nvim-notify",
-		opts = {
-			fps = 10,
-			render = "compact",
-			stages = "static",
-			timeout = 4000,
-			top_down = false,
-			background_color = "none",
-		},
+		dir = "~/projects/lua/nvim-notify/",
+		config = function()
+			local notify = require("notify")
+
+			local stages_util = require("notify.stages.util")
+			local Dir = stages_util.DIRECTION
+
+			local function anim(direction)
+				return {
+					function(state)
+						local next_height = state.message.height + 2
+						local next_row = stages_util.available_slot(state.open_windows, next_height, direction)
+						if not next_row then
+							return nil
+						end
+						return {
+							relative = "editor",
+							anchor = "NE",
+							width = 1,
+							height = state.message.height,
+							col = vim.opt.columns:get(),
+							row = next_row,
+							border = "rounded",
+							style = "minimal",
+						}
+					end,
+					function(state, win)
+						return {
+							width = { state.message.width },
+							col = { vim.opt.columns:get() },
+							row = {
+								stages_util.slot_after_previous(win, state.open_windows, direction),
+								frequency = 3,
+								complete = function()
+									return true
+								end,
+							},
+						}
+					end,
+					function(state, win)
+						return {
+							col = { vim.opt.columns:get() },
+							time = true,
+							row = {
+								stages_util.slot_after_previous(win, state.open_windows, direction),
+								frequency = 3,
+								complete = function()
+									return true
+								end,
+							},
+						}
+					end,
+					function(state, win)
+						return {
+							width = {
+								1,
+								frequency = 2.5,
+								damping = 0.9,
+								complete = function(cur_width)
+									return cur_width < 3
+								end,
+							},
+							col = { vim.opt.columns:get() },
+							row = {
+								stages_util.slot_after_previous(win, state.open_windows, direction),
+								frequency = 3,
+								complete = function()
+									return true
+								end,
+							},
+						}
+					end,
+				}
+			end
+
+			notify.setup({
+				fps = 60,
+				render = "compact",
+				stages = anim(Dir.BOTTOM_UP),
+				timeout = 3000,
+				top_down = false,
+				background_color = "none",
+			})
+		end,
 	},
 }

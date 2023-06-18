@@ -233,7 +233,7 @@ local function cokeline()
 				if buffer.is_hovered then
 					return buffer.is_modified and icons.misc.modified or (icons.actions.close_round .. " ")
 				else
-					return buffer.is_modified and icons.misc.modified or " " -- icons.actions.close
+					return buffer.is_modified and icons.misc.modified or (icons.actions.close_outline .. " ") -- icons.actions.close
 				end
 			end,
 			fg = function(_buffer)
@@ -259,10 +259,22 @@ local function cokeline()
 		},
 		clock = {
 			text = function(cx)
-				return " " .. (cx.is_hovered and os.date("%a %b %d") or os.date("%I:%M"))
+				return icons.misc.datetime .. (cx.is_hovered and os.date("%a %b %d") or os.date("%I:%M"))
 			end,
 			bg = "none",
 			fg = p.blue,
+		},
+		run = {
+			text = function()
+				return icons.dap.start
+			end,
+			bg = "none",
+			fg = function(cx)
+				return cx.is_hovered and p.lemon_chiffon or p.blue
+			end,
+			on_click = function(_id, _clicks, _button, _modifiers, _buffer)
+				require("willothy.terminals").with():send("echo test")
+			end,
 		},
 	}
 
@@ -332,7 +344,8 @@ local function cokeline()
 			components.padding,
 		},
 		rhs = {
-			components.clock,
+			components.run,
+			-- components.clock,
 		},
 		sidebar = {
 			filetype = "SidebarNvim",
@@ -374,6 +387,7 @@ return {
 		config = function()
 			require("cokeline").setup(cokeline())
 		end,
-		lazy = false,
+		lazy = true,
+		event = "VeryLazy",
 	},
 }
