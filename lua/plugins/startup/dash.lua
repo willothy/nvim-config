@@ -2,20 +2,6 @@ return {
 	{
 		"startup-nvim/startup.nvim",
 		enabled = false,
-		init = function()
-			vim.api.nvim_create_autocmd("BufEnter", {
-				pattern = "startup",
-				callback = function(evt)
-					require("sidebar-nvim").close()
-					vim.api.nvim_create_autocmd("BufWinLeave", {
-						once = true,
-						callback = function(evt)
-							require("sidebar-nvim").open()
-						end,
-					})
-				end,
-			})
-		end,
 		dependencies = {
 			"nvim-telescope/telescope.nvim",
 			"nvim-lua/plenary.nvim",

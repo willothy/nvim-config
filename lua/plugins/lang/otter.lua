@@ -8,6 +8,7 @@ return {
 		},
 		lazy = true,
 		ft = "markdown",
+		enabled = false,
 		config = function()
 			require("otter.config").setup({})
 

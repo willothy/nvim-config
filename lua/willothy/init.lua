@@ -5,9 +5,11 @@ end
 
 _G.dbg = vim.print
 
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
 -- require("willothy.test")
 require("willothy.util")
-require("willothy.remap")
 require("willothy.lazy")
 require("willothy.lsp")
 require("willothy.set")

@@ -16,7 +16,6 @@ return {
 			trouble = false,
 			signcolumn = true,
 		},
-		config = true,
 	},
 	{
 		"luukvbaal/statuscol.nvim",

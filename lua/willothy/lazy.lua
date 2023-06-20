@@ -14,7 +14,19 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	{ import = "willothy.dev" },
 	-- devicons
-	"nvim-tree/nvim-web-devicons",
+	{
+		"nvim-tree/nvim-web-devicons",
+		opts = {
+			override = {},
+			override_by_extension = {
+				tl = {
+					icon = "",
+					color = "#72d6d6",
+					name = "Teal",
+				},
+			},
+		},
+	},
 
 	{ import = "plugins" },
 	{

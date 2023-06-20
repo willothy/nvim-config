@@ -273,7 +273,8 @@ local function cokeline()
 				return cx.is_hovered and p.lemon_chiffon or p.blue
 			end,
 			on_click = function(_id, _clicks, _button, _modifiers, _buffer)
-				require("willothy.terminals").with():send("echo test")
+				vim.cmd("Greyjoy")
+				-- require("willothy.terminals").with():send("echo test")
 			end,
 		},
 	}

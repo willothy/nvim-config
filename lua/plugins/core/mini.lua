@@ -30,7 +30,6 @@ return {
 	{
 		"echasnovski/mini.jump",
 		name = "mini.jump",
-		version = false,
 		lazy = true,
 		event = "VeryLazy",
 		enabled = false,
@@ -46,8 +45,8 @@ return {
 	{
 		"echasnovski/mini.indentscope",
 		name = "mini.indentscope",
-		version = false,
 		lazy = true,
+		enabled = false,
 		event = "VeryLazy",
 		config = function()
 			require("mini.indentscope").setup({
@@ -62,7 +61,6 @@ return {
 	{
 		"echasnovski/mini.cursorword",
 		name = "mini.cursorword",
-		version = false,
 		lazy = true,
 		event = "VeryLazy",
 		config = function()
@@ -72,7 +70,6 @@ return {
 	{
 		"echasnovski/mini.bracketed",
 		name = "mini.bracketed",
-		version = false,
 		lazy = true,
 		enabled = false,
 		event = "VeryLazy",

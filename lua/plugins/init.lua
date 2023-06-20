@@ -1,7 +1,7 @@
 return {
 	{ import = "plugins.core" },
+	{ import = "plugins.ui" },
 	{ import = "plugins.git" },
-	{ import = "plugins.ai" },
 	{ import = "plugins.task" },
 	{ import = "plugins.lang" },
 	{ import = "plugins.navigation" },

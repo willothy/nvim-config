@@ -334,7 +334,11 @@ local function heirline()
 		{
 			-- git branch name
 			provider = function(self)
-				return string.format("%s %s ", icons.git.branch, self.status_dict.head)
+				local head = self.status_dict.head
+				if not head or head == "" then
+					head = "<empty>"
+				end
+				return string.format("%s %s ", icons.git.branch, head)
 			end,
 			hl = { fg = p.cool_gray },
 		},

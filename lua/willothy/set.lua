@@ -7,6 +7,10 @@ local Iter = require("litter")
 vim.api.nvim_exec('let &t_Cs = "\\e[4:0m"', true)
 vim.api.nvim_exec('let &t_Ce = "\\e[4:0m"', true)
 
+vim.cmd.colorscheme("minimus")
+
+vim.o.shell = "bash"
+
 o.swapfile = true
 o.backup = false
 --O.undodir = os.getenv("HOME") .. "/.vim/undodir"
@@ -14,6 +18,9 @@ o.undofile = true
 
 o.hlsearch = false
 o.incsearch = true
+o.lazyredraw = true
+o.cursorline = false
+o.ttyfast = true
 
 o.termguicolors = true
 
@@ -42,6 +49,10 @@ O.listchars = { tab = "  ", extends = "", precedes = "" }
 
 o.number = true
 o.relativenumber = true
+
+o.numberwidth = 1
+o.wrap = false
+o.expandtab = true
 
 O.numberwidth._info.default = 1
 
@@ -119,7 +130,7 @@ for ft, options in pairs(filetypes) do
 	filetypes[ft] = vim.tbl_deep_extend("keep", options, default)
 end
 
-vim.api.nvim_create_autocmd({ "BufReadPost", "BufEnter", "TermOpen" }, {
+vim.api.nvim_create_autocmd("FileType", {
 	pattern = "*",
 	callback = function(ev)
 		local buf = ev.buf
@@ -127,33 +138,41 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufEnter", "TermOpen" }, {
 		local bt = vim.bo[buf].buftype
 		if bt == "" then
 			local options = filetypes[ft] or default
-			Iter:from_map(options.buffer)
-				:each(function(v)
-					vim.api.nvim_buf_set_option(buf, v[1], v[2])
-				end)
-				:chain(Iter:from_map(options.window):each(function(v)
-					vim.api.nvim_win_set_option(0, v[1], v[2])
-				end))
-				:chain(Iter:from_map(options.global):each(function(v)
-					vim.api.nvim_set_option(v[1], v[2])
-				end))
-				:collect()
+			for k, v in pairs(options) do
+				if k == "global" then
+					for ik, iv in pairs(v) do
+						vim.api.nvim_set_option(ik, iv)
+					end
+				elseif k == "window" then
+					for ik, iv in pairs(v) do
+						vim.api.nvim_win_set_option(0, ik, iv)
+					end
+				elseif k == "buffer" then
+					for ik, iv in pairs(v) do
+						vim.api.nvim_buf_set_option(buf, ik, iv)
+					end
+				end
+			end
 			local ok, _ = pcall(vim.cmd, "Gcd")
 			if ok == false then
 				vim.cmd("lcd %:p:h")
 			end
 		elseif bt == "terminal" then
-			Iter:from_map(terminal.window)
-				:each(function(v)
-					vim.api.nvim_win_set_option(0, v[1], v[2])
-				end)
-				:chain(Iter:from_map(terminal.buffer):each(function(v)
-					vim.api.nvim_buf_set_option(buf, v[1], v[2])
-				end))
-				:chain(Iter:from_map(terminal.global):each(function(v)
-					vim.api.nvim_set_option(v[1], v[2])
-				end))
-				:collect()
+			for k, v in pairs(terminal) do
+				if k == "global" then
+					for ik, iv in pairs(v) do
+						vim.api.nvim_set_option(ik, iv)
+					end
+				elseif k == "window" then
+					for ik, iv in pairs(v) do
+						vim.api.nvim_win_set_option(0, ik, iv)
+					end
+				elseif k == "buffer" then
+					for ik, iv in pairs(v) do
+						vim.api.nvim_buf_set_option(buf, ik, iv)
+					end
+				end
+			end
 		end
 	end,
 })

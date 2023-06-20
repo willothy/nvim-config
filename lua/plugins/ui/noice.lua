@@ -8,7 +8,7 @@ return {
 		},
 		-- enabled = false,
 		lazy = true,
-		event = "VeryLazy",
+		event = "UiEnter",
 		config = function()
 			require("noice").setup({
 				-- you can enable a preset for easier configuration
@@ -137,7 +137,6 @@ return {
 	},
 	{
 		"rcarriga/nvim-notify",
-		dir = "~/projects/lua/nvim-notify/",
 		config = function()
 			local notify = require("notify")
 

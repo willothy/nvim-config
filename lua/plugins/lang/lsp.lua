@@ -173,6 +173,83 @@ local lsp_settings = {
 	clangd = {
 		semanticHighlighting = true,
 	},
+	["rust-analyzer"] = {
+		diagnostics = {
+			experimental = {
+				enable = true,
+			},
+		},
+		procMacro = {
+			enable = true,
+		},
+		hover = {
+			actions = {
+				references = {
+					enable = true,
+				},
+				run = {
+					enable = true,
+				},
+				documentation = {
+					enable = true,
+				},
+			},
+			memoryLayout = {
+				niches = true,
+			},
+		},
+		imports = {
+			granularity = {
+				enforce = true,
+				group = "crate",
+			},
+			group = {
+				enable = true,
+			},
+			merge = {
+				glob = true,
+			},
+		},
+		inlayHints = {
+			bindingModeHints = {
+				enable = true,
+			},
+			closureCaptureHints = {
+				enable = true,
+			},
+			closureReturnTypeHints = {
+				enable = "always",
+			},
+			discriminantHints = {
+				enable = "always",
+			},
+			expressionAdjustmentHints = {
+				enable = "always",
+				hideOutsideUnsafe = false,
+			},
+			lifetimeElisionHints = {
+				enable = "always",
+				useParameterNames = false,
+			},
+		},
+		lens = {
+			enable = true,
+			references = {
+				adt = {
+					enable = true,
+				},
+				enumVariant = {
+					enable = true,
+				},
+				method = {
+					enable = true,
+				},
+				trait = {
+					enable = true,
+				},
+			},
+		},
+	},
 	lua_ls = {
 		Lua = {
 			format = {
@@ -234,22 +311,22 @@ local function setup_null()
 	null_ls.setup({
 		sources = {
 			builtins.formatting.stylua,
-			builtins.formatting.prettier,
-			builtins.formatting.asmfmt,
-			builtins.formatting.beautysh,
-			builtins.formatting.pyink,
+			-- builtins.formatting.prettier,
+			-- builtins.formatting.asmfmt,
+			-- builtins.formatting.beautysh,
+			-- builtins.formatting.pyink,
 			builtins.formatting.markdownlint,
-			builtins.formatting.taplo,
+			-- builtins.formatting.taplo,
 			builtins.diagnostics.selene,
-			builtins.diagnostics.todo_comments,
-			builtins.diagnostics.commitlint,
-			builtins.diagnostics.markdownlint,
-			builtins.diagnostics.semgrep,
-			builtins.diagnostics.shellcheck,
+			-- builtins.diagnostics.todo_comments,
+			-- builtins.diagnostics.commitlint,
+			-- builtins.diagnostics.markdownlint,
+			-- builtins.diagnostics.semgrep,
+			-- builtins.diagnostics.shellcheck,
 			builtins.diagnostics.zsh,
-			builtins.code_actions.cspell,
+			-- builtins.code_actions.cspell,
 			builtins.code_actions.gitrebase,
-			builtins.hover.dictionary,
+			-- builtins.hover.dictionary,
 		},
 		on_attach = lsp_attach,
 	})
@@ -298,89 +375,11 @@ local function setup_rust()
 			inlay_hints = {
 				auto = false,
 			},
-			hover_actions = {},
 		},
 		server = {
-			-- standalone = false,
 			on_attach = lsp_attach,
 			-- capabilities = mkcaps(),
-			settings = {
-				assist = {
-					importGranularity = "module",
-					importPrefix = "by_self",
-				},
-				cargo = {
-					loadOutDirsFromCheck = true,
-				},
-				procMacro = {
-					enable = true,
-					enabled = true,
-				},
-				procMacros = {
-					enable = true,
-					enabled = true,
-				},
-				imports = {
-					prefix = "self",
-				},
-				inlayHints = {
-					render_colons = true,
-					type_hints = true,
-					parameter_hints = true,
-					chaining_hints = true,
-					hide_closure_initialization_hints = false,
-					adjustment_hints = {
-						enable = "always",
-					},
-					discriminant_hints = {
-						enable = "always",
-					},
-					lifetimeElisionHints = {
-						enable = "always",
-						useParemeterNames = true,
-					},
-					closureReturnTypeHints = {
-						enable = "always",
-					},
-					discriminantHints = {
-						enable = "fieldless",
-					},
-					bindingModeHints = {
-						enable = true,
-					},
-				},
-				lens = {
-					run = true,
-					enable = true,
-					implementations = {
-						enable = true,
-					},
-					method_refs = {
-						enable = true,
-					},
-					references = {
-						adt = {
-							enable = true,
-						},
-						enumVariant = {
-							enable = true,
-						},
-						method = {
-							enable = true,
-						},
-						trait = {
-							enable = true,
-						},
-					},
-				},
-				hover = {
-					actions = {
-						references = {
-							enable = true,
-						},
-					},
-				},
-			},
+			settings = lsp_settings["rust-analyzer"],
 		},
 	})
 end
@@ -496,7 +495,6 @@ local function lsp_setup()
 	-- 	end,
 	-- 	capabilities = vim.lsp.protocol.make_client_capabilities(),
 	-- })
-	setup_rust()
 
 	setup_null()
 	setup_ufo()
@@ -628,7 +626,9 @@ return {
 		-- "simrat39/rust-tools.nvim",
 		"willothy/rust-tools.nvim",
 		branch = "no-augment",
-		lazy = true,
+		config = setup_rust,
+		-- lazy = true,
+		-- event = "VimEnter",
 	},
 	{
 		"williamboman/mason.nvim",
@@ -745,6 +745,7 @@ return {
 				end,
 			})
 		end,
+		enabled = false,
 		lazy = true,
 		event = "LspAttach",
 	},

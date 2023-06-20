@@ -17,11 +17,11 @@ return {
 					},
 					cargo = {
 						targets = {
+							{ "run" },
+							{ "run", "--release" },
 							{ "build" },
 							{ "build", "--release" },
-							{ "check" },
 							{ "clean" },
-							{ "update" },
 						},
 					},
 				},

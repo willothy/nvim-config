@@ -64,13 +64,20 @@ M.lua = Terminal:new({
 	hidden = true,
 })
 
+local edgy = (function()
+	local ok, res = pcall(require, "edgy")
+	return ok and res or nil
+end)()
+
 ---@return Terminal
 function M.with()
 	local term = require("willothy.terminals").main
-	local win = require("edgy").get_win(term.window)
 	if term:is_open() then
-		if win and not win.visible then
-			win:open()
+		if edgy then
+			local win = require("edgy").get_win(term.window)
+			if win and not win.visible then
+				win:open()
+			end
 		end
 	else
 		term:open()
@@ -80,10 +87,12 @@ end
 
 function M.with_float()
 	local term = require("willothy.terminals").float
-	local win = require("edgy").get_win(term.window)
 	if term:is_open() then
-		if win and not win.visible then
-			win:open()
+		if edgy then
+			local win = edgy.get_win(term.window)
+			if win and not win.visible then
+				win:open()
+			end
 		end
 	else
 		term:open()
@@ -93,12 +102,16 @@ end
 
 function M.toggle()
 	local term = require("willothy.terminals").main
-	local win = require("edgy").get_win(term.window)
 	if term:is_open() then
-		if win and win.visible then
-			win:close()
-		elseif win then
-			win:open()
+		if edgy then
+			local win = edgy.get_win(term.window)
+			if win and win.visible then
+				win:close()
+			elseif win then
+				win:open()
+			end
+		else
+			term:close()
 		end
 	else
 		term:open()

@@ -11,36 +11,36 @@ local function matchstr(...)
 	return ""
 end
 
-vim.api.nvim_create_user_command("DiagFloatToggle", function()
-	enabled = not enabled
-end, {})
-
-vim.api.nvim_create_autocmd({ "CursorMoved", "CursorHold" }, {
-	callback = function()
-		if enabled then
-			local column = vim.api.nvim_win_get_cursor(0)[2] + 1 -- one-based indexing.
-			local line = vim.api.nvim_get_current_line()
-
-			-- get the cursor word.
-			-- \k are chars that can be keywords.
-			local left = matchstr(line:sub(1, column), [[\k*$]])
-			local right = matchstr(line:sub(column), [[^\k*]]):sub(2)
-
-			local cursor_word = left .. right
-			if cursor_word == "" then
-				vim.cmd("doautocmd InsertEnter")
-				return
-			end
-
-			local _b, _w = vim.diagnostic.open_float(nil, {
-				focus = true,
-				scope = "cursor",
-				noautocmd = true,
-				anchor = "NW",
-			})
-		end
-	end,
-})
+-- vim.api.nvim_create_user_command("DiagFloatToggle", function()
+-- 	enabled = not enabled
+-- end, {})
+--
+-- vim.api.nvim_create_autocmd({ "CursorMoved", "CursorHold" }, {
+-- 	callback = function()
+-- 		if enabled then
+-- 			local column = vim.api.nvim_win_get_cursor(0)[2] + 1 -- one-based indexing.
+-- 			local line = vim.api.nvim_get_current_line()
+--
+-- 			-- get the cursor word.
+-- 			-- \k are chars that can be keywords.
+-- 			local left = matchstr(line:sub(1, column), [[\k*$]])
+-- 			local right = matchstr(line:sub(column), [[^\k*]]):sub(2)
+--
+-- 			local cursor_word = left .. right
+-- 			if cursor_word == "" then
+-- 				vim.cmd("doautocmd InsertEnter")
+-- 				return
+-- 			end
+--
+-- 			local _b, _w = vim.diagnostic.open_float(nil, {
+-- 				focus = true,
+-- 				scope = "cursor",
+-- 				noautocmd = true,
+-- 				anchor = "NW",
+-- 			})
+-- 		end
+-- 	end,
+-- })
 
 return {
 	-- {
