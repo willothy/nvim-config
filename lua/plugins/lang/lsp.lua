@@ -1,6 +1,5 @@
 local utils = require("willothy.util")
 local icons = require("willothy.icons")
-local augroup = vim.api.nvim_create_augroup
 local setmap = vim.keymap.set
 local buf = vim.lsp.buf
 local diagnostic = vim.diagnostic
@@ -115,7 +114,7 @@ local function setup_inlayhints()
 	})
 
 	vim.api.nvim_create_autocmd("LspAttach", {
-		group = vim.api.nvim_create_augroup("LspAttach_inlayhints", {}),
+		group = vim.api.nvim_create_augroup("LspAttach_inlayhints", { clear = true }),
 		callback = function(args)
 			if not (args.data and args.data.client_id) then
 				return
@@ -127,7 +126,6 @@ local function setup_inlayhints()
 end
 
 local format
-local format_group = augroup("lsp_format_group", {})
 local function setup_format()
 	format = require("lsp-format")
 	format.setup({
@@ -252,8 +250,17 @@ local lsp_settings = {
 	},
 	lua_ls = {
 		Lua = {
-			format = {
-				enable = false,
+			workspace = {
+				checkThirdParty = false,
+			},
+			completion = {
+				workspaceWord = true,
+				callSnippet = "Both",
+			},
+			misc = {
+				parameters = {
+					"--log-level=trace",
+				},
 			},
 			diagnostics = {
 				disable = { "incomplete-signature-doc" },
@@ -277,19 +284,14 @@ local lsp_settings = {
 					["unused"] = "Opened",
 				},
 				unusedLocalExclude = { "_*" },
-				globals = { "vim" },
 			},
-			workspace = {
-				-- checkThirdParty = true,
-				-- library = {
-				-- 	"~/projects/lua/veil/lua/",
-				-- },
-			},
-			completion = {
-				enable = true,
-				autoRequire = true,
-				callSnippet = "Replace",
-				-- workspaceDelay = 1000,
+			format = {
+				enable = false,
+				defaultConfig = {
+					indent_style = "space",
+					indent_size = "2",
+					continuation_indent_size = "2",
+				},
 			},
 			hint = {
 				enable = true,
@@ -311,21 +313,21 @@ local function setup_null()
 	null_ls.setup({
 		sources = {
 			builtins.formatting.stylua,
-			-- builtins.formatting.prettier,
+			builtins.diagnostics.selene,
+			builtins.formatting.prettier,
 			-- builtins.formatting.asmfmt,
 			-- builtins.formatting.beautysh,
 			-- builtins.formatting.pyink,
-			builtins.formatting.markdownlint,
+			-- builtins.formatting.markdownlint,
 			-- builtins.formatting.taplo,
-			builtins.diagnostics.selene,
 			-- builtins.diagnostics.todo_comments,
 			-- builtins.diagnostics.commitlint,
 			-- builtins.diagnostics.markdownlint,
 			-- builtins.diagnostics.semgrep,
 			-- builtins.diagnostics.shellcheck,
-			builtins.diagnostics.zsh,
+			-- builtins.diagnostics.zsh,
 			-- builtins.code_actions.cspell,
-			builtins.code_actions.gitrebase,
+			-- builtins.code_actions.gitrebase,
 			-- builtins.hover.dictionary,
 		},
 		on_attach = lsp_attach,
@@ -385,120 +387,35 @@ local function setup_rust()
 end
 
 local function lsp_setup()
-	require("neodev").setup({
-		setup_jsonls = true,
-	})
-
 	vim.lsp.set_log_level("off")
+	require("neodev").setup()
+	require("mason").setup()
 
-	require("mason").setup({})
-	local mason_lspconfig = require("mason-lspconfig")
-	mason_lspconfig.setup({
-		lua_ls = {
-			single_file_support = true,
-			settings = {
-				Lua = {
-					workspace = {
-						checkThirdParty = false,
-					},
-					completion = {
-						workspaceWord = true,
-						callSnippet = "Both",
-					},
-					misc = {
-						parameters = {
-							"--log-level=trace",
-						},
-					},
-					diagnostics = {
-						disable = { "incomplete-signature-doc" },
-						enable = false,
-						groupSeverity = {
-							strong = "Warning",
-							strict = "Warning",
-						},
-						groupFileStatus = {
-							["ambiguity"] = "Opened",
-							["await"] = "Opened",
-							["codestyle"] = "None",
-							["duplicate"] = "Opened",
-							["global"] = "Opened",
-							["luadoc"] = "Opened",
-							["redefined"] = "Opened",
-							["strict"] = "Opened",
-							["strong"] = "Opened",
-							["type-check"] = "Opened",
-							["unbalanced"] = "Opened",
-							["unused"] = "Opened",
-						},
-						unusedLocalExclude = { "_*" },
-					},
-					format = {
-						enable = false,
-						defaultConfig = {
-							indent_style = "space",
-							indent_size = "2",
-							continuation_indent_size = "2",
-						},
-					},
-					hint = {
-						enable = true,
-						setType = true,
-						arrayIndex = "Enable",
-						await = true,
-						paramName = "All",
-						paramType = true,
-						semicolon = "SameLine",
-					},
-				},
-			},
+	local lspconfig = require("lspconfig")
+	local capabilities = mkcaps(true)
+
+	require("mason-lspconfig").setup({
+		ensure_installed = {
+			"lua_ls",
+		},
+		automatic_installation = false,
+		handlers = {
+			function(server_name)
+				lspconfig[server_name].setup({
+					capabilities = capabilities,
+					on_attach = lsp_attach,
+					settings = lsp_settings[server_name] or {},
+				})
+			end,
 		},
 	})
-	require("mason-null-ls").setup({
-		automatic_setup = true,
-	})
-	local lspconfig = require("lspconfig")
 
-	local lspcfg_cfg = require("lspconfig.configs")
 	local cmp_lsp = require("cmp_nvim_lsp")
-
-	-- lspcfg_cfg.luahint = {
-	-- 	default_config = {
-	-- 		cmd = { "luahint" },
-	-- 		filetypes = { "lua" },
-	-- 		root_dir = function()
-	-- 			return vim.fn.getcwd()
-	-- 		end,
-	-- 		settings = {},
-	-- 	},
-	-- }
-
-	local capabilities = mkcaps(true)
 
 	cmp_lsp.default_capabilities(capabilities)
 
-	-- local servers = get_servers()
-	setup_inlayhints()
-	mason_lspconfig.setup_handlers({
-		function(server_name)
-			lspconfig[server_name].setup({
-				capabilities = capabilities,
-				on_attach = lsp_attach,
-				settings = lsp_settings[server_name] or {},
-			})
-		end,
-	})
-
-	-- lspconfig.luahint.setup({
-	-- 	on_attach = function(client, bufnr)
-	-- 		inlayhints.on_attach(client, bufnr, false)
-	-- 	end,
-	-- 	capabilities = vim.lsp.protocol.make_client_capabilities(),
-	-- })
-
-	setup_null()
-	setup_ufo()
 	setup_format()
+	setup_ufo()
 
 	local sign = function(opts)
 		vim.fn.sign_define(opts.name, {
@@ -512,6 +429,17 @@ local function lsp_setup()
 	sign({ name = "DiagnosticSignHint", text = icons.diagnostics.hints })
 	sign({ name = "DiagnosticSignInfo", text = icons.diagnostics.info })
 	sign({ name = "LightBulbSign", text = icons.lsp.action_hint, hl = "DiagnosticSignWarn" })
+	-- DAP signs:
+	--  DapBreakpoint
+	--  DapBreakpointCondition
+	--  DapLogPoint
+	--  DapStopped
+	--  DapBreakpointRejected
+	sign({ name = "DapBreakpoint", text = icons.dap.breakpoint, hl = "DiagnosticSignError" })
+	sign({ name = "DapBreakpointCondition", text = icons.dap.breakpoint_condition, hl = "DiagnosticSignWarn" })
+	sign({ name = "DapLogPoint", text = icons.dap.log_point, hl = "DiagnosticSignInfo" })
+	sign({ name = "DapStopped", text = icons.dap.stopped, hl = "DiagnosticSignInfo" })
+	sign({ name = "DapBreakpointRejected", text = icons.dap.breakpoint_rejected, hl = "DiagnosticSignWarn" })
 
 	diagnostic.config({
 		virtual_text = {
@@ -711,6 +639,8 @@ return {
 	{
 		"jose-elias-alvarez/null-ls.nvim",
 		lazy = true,
+		event = "VimEnter",
+		config = setup_null,
 	},
 	{
 		"ThePrimeagen/refactoring.nvim",
@@ -745,7 +675,7 @@ return {
 				end,
 			})
 		end,
-		enabled = false,
+		-- enabled = false,
 		lazy = true,
 		event = "LspAttach",
 	},

@@ -83,6 +83,9 @@ M.dap = {
 	paused = "",
 	breakpoint = "",
 	start = "", -- 
+	breakpoint_condition = "",
+	breakpoint_rejected = "",
+	log_point = "",
 }
 
 M.actions = {
