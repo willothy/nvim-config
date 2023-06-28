@@ -65,7 +65,7 @@ function Locations:setup(opts)
       primary = "Type",
       secondary = "Macro",
     },
-    range = 10,
+    range = 15,
   }, opts or {})
   Chars:setup(Locations.config.chars)
 end
@@ -239,10 +239,10 @@ return {
       end
 
       flash.setup({
+        label = {
+          style = "overlay",
+        },
         highlight = {
-          label = {
-            style = "overlay",
-          },
           groups = {
             match = "HlSearch",
             label = "Macro",

@@ -36,7 +36,10 @@ o.mousemoveevent = true
 -- o.signcolumn = "auto:2"
 
 o.foldcolumn = "1"
-o.fillchars = [[eob: ,fold: ,foldopen:]] .. icons.fold.open .. [[,foldsep: ,foldclose:]] .. icons.fold.closed
+o.fillchars = [[eob: ,fold: ,foldopen:]]
+  .. icons.fold.open
+  .. [[,foldsep: ,foldclose:]]
+  .. icons.fold.closed
 o.foldlevel = 99
 o.foldenable = true
 o.foldlevelstart = 99
@@ -57,130 +60,124 @@ o.expandtab = true
 O.numberwidth._info.default = 1
 
 vim.api.nvim_create_autocmd({
-	"ModeChanged",
-	"BufEnter",
-	"TermResponse",
+  "ModeChanged",
+  "BufEnter",
+  "TermResponse",
 }, {
-	callback = function()
-		vim.cmd("checktime")
-	end,
+  callback = function() vim.cmd("checktime") end,
 })
 
 local default = {
-	global = {
-		numberwidth = 1,
-	},
-	window = {
-		wrap = false,
-		numberwidth = 1,
-		number = true,
-		relativenumber = true,
-	},
-	buffer = {
-		tabstop = 4,
-		softtabstop = -1,
-		shiftwidth = 0,
-		expandtab = true,
-		smartindent = false,
-	},
+  global = {
+    numberwidth = 1,
+  },
+  window = {
+    wrap = false,
+    numberwidth = 1,
+    number = true,
+    relativenumber = true,
+  },
+  buffer = {
+    tabstop = 4,
+    softtabstop = -1,
+    shiftwidth = 0,
+    expandtab = true,
+    smartindent = false,
+  },
 }
 
 local filetypes = {
-	markdown = {
-		window = {
-			wrap = true,
-		},
-	},
-	lua = {
-		buffer = {
-			tabstop = 2,
-			shiftwidth = 2,
-		},
-	},
-	text = {
-		window = {
-			wrap = true,
-		},
-	},
-	c = {
-		buffer = {
-			tabstop = 2,
-			shiftwidth = 2,
-		},
-	},
-	make = {
-		buffer = {
-			expandtab = false,
-		},
-	},
+  markdown = {
+    window = {
+      wrap = true,
+    },
+  },
+  lua = {
+    buffer = {
+      tabstop = 2,
+      shiftwidth = 2,
+    },
+  },
+  text = {
+    window = {
+      wrap = true,
+    },
+  },
+  c = {
+    buffer = {
+      tabstop = 2,
+      shiftwidth = 2,
+    },
+  },
+  make = {
+    buffer = {
+      expandtab = false,
+    },
+  },
 }
 
 local terminal = vim.tbl_deep_extend("keep", {
-	window = {
-		number = false,
-		relativenumber = false,
-		numberwidth = 1,
-	},
-	buffer = {
-		tabstop = 4,
-	},
+  window = {
+    number = false,
+    relativenumber = false,
+    numberwidth = 1,
+  },
+  buffer = {
+    tabstop = 4,
+  },
 }, default)
 
 for ft, options in pairs(filetypes) do
-	filetypes[ft] = vim.tbl_deep_extend("keep", options, default)
+  filetypes[ft] = vim.tbl_deep_extend("keep", options, default)
 end
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = "*",
-	callback = function(ev)
-		local buf = ev.buf
-		local ft = vim.bo[buf].filetype
-		local bt = vim.bo[buf].buftype
-		if bt == "" then
-			local options = filetypes[ft] or default
-			for k, v in pairs(options) do
-				if k == "global" then
-					for ik, iv in pairs(v) do
-						vim.api.nvim_set_option(ik, iv)
-					end
-				elseif k == "window" then
-					for ik, iv in pairs(v) do
-						vim.api.nvim_win_set_option(0, ik, iv)
-					end
-				elseif k == "buffer" then
-					for ik, iv in pairs(v) do
-						vim.api.nvim_buf_set_option(buf, ik, iv)
-					end
-				end
-			end
-			local ok, _ = pcall(vim.cmd, "Gcd")
-			if ok == false then
-				vim.cmd("lcd %:p:h")
-			end
-		elseif bt == "terminal" then
-			for k, v in pairs(terminal) do
-				if k == "global" then
-					for ik, iv in pairs(v) do
-						vim.api.nvim_set_option(ik, iv)
-					end
-				elseif k == "window" then
-					for ik, iv in pairs(v) do
-						vim.api.nvim_win_set_option(0, ik, iv)
-					end
-				elseif k == "buffer" then
-					for ik, iv in pairs(v) do
-						vim.api.nvim_buf_set_option(buf, ik, iv)
-					end
-				end
-			end
-		end
-	end,
+  pattern = "*",
+  callback = function(ev)
+    local buf = ev.buf
+    local ft = vim.bo[buf].filetype
+    local bt = vim.bo[buf].buftype
+    if bt == "" then
+      local options = filetypes[ft] or default
+      for k, v in pairs(options) do
+        if k == "global" then
+          for ik, iv in pairs(v) do
+            vim.api.nvim_set_option(ik, iv)
+          end
+        elseif k == "window" then
+          for ik, iv in pairs(v) do
+            vim.api.nvim_win_set_option(0, ik, iv)
+          end
+        elseif k == "buffer" then
+          for ik, iv in pairs(v) do
+            vim.api.nvim_buf_set_option(buf, ik, iv)
+          end
+        end
+      end
+      local ok, _ = pcall(vim.cmd, "Gcd")
+      if ok == false then vim.cmd("lcd %:p:h") end
+    elseif bt == "terminal" then
+      for k, v in pairs(terminal) do
+        if k == "global" then
+          for ik, iv in pairs(v) do
+            vim.api.nvim_set_option(ik, iv)
+          end
+        elseif k == "window" then
+          for ik, iv in pairs(v) do
+            vim.api.nvim_win_set_option(0, ik, iv)
+          end
+        elseif k == "buffer" then
+          for ik, iv in pairs(v) do
+            vim.api.nvim_buf_set_option(buf, ik, iv)
+          end
+        end
+      end
+    end
+  end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "c", "h", "cpp", "hpp" },
-	group = vim.api.nvim_create_augroup("ft_set_treesitter", { clear = true }),
-	callback = function()
-		vim.treesitter.start()
-	end,
+  pattern = { "c", "h", "cpp", "hpp" },
+  group = vim.api.nvim_create_augroup("ft_set_treesitter", { clear = true }),
+  callback = function() vim.treesitter.start() end,
 })
