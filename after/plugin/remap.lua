@@ -347,12 +347,12 @@ register("n", {
   },
 })
 
-register("x", {
+register({ "x", "c", "i" }, {
   ["<S-CR>"] = {
-    nil,
+    function() vim.api.nvim_feedkeys("\n", "x", false) end,
     "Newline",
   },
-}, { noremap = true })
+})
 
 local spl = require("smart-splits")
 register({ "n", "t" }, {
@@ -415,6 +415,17 @@ wk.register({
       function() require("cokeline.mappings").by_step("switch", 1) end,
       "Move next buffer",
     },
+  },
+})
+
+register({ "n", "t" }, {
+  ["<S-Esc>"] = {
+    "<Cmd>TroubleToggle document_diagnostics<CR>",
+    "Diagnostics",
+  },
+  ["<S-CR>"] = {
+    terminals.toggle,
+    "Toggle terminal",
   },
 })
 
