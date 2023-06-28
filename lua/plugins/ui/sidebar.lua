@@ -24,37 +24,42 @@
 -- }
 
 return {
-	{
-		"sidebar-nvim/sidebar.nvim",
-		opts = {
-			side = "left",
-			-- open = vim.o.columns >= 150, --vim.fn.argc() ~= 0,
-			open = false,
-			section_separator = { " ", " " },
-			sections = {
-				-- "git",
-				"datetime",
-				"files",
-				-- "symbols",
-				-- "diagnostics",
-				-- "todos",
-				"containers",
-				-- crates,
-			},
-		},
-	},
-	-- {
-	-- 	"willothy/luacrates",
-	-- 	build = "make",
-	-- },
-	{
-		"nvim-neo-tree/neo-tree.nvim",
-		lazy = true,
-		cmd = "Neotree",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-			"MunifTanjim/nui.nvim",
-		},
-	},
+  {
+    "sidebar-nvim/sidebar.nvim",
+    opts = {
+      side = "left",
+      -- open = vim.o.columns >= 150, --vim.fn.argc() ~= 0,
+      open = false,
+      section_separator = { " ", " " },
+      sections = {
+        -- "git",
+        "datetime",
+        "files",
+        -- "symbols",
+        -- "diagnostics",
+        -- "todos",
+        "containers",
+        -- crates,
+      },
+    },
+  },
+  -- {
+  -- 	"willothy/luacrates",
+  -- 	build = "make",
+  -- },
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    lazy = true,
+    event = "VeryLazy",
+    opts = {
+      source_selector = {
+        winbar = true,
+      },
+    },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
+    },
+  },
 }
