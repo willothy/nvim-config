@@ -50,7 +50,7 @@ return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     lazy = true,
-    event = "VeryLazy",
+    cmd = "Neotree",
     opts = {
       source_selector = {
         winbar = true,

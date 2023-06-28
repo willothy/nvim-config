@@ -2,7 +2,6 @@ local o = vim.o
 local O = vim.opt
 local icons = require("willothy.icons")
 local _util = require("willothy.util")
-local Iter = require("litter")
 
 vim.api.nvim_exec('let &t_Cs = "\\e[4:0m"', true)
 vim.api.nvim_exec('let &t_Ce = "\\e[4:0m"', true)
@@ -154,8 +153,6 @@ vim.api.nvim_create_autocmd("FileType", {
           end
         end
       end
-      local ok, _ = pcall(vim.cmd, "Gcd")
-      if ok == false then vim.cmd("lcd %:p:h") end
     elseif bt == "terminal" then
       for k, v in pairs(terminal) do
         if k == "global" then
