@@ -7,7 +7,7 @@ return {
       "rouge8/neotest-rust",
     },
     lazy = true,
-    event = "VeryLazy",
+    event = "LspAttach",
     config = function()
       require("neotest").setup({
         adapters = {

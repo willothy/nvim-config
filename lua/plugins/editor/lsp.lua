@@ -592,7 +592,8 @@ return {
     "willothy/rust-tools.nvim",
     branch = "no-augment",
     config = setup_rust,
-    -- lazy = true,
+    lazy = true,
+    ft = "rust",
     -- event = "VimEnter",
   },
   {
@@ -674,7 +675,7 @@ return {
   {
     "jose-elias-alvarez/null-ls.nvim",
     lazy = true,
-    event = "VimEnter",
+    event = "VeryLazy",
     config = setup_null,
   },
   {

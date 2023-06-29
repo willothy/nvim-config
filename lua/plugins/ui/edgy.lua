@@ -3,7 +3,6 @@ return {
     "willothy/edgy.nvim",
     branch = "close-when-hidden",
     event = "VeryLazy",
-    -- enabled = false,
     opts = {
       left = {
         {
