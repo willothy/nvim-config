@@ -378,6 +378,8 @@ register({ "n", "t" }, {
     ["j"] = { util.bind(vim.cmd, "wincmd j"), "Move to window down" },
     ["h"] = { util.bind(vim.cmd, "wincmd h"), "Move to window left" },
     ["l"] = { util.bind(vim.cmd, "wincmd l"), "Move to window right" },
+    ["="] = { "<cmd>WindowsEqualize<CR>", "Equalize window sizes" },
+    ["`"] = { "<cmd>WindowsToggleAutowidth<CR>", "Toggle auto resize" },
     x = {
       function() vim.api.nvim_exec("WinShift swap", true) end,
       "Swap windows",
