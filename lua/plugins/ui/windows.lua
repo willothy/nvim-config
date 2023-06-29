@@ -68,4 +68,11 @@ return {
       scroll = { enable = false },
     },
   },
+  {
+    "yorickpeterse/nvim-window",
+    config = function()
+      local w = require("nvim-window")
+      w.setup({})
+    end,
+  },
 }

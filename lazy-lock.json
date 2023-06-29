@@ -79,6 +79,7 @@
   "nvim-treesitter": { "branch": "master", "commit": "8d2eb35c5b72a2e2fdb713998bdc906d8f028114" },
   "nvim-treesitter-textobjects": { "branch": "master", "commit": "52f1f3280d9092bfaee5c45be5962fabee3d9654" },
   "nvim-web-devicons": { "branch": "master", "commit": "9ab9b0b894b2388a9dbcdee5f00ce72e25d85bf9" },
+  "nvim-window": { "branch": "main", "commit": "dd0a6b230003ef35524853d71e5413f88fd2ba74" },
   "overseer.nvim": { "branch": "master", "commit": "5564d0d1b7c956be5c51f4945ebbde7408a48043" },
   "plenary.nvim": { "branch": "master", "commit": "36aaceb6e93addd20b1b18f94d86aecc552f30c4" },
   "poimandres.nvim": { "branch": "main", "commit": "43ea31d1e19f7603697bb3272b233930d0292383" },
