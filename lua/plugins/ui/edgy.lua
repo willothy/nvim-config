@@ -1,6 +1,7 @@
 return {
   {
-    "folke/edgy.nvim",
+    "willothy/edgy.nvim",
+    branch = "close-when-hidden",
     event = "VeryLazy",
     -- enabled = false,
     opts = {
@@ -25,6 +26,7 @@ return {
       },
 
       exit_when_last = true,
+      close_when_all_hidden = true,
 
       animate = {
         enabled = true,

@@ -21,38 +21,6 @@ M.main = Terminal:new({
   close_on_exit = true,
   direction = "horizontal",
   start_in_insert = false,
-  -- on_create = function(t)
-  -- 	local group = vim.api.nvim_create_augroup("term_autosize", { clear = true })
-  -- 	local buf = t.bufnr
-  -- 	vim.api.nvim_create_autocmd("TermEnter", {
-  -- 		buffer = buf,
-  -- 		group = group,
-  -- 		callback = function()
-  -- 			vim.api.nvim_win_set_height(t.window, vim.o.lines / 2)
-  -- 			local win = require("edgy").get_win(t.window)
-  -- 			if win then
-  -- 				-- expand window vertically
-  -- 				win.height = vim.o.lines / 2
-  -- 				win:resize()
-  -- 			end
-  -- 			-- t:resize(vim.o.lines / 2)
-  -- 		end,
-  -- 	})
-  -- 	vim.api.nvim_create_autocmd("BufLeave", {
-  -- 		buffer = buf,
-  -- 		group = group,
-  -- 		callback = function()
-  -- 			vim.api.nvim_win_set_height(t.window, 4)
-  -- 			local win = require("edgy").get_win(t.window)
-  -- 			if win then
-  -- 				-- expand window vertically
-  -- 				win.height = 4
-  -- 				win:resize()
-  -- 			end
-  -- 			-- t:resize(3)
-  -- 		end,
-  -- 	})
-  -- end,
 })
 
 M.py = Terminal:new({
