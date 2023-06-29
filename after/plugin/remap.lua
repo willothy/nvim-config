@@ -2,6 +2,7 @@ if vim.g.minimal then return end
 local wk = require("which-key")
 local util = require("willothy.util")
 local terminals = require("willothy.terminals")
+local telescope = require("telescope")
 local harpoon = require("harpoon.mark")
 local Iter = require("litter")
 
@@ -527,19 +528,19 @@ wk.register({
   f = {
     name = "file",
     f = {
-      function() require("telescope").extensions.menufacture.find_files() end,
+      telescope.extensions.menufacture.find_files,
       "Find files",
     },
     g = {
-      function() require("telescope").extensions.menufacture.git_files() end,
+      telescope.extensions.menufacture.git_files,
       "Find git files",
     },
     s = {
-      function() require("telescope").extensions.menufacture.grep_string() end,
+      telescope.extensions.menufacture.grep_string,
       "Grep string",
     },
     b = {
-      function() require("telescope.builtin").buffers() end,
+      telescope.extensions.scope.buffers,
       "Find buffers",
     },
     n = { "<cmd>enew<CR>", "Create a new buffer" },
