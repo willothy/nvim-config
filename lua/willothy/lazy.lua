@@ -17,7 +17,13 @@ require("lazy").setup({
   {
     "nvim-tree/nvim-web-devicons",
     opts = {
-      override = {},
+      override_by_filename = {
+        terminal = {
+          icon = "",
+          color = "#7ec699",
+          name = "ToggleTerm",
+        },
+      },
       override_by_extension = {
         tl = {
           icon = "",

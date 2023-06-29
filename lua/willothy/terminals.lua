@@ -2,6 +2,8 @@ local M = {}
 
 local Terminal = require("toggleterm.terminal").Terminal
 
+require("toggleterm.constants").FILETYPE = "terminal"
+
 M.float = Terminal:new({
   display_name = "floating",
   filetype = "toggleterm_float",

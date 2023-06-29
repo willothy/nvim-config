@@ -15,7 +15,7 @@ return {
           -- end,
         },
         {
-          ft = "toggleterm",
+          ft = "terminal",
           title = "Terminal",
           pinned = true,
           open = function() require("willothy.terminals").main:open() end,
