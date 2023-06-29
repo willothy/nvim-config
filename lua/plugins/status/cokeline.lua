@@ -426,10 +426,9 @@ end
 return {
   {
     "willothy/nvim-cokeline",
-    -- branch = "rhs-components",
+    branch = "mouse-move",
     -- dir = vim.g.dev == "cokeline" and "~/projects/neovim/cokeline" or nil,
-    dir = "~/projects/lua/cokeline/",
-    -- config = true,
+    -- dir = "~/projects/lua/cokeline/",
     config = function() require("cokeline").setup(cokeline()) end,
     lazy = true,
     event = "VeryLazy",

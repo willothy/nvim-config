@@ -53,7 +53,7 @@ return {
     cmd = "Neotree",
     opts = {
       source_selector = {
-        winbar = true,
+        winbar = false,
       },
     },
     dependencies = {
