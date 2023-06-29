@@ -287,8 +287,8 @@ local function cokeline()
   return {
     show_if_buffers_are_at_least = 1,
     buffers = {
-      -- filter_valid = function(buffer) return buffer.type ~= 'terminal' end,
-      -- filter_visible = function(buffer) return buffer.type ~= 'terminal' end,
+      -- filter_valid = function(buffer) return true end,
+      -- filter_visible = function(buffer) return true end,
       focus_on_delete = "next",
       new_buffers_position = "next",
       delete_on_right_click = false,
@@ -426,9 +426,9 @@ end
 return {
   {
     "willothy/nvim-cokeline",
-    branch = "mouse-move",
+    -- branch = "mouse-move",
     -- dir = vim.g.dev == "cokeline" and "~/projects/neovim/cokeline" or nil,
-    -- dir = "~/projects/lua/cokeline/",
+    dir = "~/projects/lua/cokeline/",
     config = function() require("cokeline").setup(cokeline()) end,
     lazy = true,
     event = "VeryLazy",
