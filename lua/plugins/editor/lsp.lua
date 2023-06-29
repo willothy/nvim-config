@@ -609,7 +609,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     lazy = true,
-    event = "VimEnter",
+    event = "VeryLazy",
     config = lsp_setup,
   },
   {

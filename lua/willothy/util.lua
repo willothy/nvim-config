@@ -256,4 +256,16 @@ function M.synStack()
   end
 end
 
+vim.api.nvim_create_user_command("Scratch", function(opts)
+  local f = vim.fn.tempname()
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_name(buf, f)
+  vim.bo[buf].filetype = (opts.args and (#opts.args > 1)) and opts.args[1]
+    or "lua"
+  vim.bo[buf].buftype = ""
+  vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+  vim.api.nvim_buf_set_option(buf, "swapfile", false)
+  vim.api.nvim_set_current_buf(buf)
+end, { nargs = "?" })
+
 return M

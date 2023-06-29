@@ -18,8 +18,10 @@ return {
   --   event = "VeryLazy",
   -- },
   {
-    "nvim-focus/focus.nvim",
+    -- "nvim-focus/focus.nvim",
+    "willothy/focus.nvim",
     branch = "refactor",
+    -- enabled = false,
     config = function()
       local focus = require("focus")
       focus.setup({
@@ -39,8 +41,6 @@ return {
               "SidebarNvim",
               "Trouble",
               "terminal",
-              "TelescopePrompt",
-              "",
             }, vim.bo.filetype)
           then
             vim.b.focus_disable = true
@@ -48,15 +48,19 @@ return {
         end,
         desc = "Disable focus autoresize for FileType",
       })
-      vim.api.nvim_create_autocmd("WinEnter", {
-        group = group,
-        callback = function(_)
-          if vim.tbl_contains({ "nofile", "terminal" }, vim.bo.buftype) then
-            vim.b.focus_disable = true
-          end
-        end,
-        desc = "Disable focus autoresize for BufType",
-      })
+      -- vim.api.nvim_create_autocmd("WinEnter", {
+      --   group = group,
+      --   callback = function(_)
+      --     if
+      --       vim.tbl_contains({ "nofile", "terminal" }, vim.bo.buftype)
+      --       or not vim.bo.buflisted
+      --       or vim.api.nvim_win_get_config(0).relative ~= ""
+      --     then
+      --       vim.b.focus_disable = true
+      --     end
+      --   end,
+      --   desc = "Disable focus autoresize for BufType",
+      -- })
     end,
     lazy = true,
     event = "VeryLazy",

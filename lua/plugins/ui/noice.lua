@@ -1,4 +1,17 @@
 return {
+
+  {
+    "tamton-aquib/flirt.nvim",
+    dependencies = {
+      "folke/noice.nvim",
+    },
+    opts = {
+      override_open = false,
+      default_move_mappings = true,
+      default_resize_mappings = true,
+      default_mouse_mappings = true,
+    },
+  },
   {
     "folke/noice.nvim",
     dependencies = {
