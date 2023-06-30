@@ -1,10 +1,11 @@
 local ns = vim.api.nvim_create_namespace("conceal_ns")
 
-local function conceal(pat, sub, hl)
+local function conceal(pat, sub, hl, cur_line)
   vim
     .iter(vim.api.nvim_buf_get_lines(0, 0, -1, true))
     :enumerate()
     :each(function(lnr, line)
+      if cur_line and lnr == cur_line then return end
       local offset = 1
       while offset < #line do
         local start, finish = string.find(line, pat, offset)
@@ -26,8 +27,29 @@ local function conceal(pat, sub, hl)
     end)
 end
 
-conceal("local", "loc", "Keyword")
-conceal("function", "fun", "Keyword")
-conceal(" do", ":", "Normal")
-conceal(" then", ":", "Normal")
-conceal("end", "")
+local function clear()
+  for _, mark in ipairs(vim.api.nvim_buf_get_extmarks(0, ns, 0, -1, {})) do
+    vim.api.nvim_buf_del_extmark(0, ns, mark[1])
+  end
+end
+
+local function exec(rules)
+  clear()
+  local line = vim.api.nvim_win_get_cursor(0)[1]
+  for rule in vim.iter(rules) do
+    conceal(rule.pat, rule.sub, rule.hl, line - 1)
+  end
+  for _, mark in
+    ipairs(vim.api.nvim_buf_get_extmarks(0, ns, line, line + 1, {}))
+  do
+    vim.api.nvim_buf_del_extmark(0, ns, mark[1])
+  end
+end
+
+local rules = {
+  { pat = "local", sub = "loc", hl = "Keyword" },
+  { pat = "function", sub = "fun", hl = "Keyword" },
+  { pat = "nvim_", sub = "" },
+  { pat = "do", sub = ":", hl = "Normal" },
+  { pat = "then", sub = ":", hl = "Normal" },
+}

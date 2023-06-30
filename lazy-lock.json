@@ -28,7 +28,7 @@
   "flash.nvim": { "branch": "main", "commit": "bdfda726eb9e5e87d5860cdd2f33d678cc343cdb" },
   "flatten.nvim": { "branch": "main", "commit": "d92c93959e9ac52a00002d6fd64c2d2ca5dd7192" },
   "flirt.nvim": { "branch": "main", "commit": "93eefd618963335242046e3336e6003082f2971c" },
-  "focus.nvim": { "branch": "refactor", "commit": "b4398cd689b931e77b959494a93a26c1e78e8ec6" },
+  "focus.nvim": { "branch": "refactor", "commit": "e2882bfa660bc4ce9d544b563bde31b25bcea70c" },
   "friendly-snippets": { "branch": "main", "commit": "1723ae01d83f3b3ac1530f1ae22b7b9d5da7749b" },
   "fuzzy.nvim": { "branch": "master", "commit": "4b1e1d1bd7bc93eafcbcb72b486475589a12747c" },
   "fuzzy_slash.nvim": { "branch": "main", "commit": "ded0d47b9f0456c3f2d6180665f6be9db3e907bb" },

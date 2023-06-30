@@ -26,6 +26,7 @@ local function config()
       },
     },
     bar = {
+      truncate = false,
       padding = {
         left = 0,
         right = 1,
@@ -100,7 +101,6 @@ end
 return {
   {
     "Bekaboo/dropbar.nvim",
-    -- dir = "~/projects/lua/dropbar/",
     config = config,
   },
 }

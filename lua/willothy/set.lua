@@ -1,7 +1,6 @@
 local o = vim.o
 local O = vim.opt
 local icons = require("willothy.icons")
-local _util = require("willothy.util")
 
 vim.api.nvim_exec('let &t_Cs = "\\e[4:0m"', true)
 vim.api.nvim_exec('let &t_Ce = "\\e[4:0m"', true)
@@ -12,7 +11,6 @@ vim.o.shell = "bash"
 
 o.swapfile = true
 o.backup = false
---O.undodir = os.getenv("HOME") .. "/.vim/undodir"
 o.undofile = true
 
 o.hlsearch = false
@@ -24,15 +22,12 @@ o.ttyfast = true
 o.termguicolors = true
 
 o.scrolloff = 16
---o.isfname:append("@-@")
 
 o.updatetime = 150
 o.mousemodel = "extend"
 o.mousemoveevent = true
 
---o.virtualedit = "all"
-
--- o.signcolumn = "auto:2"
+o.conceallevel = 2
 
 o.foldcolumn = "1"
 o.fillchars = [[eob: ,fold: ,foldopen:]]

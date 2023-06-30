@@ -1,8 +1,6 @@
 return {
   {
-    "willothy/focus.nvim",
-    -- "nvim-focus/focus.nvim",
-    -- dir = "~/projects/lua/focus.nvim/",
+    "nvim-focus/focus.nvim",
     branch = "refactor",
     config = function()
       local disable = {
