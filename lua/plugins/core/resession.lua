@@ -17,6 +17,21 @@ return {
         tab_buf_filter = function(tabpage, bufnr)
           return vim.startswith(bufname(bufnr), cwd(-1, tabnr(tabpage)))
         end,
+        buf_filter = function(bufnr)
+          local filetype = vim.bo[bufnr].filetype
+          if
+            filetype == "gitcommit"
+            or filetype == "gitrebase"
+            or vim.bo[bufnr].bufhidden == "wipe"
+          then
+            return false
+          end
+          local buftype = vim.bo[bufnr].buftype
+          if buftype == "help" then return true end
+          if buftype ~= "" and buftype ~= "acwrite" then return false end
+          if vim.api.nvim_buf_get_name(bufnr) == "" then return false end
+          return vim.bo[bufnr].buflisted
+        end,
       })
 
       vim.api.nvim_create_autocmd("VimEnter", {

@@ -62,4 +62,26 @@ return {
       "MunifTanjim/nui.nvim",
     },
   },
+  {
+    "stevearc/aerial.nvim",
+    opts = {
+      layout = {
+        default_direction = "left",
+        placement = "edge",
+      },
+      attach_mode = "global",
+    },
+    init = function()
+      vim.keymap.set(
+        "n",
+        "<leader>o",
+        function() require("aerial").toggle() end,
+        {
+          desc = "Toggle aerial window",
+        }
+      )
+    end,
+    lazy = true,
+    cmd = "AerialToggle",
+  },
 }

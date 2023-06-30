@@ -10,31 +10,37 @@ return {
           title = "Sidebar",
         },
         {
-          title = "Neo-Tree",
+          title = "Files",
           ft = "neo-tree",
           filter = function(buf)
             return vim.b[buf].neo_tree_source == "filesystem"
           end,
           pinned = true,
-          open = function() vim.api.nvim_input("<esc><space>e") end,
+          open = "Neotree",
           size = { height = 0.5 },
+        },
+        {
+          ft = "aerial",
+          title = "Document Symbols",
+          pinned = true,
+          open = function() require("aerial").open() end,
         },
         { title = "Neotest Summary", ft = "neotest-summary" },
         {
-          title = "Neo-Tree Git",
+          title = "Git",
           ft = "neo-tree",
           filter = function(buf)
             return vim.b[buf].neo_tree_source == "git_status"
           end,
           pinned = true,
-          open = "Neotree position=right git_status",
+          open = "Neotree git_status",
         },
         {
-          title = "Neo-Tree Buffers",
+          title = "Buffers",
           ft = "neo-tree",
           filter = function(buf) return vim.b[buf].neo_tree_source == "buffers" end,
           pinned = true,
-          open = "Neotree position=top buffers",
+          open = "Neotree buffers",
         },
         "neo-tree",
       },

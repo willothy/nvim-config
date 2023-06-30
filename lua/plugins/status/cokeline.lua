@@ -287,16 +287,10 @@ local function cokeline()
   return {
     show_if_buffers_are_at_least = 1,
     buffers = {
-      -- filter_valid = function(buffer) return true end,
-      -- filter_visible = function(buffer) return true end,
       focus_on_delete = "next",
       new_buffers_position = "next",
       delete_on_right_click = false,
-      -- new_buffers_position = "number",
     },
-    -- rendering = {
-    -- 	max_buffer_width = 30,
-    -- },
     pick = {
       use_filename = true,
     },
@@ -308,31 +302,6 @@ local function cokeline()
         return buffer.is_focused and p.turquoise or p.gunmetal
       end,
     },
-    -- rhs = {
-    -- 	{
-    -- 		text = function()
-    -- 			return circle_left
-    -- 		end,
-    -- 		fg = A.bg,
-    -- 		bg = "none",
-    -- 	},
-    -- 	{
-    -- 		text = function()
-    -- 			local r, builtin = pcall(require, "cokeline.builtin")
-    -- 			return " " .. (r == true and builtin.time() or os.time()) .. " "
-    -- 		end,
-    -- 		fg = A.fg,
-    -- 		bg = A.bg,
-    -- 		style = A.style,
-    -- 	},
-    -- 	{
-    -- 		text = function()
-    -- 			return circle_right
-    -- 		end,
-    -- 		fg = A.bg,
-    -- 		bg = "none",
-    -- 	},
-    -- },
     components = {
       components.separator("left"),
       components.space,
@@ -354,7 +323,7 @@ local function cokeline()
       -- components.clock,
     },
     sidebar = {
-      filetype = { "SidebarNvim", "neo-tree", "edgy" },
+      filetype = { "SidebarNvim", "neo-tree", "edgy", "aerial" },
       components = {
         {
           text = icons.separators.circle.left,
@@ -365,56 +334,6 @@ local function cokeline()
           text = " ",
           bg = p.gunmetal,
         },
-        -- {
-        --   text = "Files",
-        --   bg = p.gunmetal,
-        --   fg = p.text,
-        --   style = function(cx) return cx.is_hovered and "bold" or "none" end,
-        --   on_click = function()
-        --     vim.api.nvim_exec("Neotree focus filesystem left", true)
-        --   end,
-        -- },
-        -- {
-        --   text = " | ",
-        --   fg = p.text,
-        --   bg = p.gunmetal,
-        -- },
-        -- {
-        --   text = "Buffers",
-        --   bg = p.gunmetal,
-        --   fg = p.text,
-        --   style = function(cx) return cx.is_hovered and "bold" or "none" end,
-        --   on_click = function()
-        --     vim.api.nvim_exec("Neotree focus buffers left", true)
-        --   end,
-        -- },
-        -- {
-        --   text = " | ",
-        --   fg = p.text,
-        --   bg = p.gunmetal,
-        -- },
-        -- {
-        --   text = "Git",
-        --   bg = p.gunmetal,
-        --   fg = p.text,
-        --   style = function(cx) return cx.is_hovered and "bold" or "none" end,
-        --   on_click = function()
-        --     vim.api.nvim_exec("Neotree focus git_status left", true)
-        --   end,
-        -- },
-        -- {
-        --   text = " ",
-        --   bg = p.gunmetal,
-        --   fg = "none",
-        -- },
-        -- {
-        -- 	text = function()
-        -- 		local names = require("willothy.state").lsp.clients or {}
-        -- 		return (#names > 0 and "⚡ " or "") .. table.concat(names, " • ")
-        -- 	end,
-        -- 	bg = p.gunmetal,
-        -- 	fg = p.cool_gray,
-        -- },
       },
     },
   }
@@ -428,7 +347,7 @@ return {
     "willothy/nvim-cokeline",
     -- branch = "mouse-move",
     -- dir = vim.g.dev == "cokeline" and "~/projects/neovim/cokeline" or nil,
-    -- dir = "~/projects/lua/cokeline/",
+    dir = "~/projects/lua/cokeline/",
     config = function() require("cokeline").setup(cokeline()) end,
     lazy = true,
     event = "VeryLazy",

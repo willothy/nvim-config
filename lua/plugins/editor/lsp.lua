@@ -77,7 +77,9 @@ local function lsp_maps(bufnr)
   map("n", "<leader>vq", utils.bind(trouble, "quickfix"), "Quickfix")
   map("n", "<leader>vl", utils.bind(trouble, "loclist"), "Loclist")
 
-  local increname = function() vim.cmd("IncRename " .. fn.expand("<cword>")) end
+  local increname = function()
+    vim.api.nvim_feedkeys(":IncRename " .. fn.expand("<cword>"), "n", false)
+  end
   setmap("n", "<leader>rn", increname, { expr = true, desc = "Rename" })
   setmap("n", "<F2>", increname, { expr = true, desc = "Rename" })
 end
@@ -492,17 +494,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-local aerial_opt = {
-  dense = true,
-  depth = 5,
-}
-
-local function aerial_cfg()
-  setmap("n", "<leader>o", function() require("aerial").toggle() end, {
-    desc = "Toggle aerial window",
-  })
-end
-
 local fidget = {
   text = {
     spinner = "pipe", --"dots",
@@ -525,13 +516,6 @@ local fidget = {
 
 return {
   {
-    "stevearc/aerial.nvim",
-    opts = aerial_opt,
-    init = aerial_cfg,
-    lazy = true,
-    cmd = "AerialToggle",
-  },
-  {
     "folke/neodev.nvim",
     lazy = true,
     ft = "lua",
@@ -547,7 +531,6 @@ return {
   {
     "smjonas/inc-rename.nvim",
     config = true,
-    lazy = false,
   },
   {
     "lvimuser/lsp-inlayhints.nvim",
@@ -567,7 +550,6 @@ return {
     config = setup_rust,
     lazy = true,
     ft = "rust",
-    -- event = "VimEnter",
   },
   {
     "williamboman/mason.nvim",
