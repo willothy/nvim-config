@@ -1,7 +1,7 @@
 return {
   {
     "willothy/veil.nvim",
-    -- enabled = false,
+    enabled = false,
     -- config = true,
     dir = "~/projects/lua/veil/",
     -- enabled = false,

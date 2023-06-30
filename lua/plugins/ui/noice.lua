@@ -1,7 +1,8 @@
 return {
 
   {
-    "tamton-aquib/flirt.nvim",
+    -- "tamton-aquib/flirt.nvim",
+    "willothy/flirt.nvim",
     dependencies = {
       "folke/noice.nvim",
     },

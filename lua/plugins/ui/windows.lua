@@ -35,7 +35,6 @@ return {
   },
   {
     "echasnovski/mini.animate",
-    branch = "stable",
     opts = {
       cursor = { enable = false },
       scroll = { enable = false },
