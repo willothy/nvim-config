@@ -431,6 +431,10 @@ register({ "n", "t" }, {
   },
 })
 
+register({ "n", "x" }, {
+  ["<C-F>"] = { require("ssr").open, "Structural Search/Replace" },
+})
+
 wk.register({
   h = "help",
   v = "view",
