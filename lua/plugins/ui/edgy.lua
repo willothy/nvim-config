@@ -1,7 +1,7 @@
 return {
   {
-    "willothy/edgy.nvim",
-    branch = "close-when-hidden",
+    "folke/edgy.nvim",
+    lazy = true,
     event = "VeryLazy",
     opts = {
       left = {
@@ -40,14 +40,6 @@ return {
       },
       bottom = {
         {
-          ft = "Trouble",
-          title = "Diagnostics",
-          --      pinned = true,
-          -- open = function()
-          -- 	require("trouble").open()
-          -- end,
-        },
-        {
           ft = "terminal",
           title = "Terminal",
           pinned = true,
@@ -55,6 +47,12 @@ return {
           filter = function(_buf, win)
             return vim.api.nvim_win_get_config(win).relative == ""
           end,
+        },
+        {
+          ft = "Trouble",
+          title = "Diagnostics",
+          -- pinned = true,
+          open = function() require("trouble").open() end,
         },
         {
           ft = "noice",

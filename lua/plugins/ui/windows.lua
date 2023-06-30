@@ -1,28 +1,18 @@
 return {
-  -- {
-  --   "anuvyklack/windows.nvim",
-  --   dependencies = {
-  --     "anuvyklack/middleclass",
-  --   },
-  --   config = function()
-  --     require("windows").setup({
-  --       autowidth = {
-  --         enable = true,
-  --       },
-  --       animation = {
-  --         enable = false,
-  --       },
-  --     })
-  --   end,
-  --   lazy = true,
-  --   event = "VeryLazy",
-  -- },
   {
-    -- "nvim-focus/focus.nvim",
     "willothy/focus.nvim",
+    -- "nvim-focus/focus.nvim",
+    -- dir = "~/projects/lua/focus.nvim/",
     branch = "refactor",
-    -- enabled = false,
     config = function()
+      local disable = {
+        filetype = {
+          "neo-tree",
+          "SidebarNvim",
+          "Trouble",
+          "terminal",
+        },
+      }
       local focus = require("focus")
       focus.setup({
         ui = {
@@ -35,41 +25,24 @@ return {
       vim.api.nvim_create_autocmd("FileType", {
         group = group,
         callback = function()
-          if
-            vim.tbl_contains({
-              "neo-tree",
-              "SidebarNvim",
-              "Trouble",
-              "terminal",
-            }, vim.bo.filetype)
-          then
+          if vim.tbl_contains(disable.filetype, vim.bo.filetype) then
             vim.b.focus_disable = true
           end
         end,
         desc = "Disable focus autoresize for FileType",
       })
-      -- vim.api.nvim_create_autocmd("WinEnter", {
-      --   group = group,
-      --   callback = function(_)
-      --     if
-      --       vim.tbl_contains({ "nofile", "terminal" }, vim.bo.buftype)
-      --       or not vim.bo.buflisted
-      --       or vim.api.nvim_win_get_config(0).relative ~= ""
-      --     then
-      --       vim.b.focus_disable = true
-      --     end
-      --   end,
-      --   desc = "Disable focus autoresize for BufType",
-      -- })
     end,
     lazy = true,
     event = "VeryLazy",
   },
   {
     "echasnovski/mini.animate",
+    branch = "stable",
     opts = {
       cursor = { enable = false },
       scroll = { enable = false },
+      open = { enable = false },
+      close = { enable = false },
     },
   },
   {
