@@ -4,11 +4,10 @@ local util = require("willothy.util")
 local terminals = require("willothy.terminals")
 local telescope = require("telescope")
 local harpoon = require("harpoon.mark")
-local Iter = require("litter")
 
 local function register(modes, mappings, opts)
   if type(modes) == "table" then
-    Iter:new(modes):for_each(
+    vim.iter(modes):each(
       function(mode)
         wk.register(
           mappings,
