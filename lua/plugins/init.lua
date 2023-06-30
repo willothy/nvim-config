@@ -5,7 +5,6 @@ return {
   { import = "plugins.task" },
   { import = "plugins.editor" },
   { import = "plugins.navigation" },
-  { import = "plugins.startup" },
   { import = "plugins.status" },
   { import = "plugins.terminal" },
   { import = "plugins.util" },

@@ -58,53 +58,26 @@ local function lsp_maps(bufnr)
   map("n", "<leader>fd", diagnostic.open_float, "Diagnostic float")
   map("n", "[d", diagnostic.goto_next, "Next diagnostic")
   map("n", "]d", diagnostic.goto_prev, "Previous diagnostic")
-  -- map("n", "<leader>ca", buf.code_action, opts)
-  -- map("n", "<leader>ca", require("willothy.actions").code_actions, "Code actions")
   map("n", "<leader>ca", function()
     local win = vim.api.nvim_get_current_win()
     require("rust-tools").code_action_group.code_action_group()
     vim.api.nvim_set_current_win(win)
   end, "Code actions")
-  -- map("n", "<leader>vrr", buf.references, opts)
   map("n", "<leader>hs", buf.signature_help, "Signature help")
 
-  -- Glance
-  local glance = require("glance").actions.open
-  map("n", "<leader>rr", utils.bind(glance, "references"), "Glance references")
+  local trouble = require("trouble").open
+  map("n", "<leader>rr", utils.bind(trouble, "lsp_references"), "References")
+  map("n", "<leader>vd", utils.bind(trouble, "lsp_definitions"), "Definitions")
   map(
     "n",
     "<leader>vd",
-    utils.bind(glance, "definitions"),
-    "Glance definitions"
+    utils.bind(trouble, "lsp_type_definitions"),
+    "Type definitions"
   )
-  map(
-    "n",
-    "<leader>vd",
-    utils.bind(glance, "type_definitions"),
-    "Glance type definitions"
-  )
-  map(
-    "n",
-    "<leader>vi",
-    utils.bind(glance, "implementations"),
-    "Glance implementations"
-  )
+  map("n", "<leader>vq", utils.bind(trouble, "quickfix"), "Quickfix")
+  map("n", "<leader>vl", utils.bind(trouble, "loclist"), "Loclist")
 
-  -- IncRename
-  -- local ts_utils = require("nvim-treesitter.ts_utils")
-  local increname = function()
-    local cword = fn.expand("<cword>")
-    vim.api.nvim_feedkeys(":IncRename " .. cword, "n", false)
-    -- local node = ts_utils.get_node_at_cursor()
-    --
-    -- local type = node:type()
-    -- if type ~= nil and string.match(type, "identifier") ~= nil then
-    -- 	require("willothy.lsp").if_defined_in_workspace(function()
-    -- 	end)
-    -- else
-    -- 	return
-    -- end
-  end
+  local increname = function() vim.cmd("IncRename " .. fn.expand("<cword>")) end
   setmap("n", "<leader>rn", increname, { expr = true, desc = "Rename" })
   setmap("n", "<F2>", increname, { expr = true, desc = "Rename" })
 end
@@ -613,64 +586,12 @@ return {
     config = lsp_setup,
   },
   {
-    "dnlhc/glance.nvim",
-    lazy = true,
-    event = "LSPAttach",
-    config = function()
-      local glance = require("glance")
-      local actions = glance.actions
-
-      local cfg = {
-        theme = {
-          enable = true,
-          mode = "auto",
-        },
-        border = {
-          enable = true,
-        },
-        preview_win_opts = {
-          wrap = false,
-        },
-        mappings = {
-          list = {
-            ["<Tab>"] = actions.enter_win("preview"),
-          },
-          preview = {
-            ["<Tab>"] = actions.enter_win("list"),
-          },
-        },
-        -- detached = true,
-        hooks = {
-          before_open = function(results, open, _jump, _method) open(results) end,
-        },
-        winbar = {
-          enable = true,
-        },
-      }
-
-      glance.setup(cfg)
-    end,
-  },
-  {
     "kevinhwang91/nvim-ufo",
     name = "ufo",
     dependencies = {
       "kevinhwang91/promise-async",
     },
-    init = function()
-      -- vim.o.foldcolumn = "1"
-      -- vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
-      -- vim.o.foldlevel = 99
-      -- vim.o.foldenable = true
-      -- vim.o.foldlevelstart = 99
-      -- vim.o.foldopen = "block,mark,percent,quickfix,search,tag,undo"
-    end,
     lazy = true,
-  },
-  {
-    "weilbith/nvim-code-action-menu",
-    lazy = true,
-    cmd = "CodeActionMenu",
   },
   {
     "jose-elias-alvarez/null-ls.nvim",
@@ -681,7 +602,7 @@ return {
   {
     "ThePrimeagen/refactoring.nvim",
     lazy = true,
-    enabled = false,
+    event = "LspAttach",
     requires = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
@@ -709,7 +630,6 @@ return {
         callback = function() require("nvim-lightbulb").update_lightbulb() end,
       })
     end,
-    -- enabled = false,
     lazy = true,
     event = "LspAttach",
   },
