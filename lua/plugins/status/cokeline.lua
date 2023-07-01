@@ -4,12 +4,7 @@ local ns = vim.api.nvim_create_namespace("cokeline_diagnostics")
 local function cokeline()
   local p = require("minimus.palette").hex
   local mappings = require("cokeline.mappings")
-
-  local errors_fg = p.red
-  local warnings_fg = p.lemon_chiffon
-
-  local red = vim.g.terminal_color_1
-  local yellow = vim.g.terminal_color_3
+  local get_hex = require("cokeline.utils").get_hex
 
   local components = {
     space = {
@@ -41,19 +36,12 @@ local function cokeline()
         end,
         fg = function(buffer)
           if buffer.is_focused then
-            return p.turquoise
+            return get_hex("TabLineSel", "bg")
           else
-            return p.gunmetal
+            return get_hex("TabLine", "bg")
           end
         end,
         bg = function(buffer)
-          --[[ if
-            side == "left"
-            and #require("cokeline.sidebar").get_components() > 0
-            and buffer.is_first
-          then
-            return p.gunmetal
-          else ]]
           if
             (
               side == "left"
@@ -64,11 +52,11 @@ local function cokeline()
             or (
               side == "right"
               and #require("cokeline.buffers").get_visible() == 1
-            ) -- or (#require("cokeline.sidebar").get_components() > 0)
+            )
           then
             return "none"
           else
-            return p.gunmetal
+            return "TabLine"
           end
         end,
         truncation = { priority = 1 },
@@ -86,9 +74,9 @@ local function cokeline()
         return buffer.devicon.icon
       end,
       fg = function(buffer)
-        return buffer.is_focused and p.raisin_black
-          or (mappings.is_picking_focus() and yellow)
-          or (mappings.is_picking_close() and red)
+        return buffer.is_focused and "TabLineSel"
+          or (mappings.is_picking_focus() and "DiagnosticWarn")
+          or (mappings.is_picking_close() and "DiagnosticError")
           or buffer.devicon.color
       end,
       style = function(_)
@@ -106,9 +94,9 @@ local function cokeline()
       text = function(buffer) return buffer.unique_prefix end,
       fg = function(buffer)
         if buffer.is_focused then
-          return p.gunmetal
+          return "TabLineSel"
         else
-          return p.cool_gray
+          return "TabLine"
         end
       end,
       truncation = {
@@ -125,13 +113,15 @@ local function cokeline()
       end,
       fg = function(buffer)
         if buffer.is_focused then
-          return p.raisin_black
+          return "TabLineSel"
         elseif buffer.diagnostics.errors ~= 0 then
-          return errors_fg
+          return "DiagnosticError"
         elseif buffer.diagnostics.warnings ~= 0 then
-          return warnings_fg
+          return "DiagnosticWarn"
+        elseif buffer.diagnostics.infos ~= 0 then
+          return "DiagnosticInfo"
         else
-          return p.cool_gray
+          return "TabLine"
         end
       end,
       truncation = {
@@ -169,8 +159,8 @@ local function cokeline()
             or ""
         end,
         fg = function(buffer)
-          return (buffer.diagnostics.errors ~= 0 and errors_fg)
-            or (buffer.diagnostics.warnings ~= 0 and warnings_fg)
+          return (buffer.diagnostics.errors ~= 0 and "DiagnosticError")
+            or (buffer.diagnostics.warnings ~= 0 and "DiagnosticWarn")
             or nil
         end,
         truncation = { priority = 1 },
@@ -250,7 +240,6 @@ local function cokeline()
             or (icons.actions.close_outline .. " ") -- icons.actions.close
         end
       end,
-      fg = function(_buffer) return nil end,
       style = "bold",
       truncation = { priority = 1 },
       on_click = function(_id, _clicks, _button, _modifiers, buffer)
@@ -259,7 +248,7 @@ local function cokeline()
     },
     padding = {
       text = function(buffer) return buffer.is_last and " " or "" end,
-      bg = "none",
+      bg = "TabLineFill",
       fg = "none",
     },
     front_padding = {
@@ -293,13 +282,14 @@ local function cokeline()
     },
     pick = {
       use_filename = true,
+      letters = "ab",
     },
     default_hl = {
       fg = function(buffer)
-        return buffer.is_focused and p.raisin_black or p.cool_gray
+        return buffer.is_focused and "TabLineSel" or "TabLine"
       end,
       bg = function(buffer)
-        return buffer.is_focused and p.turquoise or p.gunmetal
+        return buffer.is_focused and "TabLineSel" or "TabLine"
       end,
     },
     components = {
