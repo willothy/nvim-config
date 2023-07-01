@@ -548,8 +548,6 @@ return {
     "willothy/rust-tools.nvim",
     branch = "no-augment",
     config = setup_rust,
-    lazy = true,
-    ft = "rust",
   },
   {
     "williamboman/mason.nvim",
