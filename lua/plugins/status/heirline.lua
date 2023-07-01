@@ -1,53 +1,5 @@
 local p = require("minimus.palette").hex
 local icons = require("willothy.icons")
-local mode_colors = {
-  normal = {
-    { fg = p.raisin_black, bg = p.turquoise },
-    { fg = p.text, bg = p.gunmetal },
-    { fg = p.cool_gray, bg = p.none },
-  },
-  insert = {
-    { fg = p.raisin_black, bg = p.pale_azure },
-    { fg = p.text, bg = p.gunmetal },
-    { fg = p.cool_gray, bg = p.none },
-  },
-  visual = {
-    { fg = p.raisin_black, bg = p.lemon_chiffon },
-    { fg = p.text, bg = p.gunmetal },
-    { fg = p.cool_gray, bg = p.none },
-  },
-  replace = {
-    { fg = p.raisin_black, bg = p.lavender_pink },
-    { fg = p.text, bg = p.gunmetal },
-    { fg = p.cool_gray, bg = p.none },
-  },
-  command = {
-    { fg = p.raisin_black, bg = p.peach },
-    { fg = p.text, bg = p.gunmetal },
-    { fg = p.cool_gray, bg = p.none },
-  },
-  inactive = {
-    { fg = p.blueGray3, bg = p.gunmetal },
-    { fg = p.blueGray3, bg = p.gunmetal },
-    { fg = p.blueGray3, bg = p.none },
-  },
-}
-
-local mode_map = {
-  n = mode_colors.normal,
-  i = mode_colors.insert,
-  v = mode_colors.visual,
-  V = mode_colors.visual,
-  ["\22"] = mode_colors.visual,
-  c = mode_colors.command,
-  s = mode_colors.visual,
-  S = mode_colors.visual,
-  ["\19"] = mode_colors.visual,
-  R = mode_colors.replace,
-  r = mode_colors.replace,
-  ["!"] = mode_colors.command,
-  t = mode_colors.command,
-}
 
 local function handler(f, name)
   return {
@@ -59,6 +11,56 @@ end
 local function heirline()
   local utils = require("heirline.utils")
   local conditions = require("heirline.conditions")
+  local get_hex = require("cokeline.utils").get_hex
+
+  local mode_colors = {
+    normal = {
+      { fg = get_hex("TabLineSel", "fg"), bg = get_hex("TabLineSel", "bg") },
+      { fg = get_hex("Normal", "fg"), bg = get_hex("TabLine", "bg") },
+      { fg = get_hex("TabLine"), bg = p.none },
+    },
+    insert = {
+      { fg = p.raisin_black, bg = p.pale_azure },
+      { fg = p.text, bg = get_hex("TabLine", "bg") },
+      { fg = p.cool_gray, bg = p.none },
+    },
+    visual = {
+      { fg = p.raisin_black, bg = p.lemon_chiffon },
+      { fg = p.text, bg = get_hex("TabLine", "bg") },
+      { fg = p.cool_gray, bg = p.none },
+    },
+    replace = {
+      { fg = p.raisin_black, bg = p.lavender_pink },
+      { fg = p.text, bg = get_hex("TabLine", "bg") },
+      { fg = p.cool_gray, bg = p.none },
+    },
+    command = {
+      { fg = p.raisin_black, bg = p.peach },
+      { fg = p.text, bg = get_hex("TabLine", "bg") },
+      { fg = p.cool_gray, bg = p.none },
+    },
+    inactive = {
+      { fg = p.blueGray3, bg = get_hex("TabLine", "bg") },
+      { fg = p.blueGray3, bg = get_hex("TabLine", "bg") },
+      { fg = p.blueGray3, bg = p.none },
+    },
+  }
+
+  local mode_map = {
+    n = mode_colors.normal,
+    i = mode_colors.insert,
+    v = mode_colors.visual,
+    V = mode_colors.visual,
+    ["\22"] = mode_colors.visual,
+    c = mode_colors.command,
+    s = mode_colors.visual,
+    S = mode_colors.visual,
+    ["\19"] = mode_colors.visual,
+    R = mode_colors.replace,
+    r = mode_colors.replace,
+    ["!"] = mode_colors.command,
+    t = mode_colors.command,
+  }
 
   local with = {
     __index = function(self, k)

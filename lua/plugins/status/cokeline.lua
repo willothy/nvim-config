@@ -54,7 +54,7 @@ local function cokeline()
               and #require("cokeline.buffers").get_visible() == 1
             )
           then
-            return "none"
+            return "TabLineFill"
           else
             return "TabLine"
           end
@@ -264,7 +264,7 @@ local function cokeline()
     },
     run = {
       text = function() return icons.dap.start end,
-      bg = "none",
+      bg = "TabLineFill",
       fg = function(cx) return cx.is_hovered and p.lemon_chiffon or p.blue end,
       on_click = function(_id, _clicks, _button, _modifiers, _buffer)
         vim.cmd("Greyjoy")
@@ -280,9 +280,9 @@ local function cokeline()
       new_buffers_position = "next",
       delete_on_right_click = false,
     },
+    fill_hl = "TabLineFill",
     pick = {
-      use_filename = true,
-      letters = "ab",
+      use_filename = false,
     },
     default_hl = {
       fg = function(buffer)

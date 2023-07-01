@@ -348,13 +348,6 @@ register("n", {
   },
 })
 
-register({ "x", "c", "i" }, {
-  ["<S-CR>"] = {
-    function() vim.api.nvim_feedkeys("\n", "x", false) end,
-    "Newline",
-  },
-})
-
 local spl = require("smart-splits")
 register({ "n", "t" }, {
   name = "window",
@@ -434,6 +427,10 @@ register({ "n", "t" }, {
 
 register({ "n", "x" }, {
   ["<C-F>"] = { require("ssr").open, "Structural Search/Replace" },
+  ["<C-CR>"] = {
+    function() require("cokeline.mappings").pick("focus") end,
+    "Pick buffer",
+  },
 })
 
 wk.register({
