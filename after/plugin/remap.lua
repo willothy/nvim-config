@@ -279,6 +279,7 @@ end
 
 nop("[s")
 nop("]s")
+nop("<RightMouse>")
 
 vim.api.nvim_set_keymap("", ",", " ", {
   noremap = true,
@@ -490,10 +491,6 @@ wk.register({
     c = {
       name = "Actions",
       a = "Code actions",
-      m = {
-        require("willothy.actions").quickmenu,
-        "Actions menu",
-      },
       o = {
         function() vim.cmd("Telescope oldfiles") end,
         "Telescope oldfiles",

@@ -1,18 +1,4 @@
 return {
-
-  {
-    -- "tamton-aquib/flirt.nvim",
-    "willothy/flirt.nvim",
-    dependencies = {
-      "folke/noice.nvim",
-    },
-    opts = {
-      override_open = false,
-      default_move_mappings = true,
-      default_resize_mappings = true,
-      default_mouse_mappings = true,
-    },
-  },
   {
     "folke/noice.nvim",
     dependencies = {
@@ -20,22 +6,15 @@ return {
       "rcarriga/nvim-notify",
       "VonHeikemen/lsp-zero.nvim",
     },
-    -- enabled = false,
-    lazy = true,
-    event = "UiEnter",
     config = function()
       require("noice").setup({
-        -- you can enable a preset for easier configuration
         presets = {
-          --bottom_search = true, -- use a classic bottom cmdline for search
-          -- command_palette = true, -- position the cmdline and popupmenu together
-          long_message_to_split = true, -- long messages will be sent to a split
-          inc_rename = true, -- enables an input dialog for inc-rename.nvim
-          -- lsp_doc_border = true, -- add a border to hover docs and signature help
+          long_message_to_split = true,
+          inc_rename = true,
         },
-        -- smart_move = {
-        -- 	enabled = true,
-        -- },
+        smart_move = {
+          enabled = true,
+        },
         views = {
           cmdline_popup = {
             position = {
