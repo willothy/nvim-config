@@ -36,7 +36,7 @@ local function cokeline()
           if buffer.is_focused then
             return get_hex("TabLineSel", "bg")
           else
-            return get_hex("Comment", "fg")
+            return "TabLine"
           end
         end,
         bg = "TabLine",
@@ -49,7 +49,7 @@ local function cokeline()
             return ""
           end
         end,
-        fg = p.raisin_black,
+        fg = "TabLine",
         bg = "none",
       },
     },
@@ -405,14 +405,10 @@ local function cokeline()
   }
 end
 
--- 
--- 
-
 return {
   {
     "willothy/nvim-cokeline",
     -- dir = "~/projects/lua/cokeline/",
-    branch = "dev",
     config = function() require("cokeline").setup(cokeline()) end,
     lazy = true,
     event = "VeryLazy",
