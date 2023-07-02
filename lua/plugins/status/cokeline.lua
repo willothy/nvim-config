@@ -6,6 +6,14 @@ local function cokeline()
   local mappings = require("cokeline.mappings")
   local get_hex = require("cokeline.utils").get_hex
 
+  local separators = {
+    left = icons.blocks.left[4],
+    right = icons.blocks.left[4],
+  }
+
+  local close_icon_normal = icons.actions.close
+  local close_icon_hovered = icons.actions.close_box
+
   local components = {
     space = {
       text = " ",
@@ -21,15 +29,39 @@ local function cokeline()
       end,
       truncation = { priority = 1 },
     },
+    sep = {
+      left = {
+        text = separators.left,
+        fg = function(buffer)
+          if buffer.is_focused then
+            return get_hex("TabLineSel", "bg")
+          else
+            return get_hex("Comment", "fg")
+          end
+        end,
+        bg = "TabLine",
+      },
+      right = {
+        text = function(buffer)
+          if buffer.is_last then
+            return separators.right
+          else
+            return ""
+          end
+        end,
+        fg = p.raisin_black,
+        bg = "none",
+      },
+    },
     separator = function(side)
       return {
         text = function(buffer)
           if
             side == "left"--[[  and (buffer.is_focused or buffer.is_first) ]]
           then
-            return icons.separators.circle.left
+            return separators.left
           elseif side == "right" and (buffer.is_focused or buffer.is_last) then
-            return icons.separators.circle.right
+            return separators.right
           else
             return ""
           end
@@ -38,7 +70,7 @@ local function cokeline()
           if buffer.is_focused then
             return get_hex("TabLineSel", "bg")
           else
-            return get_hex("TabLine", "bg")
+            return get_hex("Comment", "fg")
           end
         end,
         bg = function(buffer)
@@ -54,7 +86,7 @@ local function cokeline()
               and #require("cokeline.buffers").get_visible() == 1
             )
           then
-            return "TabLineFill"
+            return "TabLine"
           else
             return "TabLine"
           end
@@ -74,8 +106,8 @@ local function cokeline()
         return buffer.devicon.icon
       end,
       fg = function(buffer)
-        return buffer.is_focused and "TabLineSel"
-          or (mappings.is_picking_focus() and "DiagnosticWarn")
+        -- return buffer.is_focused and "TabLineSel"
+        return (mappings.is_picking_focus() and "DiagnosticWarn")
           or (mappings.is_picking_close() and "DiagnosticError")
           or buffer.devicon.color
       end,
@@ -112,9 +144,10 @@ local function cokeline()
         return nil
       end,
       fg = function(buffer)
-        if buffer.is_focused then
-          return "TabLineSel"
-        elseif buffer.diagnostics.errors ~= 0 then
+        --[[ if buffer.is_focused then
+          return "TabLine"
+        else ]]
+        if buffer.diagnostics.errors ~= 0 then
           return "DiagnosticError"
         elseif buffer.diagnostics.warnings ~= 0 then
           return "DiagnosticWarn"
@@ -124,6 +157,7 @@ local function cokeline()
           return "TabLine"
         end
       end,
+      bg = "TabLine",
       truncation = {
         priority = 2,
         direction = "left",
@@ -163,6 +197,7 @@ local function cokeline()
             or (buffer.diagnostics.warnings ~= 0 and "DiagnosticWarn")
             or nil
         end,
+        bg = "TabLine",
         truncation = { priority = 1 },
         on_click = function(_id, _clicks, _button, _modifiers, buffer)
           local trouble = require("trouble")
@@ -234,12 +269,13 @@ local function cokeline()
       text = function(buffer)
         if buffer.is_hovered then
           return buffer.is_modified and icons.misc.modified
-            or (icons.actions.close_round .. " ")
+            or (close_icon_hovered .. " ")
         else
           return buffer.is_modified and icons.misc.modified
-            or (icons.actions.close_outline .. " ") -- icons.actions.close
+            or (close_icon_normal .. " ") -- icons.actions.close
         end
       end,
+      fg = "TabLine",
       style = "bold",
       truncation = { priority = 1 },
       on_click = function(_id, _clicks, _button, _modifiers, buffer)
@@ -263,12 +299,15 @@ local function cokeline()
       fg = p.blue,
     },
     run = {
-      text = function() return icons.dap.start end,
+      text = function() return string.format(" %s ", icons.dap.start) end,
       bg = "TabLineFill",
       fg = function(cx) return cx.is_hovered and p.lemon_chiffon or p.blue end,
-      on_click = function(_id, _clicks, _button, _modifiers, _buffer)
-        vim.cmd("Greyjoy")
-        -- require("willothy.terminals").with():send("echo test")
+      on_click = function(_id, _clicks, button, _modifiers, _buffer)
+        if button == "l" then
+          require("dapui").toggle()
+        else
+          vim.cmd("Greyjoy")
+        end
       end,
     },
   }
@@ -288,12 +327,11 @@ local function cokeline()
       fg = function(buffer)
         return buffer.is_focused and "TabLineSel" or "TabLine"
       end,
-      bg = function(buffer)
-        return buffer.is_focused and "TabLineSel" or "TabLine"
-      end,
+      bg = function(buffer) return buffer.is_focused and "TabLine" or "TabLine" end,
     },
     components = {
-      components.separator("left"),
+      components.sep.left,
+      -- components.separator("left"),
       components.space,
       -- components.space_if_not_focused,
       components.devicon,
@@ -305,12 +343,50 @@ local function cokeline()
       components.close_or_unsaved,
       components.space,
       -- components.space_if_not_focused,
-      components.separator("right"),
+      -- components.separator("right"),
+      components.sep.right,
       components.padding,
     },
     rhs = {
       components.run,
       -- components.clock,
+    },
+    mappings = {
+      disable_mouse = false,
+    },
+    tabs = {
+      placement = "left",
+      components = (function(hovered)
+        return {
+          {
+            text = separators.left,
+            fg = function(tab)
+              return ((hovered and hovered == tab.number) or tab.is_active)
+                  and get_hex("TabLineSel", "bg")
+                or get_hex("Comment", "fg")
+            end,
+            bg = function(tab)
+              return (hovered and hovered == tab.number) and "TabLineSel"
+                or "TabLine"
+            end,
+            on_mouse_enter = function(tab) hovered = tab.number end,
+            on_mouse_leave = function() hovered = false end,
+          },
+          {
+            text = function(tab) return string.format(" %s ", tab.number) end,
+            fg = function(tab)
+              return (hovered and hovered == tab.number) and "TabLineSel"
+                or "TabLine"
+            end,
+            bg = function(tab)
+              return (hovered and hovered == tab.number) and "TabLineSel"
+                or "TabLine"
+            end,
+            on_mouse_enter = function(tab) hovered = tab.number end,
+            on_mouse_leave = function() hovered = false end,
+          },
+        }
+      end)(),
     },
     sidebar = {
       filetype = { "SidebarNvim", "neo-tree", "edgy", "aerial" },
@@ -322,7 +398,7 @@ local function cokeline()
         },
         {
           text = " ",
-          bg = p.gunmetal,
+          bg = function(cx) return cx.is_hovered and "TabLineSel" or "TabLine" end,
         },
       },
     },
@@ -335,9 +411,8 @@ end
 return {
   {
     "willothy/nvim-cokeline",
-    -- branch = "mouse-move",
-    -- dir = vim.g.dev == "cokeline" and "~/projects/neovim/cokeline" or nil,
-    dir = "~/projects/lua/cokeline/",
+    -- dir = "~/projects/lua/cokeline/",
+    branch = "dev",
     config = function() require("cokeline").setup(cokeline()) end,
     lazy = true,
     event = "VeryLazy",
