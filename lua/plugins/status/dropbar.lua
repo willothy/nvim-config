@@ -18,10 +18,11 @@ local function config()
       kinds = icons.kinds,
       ui = {
         bar = {
-          separator = " %#NormalNC#"
-            .. icons.separators.angle_quote.right
-            .. " ",
-          extends = " %#NormalNC#…",
+          -- separator = " %#NormalNC#"
+          --   .. icons.separators.angle_quote.right
+          --   .. " ",
+          separator = string.format(" %s ", icons.separators.angle_quote.right),
+          extends = "…",
         },
       },
     },
