@@ -32,14 +32,17 @@ local function cokeline()
     sep = {
       left = {
         text = separators.left,
-        fg = function(buffer)
-          if buffer.is_focused then
+        fg = function(cx)
+          if cx.is_focused or cx.buf_hovered or cx.tab_hovered then
             return get_hex("TabLineSel", "bg")
           else
-            return "TabLine"
+            return "Comment"
           end
         end,
-        bg = "TabLine",
+        bg = function(cx)
+          return (cx.buf_hovered or cx.tab_hovered) and "TabLineSel"
+            or "TabLine"
+        end,
       },
       right = {
         text = function(buffer)
@@ -331,9 +334,7 @@ local function cokeline()
     },
     components = {
       components.sep.left,
-      -- components.separator("left"),
       components.space,
-      -- components.space_if_not_focused,
       components.devicon,
       components.unique_prefix,
       components.filename,
@@ -342,8 +343,6 @@ local function cokeline()
       components.two_spaces,
       components.close_or_unsaved,
       components.space,
-      -- components.space_if_not_focused,
-      -- components.separator("right"),
       components.sep.right,
       components.padding,
     },
@@ -355,28 +354,28 @@ local function cokeline()
       disable_mouse = false,
     },
     tabs = {
-      placement = "left",
+      placement = "right",
       components = (function(hovered)
         return {
           {
-            text = separators.left,
-            fg = function(tab)
-              return ((hovered and hovered == tab.number) or tab.is_active)
-                  and get_hex("TabLineSel", "bg")
-                or get_hex("Comment", "fg")
-            end,
-            bg = function(tab)
-              return (hovered and hovered == tab.number) and "TabLineSel"
-                or "TabLine"
-            end,
+            text = function(tab) return tab.is_first and separators.left or "" end,
+            fg = "TabLine",
             on_mouse_enter = function(tab) hovered = tab.number end,
             on_mouse_leave = function() hovered = false end,
           },
           {
             text = function(tab) return string.format(" %s ", tab.number) end,
+            fg = "TabLine",
+            bg = "TabLine",
+            on_mouse_enter = function(tab) hovered = tab.number end,
+            on_mouse_leave = function() hovered = false end,
+          },
+          {
+            text = icons.blocks.right.half,
             fg = function(tab)
-              return (hovered and hovered == tab.number) and "TabLineSel"
-                or "TabLine"
+              return ((hovered and hovered == tab.number) or tab.is_active)
+                  and get_hex("TabLineSel", "bg")
+                or get_hex("Comment", "fg")
             end,
             bg = function(tab)
               return (hovered and hovered == tab.number) and "TabLineSel"
@@ -408,7 +407,7 @@ end
 return {
   {
     "willothy/nvim-cokeline",
-    -- dir = "~/projects/lua/cokeline/",
+    dir = "~/projects/lua/cokeline/",
     config = function() require("cokeline").setup(cokeline()) end,
     lazy = true,
     event = "VeryLazy",

@@ -13,35 +13,59 @@ local function heirline()
   local conditions = require("heirline.conditions")
   local get_hex = require("cokeline.utils").get_hex
 
+  local highlights = {
+    Normal = {
+      fg = get_hex("Normal", "fg"),
+      bg = get_hex("Normal", "bg"),
+    },
+    NormalNC = {
+      fg = get_hex("NormalNC", "fg"),
+      bg = get_hex("NormalNC", "bg"),
+    },
+    TabLine = {
+      fg = get_hex("TabLine", "fg"),
+      bg = get_hex("TabLine", "bg"),
+    },
+    TabLineSel = {
+      fg = get_hex("TabLineSel", "fg"),
+      bg = get_hex("TabLineSel", "bg"),
+    },
+    TabLineFill = {
+      fg = get_hex("TabLineFill", "fg"),
+      bg = get_hex("TabLineFill", "bg"),
+    },
+  }
+  local B = { fg = highlights.Normal.fg, bg = highlights.TabLine.bg }
+  local C = { fg = p.cool_gray, bg = p.none }
   local mode_colors = {
     normal = {
-      { fg = get_hex("TabLineSel", "fg"), bg = get_hex("TabLineSel", "bg") },
-      { fg = get_hex("Normal", "fg"), bg = get_hex("TabLine", "bg") },
-      { fg = get_hex("TabLine"), bg = p.none },
+      highlights.TabLineSel,
+      B,
+      C,
     },
     insert = {
-      { fg = p.raisin_black, bg = p.pale_azure },
-      { fg = p.text, bg = get_hex("TabLine", "bg") },
-      { fg = p.cool_gray, bg = p.none },
+      { fg = highlights.TabLineSel.fg, bg = p.pale_azure },
+      B,
+      C,
     },
     visual = {
-      { fg = p.raisin_black, bg = p.lemon_chiffon },
-      { fg = p.text, bg = get_hex("TabLine", "bg") },
-      { fg = p.cool_gray, bg = p.none },
+      { fg = highlights.TabLineSel.fg, bg = p.lemon_chiffon },
+      B,
+      C,
     },
     replace = {
-      { fg = p.raisin_black, bg = p.lavender_pink },
-      { fg = p.text, bg = get_hex("TabLine", "bg") },
-      { fg = p.cool_gray, bg = p.none },
+      { fg = highlights.TabLineSel.fg, bg = p.lavender_pink },
+      B,
+      C,
     },
     command = {
-      { fg = p.raisin_black, bg = p.peach },
-      { fg = p.text, bg = get_hex("TabLine", "bg") },
-      { fg = p.cool_gray, bg = p.none },
+      { fg = highlights.TabLineSel.fg, bg = p.peach },
+      B,
+      C,
     },
     inactive = {
-      { fg = p.blueGray3, bg = get_hex("TabLine", "bg") },
-      { fg = p.blueGray3, bg = get_hex("TabLine", "bg") },
+      { fg = p.blueGray3, bg = highlights.TabLine.bg },
+      { fg = p.blueGray3, bg = highlights.TabLine.bg },
       { fg = p.blueGray3, bg = p.none },
     },
   }
@@ -121,15 +145,15 @@ local function heirline()
   })
 
   local separators = {
-    left = function(highlight)
+    left = function(highlight, sub)
       return Component({
-        provider = icons.separators.circle.left,
+        provider = sub or icons.blocks.left[4], -- icons.separators.circle.left,
         hl = highlight,
       })
     end,
-    right = function(highlight)
+    right = function(highlight, sub)
       return Component({
-        provider = icons.separators.circle.right,
+        provider = sub or icons.blocks.left[4], --icons.separators.circle.right,
         hl = highlight,
       })
     end,
@@ -189,9 +213,7 @@ local function heirline()
     init = function(self)
       self.mode = vim.fn.mode(1) -- :h mode()
     end,
-    provider = function(self)
-      return "%2( " .. self.mode_names[self.mode] .. " %)"
-    end,
+    provider = function(self) return self.mode_names[self.mode] end,
     hl = hl.A,
     update = {
       "ModeChanged",
@@ -214,7 +236,7 @@ local function heirline()
 
       return "%" .. width .. "=" .. s .. "%" .. width .. ")"
     end,
-    hl = hl.A,
+    hl = hl.B,
   })
 
   local Copilot = Component({
@@ -388,9 +410,9 @@ local function heirline()
   local StatusLine = {
     {
       -- Left side
-      separators.left(hl.ANOBG),
-      hl(Mode, hl.A),
-      separators.right(hl.ANOBG),
+      separators.left(hl.AB),
+      hl(Mode, hl.B),
+      separators.right(hl.AB, icons.blocks.right.half),
       hl({
         Space(1),
         {
@@ -431,9 +453,9 @@ local function heirline()
         Space(1),
         Env("SESH_NAME"),
       }, hl.C),
-      separators.left(hl.ANOBG),
-      hl(Location, hl.A),
-      separators.right(hl.ANOBG),
+      separators.left(hl.AB),
+      hl(Location, hl.B),
+      separators.right(hl.AB, icons.blocks.right.half),
     },
   }
 
