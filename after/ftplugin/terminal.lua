@@ -8,6 +8,6 @@ bo.expandtab = false
 bo.smartindent = false
 
 wo.wrap = false
-wo.numberwidth = 0
+wo.numberwidth = 1
 wo.number = false
 wo.relativenumber = false
