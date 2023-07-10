@@ -96,11 +96,8 @@ local function cmp_opt()
     }),
     formatting = {
       format = function(_entry, vim_item)
-        vim_item.kind = string.format(
-          "%s %s",
-          icons.kinds[vim_item.kind] or "",
-          vim_item.kind
-        )
+        vim_item.kind =
+          string.format("%s%s", icons.kinds[vim_item.kind] or "", vim_item.kind)
         return vim_item
       end,
     },
