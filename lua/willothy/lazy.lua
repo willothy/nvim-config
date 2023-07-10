@@ -34,11 +34,6 @@ require("lazy").setup({
   },
 
   { import = "plugins" },
-  {
-    "dstein64/vim-startuptime",
-    lazy = true,
-    cmd = "StartupTime",
-  },
 
   -- Neoclip
   {
@@ -55,9 +50,6 @@ require("lazy").setup({
 
   -- bufdelete (used to open dash when all buffers are closed)
   "famiu/bufdelete.nvim",
-
-  -- surround
-  "tpope/vim-surround",
 }, {
   ui = {
     -- a number <1 is a percentage., >1 is a fixed size

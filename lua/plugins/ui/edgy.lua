@@ -57,12 +57,10 @@ return {
         {
           ft = "Trouble",
           title = "Diagnostics",
-          -- pinned = true,
           open = function() require("trouble").open() end,
         },
         {
           ft = "noice",
-          size = { height = 0.4 },
           filter = function(_buf, win)
             return vim.api.nvim_win_get_config(win).relative == ""
           end,
@@ -70,14 +68,12 @@ return {
         { ft = "qf", title = "QuickFix" },
         {
           ft = "help",
-          size = { height = 20 },
           -- don't open help files in edgy that we're editing
           filter = function(buf) return vim.bo[buf].buftype == "help" end,
         },
       },
 
       exit_when_last = true,
-      close_when_all_hidden = true,
 
       animate = {
         enabled = true,

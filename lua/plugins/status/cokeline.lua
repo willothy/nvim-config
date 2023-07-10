@@ -76,24 +76,7 @@ local function cokeline()
             return get_hex("Comment", "fg")
           end
         end,
-        bg = function(buffer)
-          if
-            (
-              side == "left"
-              and buffer.is_first
-              and #require("cokeline.sidebar").get_components() == 0
-            )
-            or (side == "right" and buffer.is_last)
-            or (
-              side == "right"
-              and #require("cokeline.buffers").get_visible() == 1
-            )
-          then
-            return "TabLine"
-          else
-            return "TabLine"
-          end
-        end,
+        bg = "TabLine",
         truncation = { priority = 1 },
       }
     end,
@@ -302,7 +285,12 @@ local function cokeline()
       fg = p.blue,
     },
     run = {
-      text = function() return string.format(" %s ", icons.dap.start) end,
+      text = function()
+        -- if require("dap").session() then
+        --   return string.format(" %s ", icons.dap.action.stop)
+        -- end
+        return string.format(" %s ", icons.dap.action.start)
+      end,
       bg = "TabLineFill",
       fg = function(cx) return cx.is_hovered and p.lemon_chiffon or p.blue end,
       on_click = function(_id, _clicks, button, _modifiers, _buffer)
@@ -407,7 +395,6 @@ end
 return {
   {
     "willothy/nvim-cokeline",
-    -- dir = "~/projects/lua/cokeline/",
     config = function() require("cokeline").setup(cokeline()) end,
     lazy = true,
     event = "VeryLazy",

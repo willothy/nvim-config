@@ -139,6 +139,14 @@ vim.api.nvim_create_user_command(
   {}
 )
 
+vim.api.nvim_create_user_command("Bda", function()
+  local bufs = vim
+    .iter(vim.fn.getbufinfo({ buflisted = 1 }))
+    :map(function(buf) return buf.bufnr end)
+    :totable()
+  require("bufdelete").bufdelete(bufs, true)
+end, {})
+
 vim.api.nvim_create_user_command(
   "LuaAttach",
   function() require("luapad").attach() end,
@@ -178,7 +186,7 @@ end
 ---@param string string
 ---@param case "snake"|"SNAKE"|"camel"|"Pascal"
 local function do_make_case(s, case)
-  words = {}
+  local words = {}
   for word in s:gsub("%u%w+", " %1"):gsub("[-_]", " "):gmatch("%w+") do
     table.insert(words, word)
   end
@@ -227,7 +235,7 @@ end
 local last_case = nil
 
 M.make_case = setmetatable({}, {
-  __index = function(self, k)
+  __index = function(_, k)
     local str = vim.fn.expand("<cword>")
     vim.fn.setreg("+", do_make_case(str, k))
     vim.api.nvim_feedkeys('viw"+p', "n", false)

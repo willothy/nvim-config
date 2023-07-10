@@ -10,19 +10,19 @@ local function config()
           and vim.bo[buf].buftype == ""
           and vim.api.nvim_buf_get_name(buf) ~= ""
           and vim.bo[buf].filetype ~= "Trouble"
-          and vim.bo[buf].filetype ~= "toggleterm"
+          and vim.bo[buf].filetype ~= "terminal"
           and not vim.wo[win].diff
       end,
     },
     icons = {
-      kinds = icons.kinds,
+      kinds = {
+        use_devicons = true,
+        symbols = icons.kinds,
+      },
       ui = {
         bar = {
-          -- separator = " %#NormalNC#"
-          --   .. icons.separators.angle_quote.right
-          --   .. " ",
           separator = string.format(" %s ", icons.separators.angle_quote.right),
-          extends = "…",
+          extends = icons.misc.ellipse,
         },
       },
     },

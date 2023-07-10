@@ -84,41 +84,6 @@ local function lsp_maps(bufnr)
   setmap("n", "<F2>", increname, { expr = true, desc = "Rename" })
 end
 
-local inlayhints
-local function setup_inlayhints()
-  inlayhints = require("lsp-inlayhints")
-  inlayhints.setup({
-    inlay_hints = {
-      parameter_hints = {
-        show = true,
-        separator = ", ",
-        remove_colon_start = true,
-        remove_colon_end = false,
-      },
-      type_hints = {
-        show = true,
-        separator = ", ",
-        remove_colon_start = true,
-        remove_colon_end = true,
-      },
-      highlight = "LspInlayHint",
-    },
-    enabled_at_startup = true,
-  })
-
-  vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup(
-      "LspAttach_inlayhints",
-      { clear = true }
-    ),
-    callback = function(args)
-      if not (args.data and args.data.client_id) then return end
-      local client = vim.lsp.get_client_by_id(args.data.client_id)
-      require("lsp-inlayhints").on_attach(client, args.buf, false)
-    end,
-  })
-end
-
 local format
 local function setup_format()
   format = require("lsp-format")
@@ -132,24 +97,12 @@ end
 local function lsp_attach(client, bufnr)
   lsp_maps(bufnr)
   if not format then setup_format() end
-  if not inlayhints then setup_inlayhints() end
 
   format.on_attach(client)
-  inlayhints.on_attach(client, bufnr, false)
 
-  -- if client.supports_method("textDocument/formatting") then
-  -- 	vim.api.nvim_clear_autocmds({ group = format_group, buffer = bufnr })
-  -- 	vim.api.nvim_create_autocmd("BufWritePre", {
-  -- 		group = format_group,
-  -- 		buffer = bufnr,
-  -- 		callback = function()
-  -- 			if not _G.noformat then
-  -- 				-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
-  -- 				buf.format({ bufnr = bufnr })
-  -- 			end
-  -- 		end,
-  -- 	})
-  -- end
+  if client.supports_method("textDocument/inlayHints") then
+    vim.lsp.inlay_hint(bufnr, true)
+  end
 end
 
 local lsp_settings = {
@@ -370,7 +323,6 @@ local function setup_rust()
     },
     server = {
       on_attach = lsp_attach,
-      -- capabilities = mkcaps(),
       settings = lsp_settings["rust-analyzer"],
     },
   })
@@ -423,35 +375,29 @@ local function lsp_setup()
     text = icons.lsp.action_hint,
     hl = "DiagnosticSignWarn",
   })
-  -- DAP signs:
-  --  DapBreakpoint
-  --  DapBreakpointCondition
-  --  DapLogPoint
-  --  DapStopped
-  --  DapBreakpointRejected
   sign({
     name = "DapBreakpoint",
-    text = icons.dap.breakpoint,
+    text = icons.dap.breakpoint.data,
     hl = "DiagnosticSignError",
   })
   sign({
     name = "DapBreakpointCondition",
-    text = icons.dap.breakpoint_condition,
+    text = icons.dap.breakpoint.conditional,
     hl = "DiagnosticSignWarn",
   })
   sign({
     name = "DapLogPoint",
-    text = icons.dap.log_point,
+    text = icons.dap.breakpoint.log,
     hl = "DiagnosticSignInfo",
   })
   sign({
     name = "DapStopped",
-    text = icons.dap.stopped,
+    text = icons.dap.action.stop,
     hl = "DiagnosticSignInfo",
   })
   sign({
     name = "DapBreakpointRejected",
-    text = icons.dap.breakpoint_rejected,
+    text = icons.dap.breakpoint.unsupported,
     hl = "DiagnosticSignWarn",
   })
 
@@ -482,18 +428,6 @@ local function lsp_setup()
   })
 end
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "lua",
-  -- once = true,
-  callback = function()
-    require("lspconfig").lua_ls.setup({
-      -- capabilities = capabilities,
-      settings = lsp_settings["lua_ls"],
-      attach = lsp_attach,
-    })
-  end,
-})
-
 local fidget = {
   text = {
     spinner = "pipe", --"dots",
@@ -519,6 +453,12 @@ return {
     "folke/neodev.nvim",
     lazy = true,
     ft = "lua",
+    config = function()
+      require("lspconfig").lua_ls.setup({
+        settings = lsp_settings["lua_ls"],
+        attach = lsp_attach,
+      })
+    end,
   },
   {
     "j-hui/fidget.nvim",
@@ -531,12 +471,6 @@ return {
   {
     "smjonas/inc-rename.nvim",
     config = true,
-  },
-  {
-    "lvimuser/lsp-inlayhints.nvim",
-    branch = "anticonceal",
-    lazy = true,
-    event = "LSPAttach",
   },
   {
     "lukas-reineke/lsp-format.nvim",
@@ -590,26 +524,29 @@ return {
   },
   {
     "kosayoda/nvim-lightbulb",
-    config = function()
-      local l = require("nvim-lightbulb")
-      l.setup({
-        -- ignore = { "null-ls" },
-        autocmd = {
-          enabled = false,
+    opts = {
+      ignore = {
+        ft = {
+          "harpoon",
+          "noice",
+          "neo-tree",
+          "SidebarNvim",
+          "Trouble",
+          "terminal",
         },
-        virtual_text = {
-          enabled = false,
-          text = icons.lsp.action_hint,
-        },
-        status_text = {
-          text = icons.lsp.action_hint,
-        },
-      })
-      vim.api.nvim_create_autocmd({ "CursorHold", "CursorMoved" }, {
-        pattern = "*",
-        callback = function() require("nvim-lightbulb").update_lightbulb() end,
-      })
-    end,
+        clients = { "null-ls" },
+      },
+      autocmd = {
+        enabled = true,
+        updatetime = -1,
+      },
+      sign = {
+        enabled = true,
+        priority = 100,
+        hl = "DiagnosticSignWarn",
+        text = icons.lsp.action_hint,
+      },
+    },
     lazy = true,
     event = "LspAttach",
   },

@@ -517,10 +517,6 @@ wk.register({
       "Delete buffer",
     },
   },
-  s = {
-    function() require("cokeline.mappings").pick("focus") end,
-    "Focus buffer",
-  },
   u = { vim.cmd.UndotreeToggle, "Toggle undotree" },
   f = {
     name = "file",
