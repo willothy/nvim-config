@@ -47,13 +47,13 @@ return {
             sign = {
               name = { ".*" },
               maxwidth = 1,
-              colwidth = 1,
+              colwidth = 2,
             },
             click = "v:lua.ScSa",
           },
           {
             text = { builtin.lnumfunc, " " },
-            condition = { builtin.not_empty },
+            condition = { builtin.not_empty, true },
             click = "v:lua.ScLa",
           },
           {
