@@ -198,11 +198,11 @@ local lsp_settings = {
       },
       completion = {
         workspaceWord = true,
-        callSnippet = "Both",
+        callSnippet = "Disable",
       },
       misc = {
         parameters = {
-          "--log-level=trace",
+          "--log-level=info",
         },
       },
       diagnostics = {

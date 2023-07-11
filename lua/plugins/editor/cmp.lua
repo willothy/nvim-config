@@ -82,17 +82,9 @@ local function cmp_opt()
       end, { "i", "c" }),
     },
     sources = cmp.config.sources({
-      { name = "nvim_lsp", priority = 1, max_item_count = 10 },
-      { name = "luasnip", priority = 2, max_item_count = 2 },
-      {
-        name = "async_path",
-        priority = 2,
-        max_item_count = 8,
-        option = {
-          trailing_slash = true,
-        },
-      },
-      { name = "calc", priority = 3, max_item_count = 8 },
+      { name = "nvim_lsp", priority = 1, max_item_count = 5, group_index = 1 },
+      { name = "luasnip", priority = 2, max_item_count = 5, group_index = 1 },
+      { name = "buffer", priority = 3, max_item_count = 5, group_index = 2 },
     }),
     formatting = {
       format = function(_entry, vim_item)
