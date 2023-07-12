@@ -111,6 +111,7 @@ local lsp_settings = {
       includeAllWorkspaceSymbols = true,
     },
   },
+  ["asm-lsp"] = {},
   clangd = {
     semanticHighlighting = true,
   },
@@ -427,6 +428,31 @@ local function lsp_setup()
     },
   })
 end
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "lua",
+  once = true,
+  callback = function()
+    require("lspconfig").lua_ls.setup({
+      settings = lsp_settings["lua_ls"],
+      attach = lsp_attach,
+    })
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "asm",
+  once = true,
+  callback = function()
+    local lspconfig = require("lspconfig")
+    lspconfig.asm_lsp.setup({
+      settings = lsp_settings["asm-lsp"],
+      attach = lsp_attach,
+      capabilities = mkcaps(false),
+      root_dir = lspconfig.util.root_pattern("Makefile", ".git", "*.asm"),
+    })
+  end,
+})
 
 local fidget = {
   text = {
