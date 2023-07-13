@@ -22,12 +22,11 @@ return {
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },
-    lazy = false,
+    event = "VeryLazy",
     config = function()
-      local peek = require("blam").peek
       local blame = function(args)
         local line = args.mousepos.line
-        peek(line)
+        require("blam").peek(line)
         return false
       end
 
@@ -81,31 +80,8 @@ return {
           GitSignsDelete = blame,
           gitsigns_extmark_signs_ = builtin.gitsigns_click,
           -- FoldOther = false, -- Disable builtin clickhandler
-          -- Lnum = function(args)
-          -- 	if args.button == "l" and args.mods:find("c") then
-          -- 		print("I Ctrl-left clicked on line " .. args.mousepos.line)
-          -- 	end
-          -- end,
         },
       })
-
-      -- local ScSa = _G.ScSa
-      -- _G.ScSa = function(...)
-      -- 	ScSa(...)
-      -- end
-      --
-      -- local ScLa = _G.ScLa
-      -- _G.ScLa = function(...)
-      -- 	vim.o.mousemodel = ""
-      -- 	ScLa(...)
-      -- 	vim.o.mousemodel = "extend"
-      -- end
-      --
-      -- local ScFa = _G.ScFa
-      -- _G.ScFa = function(...)
-      -- 	ScFa(...)
-      -- 	vim.o.mousemodel = "extend"
-      -- end
     end,
   },
 }
