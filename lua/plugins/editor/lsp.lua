@@ -333,7 +333,6 @@ end
 
 local function lsp_setup()
   vim.lsp.set_log_level("off")
-  require("neodev").setup()
   require("mason").setup()
 
   local lspconfig = require("lspconfig")
@@ -488,6 +487,7 @@ return {
     lazy = true,
     ft = "lua",
     config = function()
+      require("neodev").setup()
       require("lspconfig").lua_ls.setup({
         settings = lsp_settings["lua_ls"],
         attach = lsp_attach,
@@ -562,7 +562,6 @@ return {
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
       "jay-babu/mason-null-ls.nvim",
-      "folke/neodev.nvim",
     },
   },
   {

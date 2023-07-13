@@ -55,11 +55,6 @@ local function opt()
           },
         },
       },
-      lsp_handlers = {
-        code_action = {
-          telescope = require("telescope.themes").get_dropdown({}),
-        },
-      },
     },
   }
 end
@@ -69,43 +64,18 @@ local function config()
   t.setup(opt())
   t.load_extension("file_browser")
   t.load_extension("ui-select")
-  vim.defer_fn(function()
-    t.load_extension("neoclip")
-    -- t.load_extension("harpoon")
-    -- t.load_extension("lsp_handlers")
-    -- t.load_extension("aerial")
-    t.load_extension("menufacture")
-    -- t.load_extension("conventional_commits")
-  end, 5000)
+  t.load_extension("neoclip")
+  t.load_extension("menufacture")
+  t.load_extension("projects")
+  t.load_extension("noice")
 end
 
 return {
   {
     "nvim-telescope/telescope.nvim",
-    dependencies = {},
-    lazy = false,
+    lazy = true,
     config = config,
   },
-  -- {
-  --   "https://git.sr.ht/~havi/telescope-toggleterm.nvim",
-  --   lazy = true,
-  --   event = "TermOpen",
-  --   dependencies = {
-  --     "akinsho/toggleterm.nvim",
-  --     "nvim-telescope/telescope.nvim",
-  --     "nvim-lua/plenary.nvim",
-  --   },
-  -- },
-  -- {
-  --   "olacin/telescope-cc.nvim",
-  --   lazy = true,
-  --   cmd = "Telescope",
-  -- },
-  -- {
-  --   "gbrlsnchs/telescope-lsp-handlers.nvim",
-  --   lazy = true,
-  --   event = "LspAttach",
-  -- },
   {
     "nvim-telescope/telescope-ui-select.nvim",
     lazy = true,

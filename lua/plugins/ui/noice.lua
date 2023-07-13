@@ -121,7 +121,6 @@ return {
           filter = { event = "msg_show" },
         },
       })
-      require("telescope").load_extension("noice")
     end,
   },
   {

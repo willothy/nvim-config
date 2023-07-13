@@ -4,7 +4,7 @@ My Neovim config. It's a bit bloated (understatement), but it contains a lot of 
 
 Features:
 
-- Sub-100ms startup (on my laptop)
+- Around 60-70ms startup (on my laptop)
 - Tab scoped sessions and buffers
 - Lsp-based auto cwd / project management
   - Lots of Telescope extensions1

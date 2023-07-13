@@ -51,10 +51,11 @@ return {
         end,
       })
     end,
+    event = "VeryLazy",
   },
   {
     "ahmedkhalf/project.nvim",
-    lazy = false,
+    event = "VeryLazy",
     config = function()
       require("project_nvim").setup({
         patterns = {
@@ -63,12 +64,12 @@ return {
         },
         scope_chdir = "tab",
       })
-      require("telescope").load_extension("projects")
     end,
   },
   {
     "tiagovla/scope.nvim",
     config = true,
+    event = "VeryLazy",
   },
   {
     "pynappo/tabnames.nvim",
