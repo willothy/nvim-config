@@ -227,7 +227,7 @@ return {
       "windwp/nvim-autopairs",
     },
     lazy = true,
-    event = "InsertEnter",
+    event = { "InsertEnter", "CmdLineEnter" },
     config = cmp_setup,
   },
   {

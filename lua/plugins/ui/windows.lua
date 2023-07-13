@@ -30,7 +30,6 @@ return {
         desc = "Disable focus autoresize for FileType",
       })
     end,
-    lazy = true,
     event = "VeryLazy",
   },
   {
@@ -41,12 +40,10 @@ return {
       open = { enable = false },
       close = { enable = false },
     },
+    event = "VeryLazy",
   },
   {
     "yorickpeterse/nvim-window",
-    config = function()
-      local w = require("nvim-window")
-      w.setup({})
-    end,
+    config = true,
   },
 }

@@ -26,10 +26,6 @@ local function register(modes, mappings, opts)
   end
 end
 
-local function nop(key)
-  vim.keymap.set({ "n" }, key, "<nop>", { noremap = true })
-end
-
 local function mkportal(title, items, callback, opts)
   opts = vim.tbl_deep_extend("keep", opts or {}, {
     max_results = 4,
@@ -57,47 +53,6 @@ local function mkportal(title, items, callback, opts)
   local res = {
     source = iter,
     slots = opts.slots,
-  }
-  Portal.tunnel(res)
-end
-
-local function portal_buffers(opts)
-  opts = vim.tbl_deep_extend("keep", opts or {}, {
-    max_results = 4,
-  })
-  local buffers = vim.api.nvim_list_bufs()
-  local Content = memo("portal.content")
-  local Iterator = memo("portal.iterator")
-  local Portal = memo("portal")
-
-  local iter = Iterator:new(buffers)
-    :filter(function(v)
-      local mark = vim.api.nvim_buf_get_mark(v, ".")
-      if mark[1] == 0 and mark[2] == 0 then return false end
-      return vim.api.nvim_buf_get_option(v, "buflisted")
-    end)
-    :map(function(v, _i)
-      -- get last edit location for buf
-      local mark = vim.api.nvim_buf_get_mark(v, ".")
-      return Content:new({
-        type = "buffer",
-        buffer = v,
-        cursor = { row = mark[1], col = mark[2] },
-        callback = function(content)
-          local buf = content.buffer
-          local cursor = content.cursor
-          local win = vim.api.nvim_get_current_win()
-          local bufnr = vim.api.nvim_win_get_buf(win)
-          if buf ~= bufnr then vim.api.nvim_set_current_buf(buf) end
-          local line = math.min(vim.api.nvim_buf_line_count(buf), cursor.row)
-          vim.api.nvim_win_set_cursor(win, { line, cursor.col })
-        end,
-      })
-    end)
-    :take(opts.max_results)
-  local res = {
-    source = iter,
-    slots = nil,
   }
   Portal.tunnel(res)
 end
@@ -135,43 +90,6 @@ local function portal_diagnostics(opts)
     slots = nil,
   }
   Portal.tunnel(res)
-end
-
-local function portal_oldfiles()
-  local scheme_guard = function(path)
-    if path:match("%w+://") ~= nil then
-      return path
-    else
-      return "file://" .. path
-    end
-  end
-  local oldfiles = vim.v.oldfiles
-  mkportal("oldfiles", oldfiles, function(content)
-    local buf = content.buffer
-    local cursor = content.cursor
-    local win = vim.api.nvim_get_current_win()
-    local bufnr = vim.api.nvim_win_get_buf(win)
-    if buf ~= bufnr then vim.api.nvim_set_current_buf(buf) end
-    local lcount = vim.api.nvim_buf_line_count(buf)
-    if cursor.row > lcount then cursor.row = lcount end
-    vim.api.nvim_win_set_cursor(win, { cursor.row, cursor.col })
-  end, {
-    filter = function(v) return vim.loop.fs_stat(v) ~= nil end,
-    map = function(v)
-      local bufnr = vim.uri_to_bufnr(scheme_guard(v))
-      vim.fn.bufload(bufnr)
-
-      local mark = vim.api.nvim_buf_get_mark(bufnr, ".")
-
-      if mark[1] == 0 and mark[2] == 0 then mark = { 1, 0 } end
-      return {
-        title = "oldfiles",
-        bufnr = bufnr,
-        lnum = mark[1],
-        col = mark[2],
-      }
-    end,
-  })
 end
 
 local function portal_references(context)
@@ -214,10 +132,6 @@ local function portal_references(context)
   )
 end
 
-nop("[s")
-nop("]s")
-nop("<RightMouse>")
-
 vim.keymap.set(
   { "n", "i", "t" },
   "<C-Enter>",
@@ -225,15 +139,7 @@ vim.keymap.set(
 )
 
 -- Dap
-register({ "n" }, {
-  d = {
-    name = "Debugging",
-    t = {
-      function() memo("dapui").toggle() end,
-      "Toggle DAP UI",
-    },
-  },
-})
+register({ "n" }, {})
 
 -- Spider
 register({ "n", "o", "x" }, {
@@ -256,7 +162,7 @@ register({ "n", "o", "x" }, {
   },
 })
 
-register("n", {
+register({ "n", "i" }, {
   ["<C-e>"] = {
     function() memo("harpoon.ui").toggle_quick_menu() end,
     "Toggle harpoon quick menu",
@@ -269,9 +175,6 @@ register("n", {
     function() memo("moveline").down() end,
     "Move line down",
   },
-  T = { "<Cmd>TroubleToggle document_diagnostics<CR>", "Toggle trouble" },
-  ["<Tab>"] = { "V>", "Indent line" },
-  ["<S-Tab>"] = { "V<", "Unindent line" },
   ["<F1>"] = {
     function() memo("cokeline.mappings").pick("focus") end,
     "Pick buffer",
@@ -282,76 +185,96 @@ register("n", {
   },
 })
 
+register("n", {
+  ["<Tab>"] = { "V>", "Indent line" },
+  ["<S-Tab>"] = { "V<", "Unindent line" },
+})
+
 register({ "n", "t" }, {
-  name = "window",
-  ["<C-Up>"] = { memo("smart-splits").move_cursor_up, "Move to window up" },
+  ["<C-Up>"] = {
+    function() memo("smart-splits").move_cursor_up() end,
+    "Move to window up",
+  },
   ["<C-Down>"] = {
-    memo("smart-splits").move_cursor_down,
+    function() memo("smart-splits").move_cursor_down() end,
     "Move to window down",
   },
   ["<C-Left>"] = {
-    memo("smart-splits").move_cursor_left,
+    function() memo("smart-splits").move_cursor_left() end,
     "Move to window left",
   },
   ["<C-Right>"] = {
-    memo("smart-splits").move_cursor_right,
+    function() memo("smart-splits").move_cursor_right() end,
     "Move to window right",
   },
-  ["<M-Up>"] = { memo("smart-splits").resize_up, "Resize to window up" },
+  ["<M-Up>"] = {
+    function() memo("smart-splits").resize_up() end,
+    "Resize to window up",
+  },
   ["<M-Down>"] = {
-    memo("smart-splits").resize_down,
+    function() memo("smart-splits").resize_down() end,
     "Resize to window down",
   },
   ["<M-Left>"] = {
-    memo("smart-splits").resize_left,
+    function() memo("smart-splits").resize_left() end,
+
     "Resize to window left",
   },
   ["<M-Right>"] = {
-    memo("smart-splits").resize_right,
+    function() memo("smart-splits").resize_right() end,
     "Resize to window right",
   },
   ["<C-w>"] = {
     name = "window",
     ["<Up>"] = {
-      memo("willothy.util").bind(vim.cmd.wincmd, "k"),
-      "Move to window up",
+      function() memo("smart-splits").move_cursor_up() end,
+      "Move to window above",
     },
     ["<Down>"] = {
-      memo("willothy.util").bind(vim.cmd.wincmd, "j"),
-      "Move to window down",
+      function() memo("smart-splits").move_cursor_down() end,
+      "Move to window below",
     },
     ["<Left>"] = {
-      memo("willothy.util").bind(vim.cmd.wincmd, "h"),
+      function() memo("smart-splits").move_cursor_left() end,
       "Move to window left",
     },
     ["<Right>"] = {
-      memo("willothy.util").bind(vim.cmd.wincmd, "l"),
+      function() memo("smart-splits").move_cursor_right() end,
       "Move to window right",
     },
     ["k"] = {
-      memo("willothy.util").bind(vim.cmd.wincmd, "k"),
-      "Move to window up",
+      function() memo("smart-splits").move_cursor_up() end,
+      "Move to window abovw",
     },
     ["j"] = {
-      memo("willothy.util").bind(vim.cmd.wincmd, "j"),
-      "Move to window down",
+      function() memo("smart-splits").move_cursor_down() end,
+      "Move to window below",
     },
     ["h"] = {
-      memo("willothy.util").bind(vim.cmd.wincmd, "h"),
+      function() memo("smart-splits").move_cursor_left() end,
       "Move to window left",
     },
     ["l"] = {
-      memo("willothy.util").bind(vim.cmd.wincmd, "l"),
+      function() memo("smart-splits").move_cursor_right() end,
       "Move to window right",
     },
     ["="] = { "<cmd>WindowsEqualize<CR>", "Equalize window sizes" },
-    ["f"] = { ":lua memo('nvim-window').pick()<CR>", "Pick window" },
+    ["f"] = {
+      function() memo("nvim-window").pick() end,
+      "Pick window",
+    },
     x = {
-      function() vim.api.nvim_exec("WinShift swap", true) end,
+      function()
+        memo("winshift")
+        vim.api.nvim_exec("WinShift swap", true)
+      end,
       "Swap windows",
     },
     ["<C-w>"] = {
-      function() vim.api.nvim_exec("WinShift", true) end,
+      function()
+        memo("winshift")
+        vim.api.nvim_exec("WinShift", true)
+      end,
       "Enter WinShift mode",
     },
   },
@@ -460,25 +383,21 @@ memo("which-key").register({
       name = "Actions",
       a = "Code actions",
       o = {
-        function() vim.cmd("Telescope oldfiles") end,
+        function() memo("telescope.builtin").oldfiles() end,
         "Telescope oldfiles",
       },
       r = {
-        function() vim.cmd("Telescope registers") end,
+        function() memo("telescope.builtin").registers() end,
         "Telescope registers",
       },
       s = {
-        function() vim.cmd("Telescope lsp_document_symbols") end,
+        function() memo("telescope.builtin").lsp_document_symbols() end,
         "Telescope LSP document symbols",
       },
     },
   },
   b = {
     name = "buffer",
-    l = {
-      portal_buffers,
-      "Portal buffers",
-    },
     p = {
       function() memo("cokeline.mappings").pick("focus") end,
       "Pick buffer",
@@ -525,39 +444,33 @@ memo("which-key").register({
   p = {
     name = "project",
     f = {
-      memo("willothy.util").bind(memo("willothy.util").browse, "~/projects/"),
+      function() memo("willothy.util").browse("~/projects/") end,
       "Browse projects",
     },
     v = {
-      memo("willothy.util").bind(memo("willothy.util").browse),
+      function() memo("willothy.util").browse() end,
       "Browse current directory",
     },
     r = {
-      memo("willothy.util").bind(
-        memo("willothy.util").browse,
-        memo("willothy.util").project_root
-      ),
+      function()
+        memo("willothy.util").browse(memo("willothy.util").project_root())
+      end,
       "Browse project root",
     },
     h = {
-      memo("willothy.util").bind(
-        memo("willothy.util").browse,
-        vim.loop.os_homedir()
-      ),
+      function() memo("willothy.util").browse(vim.loop.os_homedir()) end,
       "Browse home directory",
     },
     cr = {
-      memo("willothy.util").bind(
-        memo("willothy.util").browse,
-        memo("willothy.util").crate_root
-      ),
+      function()
+        memo("willothy.util").browse(memo("willothy.util").crate_root())
+      end,
       "Browse crate root",
     },
     pc = {
-      memo("willothy.util").bind(
-        memo("willothy.util").browse,
-        memo("willothy.util").parent_crate
-      ),
+      function()
+        memo("willothy.util").browse(memo("willothy.util").parent_crate())
+      end,
       "Browse parent crate",
     },
   },
@@ -568,61 +481,48 @@ memo("which-key").register({
   },
   g = {
     name = "git",
-    s = { vim.cmd.Git, "Open fugitive" },
+    f = { vim.cmd.Git, "Open fugitive" },
     b = {
       function() memo("blam").peek() end,
       "Peek line blame",
     },
+    g = {
+      function()
+        -- hacky way of toggling diffview
+        local diffview = memo("diffview")
+        local lib = memo("diffview.lib")
+        if lib.get_current_view() then
+          diffview.close()
+        else
+          diffview.open()
+        end
+      end,
+      "Diffview",
+    },
   },
-  l = {
-    name = "line",
-    ["$"] = "Block comment to end of line",
+  d = {
+    name = "Debugging",
+    t = {
+      function() memo("dapui").toggle() end,
+      "Toggle DAP UI",
+    },
   },
+  ["l$"] = "Add comment at end of line",
   n = {
     name = "neovim",
     v = {
       function() memo("willothy.util").browse(vim.fn.stdpath("config")) end,
       "Browse nvim config",
     },
-    s = { ":so %", "Source current file" },
-    u = {
-      name = "utils",
-      r = {
-        function()
-          vim.ui.input({
-            prompt = "plugin: ",
-          }, function(input)
-            if not input then return end
-
-            memo("willothy.util").reload(input)
-          end)
-        end,
-        "Reload plugin",
-      },
-    },
   },
   j = {
     name = "portal",
-    d = { portal_diagnostics, "diagnostics" },
-    r = { portal_references, "references" },
-    o = { portal_oldfiles, "oldfiles" },
-    b = {
-      name = "buffer",
-      d = {
-        function() portal_diagnostics({ buffer = 0 }) end,
-        "diagnostics",
-      },
-      j = {
-        function()
-          memo("portal").jumplist.tunnel({
-            filter = function(v)
-              return v.buffer == vim.api.nvim_get_current_buf()
-            end,
-          })
-        end,
-        "buffer",
-      },
+    gd = { portal_diagnostics, "global diagnostics" },
+    d = {
+      function() portal_diagnostics({ buffer = 0 }) end,
+      "diagnostics",
     },
+    r = { portal_references, "references" },
     j = { function() memo("portal").jumplist.tunnel() end, "jumplist" },
     h = { function() memo("portal").harpoon.tunnel() end, "harpoon" },
     q = { function() memo("portal").quickfix.tunnel() end, "quickfix" },
