@@ -1,1 +1,0 @@
-return { { "zdcthomas/yop.nvim" } }

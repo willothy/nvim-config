@@ -9,7 +9,7 @@ return {
     lazy = true,
     ft = "markdown",
     config = function()
-      require("otter.config").setup({})
+      require("otter").setup({})
 
       local otter = require("otter")
 

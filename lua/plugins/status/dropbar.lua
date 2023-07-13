@@ -6,14 +6,20 @@ local function config()
   local opts = {
     general = {
       enable = function(buf, win)
-        return not vim.api.nvim_win_get_config(win).zindex
-          and require("cokeline.sidebar").get_win("left") ~= win
-          and require("cokeline.sidebar").get_win("right") ~= win
-          and vim.bo[buf].buftype == ""
+        if vim.api.nvim_win_get_config(win).relative ~= "" then return false end
+        if
+          require("cokeline.sidebar").get_win("left") ~= win
+          or require("cokeline.sidebar").get_win("right") ~= win
+        then
+          return false
+        end
+        if vim.wo[win].diff then return false end
+        return vim.bo[buf].buftype == ""
           and vim.api.nvim_buf_get_name(buf) ~= ""
           and vim.bo[buf].filetype ~= "Trouble"
           and vim.bo[buf].filetype ~= "terminal"
-          and not vim.wo[win].diff
+          and vim.bo[buf].filetype ~= "qf"
+          and vim.bo[buf].filetype ~= "noice"
       end,
     },
     icons = {

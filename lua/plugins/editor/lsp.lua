@@ -443,6 +443,12 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+  pattern = "rust",
+  once = true,
+  callback = setup_rust,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
   pattern = "asm",
   once = true,
   callback = function()

@@ -60,8 +60,6 @@ return {
         patterns = {
           ".git",
           "Cargo.toml",
-          "package.json",
-          "Makefile",
         },
         scope_chdir = "tab",
       })
@@ -70,10 +68,7 @@ return {
   },
   {
     "tiagovla/scope.nvim",
-    config = function()
-      require("scope").setup({})
-      require("telescope").load_extension("scope")
-    end,
+    config = true,
   },
   {
     "pynappo/tabnames.nvim",

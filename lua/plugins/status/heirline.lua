@@ -477,5 +477,6 @@ return {
         callback = function() require("heirline").setup(heirline()) end,
       })
     end,
+    lazy = false,
   },
 }

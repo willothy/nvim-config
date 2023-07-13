@@ -25,7 +25,6 @@ return {
           end,
         },
       })
-      require("telescope").load_extension("toggleterm")
     end,
   },
   {

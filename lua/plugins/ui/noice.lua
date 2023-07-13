@@ -4,8 +4,8 @@ return {
     dependencies = {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
-      "VonHeikemen/lsp-zero.nvim",
     },
+    lazy = false,
     config = function()
       require("noice").setup({
         presets = {

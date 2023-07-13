@@ -1,3 +1,0 @@
-return { {
-	'ElPiloto/significant.nvim',
-} }
