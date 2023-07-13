@@ -332,23 +332,18 @@ local function setup_rust()
 end
 
 local function lsp_setup()
-  vim.lsp.set_log_level("off")
   require("mason").setup()
 
   local lspconfig = require("lspconfig")
   local capabilities = mkcaps(true)
 
   require("mason-lspconfig").setup({
-    ensure_installed = {
-      "lua_ls",
-    },
-    automatic_installation = false,
     handlers = {
       function(server_name)
         lspconfig[server_name].setup({
           capabilities = capabilities,
           on_attach = lsp_attach,
-          settings = lsp_settings[server_name] or {},
+          settings = lsp_settings[server_name],
         })
       end,
     },

@@ -70,15 +70,71 @@ end
 local noice = require("noice.util.hacks")
 local prev_cursor
 
-function hide_cursor()
+local function hide_cursor()
   prev_cursor = noice._guicursor
   noice._guicursor = nil
 end
 
-function show_cursor()
+local function show_cursor()
   noice._guicursor = prev_cursor
   prev_cursor = nil
 end
+
+vim.api.nvim_set_hl(0, "SepBorder", {
+  fg = "#5de4c7",
+  bg = "#26283f",
+})
+
+local buf
+local win
+local function update_border()
+  local curwin = vim.api.nvim_get_current_win()
+  local w = vim.api.nvim_win_get_width(curwin)
+  local h = vim.api.nvim_win_get_height(curwin)
+  local pos = vim.api.nvim_win_get_position(curwin)
+
+  if not buf then buf = vim.api.nvim_create_buf(false, true) end
+  if not win then
+    win = vim.api.nvim_open_win(buf, false, {
+      relative = "editor",
+      width = w - 1,
+      height = h - (pos[1] == 1 and 1 or 0),
+      focusable = false,
+      row = pos[1] - (pos[1] == 1 and 0 or 1),
+      col = pos[2],
+      style = "minimal",
+      border = {
+        "┏",
+        "━",
+        "┓",
+        "┃",
+        "┛",
+        "━",
+        "┗",
+        "┃",
+      },
+    })
+    vim.api.nvim_win_set_option(win, "winhighlight", "FloatBorder:SepBorder")
+    vim.wo[win].winblend = 100
+  else
+    local conf = vim.api.nvim_win_get_config(win)
+    conf.width = w - 1
+    conf.height = h - (pos[1] == 1 and 1 or 0)
+    conf.row = pos[1] - (pos[1] == 1 and 0 or 1)
+    conf.col = pos[2]
+    vim.api.nvim_win_set_config(win, conf)
+  end
+end
+
+vim.api.nvim_create_autocmd({ "WinEnter", "WinResized" }, {
+  callback = update_border,
+})
+
+vim.api.nvim_create_autocmd("WinClosed", {
+  callback = function(ev)
+    if ev.win == win then win = nil end
+  end,
+})
 
 return {
   setup = FloatDrag.setup,

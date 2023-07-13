@@ -12,14 +12,16 @@ require("willothy.util")
 require("willothy.lazy")
 require("willothy.set")
 
+-- require("willothy.ui")
+
 -- setup float dragging
 -- require("willothy.ui").setup({
 --   resize = "<S-LeftDrag>",
 -- })
 
-vim.api.nvim_create_user_command("Detach", function()
-  local uis = vim.api.nvim_list_uis()
-  if #uis < 1 then return end
-  local chan = uis[1].chan
-  vim.fn.chanclose(chan)
-end, {})
+-- vim.api.nvim_create_user_command("Detach", function()
+--   local uis = vim.api.nvim_list_uis()
+--   if #uis < 1 then return end
+--   local chan = uis[1].chan
+--   vim.fn.chanclose(chan)
+-- end, {})

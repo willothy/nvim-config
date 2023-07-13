@@ -65,7 +65,7 @@ return {
   {
     "tiagovla/scope.nvim",
     config = true,
-    event = "VimEnter",
+    event = "VeryLazy",
   },
   {
     "pynappo/tabnames.nvim",
