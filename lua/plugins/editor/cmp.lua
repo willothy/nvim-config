@@ -85,6 +85,12 @@ local function cmp_opt()
       { name = "nvim_lsp", priority = 1, max_item_count = 5, group_index = 1 },
       { name = "luasnip", priority = 2, max_item_count = 5, group_index = 1 },
       { name = "buffer", priority = 3, max_item_count = 5, group_index = 2 },
+      {
+        name = "async_path",
+        priority = 3,
+        max_item_count = 5,
+        group_index = 2,
+      },
     }),
     formatting = {
       format = function(_entry, vim_item)

@@ -1,6 +1,6 @@
 return {
   {
     "willothy/hollywood.nvim",
-    dir = "~/projects/lua/hollwood.nvim",
+    dir = "~/projects/lua/hollywood.nvim",
   },
 }

@@ -1,10 +1,9 @@
 return {
   {
     "mrjones2014/smart-splits.nvim",
-    lazy = true,
+    lazy = false,
     opts = {
       multiplexer_integration = "wezterm",
     },
-    event = "VimEnter",
   },
 }

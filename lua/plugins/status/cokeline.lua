@@ -15,6 +15,19 @@ local function cokeline()
   local close_icon_hovered = icons.actions.close_box
 
   local components = {
+    sidebar_open = {
+      text = function(buffer)
+        local open = require("cokeline.sidebar").get_win("left") and true
+          or false
+        if (open and buffer.is_readonly) or (buffer.is_first and not open) then
+          return string.format(" %s ", open and "󰨂" or "󰨃")
+        end
+        return ""
+      end,
+      fg = function(cx) return cx.is_hovered and "TabLineSel" or "TabLine" end,
+      bg = function(cx) return cx.is_hovered and "TabLineSel" or "TabLine" end,
+      on_click = function() require("edgy").toggle("left") end,
+    },
     space = {
       text = " ",
       truncation = { priority = 1 },
@@ -264,9 +277,7 @@ local function cokeline()
       fg = "TabLine",
       style = "bold",
       truncation = { priority = 1 },
-      on_click = function(_id, _clicks, _button, _modifiers, buffer)
-        buffer:delete()
-      end,
+      on_click = function(_, _, _, _, buffer) buffer:delete() end,
     },
     padding = {
       text = function(buffer) return buffer.is_last and " " or "" end,
@@ -321,6 +332,7 @@ local function cokeline()
       bg = function(buffer) return buffer.is_focused and "TabLine" or "TabLine" end,
     },
     components = {
+      components.sidebar_open,
       components.sep.left,
       components.space,
       components.devicon,
@@ -379,14 +391,19 @@ local function cokeline()
       filetype = { "SidebarNvim", "neo-tree", "edgy", "aerial" },
       components = {
         {
-          text = icons.separators.circle.left,
-          fg = p.gunmetal,
-          bg = "none",
+          text = separators.left,
+          highlight = "TabLine",
         },
         {
-          text = " ",
-          bg = function(cx) return cx.is_hovered and "TabLineSel" or "TabLine" end,
+          text = function()
+            return string.rep(
+              " ",
+              math.max(0, require("cokeline.sidebar").get_width("left") - 4)
+            )
+          end,
+          bg = "TabLine",
         },
+        components.sidebar_open,
       },
     },
   }
@@ -395,6 +412,7 @@ end
 return {
   {
     "willothy/nvim-cokeline",
+    dir = "~/projects/lua/cokeline/",
     config = function() require("cokeline").setup(cokeline()) end,
     lazy = true,
     event = "VeryLazy",

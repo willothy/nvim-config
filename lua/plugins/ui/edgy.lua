@@ -32,14 +32,14 @@ return {
           filter = function(buf)
             return vim.b[buf].neo_tree_source == "git_status"
           end,
-          pinned = true,
+          -- pinned = true,
           open = "Neotree git_status",
         },
         {
           title = "Buffers",
           ft = "neo-tree",
           filter = function(buf) return vim.b[buf].neo_tree_source == "buffers" end,
-          pinned = true,
+          -- pinned = true,
           open = "Neotree buffers",
         },
         "neo-tree",
