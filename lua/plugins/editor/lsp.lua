@@ -354,9 +354,9 @@ local function lsp_setup()
     },
   })
 
-  local cmp_lsp = require("cmp_nvim_lsp")
-
-  cmp_lsp.default_capabilities(capabilities)
+  -- local cmp_lsp = require("cmp_nvim_lsp")
+  --
+  -- cmp_lsp.default_capabilities(capabilities)
 
   setup_format()
   setup_ufo()

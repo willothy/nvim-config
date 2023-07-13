@@ -12,8 +12,8 @@ end
 return {
   {
     "willothy/flatten.nvim",
-    -- dir = "~/projects/lua/flatten/",
     cond = true,
+    lazy = false,
     opts = {
       window = {
         open = "alternate",
