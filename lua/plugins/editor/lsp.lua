@@ -59,9 +59,11 @@ local function lsp_maps(bufnr)
   map("n", "[d", diagnostic.goto_next, "Next diagnostic")
   map("n", "]d", diagnostic.goto_prev, "Previous diagnostic")
   map("n", "<leader>ca", function()
-    local win = vim.api.nvim_get_current_win()
-    require("rust-tools").code_action_group.code_action_group()
-    vim.api.nvim_set_current_win(win)
+    -- require("actions-preview").code_actions()
+    -- local win = vim.api.nvim_get_current_win()
+    -- require("rust-tools").code_action_group.code_action_group()
+    -- vim.api.nvim_set_current_win(win)
+    require("hollywood").code_actions()
   end, "Code actions")
   map("n", "<leader>hs", buf.signature_help, "Signature help")
 
@@ -485,6 +487,44 @@ return {
         attach = lsp_attach,
       })
     end,
+  },
+  {
+    "aznhe21/actions-preview.nvim",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+    },
+    lazy = true,
+    opts = {
+      backend = { "nui", "telescope" },
+      nui = {
+        layout = {
+          relative = "cursor",
+          size = {
+            width = "auto",
+            height = "auto",
+          },
+          -- position = "auto",
+          min_width = 15,
+          min_height = 5,
+        },
+        -- options for preview area: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/popup
+        preview = {
+          size = "80%",
+          border = {
+            style = "rounded",
+            padding = { 0, 0 },
+          },
+        },
+        -- options for selection area: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/menu
+        select = {
+          size = "20%",
+          border = {
+            style = "rounded",
+            padding = { 0, 0 },
+          },
+        },
+      },
+    },
   },
   {
     "j-hui/fidget.nvim",
