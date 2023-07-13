@@ -4,6 +4,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   defaults = {
     lazy = true,
+    event = "VeryLazy",
   },
   spec = "plugins",
   dev = { path = "~/projects/lua/" },
