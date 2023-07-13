@@ -397,6 +397,11 @@ local function heirline()
     hl = hl.C,
   })
 
+  local Recording = Component({
+    provider = function() return require("NeoComposer.ui").status_recording() end,
+    hl = hl.C,
+  })
+
   -- Statusline item format
   --
   -- Usually, the statusline consists of multiple printf style % items for showing various info about current file, e.g., %F is used to show the full path of current file. The complete format for items are as follows:
@@ -443,6 +448,7 @@ local function heirline()
         provider = "%>",
       },
       hl({
+        Recording,
         Space(1),
         Devicon,
         Space(1),

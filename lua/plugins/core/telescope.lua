@@ -64,10 +64,10 @@ local function config()
   t.setup(opt())
   t.load_extension("file_browser")
   t.load_extension("ui-select")
-  t.load_extension("neoclip")
   t.load_extension("menufacture")
   t.load_extension("projects")
   t.load_extension("noice")
+  t.load_extension("macros")
 end
 
 return {
@@ -75,6 +75,7 @@ return {
     "nvim-telescope/telescope.nvim",
     lazy = true,
     config = config,
+    cmd = "Telescope",
   },
   {
     "nvim-telescope/telescope-ui-select.nvim",

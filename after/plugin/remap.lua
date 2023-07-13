@@ -329,7 +329,6 @@ register({ "n", "x" }, {
 })
 
 memo("which-key").register({
-  h = "help",
   v = "view",
   r = "misc",
   a = {
@@ -338,6 +337,7 @@ memo("which-key").register({
   },
   t = {
     name = "toggle",
+    u = { vim.cmd.UndotreeToggle, "Toggle undotree" },
     t = {
       function() memo("willothy.terminals").toggle() end,
       "Toggle terminal",
@@ -407,7 +407,6 @@ memo("which-key").register({
       "Delete buffer",
     },
   },
-  u = { vim.cmd.UndotreeToggle, "Toggle undotree" },
   f = {
     name = "file",
     f = {
@@ -426,7 +425,7 @@ memo("which-key").register({
       function() memo("telescope").extensions.scope.buffers() end,
       "Find buffers",
     },
-    n = { "<cmd>enew<CR>", "Create a new buffer" },
+    n = { vim.cmd.enew, "Create a new buffer" },
     v = {
       function() memo("willothy.util").browse(vim.fn.expand("%:p:h")) end,
       "Browse current file's directory",
