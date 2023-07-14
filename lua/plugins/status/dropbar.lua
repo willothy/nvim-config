@@ -8,12 +8,13 @@ local function config()
       enable = function(buf, win)
         if vim.api.nvim_win_get_config(win).relative ~= "" then return false end
         if
-          require("cokeline.sidebar").get_win("left") ~= win
-          or require("cokeline.sidebar").get_win("right") ~= win
+          require("cokeline.sidebar").get_win("left") == win
+          or require("cokeline.sidebar").get_win("right") == win
         then
           return false
         end
         if vim.wo[win].diff then return false end
+        if not vim.bo[buf].buflisted then return false end
         return vim.bo[buf].buftype == ""
           and vim.api.nvim_buf_get_name(buf) ~= ""
           and vim.bo[buf].filetype ~= "Trouble"
