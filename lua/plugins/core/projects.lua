@@ -15,6 +15,8 @@ return {
           notify = false,
         },
         tab_buf_filter = function(tabpage, bufnr)
+          if vim.bo[bufnr].buftype ~= "" then return false end
+          if vim.bo[bufnr].bufhidden == "wipe" then return false end
           return vim.startswith(bufname(bufnr), cwd(-1, tabnr(tabpage)))
         end,
         buf_filter = function(bufnr)
@@ -30,6 +32,9 @@ return {
           if buftype == "help" then return true end
           if buftype ~= "" and buftype ~= "acwrite" then return false end
           if vim.api.nvim_buf_get_name(bufnr) == "" then return false end
+          if vim.api.nvim_buf_get_name(bufnr) == "winborder" then
+            return false
+          end
           return vim.bo[bufnr].buflisted
         end,
       })
@@ -65,7 +70,7 @@ return {
   {
     "tiagovla/scope.nvim",
     config = true,
-    event = "VeryLazy",
+    lazy = false,
   },
   {
     "pynappo/tabnames.nvim",

@@ -111,5 +111,6 @@ return {
   {
     "Bekaboo/dropbar.nvim",
     config = config,
+    lazy = false,
   },
 }

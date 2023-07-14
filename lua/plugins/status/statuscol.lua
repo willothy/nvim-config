@@ -1,17 +1,18 @@
 local icons = require("willothy.icons")
+local bar = icons.git.signs.bar
 
 return {
   {
     "lewis6991/gitsigns.nvim",
-    lazy = false,
+    event = "VeryLazy",
     opts = {
       signs = {
-        untracked = { text = icons.git.signs.bar },
-        add = { text = icons.git.signs.bar },
-        change = { text = icons.git.signs.bar },
-        delete = { text = icons.git.signs.bar },
-        topdelete = { text = icons.git.signs.bar },
-        changedelete = { text = icons.git.signs.bar },
+        untracked = { text = bar },
+        add = { text = bar },
+        change = { text = bar },
+        delete = { text = bar },
+        topdelete = { text = bar },
+        changedelete = { text = bar },
       },
       trouble = false,
       signcolumn = true,
@@ -31,9 +32,14 @@ return {
       end
 
       local builtin = require("statuscol.builtin")
+      local winborder = require("winborder").utils.statuscol
       require("statuscol").setup({
         relculright = true,
         segments = {
+          {
+            text = { " " },
+            condition = { winborder },
+          },
           {
             sign = {
               name = { "GitSigns*" },

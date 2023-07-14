@@ -52,4 +52,10 @@ return {
       multiplexer_integration = "wezterm",
     },
   },
+  {
+    "willothy/winborder.nvim",
+    dir = "~/projects/lua/winborder.nvim/",
+    config = true,
+    event = "VeryLazy",
+  },
 }
