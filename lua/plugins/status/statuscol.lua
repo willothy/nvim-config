@@ -32,40 +32,38 @@ return {
       end
 
       local builtin = require("statuscol.builtin")
-      local winborder = require("winborder").utils.statuscol
+      local ok, winborder = pcall(require, "winborder")
+      if ok then winborder = winborder.utils.statuscol end
+
+      local function segments(pad, ...) return pad and { pad, ... } or { ... } end
+
       require("statuscol").setup({
         relculright = true,
-        segments = {
-          {
-            text = { " " },
-            condition = { winborder },
+        segments = segments(ok and {
+          text = { " " },
+          condition = { winborder },
+        } or nil, {
+          sign = {
+            name = { "GitSigns*" },
+            maxwidth = 1,
+            colwidth = 1,
           },
-          {
-            sign = {
-              name = { "GitSigns*" },
-              maxwidth = 1,
-              colwidth = 1,
-            },
-            click = "v:lua.ScSa",
+          click = "v:lua.ScSa",
+        }, {
+          sign = {
+            name = { ".*" },
+            maxwidth = 1,
+            colwidth = 2,
           },
-          {
-            sign = {
-              name = { ".*" },
-              maxwidth = 1,
-              colwidth = 2,
-            },
-            click = "v:lua.ScSa",
-          },
-          {
-            text = { builtin.lnumfunc, " " },
-            condition = { builtin.not_empty, true },
-            click = "v:lua.ScLa",
-          },
-          {
-            text = { builtin.foldfunc, " " },
-            click = "v:lua.ScFa",
-          },
-        },
+          click = "v:lua.ScSa",
+        }, {
+          text = { builtin.lnumfunc, " " },
+          condition = { builtin.not_empty, true },
+          click = "v:lua.ScLa",
+        }, {
+          text = { builtin.foldfunc, " " },
+          click = "v:lua.ScFa",
+        }),
         clickhandlers = {
           Lnum = builtin.lnum_click,
           FoldClose = builtin.foldclose_click,

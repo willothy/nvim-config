@@ -16,7 +16,16 @@ return {
         },
         tab_buf_filter = function(tabpage, bufnr)
           if vim.bo[bufnr].buftype ~= "" then return false end
-          if vim.bo[bufnr].bufhidden == "wipe" then return false end
+          local bufhidden = vim.bo[bufnr].bufhidden
+          if
+            bufhidden == "wipe"
+            or bufhidden == "unload"
+            or bufhidden == "delete"
+            or bufhidden == "hide"
+            or vim.bo[bufnr].buflisted == false
+          then
+            return false
+          end
           return vim.startswith(bufname(bufnr), cwd(-1, tabnr(tabpage)))
         end,
         buf_filter = function(bufnr)
@@ -32,9 +41,6 @@ return {
           if buftype == "help" then return true end
           if buftype ~= "" and buftype ~= "acwrite" then return false end
           if vim.api.nvim_buf_get_name(bufnr) == "" then return false end
-          if vim.api.nvim_buf_get_name(bufnr) == "winborder" then
-            return false
-          end
           return vim.bo[bufnr].buflisted
         end,
       })
@@ -42,7 +48,10 @@ return {
       -- Only load the session if nvim was started with no args
       if vim.fn.argc(-1) == 0 then
         -- Save these to a different directory, so our manual sessions don't get polluted
-        resession.load(cwd(), { dir = "dirsession", silence_errors = true })
+        resession.load(
+          cwd(-1, -1),
+          { dir = "dirsession", silence_errors = true }
+        )
       end
       vim.api.nvim_create_autocmd("VimLeavePre", {
         callback = function()
@@ -52,6 +61,9 @@ return {
         end,
       })
     end,
+    dependencies = {
+      "ahmedkhalf/project.nvim",
+    },
     event = "VeryLazy",
   },
   {
@@ -70,7 +82,7 @@ return {
   {
     "tiagovla/scope.nvim",
     config = true,
-    lazy = false,
+    event = "VeryLazy",
   },
   {
     "pynappo/tabnames.nvim",

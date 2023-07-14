@@ -68,6 +68,7 @@ local function config()
   t.load_extension("projects")
   t.load_extension("noice")
   t.load_extension("macros")
+  t.load_extension("scope")
 end
 
 return {

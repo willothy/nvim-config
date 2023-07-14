@@ -56,6 +56,7 @@ return {
     "willothy/winborder.nvim",
     dir = "~/projects/lua/winborder.nvim/",
     config = true,
+    enabled = false,
     event = "VeryLazy",
   },
 }

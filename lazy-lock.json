@@ -26,7 +26,7 @@
   "flash.nvim": { "branch": "main", "commit": "fc36b5792da9f6d6c5c6777ff36431ece58d011b" },
   "flatten.nvim": { "branch": "main", "commit": "d92c93959e9ac52a00002d6fd64c2d2ca5dd7192" },
   "focus.nvim": { "branch": "refactor", "commit": "93207b18a26aad7a14345922ac65697abc7a3438" },
-  "friendly-snippets": { "branch": "main", "commit": "6153166d5a3dcc7e2809ea4f17f9edb34d026026" },
+  "friendly-snippets": { "branch": "main", "commit": "8f5db6c5b691a6bbaa5dabd9afeb164ef8a06d04" },
   "gitsigns.nvim": { "branch": "main", "commit": "5a04466685008f29c71fa5ec25d421deb1c83fea" },
   "glow.nvim": { "branch": "main", "commit": "bbd0473d72a45094495ee5600b5577823543eefe" },
   "greyjoy.nvim": { "branch": "main", "commit": "8bc6e0ad020a32af9ec40c32b4c56766235c9873" },
@@ -76,7 +76,7 @@
   "portal.nvim": { "branch": "main", "commit": "a108a87639a43f5386dd70bdf512de3806a71f7d" },
   "project.nvim": { "branch": "main", "commit": "8c6bad7d22eef1b71144b401c9f74ed01526a4fb" },
   "promise-async": { "branch": "main", "commit": "e94f35161b8c5d4a4ca3b6ff93dd073eb9214c0e" },
-  "refactoring.nvim": { "branch": "master", "commit": "56b747d1be0aa5cecddf85e6f3ca2aed6797edef" },
+  "refactoring.nvim": { "branch": "master", "commit": "bf5b20b75824fa2e3fb6b8afe29af4e25af4d409" },
   "resession.nvim": { "branch": "master", "commit": "6ec6f20cf2cf3dc9c23a06deba36e1d2de9c75a4" },
   "rust-tools.nvim": { "branch": "no-augment", "commit": "b9e424973db16520f687fe4244e5c7c5c896650f" },
   "scope.nvim": { "branch": "main", "commit": "4a67c3e16867b2b241f5f2db2ab291497b76bece" },
@@ -98,6 +98,6 @@
   "undotree": { "branch": "master", "commit": "0e11ba7325efbbb3f3bebe06213afa3e7ec75131" },
   "vim-fugitive": { "branch": "master", "commit": "43f18ab9155c853a84ded560c6104e6300ad41da" },
   "which-key.nvim": { "branch": "main", "commit": "d871f2b664afd5aed3dc1d1573bef2fb24ce0484" },
-  "winborder.nvim": { "branch": "main", "commit": "427ab5413b5bb2c09911d44f551f83ff47b29131" },
+  "winborder.nvim": { "branch": "main", "commit": "1e741b15ba14d417852cd3397fb792607ed84633" },
   "winshift.nvim": { "branch": "main", "commit": "37468ed6f385dfb50402368669766504c0e15583" }
 }
