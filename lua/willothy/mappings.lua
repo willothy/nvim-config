@@ -258,7 +258,18 @@ register({ "n", "t" }, {
       function() memo("smart-splits").move_cursor_right() end,
       "Move to window right",
     },
-    ["="] = { "<cmd>WindowsEqualize<CR>", "Equalize window sizes" },
+    ["="] = {
+      function() memo("focus").focus_equalise() end,
+      "Equalize window sizes",
+    },
+    ["g"] = {
+      function() memo("focus").resize() end,
+      "Autoresize based on golden ratio",
+    },
+    ["m"] = {
+      function() memo("focus").focus_maximise() end,
+      "Maximize focused window",
+    },
     ["f"] = {
       function() memo("nvim-window").pick() end,
       "Pick window",

@@ -53,3 +53,44 @@ local rules = {
   { pat = "do", sub = ":", hl = "Normal" },
   { pat = "then", sub = ":", hl = "Normal" },
 }
+
+---@generic T
+---@class Callable<T>
+---@field arity integer
+---@field args any[]
+---@field fn fun(...):T
+local Callable = {}
+function Callable:__index(arg)
+  local args = rawget(self, "args")
+  table.insert(args, arg)
+  if #args == rawget(self, "arity") then
+    return rawget(self, "fn")(unpack(args))
+  else
+    return self
+  end
+end
+
+function Callable:__call(...)
+  for _, arg in ipairs({ ... }) do
+    table.insert(self.args, arg)
+  end
+  if #self.args == self.arity then
+    return self.fn(unpack(self.args))
+  elseif #self.args > self.arity then
+    error("Too many arguments")
+  else
+    return self
+  end
+end
+
+function Callable.new(fn, arity)
+  local self = setmetatable({}, Callable)
+  self.fn = fn
+  self.arity = arity
+  self.args = {}
+  return self
+end
+
+local t = Callable.new(vim.print, 2)
+
+local _ = t[5][6]

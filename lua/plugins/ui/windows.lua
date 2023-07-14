@@ -5,7 +5,7 @@ return {
     config = function()
       local disable = {
         filetype = {
-          "neo-tree",
+          -- "neo-tree",
           "SidebarNvim",
           "Trouble",
           "terminal",
