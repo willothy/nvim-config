@@ -262,21 +262,27 @@ local function setup_null()
       builtins.diagnostics.selene,
       builtins.formatting.prettier,
       builtins.diagnostics.todo_comments,
-      -- builtins.formatting.asmfmt,
-      -- builtins.formatting.beautysh,
+      builtins.formatting.asmfmt,
+      builtins.formatting.beautysh,
       -- builtins.formatting.pyink,
       -- builtins.formatting.markdownlint,
-      -- builtins.formatting.taplo,
+      builtins.formatting.taplo,
       -- builtins.diagnostics.commitlint,
-      -- builtins.diagnostics.markdownlint,
+      builtins.diagnostics.markdownlint,
       -- builtins.diagnostics.semgrep,
       -- builtins.diagnostics.shellcheck,
-      -- builtins.diagnostics.zsh,
+      builtins.diagnostics.zsh,
       -- builtins.code_actions.cspell,
-      -- builtins.code_actions.gitrebase,
-      -- builtins.hover.dictionary,
+      builtins.code_actions.gitrebase,
+      builtins.hover.dictionary,
+      builtins.hover.printenv,
     },
     on_attach = lsp_attach,
+    should_attach = function(bufnr)
+      if not vim.bo[bufnr].buflisted then return false end
+      if vim.bo[bufnr].buftype ~= "" then return false end
+      return true
+    end,
   })
 end
 
@@ -329,6 +335,7 @@ local function setup_rust()
       settings = lsp_settings["rust-analyzer"],
     },
   })
+  vim.cmd.LspStart("rust_analyzer")
 end
 
 local function lsp_setup()
@@ -425,27 +432,8 @@ local function lsp_setup()
   })
 end
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "lua",
-  once = true,
-  callback = function()
-    require("lspconfig").lua_ls.setup({
-      settings = lsp_settings["lua_ls"],
-      attach = lsp_attach,
-    })
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "rust",
-  once = true,
-  callback = setup_rust,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "asm",
-  once = true,
-  callback = function()
+local filetypes = {
+  asm = function()
     local lspconfig = require("lspconfig")
     lspconfig.asm_lsp.setup({
       settings = lsp_settings["asm-lsp"],
@@ -454,7 +442,43 @@ vim.api.nvim_create_autocmd("FileType", {
       root_dir = lspconfig.util.root_pattern("Makefile", ".git", "*.asm"),
     })
   end,
-})
+  lua = function()
+    require("lspconfig").lua_ls.setup({
+      settings = lsp_settings["lua_ls"],
+      attach = lsp_attach,
+    })
+  end,
+  markdown = function()
+    require("lspconfig").marksman.setup({
+      settings = {},
+      attach = lsp_attach,
+      filetypes = { "markdown" },
+    })
+  end,
+  toml = function()
+    require("lspconfig").taplo.setup({
+      settings = {},
+      attach = lsp_attach,
+      filetypes = { "toml" },
+    })
+  end,
+  zsh = function()
+    require("lspconfig").bashls.setup({
+      settings = {},
+      capabilities = mkcaps(false),
+      attach = lsp_attach,
+      filetypes = { "zsh", "sh", "bash" },
+    })
+  end,
+}
+
+for ft, init in pairs(filetypes) do
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = ft,
+    once = true,
+    callback = init,
+  })
+end
 
 return {
   mkcaps = mkcaps,

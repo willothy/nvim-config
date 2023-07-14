@@ -1,14 +1,4 @@
-local lsp_attach, lsp_setup, setup_rust, setup_null, lsp_settings
 local icons = require("willothy.icons")
-local lsp = function()
-  local l
-  if not l then l = require("willothy.lsp") end
-  lsp_attach = l.lsp_attach
-  lsp_setup = l.lsp_setup
-  setup_rust = l.setup_rust
-  setup_null = l.setup_null
-  lsp_settings = l.lsp_settings
-end
 
 return {
   {
@@ -16,11 +6,10 @@ return {
     lazy = true,
     ft = "lua",
     config = function()
-      lsp()
-      require("neodev").setup()
+      local l = require("willothy.lsp")
       require("lspconfig").lua_ls.setup({
-        settings = lsp_settings["lua_ls"],
-        attach = lsp_attach,
+        settings = l.lsp_settings["lua_ls"],
+        attach = l.lsp_attach,
       })
     end,
   },
@@ -102,9 +91,10 @@ return {
     -- "simrat39/rust-tools.nvim",
     "willothy/rust-tools.nvim",
     branch = "no-augment",
+    ft = "rust",
     config = function()
-      lsp()
-      setup_rust()
+      local l = require("willothy.lsp")
+      l.setup_rust()
     end,
   },
   {
@@ -121,8 +111,8 @@ return {
     lazy = true,
     event = "VeryLazy",
     config = function()
-      lsp()
-      lsp_setup()
+      local l = require("willothy.lsp")
+      l.lsp_setup()
     end,
   },
   {
@@ -138,8 +128,8 @@ return {
     lazy = true,
     event = "VeryLazy",
     config = function()
-      lsp()
-      setup_null()
+      local l = require("willothy.lsp")
+      l.setup_null()
     end,
   },
   {
