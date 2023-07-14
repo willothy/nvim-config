@@ -12,6 +12,11 @@ require("willothy.util")
 require("willothy.lazy")
 require("willothy.set")
 
+vim.api.nvim_create_autocmd("UiEnter", {
+  once = true,
+  callback = function() require("willothy.mappings") end,
+})
+
 -- require("willothy.ui")
 
 -- setup float dragging

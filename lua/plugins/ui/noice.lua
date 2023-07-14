@@ -3,7 +3,7 @@ return {
     "folke/noice.nvim",
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
+      -- "rcarriga/nvim-notify",
     },
     lazy = false,
     config = function()
@@ -125,6 +125,7 @@ return {
   },
   {
     "rcarriga/nvim-notify",
+    event = "VimEnter",
     config = function()
       local notify = require("notify")
 

@@ -321,7 +321,10 @@ register({ "n", "t" }, {
 })
 
 register({ "n", "x" }, {
-  ["<C-F>"] = { function() memo("ssr").open() end, "Structural Search/Replace" },
+  ["<C-F>"] = {
+    function() memo("ssr").open() end,
+    "Structural Search/Replace",
+  },
   ["<C-CR>"] = {
     function() memo("cokeline.mappings").pick("focus") end,
     "Pick buffer",
