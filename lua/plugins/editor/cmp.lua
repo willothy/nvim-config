@@ -233,11 +233,13 @@ return {
   {
     "windwp/nvim-autopairs",
     lazy = true,
+    event = "VeryLazy",
     opts = autopairs,
   },
   {
     "windwp/nvim-ts-autotag",
     config = true,
+    event = "VeryLazy",
   },
   {
     "zbirenbaum/copilot.lua",
@@ -245,16 +247,8 @@ return {
     opts = copilot_opt,
   },
   {
-    "zbirenbaum/copilot-cmp",
-    dependencies = {
-      "zbirenbaum/copilot.lua",
-      "hrsh7th/nvim-cmp",
-    },
-    lazy = true,
-    config = true,
-  },
-  {
     "kylechui/nvim-surround",
+    event = "VeryLazy",
     opts = {
       keymaps = {
         insert = false,

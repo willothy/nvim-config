@@ -13,4 +13,8 @@ return {
   "famiu/bufdelete.nvim",
   "kkharji/sqlite.lua",
   "AckslD/nvim-neoclip.lua",
+  {
+    "ecthelionvi/NeoComposer.nvim",
+    config = true,
+  },
 }

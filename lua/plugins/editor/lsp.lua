@@ -91,7 +91,7 @@ return {
   {
     "smjonas/inc-rename.nvim",
     config = true,
-    cmd = "IncRename",
+    event = "LspAttach",
   },
   {
     "lukas-reineke/lsp-format.nvim",

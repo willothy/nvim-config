@@ -111,6 +111,6 @@ return {
   {
     "Bekaboo/dropbar.nvim",
     config = config,
-    event = "UiEnter",
+    event = "VeryLazy",
   },
 }

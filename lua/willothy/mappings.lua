@@ -525,10 +525,13 @@ memo("which-key").register({
       "diagnostics",
     },
     r = { portal_references, "references" },
-    j = { function() memo("portal").jumplist.tunnel() end, "jumplist" },
-    h = { function() memo("portal").harpoon.tunnel() end, "harpoon" },
-    q = { function() memo("portal").quickfix.tunnel() end, "quickfix" },
-    c = { function() memo("portal").changelist.tunnel() end, "changelist" },
+    j = { function() memo("portal.builtin").jumplist.tunnel() end, "jumplist" },
+    h = { function() memo("portal.builtin").harpoon.tunnel() end, "harpoon" },
+    q = { function() memo("portal.builtin").quickfix.tunnel() end, "quickfix" },
+    c = {
+      function() memo("portal.builtin").changelist.tunnel() end,
+      "changelist",
+    },
   },
 }, { prefix = "<leader>" })
 

@@ -1,29 +1,57 @@
-if vim.g.minimal ~= nil then
-  require("willothy.minimal")
-  return
-end
-
-_G.dbg = vim.print
-
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-require("willothy.util")
-require("willothy.lazy")
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+  defaults = {
+    lazy = true,
+    event = "VeryLazy",
+  },
+  spec = vim.g.minimal and "willothy.minimal" or "plugins",
+  dev = { path = "~/projects/lua/" },
+  ui = {
+    size = { width = 0.8, height = 0.8 },
+    wrap = false,
+    border = "rounded",
+  },
+  browser = "brave",
+  diff = {
+    cmd = "diffview.nvim",
+  },
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
+})
+
+if vim.g.minimal then return end
+
 require("willothy.set")
 
-vim.api.nvim_create_autocmd("UiEnter", {
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
   once = true,
   callback = function() require("willothy.mappings") end,
 })
-
--- require("willothy.ui")
 
 -- setup float dragging
 -- require("willothy.ui").setup({
 --   resize = "<S-LeftDrag>",
 -- })
 
+-- Hacky way of detaching UI
 -- vim.api.nvim_create_user_command("Detach", function()
 --   local uis = vim.api.nvim_list_uis()
 --   if #uis < 1 then return end
