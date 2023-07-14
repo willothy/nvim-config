@@ -23,6 +23,7 @@ return {
   },
   {
     "huy-hng/anyline.nvim",
+    dir = "~/projects/lua/anyline.nvim/",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     event = "VeryLazy",
     opts = {

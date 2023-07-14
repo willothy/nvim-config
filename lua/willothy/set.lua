@@ -47,9 +47,16 @@ O.listchars = { tab = "  ", extends = "", precedes = "" }
 o.number = true
 o.relativenumber = true
 
-o.numberwidth = 1
-o.wrap = false
 o.expandtab = true
+o.tabstop = 4
+o.shiftwidth = 4
+o.softtabstop = -1
+o.expandtab = true
+
+o.wrap = false
+o.numberwidth = 1
+o.number = true
+o.relativenumber = true
 
 O.numberwidth._info.default = 1
 
