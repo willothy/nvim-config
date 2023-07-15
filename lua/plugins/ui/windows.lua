@@ -1,12 +1,10 @@
 return {
   {
     "nvim-focus/focus.nvim",
-    dir = "~/projects/lua/focus.nvim/",
-    branch = "refactor",
     config = function()
       local disable = {
         filetype = {
-          -- "neo-tree",
+          "neo-tree",
           "SidebarNvim",
           "Trouble",
           "terminal",
