@@ -9,7 +9,7 @@ return {
   { import = "plugins.util" },
 
   -- no-config plugins
-  "mbbill/undotree",
+  { "mbbill/undotree", event = "VeryLazy" },
   "famiu/bufdelete.nvim",
   "kkharji/sqlite.lua",
   "AckslD/nvim-neoclip.lua",

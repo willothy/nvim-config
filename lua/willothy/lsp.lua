@@ -55,7 +55,7 @@ local function lsp_maps(bufnr)
     "Hover docs"
   )
   map("n", "<leader>ws", buf.workspace_symbol, "Find workspace symbol")
-  map("n", "<leader>fd", diagnostic.open_float, "Diagnostic float")
+  -- map("n", "<leader>fd", diagnostic.open_float, "Diagnostic float")
   map("n", "[d", diagnostic.goto_next, "Next diagnostic")
   map("n", "]d", diagnostic.goto_prev, "Previous diagnostic")
   map("n", "<leader>ca", function()

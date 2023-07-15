@@ -421,39 +421,39 @@ memo("which-key").register({
       "Delete buffer",
     },
   },
-  f = {
-    name = "file",
-    f = {
-      function() memo("telescope").extensions.menufacture.find_files() end,
-      "Find files",
-    },
-    g = {
-      function() memo("telescope").extensions.menufacture.git_files() end,
-      "Find git files",
-    },
-    s = {
-      function() memo("telescope").extensions.menufacture.grep_string() end,
-      "Grep string",
-    },
-    b = {
-      function() memo("telescope").extensions.scope.buffers() end,
-      "Find buffers",
-    },
-    n = { vim.cmd.enew, "Create a new buffer" },
-    v = {
-      function() memo("willothy.util").browse(vim.fn.expand("%:p:h")) end,
-      "Browse current file's directory",
-    },
-    p = {
-      function()
-        vim.ui.input(
-          { prompt = "Path: " },
-          function(input) memo("willothy.util").browse(input) end
-        )
-      end,
-      "Browse path from input",
-    },
-  },
+  -- f = {
+  --   name = "file",
+  --   f = {
+  --     function() memo("telescope").extensions.menufacture.find_files() end,
+  --     "Find files",
+  --   },
+  --   g = {
+  --     function() memo("telescope").extensions.menufacture.git_files() end,
+  --     "Find git files",
+  --   },
+  --   s = {
+  --     function() memo("telescope").extensions.menufacture.grep_string() end,
+  --     "Grep string",
+  --   },
+  --   b = {
+  --     function() memo("telescope").extensions.scope.buffers() end,
+  --     "Find buffers",
+  --   },
+  --   n = { vim.cmd.enew, "Create a new buffer" },
+  --   v = {
+  --     function() memo("willothy.util").browse(vim.fn.expand("%:p:h")) end,
+  --     "Browse current file's directory",
+  --   },
+  --   p = {
+  --     function()
+  --       vim.ui.input(
+  --         { prompt = "Path: " },
+  --         function(input) memo("willothy.util").browse(input) end
+  --       )
+  --     end,
+  --     "Browse path from input",
+  --   },
+  -- },
   p = {
     name = "project",
     f = {
@@ -560,4 +560,412 @@ memo("which-key").register({
   ["<C-c>"] = { '"+y', "Copy selection" },
 }, {
   mode = "v",
+})
+
+local Hydra = memo("hydra")
+local cmd = memo("hydra.keymap-util").cmd
+
+local function escape(str) return str:gsub("\\", "\\\\") end
+
+local function mkheader(str) return escape(str) end
+
+---@class Lines
+---@field dimensions integer[]
+local Lines = {}
+Lines.__index = Lines
+
+function Lines:new(data)
+  local o
+  if type(data) == "string" then
+    o = setmetatable(vim.split(data, "\n", { trimempty = true }), Lines)
+  elseif type(data) == "table" then
+    o = setmetatable(data, Lines)
+  else
+    error("invalid data type")
+  end
+  local dimensions = { #o, 0 }
+  for _, line in ipairs(o) do
+    dimensions[2] = math.max(dimensions[2], vim.fn.strdisplaywidth(line))
+  end
+  o.dimensions = dimensions
+  return o
+end
+
+function Lines:width() return self.dimensions[2] end
+
+function Lines:height() return self.dimensions[1] end
+
+function Lines:truncate_width(width)
+  local lines = {}
+  for _, line in ipairs(self) do
+    table.insert(lines, line:sub(1, width))
+  end
+  return Lines:new(lines)
+end
+
+function Lines:truncate_height(height, start)
+  local lines = {}
+  for i = start, height + start do
+    table.insert(lines, self[i])
+  end
+  return Lines:new(lines)
+end
+
+---@param dimensions Lines | integer[]
+function Lines:empty(dimensions)
+  local dims
+  if getmetatable(dimensions) == Lines then
+    dims = dimensions.dimensions
+  else
+    dims = dimensions
+  end
+  local lines = {}
+  for _ = 1, dims[1] do
+    table.insert(lines, string.rep(" ", dims[2]))
+  end
+  return Lines:new(lines)
+end
+
+function Lines:escape()
+  for i, line in ipairs(self) do
+    self[i] = escape(line)
+  end
+  return self
+end
+
+function Lines:overlay(other, row, col)
+  if not row then row = 1 end
+  if not col then col = 1 end
+  if #other + row - 1 > #self then
+    error("lines2 is longer than lines1")
+    return self
+  end
+
+  local i = 0
+  self = setmetatable(
+    vim.list_extend(
+      vim.list_slice(self, 1, row - 1),
+      vim
+        .iter(self)
+        :skip(row - 1)
+        :map(function(line, e)
+          if type(line) ~= "string" then line = e end
+          i = i + 1
+          local other_line = other[i]
+          if not other_line then return line end
+          local new = col > 1 and line:sub(1, col - 1) or ""
+          for j = col, #line do
+            local l1_char = line:sub(j, j)
+            local l2_char = other_line:sub(j - col + 1, j - col + 1)
+
+            if
+              j < col
+              or j > (col + #other_line)
+              or l2_char == nil
+              or l2_char == ""
+              or (
+                string.match(l2_char, "%s+") ~= nil
+                and other_line:sub(j - col, j - col) == " "
+              )
+            then
+              new = new .. l1_char
+            -- elseif other_line:sub(j - col + 2, j - col + 2) == " " then
+            --   new = new .. l1_char
+            else
+              new = new .. l2_char
+            end
+          end
+          return new
+        end)
+        :totable()
+    ),
+    Lines
+  )
+
+  return self
+end
+
+function Lines:render() return table.concat(self, "\n") end
+
+local hint = mkheader(
+  [[
+.   * .    * .  ' -+-    ' *     .  `     .     -*-     .    ` 
+     . .-.     `    .  * .  _f_: files . -+- _s_: live grep  . -+-
+* .   {}``; |==|████████| * _p_: projects  * _g_: git files   *
+      / ('   .    /|\       _r_: resume   *  _u_: undotree '    .
+  (  /  \  .  *  / | \   ' .  .      * .  ' . * -+-  * .  '  .
+   \( )  ]   .  /  |  \ .   _<Enter>_: pickers    _<Esc>_ _q_
+█████████████████████████▇▆▅▄▂▁ +-    ' *     -*- `   .     ]]
+)
+
+local backgrounds = {
+  stars = Lines:new([[
+ .              +   .                .   . .     .  .
+                   .                    .       .     *
+  .       *               -*-       . . . .  .   .  + .
+                     `                .   `  +  . . .
+.          *                    .  .   .    .    . `
+     +         .              .     .     . +.    +  .
+                                .       .   . .
+        . .           `      .    * . ` .  .  +   .
+  -+-      +      .           .   .      +
+                            .       . +  .+. .
+  .                      .     . + .  . .     .      .
+           .      .    .   ` . .   . . .        ! /
+      *             .    . .  +    .  .       - O -
+          .     .    .  +   ` .  *  .       . / |
+               . + .  .  .  .. +  .
+.      .  .  .  *   .  *  . +..  .            *
+ .      .   . .   .   .   . .  +   .    .            +
+  ]]),
+  aurora = Lines:new([[
+    ` : | | |:  ||  :     `  :  |  |+|: | : : :|   .        `              .
+      ` : | :|  ||  |:  :    `  |  | :| : | : |:   |  .                    :
+         .' ':  ||  |:  |  '       ` || | : | |: : |   .  `           .   :.
+                `'  ||  |  ' |   *    ` : | | :| |*|  :   :               :|
+        *    *       `  |  : :  |  .      ` ' :| | :| . : :         *   :.||
+             .`            | |  |  : .:|       ` | || | : |: |          | ||
+      '          .         + `  |  :  .: .         '| | : :| :    .   |:| ||
+         .                 .    ` *|  || :       `    | | :| | :      |:| |
+ .                .          .        || |.: *          | || : :     :|||
+        .            .   . *    .   .  ` |||.  +        + '| |||  .  ||`
+     .             *              .     +:`|!             . ||||  :.||`
+ +                      .                ..!|*          . | :`||+ |||`
+     .                         +      : |||`        .| :| | | |.| ||`     .
+       *     +   '               +  :|| |`     :.+. || || | |:`|| `
+                            .      .||` .    ..|| | |: '` `| | |`  +
+  .       +++                      ||        !|!: `       :| |
+              +         .      .    | .      `|||.:      .||    .      .   
+          '                           `|.   .  `:|||   + ||'     `
+  __    +      *                         `'       `'|.    `:
+"'  `---"""----....____,..^---`^``----.,.___          `.    `.  .    ____,.
+    ___,--'""`---"'   ^  ^ ^        ^       """'---,..___ __,..---""'
+--"'                                 ^                         ``--..,__
+  ]]),
+  space2 = Lines:new([[
+                    .                                            .
+     *   .                  .              .        .   *          .
+  .         .                     .       .           .      .        .
+        o                             .                   .
+         .              .                  .           .
+          0     .
+                 .          .                 ,                ,    ,
+ .          \          .                         .
+      .      \   ,
+   .          o     .                 .                   .            .
+     .         \                 ,             .                .
+               #\##\#      .                              .        .
+             #  #O##\###                .                        .
+   .        #*#  #\##\###                       .                     ,
+        .   ##*#  #\##\##               .                     .
+      .      ##*#  #o##\#         .                             ,       .
+          .     *#  #\#     .                    .             .          ,
+                      \          .                         .
+____^/\---^--__________O______________/\/\---/\___________---______________
+   /\^   ^  ^    ^                  ^^ ^  '\ ^          ^       ---
+         --           -            --  -      -         ---  __       ^
+   --  __                      ___--  ^  ^                         --  __
+  ]]),
+  space = Lines:new([[
+                    .                                            .
+     *   .                  .              .        .   *          .
+  .         .                     .       .           .      .        .
+        o                             .                   .
+         .              .                  .           .
+          0     .
+                 .          .                 ,                ,    ,
+ .                     .                         .
+      .    .     ,
+   .                .       -*-       .                   .            .
+     .                           ,             .                .
+           .               .                              .        .
+                     .                  .                        .
+   .                                            .                     ,
+        .                               .                     .
+      .           .               .                             ,       .
+          .                 .                    .             .          ,
+                                 .                         .
+-------^----------------^-----------------------v--------------------------
+     ^   ^  ^    ^                  ^^ ^  '\ ^          ^       ---
+         --           -            --  -      -         ---  __       ^
+   --  __                      ___--  ^  ^                         --  __
+  ]]),
+  mountains = Lines:new([[
+          _    .  ,   .           .
+    *  / \_ *  / \_      _  *        *   /\'__        *
+      /    \  /    \,   ((        .    _/  /  \  *'.
+ .   /\/\  /\/ :' __ \_  `          _^/  ^/    `--.
+    /    \/  \  _/  \-'\      *    /.' ^_   \_   .'\  *
+  /\  .-   `. \/     \ /==~=-=~=-=-;.  _/ \ -. `_/   \
+ /  `-.__ ^   / .-'.--\ =-=~_=-=~=^/  _ `--./ .-'  `-
+/        `.  / /       `.~-^=-=~=^=.-'      '-._ `._
+  ]]),
+  sunset = Lines:new([[
+                                @@@@@@@@@
+       ^^      ^^            @@@@@@@@@@@@@@@
+          ^^               @@@@@@@@@@@@@@@@@@              ^^
+                          @@@@@@@@@@@@@@@@@@@@
+~~~~ ~~ ~~~~~ ~~~~~~~~ ~~ &&&&&&&&&&&&&&&&&&&& ~~~~~~~ ~~~~~~~~~~~ ~~~
+~         ~~   ~  ~       ~~~~~~~~~~~~~~~~~~~~ ~       ~~     ~~ ~
+  ~      ~~      ~~ ~~ ~~  ~~~~~~~~~~~~~ ~~~~  ~     ~~~    ~ ~~~  ~ ~~ 
+  ~  ~~     ~         ~      ~~~~~~  ~~ ~~~       ~~ ~ ~~  ~~ ~ 
+~  ~       ~ ~      ~           ~~ ~~~~~~  ~      ~~  ~             ~~
+      ~             ~        ~      ~      ~~   ~             ~
+  ]]),
+  clouds1 = Lines:new([[
+            _                                  
+          (`  ).                   _           
+         (     ).              .:(`  )`.       
+        _(       '`.          :(   .    )      
+    .=(`(      .   )     .--  `.  (    ) )      
+   ((    (..__.:'-'   .+(   )   ` _`  ) )                 
+   `(       ) )       (   .  )     (   )  ._   
+     ` __.:'   )     (   (   ))     `-'.-(`  ) 
+  ( )       --'       `- __.'         :(      )) 
+ (_.'          .')                    `(    )  ))
+              (_  )                     ` __.:'          
+  ]]),
+  clouds2 = Lines:new([[
+      \       I     				
+                  /
+        \  ,g88R_
+          d888(`  ).                   _
+ -  --==  888(     ).=--           .+(`  )`.
+)         Y8P(       '`.          :(   .    )
+        .+(`(      .   )     .--  `.  (    ) )
+       ((    (..__.:'-'   .=(   )   ` _`  ) )
+`.     `(       ) )       (   .  )     (   )  ._
+  )      ` __.:'   )     (   (   ))     `-'.:(`  )
+)  )  ( )       --'       `- __.'         :(      ))
+.-'  (_.'          .')                    `(    )  ))
+                  (_  )                     ` __.:'
+  ]]),
+}
+
+local elements = {
+  planets = {
+    earth = Lines:new([[
+    .-:::'-':-.
+  .''::::.:    '.
+ /   :::::'     :\
+;.    ':' `      :;
+|       '..      ;|
+; '      ::::.    ;
+ \       '::::   /
+  '.      :::  .'
+    '-.___'_.-'
+    ]]),
+    earth_large = Lines:new([[
+              _-o#&&*''''?d:>o-_
+          _o/"`''  '',, dMF9MMMMMHo_
+       .o&#'        `"MbHMMMMMMMMMMMHo.
+     .o"" '         vodM*$&&HMMMMMMMMMM?.
+    ,'              $M&ood,~'`(&##MMMMMMH\
+   /               ,MMMMMMM#b?#bobMMMMHMMML
+  &              ?MMMMMMMMMMMMMMMMM7MMM$R*Hk
+ ?$.            :MMMMMMMMMMMMMMMMMMM/HMMM|`*L
+|               |MMMMMMMMMMMMMMMMMMMMbMH'   T,
+$H#:            `*MMMMMMMMMMMMMMMMMMMMb#}'  `?
+]MMH#             ""*""""*#MMMMMMMMMMMMM'    -
+MMMMMb_                   |MMMMMMMMMMMP'     :
+HMMMMMMMHo                 `MMMMMMMMMT       .
+?MMMMMMMMP                  9MMMMMMMM}       -
+-?MMMMMMM                  |MMMMMMMMM?,d-    '
+ :|MMMMMM-                 `MMMMMMMT .M|.   :
+  .9MMM[                    &MMMMM*' `'    .
+   :9MMk                    `MMM#"        -
+     &M}                     `          .-
+      `&.                             .
+        `~,   .                     ./
+            . _                  .-
+              '`--._,dd###pp=""'
+    ]]),
+  },
+  telescope_dog = Lines:new([[
+       .-.              
+      {}``; |==|████████|  
+      / ('        /|\       
+  (  /  \        / | \    
+   \( )  ]      /  |  \    
+  ]]),
+  telescope = Lines:new([[
+            // 
+           //
+  ___o |==// 
+ /\  \/  //|\ 
+/ /        | \ 
+` `        '  '
+  ]]),
+}
+
+-- █████████████████████████▇▆▅▄▂▁
+
+vim.api.nvim_create_user_command("Testthething", function()
+  local bg = backgrounds.space
+  local planet = elements.planets.earth
+  local dog = elements.telescope_dog
+  local person = elements.telescope
+
+  local backdrop = Lines:empty(bg.dimensions)
+  local test = backdrop
+    :overlay(bg)
+    :overlay(planet, 4, bg.dimensions[2] - planet.dimensions[2] - 10)
+    :overlay(person, bg.dimensions[1] - person.dimensions[1] + 1, 15)
+    -- :escape()
+    :render()
+  vim.print(test)
+end, {})
+
+local function telescope(picker, menufacture)
+  if menufacture then
+    return function() memo("telescope").extensions.menufacture[picker]() end
+  else
+    return function() memo("telescope.builtin")[picker]() end
+  end
+end
+
+Hydra({
+  name = "Telescope",
+  hint = hint,
+  config = {
+    color = "blue",
+    invoke_on_body = true,
+    hint = {
+      position = "middle",
+      border = "rounded",
+    },
+  },
+  mode = "n",
+  body = "<leader>f",
+  heads = {
+    {
+      "s",
+      telescope("live_grep", true),
+      { desc = "Telescope: live grep" },
+    },
+    {
+      "f",
+      telescope("find_files", true),
+      { desc = "Telescope: find files" },
+    },
+    {
+      "g",
+      telescope("git_files", true),
+      { desc = "Telescope: git files" },
+    },
+    { "r", telescope("resume") },
+    { "p", telescope("projects"), { desc = "Telescope: projects" } },
+    {
+      "u",
+      cmd("silent! %foldopen! | UndotreeToggle"),
+      { desc = "undotree" },
+    },
+    {
+      "<Enter>",
+      telescope("builtin"),
+      { desc = "Telescope: list pickers" },
+    },
+    { "<Esc>", nil, { exit = true, nowait = true } },
+    { "q", nil, { exit = true, nowait = true } },
+  },
 })
