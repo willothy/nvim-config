@@ -276,4 +276,27 @@ vim.api.nvim_create_user_command("Scratch", function(opts)
   vim.api.nvim_set_current_buf(buf)
 end, { nargs = "?" })
 
+function M.pipe(data, ...)
+  if type(data) == "function" then
+    data = data(...)
+  elseif type(data) == "table" then
+    data = vim.inspect(data)
+  elseif type(data) ~= "string" then
+    data = tostring(data)
+  else
+    data = vim.api.nvim_exec2(data, {
+      output = true,
+    }).output
+  end
+  local win = vim.api.nvim_get_current_win()
+  local buf = vim.api.nvim_get_current_buf()
+
+  local cursor = vim.api.nvim_win_get_cursor(win)
+
+  local lines = vim.split(data or "", "\n", true)
+  if #lines > 0 and lines[1] ~= "" then
+    vim.api.nvim_buf_set_lines(buf, cursor[1], cursor[1], false, lines)
+  end
+end
+
 return M
