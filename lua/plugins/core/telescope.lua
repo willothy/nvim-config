@@ -35,8 +35,9 @@ local function create_and_add_to_harpoon(prompt_bufnr)
   end
 end
 
-local function opt()
-  return {
+local function config()
+  local t = require("telescope")
+  t.setup({
     extensions = {
       ["ui-select"] = {
         require("telescope.themes").get_dropdown({}),
@@ -50,18 +51,13 @@ local function opt()
             ["<C-n>"] = create_and_add_to_harpoon,
           },
           ["n"] = {
-            ["%"] = create_and_add_to_harpoon,
+            ["c"] = create_and_add_to_harpoon,
             ["a"] = add_selected_to_harpoon,
           },
         },
       },
     },
-  }
-end
-
-local function config()
-  local t = require("telescope")
-  t.setup(opt())
+  })
   t.load_extension("file_browser")
   t.load_extension("ui-select")
   t.load_extension("menufacture")
@@ -69,6 +65,7 @@ local function config()
   t.load_extension("noice")
   t.load_extension("macros")
   t.load_extension("scope")
+  t.load_extension("yank_history")
 end
 
 return {
