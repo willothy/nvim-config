@@ -15,7 +15,7 @@ return {
       local function heirline()
         local utils = require("heirline.utils")
         local conditions = require("heirline.conditions")
-        local get_hex = require("cokeline.utils").get_hex
+        local get_hex = require("willothy.hl").fetch_attr
 
         local highlights = {
           Normal = {
@@ -39,6 +39,7 @@ return {
             bg = get_hex("TabLineFill", "bg"),
           },
         }
+
         local B = { fg = highlights.Normal.fg, bg = highlights.TabLine.bg }
         local C = { fg = p.cool_gray, bg = p.none }
         local mode_colors = {
@@ -247,25 +248,34 @@ return {
           hl = hl.B,
         })
 
+        local registered = false
         local Copilot = Component({
           init = function(self)
             self.status = {
-              status = "",
+              status = "Normal",
             }
-            require("copilot.api").register_status_notification_handler(
-              function(data) self.status = data or { status = "InProgress" } end
-            )
+            if not registered then
+              registered = true
+              require("copilot.api").register_status_notification_handler(
+                function(data)
+                  self.status = data or {}
+                  if self.status.status == nil or self.status.status == "" then
+                    self.status.status = "InProgress"
+                  end
+                end
+              )
+            end
           end,
           provider = function(self)
             local icon = icons.git.copilot_err
             if self.status.status == "InProgress" then
-              icon = require("noice.util.spinners").spin("dots")
-                or icons.git.copilot_warn
+              icon = require("noice.util.spinners").spin("dots") or "\\"
             elseif self.status.status == "Warning" then
               icon = icons.git.copilot_warn
             elseif self.status.status == "Normal" then
               icon = icons.git.copilot
             end
+
             return icon .. " "
           end,
           hl = hl.C,
