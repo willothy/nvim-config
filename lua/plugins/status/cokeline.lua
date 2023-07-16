@@ -314,11 +314,29 @@ local function cokeline()
     },
   }
 
+  local harpoon = require("harpoon.mark")
+  local function marknum(buf)
+    local n = tonumber(string.match(harpoon.status(buf.number), "%d+"))
+    return n
+  end
   return {
     show_if_buffers_are_at_least = 1,
     buffers = {
       focus_on_delete = "next",
-      new_buffers_position = "next",
+      -- new_buffers_position = "next",
+      new_buffers_position = function(a, b)
+        local ma = marknum(a) --b._valid_index
+        local mb = marknum(b) --a._valid_index
+        if ma and not mb then
+          return true
+        elseif mb and not ma then
+          return false
+        elseif ma == nil and mb == nil then
+          ma = a.index
+          mb = b.index
+        end
+        return ma < mb
+      end,
       delete_on_right_click = false,
     },
     fill_hl = "TabLineFill",
@@ -412,7 +430,6 @@ end
 return {
   {
     "willothy/nvim-cokeline",
-    dir = "~/projects/lua/cokeline/",
     config = function() require("cokeline").setup(cokeline()) end,
     lazy = true,
     event = "VeryLazy",
