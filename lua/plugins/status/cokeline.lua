@@ -317,18 +317,18 @@ local function cokeline()
   local harpoon = require("harpoon.mark")
   local cache = {}
 
-  local function marknum(buf)
+  local function marknum(buf, force)
     local b = cache[buf.number]
-    if not b then
+    if b == nil or force then
       b = harpoon.get_index_of(buf.filename)
       cache[buf.number] = b
     end
     return b
   end
+
   harpoon.on("changed", function()
     for _, buf in ipairs(require("cokeline.buffers").get_visible()) do
-      cache[buf.number] = nil
-      marknum(buf)
+      marknum(buf, true)
     end
   end)
 
