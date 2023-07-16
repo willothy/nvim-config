@@ -1,9 +1,48 @@
 local au = vim.api.nvim_create_augroup("murmur_au", { clear = true })
 
+local anyline = false
+
 return {
+  {
+    "echasnovski/mini.indentscope",
+    name = "mini.indentscope",
+    lazy = true,
+    enabled = not anyline,
+    event = "VeryLazy",
+    config = function()
+      require("mini.indentscope").setup({
+        symbol = "▏",
+        options = {
+          -- border = "bottom",
+          try_as_border = true,
+        },
+        mappings = {
+          goto_top = "",
+          goto_bottom = "",
+          object_scope = "",
+          object_scope_with_border = "",
+        },
+      })
+      local disabled = {
+        "",
+        "harpoon",
+        "help",
+        "terminal",
+      }
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "*",
+        callback = function()
+          if disabled[vim.bo.filetype] ~= nil or vim.bo.buftype ~= "" then
+            vim.b.miniindentscope_disable = true
+          end
+        end,
+      })
+    end,
+  },
   {
     "willothy/anyline.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
+    enabled = anyline,
     event = "VeryLazy",
     config = function()
       require("anyline").setup({
@@ -56,6 +95,7 @@ return {
           "SidebarNvim",
           "terminal",
           "Trouble",
+          "",
         },
         cursor_rgb = "Cursorword",
         cursor_rgb_current = "CursorwordCurrent",

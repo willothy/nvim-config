@@ -536,5 +536,3 @@ require("which-key").register({
 }, {
   mode = "v",
 })
-
-require("willothy.hydras")

@@ -70,7 +70,7 @@ local function lsp_maps(bufnr)
     -- vim.api.nvim_set_current_win(win)
     require("hollywood").code_actions()
   end, "Code actions")
-  map("n", "<leader>vh", buf.signature_help, "Signature help")
+  map("n", "<leader>vh", function() buf.signature_help() end, "Signature help")
 
   local trouble = require("trouble").open
   map("n", "<leader>rr", utils.bind(trouble, "lsp_references"), "References")

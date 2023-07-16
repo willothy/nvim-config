@@ -149,7 +149,7 @@ local function cmp_setup()
   cmp.setup.cmdline(":", {
     sources = cmp.config.sources({
       { name = "cmdline", group_index = 1 },
-      { name = "async_path", group_index = 1 },
+      -- { name = "async_path", group_index = 1 },
       { name = "cmdline_history", group_index = 2 },
       { name = "copilot", group_index = 2 },
     }),
