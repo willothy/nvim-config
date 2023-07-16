@@ -327,14 +327,15 @@ local function cokeline()
   end
   harpoon.on("changed", function()
     for _, buf in ipairs(require("cokeline.buffers").get_visible()) do
+      cache[buf.number] = nil
       marknum(buf)
     end
   end)
+
   return {
     show_if_buffers_are_at_least = 1,
     buffers = {
       focus_on_delete = "next",
-      -- new_buffers_position = "next",
       new_buffers_position = function(a, b)
         local ma = marknum(a)
         local mb = marknum(b)
@@ -348,6 +349,7 @@ local function cokeline()
         end
         return ma < mb
       end,
+      -- new_buffers_position = "next",
       delete_on_right_click = false,
     },
     fill_hl = "TabLineFill",
