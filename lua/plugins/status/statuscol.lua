@@ -23,7 +23,7 @@ return {
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },
-    event = "VeryLazy",
+    event = "UiEnter",
     config = function()
       local blame = function(args)
         local line = args.mousepos.line

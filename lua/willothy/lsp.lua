@@ -12,6 +12,11 @@ local function mkcaps(extra)
     -- snippets
     capabilities.textDocument.completion.completionItem.snippetSupport = true
 
+    capabilities.textDocument.foldingRange = {
+      dynamicRegistration = false,
+      lineFoldingOnly = true,
+    }
+
     -- send actions with hover request
     capabilities.experimental = {
       hoverActions = true,
@@ -318,9 +323,17 @@ local function setup_ufo()
   -- global handler
   -- `handler` is the 2nd parameter of `setFoldVirtTextHandler`,
   -- check out `./lua/ufo.lua` and search `setFoldVirtTextHandler` for detail.
-  require("ufo").setup({
+  local ufo = require("ufo")
+  ufo.setup({
     fold_virt_text_handler = handler,
   })
+  vim.schedule(function()
+    local tab = vim.api.nvim_get_current_tabpage()
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
+      local bufnr = vim.api.nvim_win_get_buf(win)
+      ufo.attach(bufnr)
+    end
+  end)
 end
 
 local function setup_rust()
@@ -355,10 +368,6 @@ local function lsp_setup()
       end,
     },
   })
-
-  -- local cmp_lsp = require("cmp_nvim_lsp")
-  --
-  -- cmp_lsp.default_capabilities(capabilities)
 
   setup_format()
   setup_ufo()
