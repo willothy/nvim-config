@@ -247,7 +247,7 @@ local function cokeline()
           if buffer.diagnostics.hints > 0 then
             table.insert(text, {
               icons.diagnostics.hints .. " " .. buffer.diagnostics.hints .. " ",
-              "DiagnosticSignHint",
+              "DiagnosticSignpint",
             })
             width = width + #tostring(buffer.diagnostics.hints) + 3
           end
@@ -314,41 +314,50 @@ local function cokeline()
     },
   }
 
-  local harpoon = require("harpoon.mark")
-  local cache = {}
+  local function harpoon_sorter()
+    local harpoon = require("harpoon.mark")
+    local cache = {}
 
-  local function marknum(buf, force)
-    local b = cache[buf.number]
-    if b == nil or force then
-      b = harpoon.get_index_of(buf.filename)
-      cache[buf.number] = b
+    local function marknum(buf, force)
+      local b = cache[buf.number]
+      if b == nil or force then
+        b = harpoon.get_index_of(buf.path)
+        cache[buf.number] = b
+      end
+      return b
     end
-    return b
+
+    harpoon.on("changed", function()
+      for _, buf in ipairs(require("cokeline.buffers").get_visible()) do
+        cache[buf.number] = marknum(buf, true)
+      end
+    end)
+
+    ---@type a Buffer
+    ---@type b Buffer
+    -- Use this in `config.buffers.new_buffers_position`
+    return function(a, b)
+      -- switch the a and b._valid_index to place non-harpoon buffers on the left
+      -- side of the tabline - this puts them on the right.
+      local ma = marknum(a) --b._valid_index
+      local mb = marknum(b) --a._valid_index
+      if ma and not mb then
+        return true
+      elseif mb and not ma then
+        return false
+      elseif ma == nil and mb == nil then
+        ma = a.index
+        mb = b.index
+      end
+      return ma < mb
+    end
   end
-
-  harpoon.on("changed", function()
-    for _, buf in ipairs(require("cokeline.buffers").get_visible()) do
-      marknum(buf, true)
-    end
-  end)
 
   return {
     show_if_buffers_are_at_least = 1,
     buffers = {
       focus_on_delete = "next",
-      new_buffers_position = function(a, b)
-        local ma = marknum(a)
-        local mb = marknum(b)
-        if ma and not mb then
-          return true
-        elseif mb and not ma then
-          return false
-        elseif ma == nil and mb == nil then
-          ma = a.index
-          mb = b.index
-        end
-        return ma < mb
-      end,
+      new_buffers_position = harpoon_sorter(),
       -- new_buffers_position = "next",
       delete_on_right_click = false,
     },

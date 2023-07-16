@@ -248,14 +248,15 @@ return {
           hl = hl.B,
         })
 
-        local registered = false
+        local copilot_init = false
         local Copilot = Component({
           init = function(self)
-            self.status = {
-              status = "Normal",
-            }
-            if not registered then
-              registered = true
+            self.ready = false
+
+            if not copilot_init then
+              copilot_init = true
+              return
+            elseif not self.ready then
               require("copilot.api").register_status_notification_handler(
                 function(data)
                   self.status = data or {}
@@ -264,9 +265,15 @@ return {
                   end
                 end
               )
+              self.ready = true
             end
+
+            self.status = {
+              status = "Normal",
+            }
           end,
           provider = function(self)
+            if not self.ready then return "" end
             local icon = icons.git.copilot_err
             if self.status.status == "InProgress" then
               icon = require("noice.util.spinners").spin("dots") or "\\"
@@ -322,7 +329,6 @@ return {
 
         local Harpoon = Component({
           provider = function(self)
-            if not self.ready then return "" end
             if self.nfiles == nil or self.nfiles == 0 then
               return " " .. icons.misc.hook_disabled
             elseif self.current == nil then
@@ -342,16 +348,28 @@ return {
           end),
           update = {
             "User",
-            pattern = "VeryLazy",
-            callback = function(self)
-              local h = require("harpoon.mark")
-              self.current = h.get_current_index()
-              self.nfiles = h.get_length()
-              self.ready = true
-              h.on("changed", function()
-                self.nfiles = h.get_length()
-                self.current = h.get_current_index()
-              end)
+            pattern = { "ExtraLazy", "UpdateHarpoonStatus" },
+            callback = function(self, ev)
+              local harpoon = require("harpoon.mark")
+              local cur = harpoon.get_current_index()
+              local nfiles = harpoon.get_length()
+              self.current = cur
+              self.nfiles = nfiles
+              if ev.event == "User" and ev.file == "ExtraLazy" then
+                harpoon.on(
+                  "changed",
+                  vim.schedule_wrap(
+                    function()
+                      vim.api.nvim_exec_autocmds("User", {
+                        pattern = "UpdateHarpoonStatus",
+                      })
+                    end
+                  )
+                )
+                return false
+              else
+                return true
+              end
             end,
           },
         })
@@ -436,17 +454,17 @@ return {
           hl = hl.C,
         })
 
+        local macros_init = false
         local Recording = Component({
+          init = function(self)
+            self.ready = macros_init
+            macros_init = true
+          end,
           provider = function(self)
             if not self.ready then return "" end
             return require("NeoComposer.ui").status_recording()
           end,
           hl = hl.C,
-          update = {
-            "User",
-            pattern = "VeryLazy",
-            callback = function(self) self.ready = true end,
-          },
         })
 
         -- Statusline item format
@@ -517,13 +535,13 @@ return {
         }
       end
       require("heirline").setup(heirline())
-      vim.api.nvim_create_autocmd("ColorScheme", {
-        group = vim.api.nvim_create_augroup(
-          "heirline_colorscheme_reset",
-          { clear = true }
-        ),
-        callback = function() require("heirline").setup(heirline()) end,
-      })
+      -- vim.api.nvim_create_autocmd("ColorScheme", {
+      --   group = vim.api.nvim_create_augroup(
+      --     "heirline_colorscheme_reset",
+      --     { clear = true }
+      --   ),
+      --   callback = function() require("heirline").setup(heirline()) end,
+      -- })
     end,
     event = "UiEnter",
   },

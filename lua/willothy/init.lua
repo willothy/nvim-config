@@ -52,6 +52,8 @@ local function initialize()
 
   -- setup hydras
   require("willothy.hydras")
+
+  vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" })
 end
 
 vim.api.nvim_create_autocmd("User", {
@@ -61,9 +63,9 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 -- setup float dragging
-require("willothy.ui").setup({
-  resize = "<S-LeftDrag>",
-})
+-- require("willothy.ui").setup({
+--   resize = "<S-LeftDrag>",
+-- })
 
 -- Hacky way of detaching UI
 -- vim.api.nvim_create_user_command("Detach", function()
