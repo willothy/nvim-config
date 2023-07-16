@@ -3,7 +3,6 @@ local au = vim.api.nvim_create_augroup("murmur_au", { clear = true })
 return {
   {
     "willothy/anyline.nvim",
-    dir = "~/projects/lua/anyline.nvim/",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     event = "VeryLazy",
     config = function()
@@ -46,7 +45,7 @@ return {
     end,
   },
   {
-    "nyngwang/murmur.lua",
+    "willothy/murmur.lua",
     event = "VeryLazy",
     config = function()
       require("murmur").setup({
@@ -58,6 +57,9 @@ return {
           "terminal",
           "Trouble",
         },
+        cursor_rgb = "Cursorword",
+        cursor_rgb_current = "CursorwordCurrent",
+        cursor_rgb_always_use_config = true,
         callbacks = {
           function()
             vim.api.nvim_exec_autocmds(
@@ -99,16 +101,23 @@ return {
         end,
       })
 
-      -- To create special cursorword coloring for the colortheme `typewriter-night`.
-      -- remember to change it to the name of yours.
-      vim.api.nvim_set_hl(
-        0,
-        "murmur_cursor_rgb",
-        vim.api.nvim_get_hl(
-          0,
-          { id = vim.api.nvim_get_hl_id_by_name("MiniCursorword") }
-        )
-      )
+      -- vim.api.nvim_set_hl(
+      --   0,
+      --   "murmur_cursor_rgb",
+      --   vim.api.nvim_get_hl(
+      --     0,
+      --     { id = vim.api.nvim_get_hl_id_by_name("Cursorword") }
+      --   )
+      -- )
+      --
+      -- vim.api.nvim_set_hl(
+      --   0,
+      --   "murmur_cursor_rgb_current",
+      --   vim.api.nvim_get_hl(
+      --     0,
+      --     { id = vim.api.nvim_get_hl_id_by_name("Visual") }
+      --   )
+      -- )
     end,
   },
 }

@@ -329,9 +329,13 @@ local function setup_ufo()
   })
   vim.schedule(function()
     local tab = vim.api.nvim_get_current_tabpage()
+    local visited = {}
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
       local bufnr = vim.api.nvim_win_get_buf(win)
-      ufo.attach(bufnr)
+      if not visited[bufnr] then
+        ufo.attach(bufnr)
+        visited[bufnr] = true
+      end
     end
   end)
 end
