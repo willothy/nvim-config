@@ -26,6 +26,7 @@
 return {
   {
     "sidebar-nvim/sidebar.nvim",
+    cmd = "SidebarNvimOpen",
     opts = {
       side = "left",
       -- open = vim.o.columns >= 150, --vim.fn.argc() ~= 0,
@@ -43,10 +44,6 @@ return {
       },
     },
   },
-  -- {
-  -- 	"willothy/luacrates",
-  -- 	build = "make",
-  -- },
   {
     "nvim-neo-tree/neo-tree.nvim",
     lazy = true,
@@ -58,7 +55,7 @@ return {
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      "nvim-tree/nvim-web-devicons",
       "MunifTanjim/nui.nvim",
     },
   },
@@ -71,16 +68,6 @@ return {
       },
       attach_mode = "global",
     },
-    init = function()
-      vim.keymap.set(
-        "n",
-        "<leader>o",
-        function() require("aerial").toggle() end,
-        {
-          desc = "Toggle aerial window",
-        }
-      )
-    end,
     lazy = true,
     cmd = "AerialToggle",
   },

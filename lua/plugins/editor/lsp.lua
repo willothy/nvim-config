@@ -29,6 +29,10 @@ return {
     end,
   },
   {
+    "willothy/hollywood.nvim",
+    dir = "~/projects/lua/hollywood.nvim",
+  },
+  {
     "aznhe21/actions-preview.nvim",
     dependencies = {
       "MunifTanjim/nui.nvim",

@@ -84,7 +84,7 @@ return {
     end,
   },
   {
-    "willothy/murmur.lua",
+    "nyngwang/murmur.lua",
     event = "VeryLazy",
     config = function()
       require("murmur").setup({

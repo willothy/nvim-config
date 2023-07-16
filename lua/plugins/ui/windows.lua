@@ -51,6 +51,11 @@ return {
       multiplexer_integration = "wezterm",
     },
   },
+  {
+    "sindrets/winshift.nvim",
+    config = true,
+    cmd = "WinShift"
+  },
   -- {
   --   "willothy/winborder.nvim",
   --   dir = "~/projects/lua/winborder.nvim/",
