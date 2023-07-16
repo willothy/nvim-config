@@ -9,6 +9,8 @@ vim.cmd.colorscheme("minimus")
 
 vim.o.shell = "bash"
 
+vim.o.shortmess = vim.o.shortmess .. "I"
+
 o.swapfile = true
 o.backup = false
 o.undofile = true

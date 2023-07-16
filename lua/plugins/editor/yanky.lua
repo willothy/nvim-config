@@ -18,7 +18,7 @@ return {
       {
         "p",
         "<Plug>(YankyPutAfter)",
-        mode = { "n", "x" },
+        mode = { "n", "x", "v" },
         desc = fmt("Put", true),
       },
       {
