@@ -23,7 +23,7 @@ return {
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },
-    event = "UiEnter",
+    event = "VeryLazy",
     config = function()
       local blame = function(args)
         local line = args.mousepos.line
@@ -35,35 +35,39 @@ return {
       local ok, winborder = pcall(require, "winborder")
       if ok then winborder = winborder.utils.statuscol end
 
-      local function segments(pad, ...) return pad and { pad, ... } or { ... } end
-
       require("statuscol").setup({
         relculright = true,
-        segments = segments(ok and {
-          text = { " " },
-          condition = { winborder },
-        } or nil, {
-          sign = {
-            name = { "GitSigns*" },
-            maxwidth = 1,
-            colwidth = 1,
+        segments = {
+          {
+            text = { " " },
+            condition = { ok and winborder or false },
           },
-          click = "v:lua.ScSa",
-        }, {
-          sign = {
-            name = { ".*" },
-            maxwidth = 1,
-            colwidth = 2,
+          {
+            sign = {
+              name = { "GitSigns*" },
+              maxwidth = 1,
+              colwidth = 1,
+            },
+            click = "v:lua.ScSa",
           },
-          click = "v:lua.ScSa",
-        }, {
-          text = { builtin.lnumfunc, " " },
-          condition = { builtin.not_empty, true },
-          click = "v:lua.ScLa",
-        }, {
-          text = { builtin.foldfunc, " " },
-          click = "v:lua.ScFa",
-        }),
+          {
+            sign = {
+              name = { ".*" },
+              maxwidth = 1,
+              colwidth = 2,
+            },
+            click = "v:lua.ScSa",
+          },
+          {
+            text = { builtin.lnumfunc, " " },
+            condition = { builtin.not_empty, true },
+            click = "v:lua.ScLa",
+          },
+          {
+            text = { builtin.foldfunc, " " },
+            click = "v:lua.ScFa",
+          },
+        },
         clickhandlers = {
           Lnum = builtin.lnum_click,
           FoldClose = builtin.foldclose_click,
@@ -77,6 +81,17 @@ return {
           GitSignsDelete = blame,
         },
       })
+
+      local curwin = vim.api.nvim_get_current_win()
+      local tab = vim.api.nvim_get_current_tabpage()
+      local wins = vim.api.nvim_tabpage_list_wins(tab)
+
+      local stc = vim.api.nvim_win_get_option(curwin, "statuscolumn")
+      for _, win in ipairs(wins) do
+        if win ~= curwin then
+          vim.api.nvim_win_set_option(win, "statuscolumn", stc)
+        end
+      end
     end,
   },
 }

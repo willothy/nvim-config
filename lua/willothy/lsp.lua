@@ -455,12 +455,6 @@ local filetypes = {
       root_dir = lspconfig.util.root_pattern("Makefile", ".git", "*.asm"),
     })
   end,
-  lua = function()
-    require("lspconfig").lua_ls.setup({
-      settings = lsp_settings["lua_ls"],
-      attach = lsp_attach,
-    })
-  end,
   markdown = function()
     require("lspconfig").marksman.setup({
       settings = {},

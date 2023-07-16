@@ -216,9 +216,6 @@ return {
       "dmitmel/cmp-cmdline-history",
       "saadparwaiz1/cmp_luasnip",
 
-      -- Copilot
-      "zbirenbaum/copilot.lua",
-
       -- Snippets
       "L3MON4D3/LuaSnip",
       "rafamadriz/friendly-snippets",
@@ -244,7 +241,16 @@ return {
   {
     "zbirenbaum/copilot.lua",
     lazy = true,
-    opts = copilot_opt,
+    event = { "InsertEnter", "CmdLineEnter" },
+    config = function()
+      vim.api.nvim_create_autocmd(
+        { "User VeryLazy", "BufReadPost", "CursorHold" },
+        {
+          once = true,
+          callback = function() require("copilot").setup(copilot_opt) end,
+        }
+      )
+    end,
   },
   {
     "kylechui/nvim-surround",

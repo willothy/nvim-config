@@ -311,16 +311,8 @@ return {
         })
 
         local Harpoon = Component({
-          init = function(self)
-            self.h = require("harpoon.mark")
-            self.current = self.h.get_current_index()
-            self.nfiles = self.h.get_length()
-            self.h.on("changed", function()
-              self.nfiles = self.h.get_length()
-              self.current = self.h.get_current_index()
-            end)
-          end,
           provider = function(self)
+            if not self.ready then return "" end
             if self.nfiles == nil or self.nfiles == 0 then
               return " " .. icons.misc.hook_disabled
             elseif self.current == nil then
@@ -338,6 +330,20 @@ return {
             require("harpoon.mark").toggle_file(buf)
             require("harpoon").save()
           end),
+          update = {
+            "User",
+            pattern = "VeryLazy",
+            callback = function(self)
+              local h = require("harpoon.mark")
+              self.current = h.get_current_index()
+              self.nfiles = h.get_length()
+              self.ready = true
+              h.on("changed", function()
+                self.nfiles = h.get_length()
+                self.current = h.get_current_index()
+              end)
+            end,
+          },
         })
 
         local Git = Component({
@@ -421,10 +427,16 @@ return {
         })
 
         local Recording = Component({
-          provider = function()
+          provider = function(self)
+            if not self.ready then return "" end
             return require("NeoComposer.ui").status_recording()
           end,
           hl = hl.C,
+          update = {
+            "User",
+            pattern = "VeryLazy",
+            callback = function(self) self.ready = true end,
+          },
         })
 
         -- Statusline item format

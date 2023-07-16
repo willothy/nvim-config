@@ -336,11 +336,21 @@ register({ "n", "x" }, {
 
 require("which-key").register({
   v = "view",
-  r = "misc",
+  r = "lsp",
   a = {
     function() require("harpoon.mark").add_file() end,
     "Add file to harpoon",
   },
+  -- f = {
+  --   name = "telescope",
+  --   f = "find files",
+  --   s = "live grep",
+  --   g = "git files",
+  --   r = "resume",
+  --   p = "projects",
+  --   u = "undotree",
+  --   ["<Enter>"] = "builtin pickers",
+  -- },
   t = {
     name = "toggle",
     u = { vim.cmd.UndotreeToggle, "Toggle undotree" },

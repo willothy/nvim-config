@@ -3,13 +3,28 @@ local icons = require("willothy.icons")
 return {
   {
     "folke/neodev.nvim",
-    lazy = true,
     ft = "lua",
     config = function()
-      local l = require("willothy.lsp")
-      require("lspconfig").lua_ls.setup({
-        settings = l.lsp_settings["lua_ls"],
-        attach = l.lsp_attach,
+      vim.api.nvim_create_autocmd("User VeryLazy", {
+        once = true,
+        callback = function()
+          require("neodev").setup({
+            library = {
+              enabled = true,
+              plugins = true,
+              runtime = true,
+              types = true,
+            },
+            lspconfig = false,
+            pathStrict = true,
+          })
+          local lsp = require("willothy.lsp")
+          require("lspconfig").lua_ls.setup({
+            settings = lsp.lsp_settings["lua_ls"],
+            attach = lsp.lsp_attach,
+            before_init = require("neodev.lsp").before_init,
+          })
+        end,
       })
     end,
   },
@@ -18,7 +33,6 @@ return {
     dependencies = {
       "MunifTanjim/nui.nvim",
     },
-    lazy = true,
     opts = {
       backend = { "nui", "telescope" },
       nui = {
