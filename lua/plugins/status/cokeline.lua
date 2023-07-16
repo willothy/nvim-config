@@ -315,18 +315,29 @@ local function cokeline()
   }
 
   local harpoon = require("harpoon.mark")
+  local cache = {}
+
   local function marknum(buf)
-    local n = tonumber(string.match(harpoon.status(buf.number), "%d+"))
-    return n
+    local b = cache[buf.number]
+    if not b then
+      b = harpoon.get_index_of(buf.filename)
+      cache[buf.number] = b
+    end
+    return b
   end
+  harpoon.on("changed", function()
+    for _, buf in ipairs(require("cokeline.buffers").get_visible()) do
+      marknum(buf)
+    end
+  end)
   return {
     show_if_buffers_are_at_least = 1,
     buffers = {
       focus_on_delete = "next",
       -- new_buffers_position = "next",
       new_buffers_position = function(a, b)
-        local ma = marknum(a) --b._valid_index
-        local mb = marknum(b) --a._valid_index
+        local ma = marknum(a)
+        local mb = marknum(b)
         if ma and not mb then
           return true
         elseif mb and not ma then
