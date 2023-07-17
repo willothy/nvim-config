@@ -62,6 +62,12 @@ vim.api.nvim_create_autocmd("User", {
   callback = initialize,
 })
 
+vim.api.nvim_create_autocmd("User", {
+  pattern = "ExtraLazy",
+  once = true,
+  callback = function() require("willothy.async") end,
+})
+
 -- setup float dragging
 -- require("willothy.ui").setup({
 --   resize = "<S-LeftDrag>",

@@ -1,12 +1,12 @@
 ---
-base: lua51
+base: lua51+luajit
 
 globals:
   vim:
     any: true
-  table.iter:
-    args:
-      - type: table
+  executor:
+    any: true
+
   assert:
     args:
       - type: bool
