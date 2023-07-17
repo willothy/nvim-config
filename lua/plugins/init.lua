@@ -16,6 +16,6 @@ return {
   {
     "ecthelionvi/NeoComposer.nvim",
     config = true,
-    event = "VeryLazy",
+    event = "User ExtraLazy",
   },
 }

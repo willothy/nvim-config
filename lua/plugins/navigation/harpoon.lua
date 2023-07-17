@@ -2,7 +2,7 @@ return {
   {
     "ThePrimeagen/harpoon",
     config = true,
-    event = "VeryLazy",
+    event = "User ExtraLazy",
   },
   {
     "cbochs/portal.nvim",

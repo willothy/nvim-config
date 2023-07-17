@@ -8,9 +8,7 @@ end
 
 return {
   {
-    -- terminal
     "akinsho/toggleterm.nvim",
-    lazy = true,
     config = function()
       require("toggleterm").setup({
         start_in_insert = true,
@@ -31,5 +29,10 @@ return {
     "NvChad/nvterm",
     config = true,
     enabled = false,
+  },
+  {
+    "willothy/wezterm.nvim",
+    dir = "~/projects/lua/wezterm.nvim/",
+    config = true,
   },
 }

@@ -1,7 +1,7 @@
 return {
   {
     "smjonas/live-command.nvim",
-    event = "VeryLazy",
+    cmd = { "Norm", "Reg" },
     config = function()
       require("live-command").setup({
         commands = {

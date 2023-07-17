@@ -64,11 +64,11 @@ return {
     dependencies = {
       "ahmedkhalf/project.nvim",
     },
-    event = "VeryLazy",
+    event = "User ExtraLazy", --"UiEnter",
   },
   {
     "ahmedkhalf/project.nvim",
-    event = "VeryLazy",
+    event = "User ExtraLazy",
     config = function()
       require("project_nvim").setup({
         patterns = {
@@ -82,10 +82,11 @@ return {
   {
     "tiagovla/scope.nvim",
     config = true,
-    event = "VeryLazy",
+    event = "User ExtraLazy",
   },
   {
     "pynappo/tabnames.nvim",
+    event = "User ExtraLazy",
     config = function()
       local tabnames = require("tabnames")
       tabnames.setup({

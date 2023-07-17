@@ -1,9 +1,10 @@
 local function telescope(picker)
-  local menufacture = require("telescope").extensions.menufacture[picker]
-  if menufacture then
-    return menufacture
-  else
-    return require("telescope.builtin")[picker]
+  return function(...)
+    if require("telescope").extensions.menufacture[picker] then
+      require("telescope").extensions.menufacture[picker](...)
+    else
+      require("telescope.builtin")[picker](...)
+    end
   end
 end
 

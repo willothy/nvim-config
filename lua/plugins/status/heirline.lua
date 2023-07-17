@@ -310,21 +310,28 @@ return {
         })
 
         local Devicon = Component({
-          init = function(self)
-            local filename = vim.fn.expand("%")
-            local extension = vim.fn.fnamemodify(filename, ":e")
-            local devicons = require("nvim-web-devicons")
-            self.icon, self.icon_color =
-              devicons.get_icon_color(filename, extension)
-            if not self.icon then
-              self.icon, self.icon_color = devicons.get_icon_color_by_filetype(
-                vim.bo.filetype,
-                { default = true }
-              )
-            end
-          end,
           provider = function(self) return self.icon and self.icon or "" end,
           hl = function(self) return { fg = self.icon_color } end,
+          update = {
+            "User",
+            pattern = { "ExtraLazy" },
+            callback = function(self)
+              vim.schedule(function()
+                local filename = vim.fn.expand("%")
+                local extension = vim.fn.fnamemodify(filename, ":e")
+                local devicons = require("nvim-web-devicons")
+                self.icon, self.icon_color =
+                  devicons.get_icon_color(filename, extension)
+                if not self.icon then
+                  self.icon, self.icon_color =
+                    devicons.get_icon_color_by_filetype(
+                      vim.bo.filetype,
+                      { default = true }
+                    )
+                end
+              end)
+            end,
+          },
         })
 
         local Harpoon = Component({
@@ -348,25 +355,40 @@ return {
           end),
           update = {
             "User",
-            pattern = { "ExtraLazy", "UpdateHarpoonStatus" },
+            pattern = { "ExtraLazy", "UpdateHarpoonStatus", "BufEnter" },
             callback = function(self, ev)
+              local win = ev.win
+              local cur
               local harpoon = require("harpoon.mark")
-              local cur = harpoon.get_current_index()
+              if win then
+                local buf = vim.api.nvim_win_get_buf(win)
+                local name = vim.api.nvim_buf_get_name(buf)
+                -- cur = harpoon.get_index_of(name)
+                vim.api.nvim_buf_call(
+                  buf,
+                  function() cur = harpoon.get_current_index() end
+                )
+              else
+                cur = harpoon.get_current_index()
+              end
               local nfiles = harpoon.get_length()
               self.current = cur
               self.nfiles = nfiles
               if ev.event == "User" and ev.file == "ExtraLazy" then
                 harpoon.on(
                   "changed",
-                  vim.schedule_wrap(
-                    function()
-                      vim.api.nvim_exec_autocmds("User", {
-                        pattern = "UpdateHarpoonStatus",
-                      })
-                    end
-                  )
+                  vim.schedule_wrap(function()
+                    -- vim.api.nvim_exec_autocmds("User", {
+                    --   pattern = "UpdateHarpoonStatus",
+                    --   data = {
+                    --     win = vim.api.nvim_get_current_win(),
+                    --   },
+                    -- })
+                    self.current = harpoon.get_current_index()
+                    self.nfiles = harpoon.get_length()
+                  end)
                 )
-                return false
+                -- return true
               else
                 return true
               end

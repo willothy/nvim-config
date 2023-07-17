@@ -4,7 +4,7 @@ local bar = icons.git.signs.bar
 return {
   {
     "lewis6991/gitsigns.nvim",
-    event = "VeryLazy",
+    event = "User ExtraLazy",
     opts = {
       signs = {
         untracked = { text = bar },
@@ -23,7 +23,7 @@ return {
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },
-    event = "VeryLazy",
+    event = "User ExtraLazy",
     config = function()
       local blame = function(args)
         local line = args.mousepos.line

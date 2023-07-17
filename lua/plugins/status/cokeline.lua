@@ -454,6 +454,6 @@ return {
     "willothy/nvim-cokeline",
     config = function() require("cokeline").setup(cokeline()) end,
     lazy = true,
-    event = "VeryLazy",
+    event = "User ExtraLazy",
   },
 }

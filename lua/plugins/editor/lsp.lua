@@ -117,8 +117,7 @@ return {
   },
   {
     "williamboman/mason.nvim",
-    lazy = true,
-    event = "VeryLazy",
+    event = "User ExtraLazy",
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
       "jay-babu/mason-null-ls.nvim",
@@ -127,7 +126,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     lazy = true,
-    event = "VeryLazy",
+    event = "User ExtraLazy",
     config = function()
       local l = require("willothy.lsp")
       l.lsp_setup()

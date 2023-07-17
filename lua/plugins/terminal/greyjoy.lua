@@ -4,6 +4,7 @@ return {
     dependencies = {
       "stevearc/overseer.nvim",
     },
+    cmd = "Greyjoy",
     config = function()
       local greyjoy = require("greyjoy")
       greyjoy.setup({

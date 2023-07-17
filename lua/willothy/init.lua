@@ -53,13 +53,19 @@ local function initialize()
   -- setup hydras
   require("willothy.hydras")
 
-  vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" })
+  vim.defer_fn(
+    function() vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" }) end,
+    100
+  )
 end
 
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
   once = true,
-  callback = initialize,
+  callback = vim.schedule_wrap(function()
+    -- require("lazy").load("willothy")
+    initialize()
+  end),
 })
 
 vim.api.nvim_create_autocmd("User", {
