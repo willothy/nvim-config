@@ -7,19 +7,4 @@ return {
   { import = "plugins.status" },
   { import = "plugins.terminal" },
   { import = "plugins.util" },
-
-  -- no-config plugins
-  { "mbbill/undotree", event = "VeryLazy" },
-  "famiu/bufdelete.nvim",
-  "kkharji/sqlite.lua",
-  "AckslD/nvim-neoclip.lua",
-  {
-    "ecthelionvi/NeoComposer.nvim",
-    event = "User ExtraLazy",
-    opts = {
-      colors = {
-        bg = "#26283f",
-      },
-    },
-  },
 }

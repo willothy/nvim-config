@@ -71,6 +71,7 @@ return {
   },
   {
     "j-hui/fidget.nvim",
+    enabled=false,
     branch = "legacy",
     opts = {
       text = {

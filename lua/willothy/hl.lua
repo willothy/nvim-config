@@ -74,33 +74,14 @@ end
 
 ---@param group string | integer
 function M.hl(group)
-  return M.hl_by_id(
-    0,
-    type(group) == "number" and { id = group } or { name = group }
+  return M.sanitize(
+    M.hl_by_id(
+      0,
+      type(group) == "number" and { id = group } or { name = group }
+    )
   )
 end
 
-function M.fetch(group) return M.sanitize(M.hl(group)) end
-
 function M.fetch_attr(group, attr) return M.sanitize(M.hl(group))[attr] end
-
--- local test_hl = {
---   bold = true,
---   italic = true,
---   underline = true,
---   undercurl = true,
---   strikethrough = true,
---   fg = 0xff0000,
---   bg = "0xf0faff",
--- }
---
--- print(M.sanitize(test_hl))
---
--- local test_hl_gui = {
---   gui = "bold,italic,underline,undercurl,strikethrough",
---   fg = 0xff0000,
---   bg = 0x00ffff,
--- }
--- print(M.sanitize(test_hl_gui))
 
 return M

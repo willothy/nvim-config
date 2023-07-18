@@ -68,6 +68,9 @@ return {
             click = "v:lua.ScFa",
           },
         },
+        bt_ignore = {
+          "nofile",
+        },
         clickhandlers = {
           Lnum = builtin.lnum_click,
           FoldClose = builtin.foldclose_click,

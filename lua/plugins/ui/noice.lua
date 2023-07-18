@@ -71,7 +71,8 @@ return {
             ["cmp.entry.get_documentation"] = true,
           },
           progress = {
-            enabled = false,
+            enabled = true,
+            view = "mini",
           },
           signature = {
             enabled = true,
@@ -108,6 +109,12 @@ return {
           enabled = true,
           backend = "nui",
         },
+        format = {
+          notify = {
+            pattern = { "auto-save%w*" },
+            kind = "test",
+          },
+        },
         messages = {
           enabled = true, -- enables the Noice messages UI
           view = "notify", -- default view for messages
@@ -116,11 +123,51 @@ return {
           view_history = "messages", -- view for :messages
           view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
         },
-        redirect = {
-          view = "popup",
-          filter = { event = "msg_show" },
+        routes = {
+          {
+            filter = {
+              any = {
+                { find = "%dL" },
+              },
+            },
+            opts = { stop = false, skip = true },
+            view = "notify",
+          },
+          {
+            filter = { find = "%dL" },
+            view = "mini",
+            opts = { stop = true },
+          },
         },
       })
+
+      vim.notify_mini = function(msg, opts)
+        local title = opts.title
+        local level = opts.level or vim.log.levels.INFO
+        require("noice.message.router").redirect(
+          function()
+            vim.notify(msg, level, {
+              title = title,
+            })
+          end,
+          {
+            { filter = {}, view = "mini" },
+          }
+        )
+      end
+
+      vim.redirect = function(view, msg, title)
+        require("noice.message.router").redirect(
+          function()
+            vim.notify(msg, vim.log.levels.INFO, {
+              title = title or "Notify",
+            })
+          end,
+          {
+            { filter = {}, view = view },
+          }
+        )
+      end
     end,
   },
   {
@@ -135,10 +182,9 @@ return {
       local function anim(direction)
         return {
           function(state)
-            local next_height = state.message.height + 2
             local next_row = stages_util.available_slot(
               state.open_windows,
-              next_height,
+              state.message.height,
               direction
             )
             if not next_row then return nil end
@@ -209,9 +255,9 @@ return {
       notify.setup({
         fps = 60,
         render = "compact",
-        stages = anim(Dir.BOTTOM_UP),
         timeout = 3000,
-        top_down = false,
+        stages = anim(Dir.TOP_DOWN),
+        -- top_down = false,
         background_color = "none",
       })
     end,

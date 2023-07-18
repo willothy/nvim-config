@@ -85,6 +85,7 @@ return {
   },
   {
     "nyngwang/murmur.lua",
+    dir = "~/projects/lua/murmur.lua/",
     event = "VeryLazy",
     config = function()
       require("murmur").setup({

@@ -30,7 +30,6 @@ require("lazy").setup({
     cache = { enabled = true },
     reset_packpath = true,
     rtp = {
-
       disabled_plugins = {
         "gzip",
         "matchit",
@@ -84,13 +83,15 @@ vim.api.nvim_create_autocmd("User", {
     require("willothy.auto-save").setup({
       callbacks = {
         on_save_done = function(bufnr)
-          require("noice").redirect(function() end, {
-            {
-              filter = {},
-              view = "mini",
-              opts = { hl = "DiagnosticSignError" },
-            },
-          })
+          require("noice").redirect(function()
+            local name = vim.api.nvim_buf_get_name(bufnr)
+            local dir = vim.fn.getcwd() .. "/"
+            if vim.startswith(name, dir) then name = name:gsub(dir, "") end
+
+            vim.notify(
+              string.format("%s auto-saved %s", "✔", name, { level = "bruh" })
+            )
+          end, { { filter = {}, view = "mini" } })
         end,
       },
       disable_format = true,

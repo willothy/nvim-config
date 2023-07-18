@@ -6,6 +6,10 @@ globals:
     any: true
   executor:
     any: true
+  coroutine:
+    any: true
+  coroutine.isyieldable:
+    any: true
 
   assert:
     args:

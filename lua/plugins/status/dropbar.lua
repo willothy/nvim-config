@@ -14,14 +14,25 @@ local function config()
           return false
         end
         if vim.wo[win].diff then return false end
-        if not vim.bo[buf].buflisted then return false end
-        return vim.bo[buf].buftype == ""
+        return vim.bo[buf].buflisted
+          and vim.bo[buf].buftype == ""
           and vim.api.nvim_buf_get_name(buf) ~= ""
           and vim.bo[buf].filetype ~= "Trouble"
           and vim.bo[buf].filetype ~= "terminal"
           and vim.bo[buf].filetype ~= "qf"
           and vim.bo[buf].filetype ~= "noice"
+          and not vim.wo[win].diff
       end,
+      update_events = {
+        win = {
+          "CursorMoved",
+          "CursorMovedI",
+          "WinEnter",
+          "WinLeave",
+          "WinResized",
+        },
+      },
+      update_interval = 100,
     },
     icons = {
       kinds = {
@@ -110,7 +121,7 @@ end
 
 return {
   {
-    "Bekaboo/dropbar.nvim",
+    "willothy/dropbar.nvim",
     config = config,
     event = "VeryLazy",
   },

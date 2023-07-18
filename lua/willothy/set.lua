@@ -9,7 +9,7 @@ vim.cmd.colorscheme("minimus")
 
 vim.o.shell = "bash"
 
-vim.o.shortmess = vim.o.shortmess .. "I"
+vim.o.shortmess = "WfilnxoOCFI"
 
 o.swapfile = true
 o.backup = false

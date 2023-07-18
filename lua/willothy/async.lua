@@ -11,8 +11,10 @@ function Task:poll()
   if self.job then
     local status = coroutine.status(self.job)
 
-    if coroutine.status(self.job) == "suspended" then
-      local ok, result = coroutine.resume(self.job)
+    if status == "suspended" then
+      local ok, result = (function(e, ...) return e, { ... } end)(
+        coroutine.resume(self.job)
+      )
       self.age = self.age + 1
 
       if not ok then
@@ -24,28 +26,34 @@ function Task:poll()
         self.ok = true
         self.result = result
       end
-    elseif coroutine.status(self.job) == "dead" then
+    elseif status == "dead" then
       self.done = true
       self.ok = true
+      if self.on_result then
+        self.on_result(self.ok == false, unpack(self.result))
+      end
     end
   end
 end
 
 ---@param func fun(...: any)
+---@param id integer
 ---@return Task
-function Task:new(func)
+function Task:new(func, cb, id)
   local o = {
     done = false,
     ok = true,
     result = nil,
     age = 0,
     func = func,
+    on_result = cb,
+    id = id,
   }
   local env = setmetatable({
     error = function(e)
       o.ok = false
       o.done = true
-      o.result = e
+      o.result = { e }
     end,
     require = function(mod)
       mod = require(mod)
@@ -87,6 +95,7 @@ end
 ---@class Executor
 ---@field queue Task[]       # The task queue
 ---@field cache table<integer, Task> # task lookup by id
+---@field results table<integer, any> # task results by id
 ---@field active Task        # The currently running task
 ---@field thread uv_thread_t # Background thread
 ---@field ticks integer      # Number of ticks since init
@@ -96,22 +105,29 @@ Executor.__index = Executor
 
 ---@return Executor
 function Executor:new()
-  local o = { queue = {}, ticks = 0, tasks = 0, active = nil }
+  local o = {
+    queue = {},
+    cache = {},
+    results = {},
+    ticks = 0,
+    tasks = 0,
+    active = nil,
+  }
   setmetatable(o, Executor)
   return o
 end
 
 ---@return integer
 function Executor:free_id()
-  local id = (math.random(1, #queue) % #queue) + 1
-  while self.cache[id] do
+  local id = 1
+  while self.cache[id] ~= nil do
     id = id + 1
   end
   return id
 end
 
 ---@param task Task | thread | fun() | string
----@param opts { args: string[]? } Spawn configuration
+---@param opts { args: string[]?, callback: fun()? } Spawn configuration
 ---@return Task
 function Executor:spawn(task, opts)
   local id = self:free_id()
@@ -124,48 +140,43 @@ function Executor:spawn(task, opts)
       local stdin = vim.loop.new_pipe()
       local stdout = vim.loop.new_pipe()
       local stderr = vim.loop.new_pipe()
-      local opts = {
+      opts = {
         args = opts.args or {},
         stdio = { stdin, stdout, stderr },
       }
 
       local done = false
-      local handle, pid = vim.loop.spawn(cmd, opts, function(code, signal)
-        done = true
-        self.cache[id] = nil
-      end)
+      local handle = vim.loop.spawn(cmd, opts, function() done = true end)
 
       local out, err = "", ""
 
-      vim.loop.read_start(stdout, function(e, data)
+      vim.loop.read_start(stdout, function(_, data)
         if data then out = out .. data end
       end)
-      vim.loop.read_start(stderr, function(e, data)
+      vim.loop.read_start(stderr, function(_, data)
         if data then err = err .. data end
       end)
 
       while not done do
         coroutine.yield()
       end
-      vim.print("done, " .. out)
       vim.loop.close(handle)
       return out, err
-    end)
+    end, opts.callback or function() end, id)
   end
   if task then
     table.insert(self.queue, task)
+    self.cache[task.id] = task
     if self.active == nil then self.active = self.queue[#self.queue] end
     self.tasks = self.tasks + 1
   end
-  local function class()
-  end
 
-  return function()
-    while not self.cache[id].done do
+  return coroutine.wrap(function()
+    while not self.cache[id] or not self.cache[id].done do
       coroutine.yield()
     end
-    return task.result
-  end
+    return unpack(self.cache[id].result)
+  end)
 end
 
 ---@return Task | nil       # The task that was just completed, if any
@@ -186,6 +197,8 @@ function Executor:tick()
   end
   if prev ~= nil and prev.done == true then
     self.tasks = self.tasks - 1
+    self.results[prev.id] = prev.result
+    self.cache[prev.id] = nil
     return prev
   end
 end
@@ -193,21 +206,6 @@ end
 function Executor:cycle()
   for _ = 1, self.tasks do
     self:tick()
-  end
-end
-
-function Executor:all()
-  local limit = 10000
-  local current = 0
-  while self.tasks > 0 do
-    current = current + 1
-    local env = getfenv(self.active.func)
-    vim.print(env.error)
-    env.error("test")
-    if current > limit then
-      env.error("Executor:all() hit limit of " .. limit .. " cycles")
-    end
-    self:cycle()
   end
 end
 
