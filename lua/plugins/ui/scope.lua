@@ -1,5 +1,3 @@
-local au = vim.api.nvim_create_augroup("murmur_au", { clear = true })
-
 local anyline = false
 
 return {
@@ -24,7 +22,6 @@ return {
         },
       })
       local disabled = {
-        "",
         "harpoon",
         "help",
         "terminal",
@@ -58,6 +55,7 @@ return {
           "terminal",
         },
       })
+      local au = vim.api.nvim_create_augroup("anyline_au", { clear = true })
 
       vim.api.nvim_create_autocmd({ "BufEnter", "LspAttach", "CursorHold" }, {
         group = au,
@@ -84,8 +82,10 @@ return {
     end,
   },
   {
-    "nyngwang/murmur.lua",
+    "willothy/murmur.lua",
     dir = "~/projects/lua/murmur.lua/",
+    -- enabled = false,
+    -- branch = "hl-sanitize",
     event = "VeryLazy",
     config = function()
       require("murmur").setup({
@@ -110,6 +110,9 @@ return {
           end,
         },
       })
+
+      local au = vim.api.nvim_create_augroup("murmur_au", { clear = true })
+
       -- To create IDE-like no blinking diagnostic message with `cursor` scope. (should be paired with the callback above)
       vim.api.nvim_create_autocmd("CursorHold", {
         group = au,
@@ -125,6 +128,7 @@ return {
               close_events = {
                 "InsertEnter",
                 "User MurmurDiagnostics",
+                "BufLeave",
               },
             })
 

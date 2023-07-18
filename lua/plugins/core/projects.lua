@@ -4,7 +4,6 @@ return {
     config = function()
       local curtab = vim.api.nvim_get_current_tabpage
       local tabnr = vim.api.nvim_tabpage_get_number
-      local bufname = vim.api.nvim_buf_get_name
       local cwd = vim.fn.getcwd
       local resession = require("resession")
 
@@ -17,6 +16,8 @@ return {
         tab_buf_filter = function(tabpage, bufnr)
           if vim.bo[bufnr].buftype ~= "" then return false end
           local bufhidden = vim.bo[bufnr].bufhidden
+          local name = vim.api.nvim_buf_get_name(bufnr)
+          tabpage = vim.api.nvim_tabpage_get_number(tabpage)
           if
             bufhidden == "wipe"
             or bufhidden == "unload"
@@ -26,7 +27,8 @@ return {
           then
             return false
           end
-          return vim.startswith(bufname(bufnr), cwd(-1, tabnr(tabpage)))
+
+          return vim.startswith(name, cwd(-1, tabpage))
         end,
         buf_filter = function(bufnr)
           local filetype = vim.bo[bufnr].filetype
@@ -84,18 +86,18 @@ return {
     config = true,
     event = "User ExtraLazy",
   },
-  {
-    "pynappo/tabnames.nvim",
-    event = "User ExtraLazy",
-    config = function()
-      local tabnames = require("tabnames")
-      tabnames.setup({
-        auto_suggest_names = true,
-        default_tab_name = tabnames.tab_name_presets.short_tab_cwd,
-        experimental = {
-          session_support = false,
-        },
-      })
-    end,
-  },
+  -- {
+  --   "pynappo/tabnames.nvim",
+  --   event = "User ExtraLazy",
+  --   config = function()
+  --     local tabnames = require("tabnames")
+  --     tabnames.setup({
+  --       auto_suggest_names = true,
+  --       default_tab_name = tabnames.tab_name_presets.short_tab_cwd,
+  --       experimental = {
+  --         session_support = false,
+  --       },
+  --     })
+  --   end,
+  -- },
 }

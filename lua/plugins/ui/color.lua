@@ -2,7 +2,7 @@ return {
   -- Color themes
   {
     "willothy/minimus",
-    dir = "~/projects/lua/minimus/",
+    -- dir = "~/projects/lua/minimus/",
     dependencies = {
       "rktjmp/lush.nvim",
     },

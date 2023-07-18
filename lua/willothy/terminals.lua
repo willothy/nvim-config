@@ -14,6 +14,7 @@ M.float = Terminal:new({
     border = "rounded",
   },
   close_on_exit = true,
+  start_in_insert = false,
   on_open = function(term)
     local w = vim.wo[term.window]
     local b = vim.bo[term.bufnr]
@@ -31,6 +32,7 @@ M.main = Terminal:new({
   hidden = false,
   close_on_exit = true,
   direction = "horizontal",
+  start_in_insert = false,
   on_open = function(term)
     local w = vim.wo[term.window]
     local b = vim.bo[term.bufnr]

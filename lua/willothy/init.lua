@@ -81,20 +81,7 @@ vim.api.nvim_create_autocmd("User", {
     require("willothy.commands")
 
     -- setup auto-save
-    require("willothy.auto-save").setup({
-      callbacks = {
-        on_save_done = function(bufnr)
-          require("noice").redirect(function() end, {
-            {
-              filter = {},
-              view = "mini",
-              opts = { hl = "DiagnosticSignError" },
-            },
-          })
-        end,
-      },
-      disable_format = true,
-    })
+    require("willothy.auto-save").setup({})
   end,
 })
 

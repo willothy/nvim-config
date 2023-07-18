@@ -1,16 +1,13 @@
 ---@field timers uv.uv_timer_t[]
----@field condition (fun(bufnr: buffer, winnr: window): boolean)[]
 local M = {}
 
 M.timers = {}
 
 function M.save(bufnr)
   M.progress_start("saving")
-  if
-    vim.api.nvim_buf_is_valid(bufnr) == false or not vim.bo[bufnr].modified
-  then
+  if M.should_save(bufnr) == false then
     M.cancel(bufnr)
-    M.progress_stop("cancelled")
+    M.progress_stop()
     return
   end
 
@@ -42,27 +39,26 @@ function M.progress_stop(message)
   })
 end
 
-function M.immediate()
-  local bufnr = vim.api.nvim_get_current_buf()
+function M.should_save(bufnr)
+  for _, cond in ipairs(M.config.conditions) do
+    if cond(bufnr) == false then return false end
+  end
+  return vim.api.nvim_buf_get_option(bufnr, "modified") == true
+end
+
+function M.immediate(bufnr)
+  M.cancel(bufnr)
   if M.should_save(bufnr) then
+    M.progress_start("saving")
     M.callback("on_immediate", bufnr)
     M.save(bufnr)
     M.callback("on_immediate_done", bufnr)
   end
 end
 
-function M.should_save(bufnr)
-  if M.config.condition then
-    for _, cond in ipairs(M.config.condition) do
-      if not cond(bufnr) then return false end
-    end
-  end
-  return true
-end
-
 function M.deferred(bufnr)
   M.cancel(bufnr)
-  if M.should_save(bufnr) then
+  if M.should_save(bufnr) == true then
     local timer = vim.defer_fn(function()
       M.save(bufnr)
       M.callback("on_deferred_done", bufnr)
@@ -118,19 +114,23 @@ function M.setup(opts)
     callbacks = {},
     conditions = {
       function(bufnr)
-        return vim.api.nvim_buf_is_loaded(bufnr)
+        return vim.api.nvim_buf_is_valid(bufnr)
           and vim.bo[bufnr].buftype == ""
           and vim.bo[bufnr].buflisted == true
-          and vim.bo[bufnr].modifiable == true
-          and vim.bo[bufnr].readonly == false
+        -- and vim.bo[bufnr].modifiable == true
+        -- and vim.bo[bufnr].readonly == false
       end,
-      function(bufnr)
-        local ft = vim.bo[bufnr].filetype
-        return ft ~= "gitcommit"
-          and ft ~= "gitrebase"
-          and ft ~= "qf"
-          and ft ~= "help"
-      end,
+      -- function(bufnr)
+      --   local ft = vim.bo[bufnr].filetype
+      --   local ignore = {
+      --     help = true,
+      --     qf = true,
+      --     gitcommit = true,
+      --     gitrebase = true,
+      --   }
+      --   return ignore[ft] == nil
+      -- end,
+      function(bufnr) return vim.api.nvim_buf_get_name(bufnr) ~= "" end,
       function(bufnr)
         return vim.diagnostic.get(bufnr, { severity = 1 })[1] == nil
       end,

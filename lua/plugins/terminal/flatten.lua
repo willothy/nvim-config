@@ -11,13 +11,45 @@ end
 
 return {
   {
-    "willothy/flatten.nvim",
+    -- "willothy/flatten.nvim",
+    "IndianBoy42/flatten.nvim",
+    branch = "misc",
     cond = true,
     lazy = false,
+    priority = 1000,
     opts = {
       window = {
         open = "alternate",
+        -- open = function(files, argv, stdin_buf_id)
+        --
+        -- end,
       },
+      pipe_path = function()
+        -- If running in a terminal inside Neovim:
+        if vim.env.NVIM then return vim.env.NVIM end
+        -- If running in a Kitty terminal,
+        -- all tabs/windows/os-windows in the same instance of kitty will open in the first neovim instance
+        if vim.env.WEZTERM_UNIX_SOCKET then
+          -- local list = vim.json.decode(
+          --   vim.system({ "wezterm", "cli", "list", "--format", "json" }):wait()
+          -- )
+          -- local cur_tab
+          -- for _, pane in ipairs(list) do
+          --   if pane.pane_id == tonumber(vim.env.WEZTERM_PANE) then
+          --     cur_tab = pane.tab_id
+          --   end
+          -- end
+          local addr = ("%s/%s"):format(
+            vim.fn.stdpath("run"),
+            "wezterm.nvim-"
+              .. vim.env.WEZTERM_UNIX_SOCKET:match("gui%-sock%-(%d+)")
+            -- cur_tab
+          )
+          -- if not vim.loop.fs_stat(addr) then pcall(vim.fn.serverstart, addr) end
+          pcall(vim.fn.serverstart, addr)
+          return addr
+        end
+      end,
       callbacks = {
         should_block = function(argv) return vim.tbl_contains(argv, "-b") end,
         post_open = function(bufnr, winnr, ft, is_blocking)
