@@ -15,7 +15,11 @@ return {
   "AckslD/nvim-neoclip.lua",
   {
     "ecthelionvi/NeoComposer.nvim",
-    config = true,
     event = "User ExtraLazy",
+    opts = {
+      colors = {
+        bg = "#26283f",
+      },
+    },
   },
 }

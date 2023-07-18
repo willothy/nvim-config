@@ -312,24 +312,31 @@ return {
         local Devicon = Component({
           provider = function(self) return self.icon and self.icon or "" end,
           hl = function(self) return { fg = self.icon_color } end,
+          static = {
+            fetch = vim.schedule_wrap(function(self)
+              local filename = vim.fn.expand("%")
+              local extension = vim.fn.fnamemodify(filename, ":e")
+              local devicons = require("nvim-web-devicons")
+              self.icon, self.icon_color =
+                devicons.get_icon_color(filename, extension)
+              if not self.icon then
+                self.icon, self.icon_color =
+                  devicons.get_icon_color_by_filetype(
+                    vim.bo.filetype,
+                    { default = true }
+                  )
+              end
+            end),
+          },
           update = {
             "User",
             pattern = { "ExtraLazy" },
             callback = function(self)
-              vim.schedule(function()
-                local filename = vim.fn.expand("%")
-                local extension = vim.fn.fnamemodify(filename, ":e")
-                local devicons = require("nvim-web-devicons")
-                self.icon, self.icon_color =
-                  devicons.get_icon_color(filename, extension)
-                if not self.icon then
-                  self.icon, self.icon_color =
-                    devicons.get_icon_color_by_filetype(
-                      vim.bo.filetype,
-                      { default = true }
-                    )
-                end
-              end)
+              vim.api.nvim_create_autocmd("BufEnter", {
+                callback = function() self:fetch() end,
+              })
+
+              self:fetch()
             end,
           },
         })
@@ -355,40 +362,30 @@ return {
           end),
           update = {
             "User",
-            pattern = { "ExtraLazy", "UpdateHarpoonStatus", "BufEnter" },
+            pattern = { "ExtraLazy", "UpdateHarpoonStatus" },
             callback = function(self, ev)
-              local win = ev.win
-              local cur
               local harpoon = require("harpoon.mark")
-              if win then
-                local buf = vim.api.nvim_win_get_buf(win)
-                local name = vim.api.nvim_buf_get_name(buf)
-                -- cur = harpoon.get_index_of(name)
-                vim.api.nvim_buf_call(
-                  buf,
-                  function() cur = harpoon.get_current_index() end
-                )
-              else
-                cur = harpoon.get_current_index()
-              end
-              local nfiles = harpoon.get_length()
-              self.current = cur
-              self.nfiles = nfiles
+              self.current = harpoon.get_current_index()
+              self.nfiles = harpoon.get_length()
+              vim.cmd.redrawstatus()
               if ev.event == "User" and ev.file == "ExtraLazy" then
+                vim.api.nvim_create_autocmd("BufEnter", {
+                  callback = function()
+                    if self.nfiles == nil then return end
+                    vim.api.nvim_exec_autocmds(
+                      "User",
+                      { pattern = "UpdateHarpoonStatus" }
+                    )
+                  end,
+                })
                 harpoon.on(
                   "changed",
-                  vim.schedule_wrap(function()
-                    -- vim.api.nvim_exec_autocmds("User", {
-                    --   pattern = "UpdateHarpoonStatus",
-                    --   data = {
-                    --     win = vim.api.nvim_get_current_win(),
-                    --   },
-                    -- })
-                    self.current = harpoon.get_current_index()
-                    self.nfiles = harpoon.get_length()
-                  end)
+                  function()
+                    vim.api.nvim_exec_autocmds("User", {
+                      pattern = "UpdateHarpoonStatus",
+                    })
+                  end
                 )
-                -- return true
               else
                 return true
               end
@@ -396,8 +393,37 @@ return {
           },
         })
 
+        local Recording = Component({
+          provider = function(self)
+            if not self.ready then return "" end
+            return require("NeoComposer.ui").status_recording()
+          end,
+          hl = hl.C,
+          update = {
+            "User",
+            pattern = { "ExtraLazy", "UpdateNeoComposerUI" },
+            callback = function(self, ev)
+              if ev.file == "ExtraLazy" then
+                self.ready = true
+                local state = require("NeoComposer.macro")
+                for k, v in pairs(state) do
+                  if type(v) == "function" then
+                    local prev = state[k]
+                    state[k] = function(...)
+                      prev(...)
+                      vim.api.nvim_exec_autocmds(
+                        "User",
+                        { pattern = "UpdateNeoComposerUI" }
+                      )
+                    end
+                  end
+                end
+              end
+            end,
+          },
+        })
+
         local Git = Component({
-          static = {},
           condition = conditions.is_git_repo,
           init = function(self)
             self.status_dict = vim.b.gitsigns_status_dict
@@ -472,19 +498,6 @@ return {
             local filename = vim.fn.expand("%:t")
             filename = filename == "" and "[No Name]" or filename
             return filename
-          end,
-          hl = hl.C,
-        })
-
-        local macros_init = false
-        local Recording = Component({
-          init = function(self)
-            self.ready = macros_init
-            macros_init = true
-          end,
-          provider = function(self)
-            if not self.ready then return "" end
-            return require("NeoComposer.ui").status_recording()
           end,
           hl = hl.C,
         })

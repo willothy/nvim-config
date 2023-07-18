@@ -95,7 +95,6 @@ return {
           "SidebarNvim",
           "terminal",
           "Trouble",
-          "",
         },
         cursor_rgb = "Cursorword",
         cursor_rgb_current = "CursorwordCurrent",
@@ -140,24 +139,6 @@ return {
           end
         end,
       })
-
-      -- vim.api.nvim_set_hl(
-      --   0,
-      --   "murmur_cursor_rgb",
-      --   vim.api.nvim_get_hl(
-      --     0,
-      --     { id = vim.api.nvim_get_hl_id_by_name("Cursorword") }
-      --   )
-      -- )
-      --
-      -- vim.api.nvim_set_hl(
-      --   0,
-      --   "murmur_cursor_rgb_current",
-      --   vim.api.nvim_get_hl(
-      --     0,
-      --     { id = vim.api.nvim_get_hl_id_by_name("Visual") }
-      --   )
-      -- )
     end,
   },
 }
