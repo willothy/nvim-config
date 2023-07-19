@@ -86,6 +86,12 @@ return {
     config = true,
     event = "User ExtraLazy",
   },
+  {
+    "willothy/savior.nvim",
+    dir = "~/projects/lua/savior.nvim/",
+    config = true,
+    event = "User ExtraLazy",
+  },
   -- {
   --   "pynappo/tabnames.nvim",
   --   event = "User ExtraLazy",

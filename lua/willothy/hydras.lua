@@ -1,31 +1,56 @@
 local function telescope(picker)
   return function(...)
-    if require("telescope").extensions.menufacture[picker] then
-      require("telescope").extensions.menufacture[picker](...)
-    else
+    local t = require("telescope")
+    local ext = t.extensions
+    if ext.menufacture[picker] ~= nil then
+      ext.menufacture[picker](...)
+    elseif require("telescope.builtin")[picker] then
       require("telescope.builtin")[picker](...)
+    elseif ext[picker] then
+      ext[picker][picker](...)
+    else
+      vim.notify(string.format("unknown picker %s", picker))
     end
   end
 end
 
---- Lazy-load hydras on body keys
+--- Lazy-load hydras on body keys, and add the body as a group
+--- in which-key
 local Hydra = function(hintfunc, config)
   local this
-  vim.keymap.set(config.mode, config.body, function()
-    if this == nil then
-      config.body = nil
-      config.hint = hintfunc(config)
-      this = require("hydra")(config)
-    end
-    this:activate()
-  end)
-  require("which-key").register({
-    [config.body] = {
-      name = config.name:lower(),
-      group = true,
-      ["a"] = "which_key_ignore",
-    },
-  }, {})
+  if config.body and config.body ~= "" then
+    vim.keymap.set(config.mode, config.body, function()
+      if this == nil then
+        config.body = nil
+        config.hint = hintfunc(config)
+        this = require("hydra")(config)
+      end
+      this:activate()
+    end)
+    require("which-key").register({
+      [config.body] = {
+        name = config.name:lower(),
+        group = true,
+        ["a"] = "which_key_ignore",
+      },
+    }, {})
+  else
+    local ready = false
+    this = setmetatable({}, {
+      __index = function(_, k)
+        if not ready then
+          ready = true
+          this = require("hydra")(config)
+          if k == "activate" then
+            this:activate()
+            return function() end
+          end
+        end
+        return this[k]
+      end,
+    })
+  end
+  return this
 end
 
 local cmd = require("hydra.keymap-util").cmd

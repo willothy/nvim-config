@@ -79,9 +79,6 @@ vim.api.nvim_create_autocmd("User", {
 
     -- setup commands
     require("willothy.commands")
-
-    -- setup auto-save
-    require("willothy.auto-save").setup({})
   end,
 })
 
