@@ -22,7 +22,7 @@
   "dropbar.nvim": { "branch": "master", "commit": "f8865e154a1bfbef515be1b0e52f989bce2a42da" },
   "edgy.nvim": { "branch": "main", "commit": "0d3b64f9159442cf9edcad451a0dd9fb7e31bc41" },
   "flash.nvim": { "branch": "main", "commit": "b6b89a517d53f6e09ce4eb82c5114121c0bf89d2" },
-  "flatten.nvim": { "branch": "misc", "commit": "eb7a99d3e2aea82823b4ce4b260644b60aa37365" },
+  "flatten.nvim": { "branch": "main", "commit": "2bff175c50dc66491874d3b9030c0de95e2f4597" },
   "focus.nvim": { "branch": "master", "commit": "31f41d91b6b331faa07f0a513adcbc37087d028d" },
   "gitsigns.nvim": { "branch": "main", "commit": "adcf2c7f2f495f5df148683764bf7cba6a70f34c" },
   "glow.nvim": { "branch": "main", "commit": "bbd0473d72a45094495ee5600b5577823543eefe" },
@@ -98,6 +98,7 @@
   "undotree": { "branch": "master", "commit": "0e11ba7325efbbb3f3bebe06213afa3e7ec75131" },
   "vim-fugitive": { "branch": "master", "commit": "b3b838d690f315a503ec4af8c634bdff3b200aaf" },
   "vim-visual-multi": { "branch": "master", "commit": "724bd53adfbaf32e129b001658b45d4c5c29ca1a" },
+  "wezterm.nvim": { "branch": "main", "commit": "9e209cb4afb2b785c116bbe2d9777cb82d700671" },
   "which-key.nvim": { "branch": "main", "commit": "38b990f6eabf62014018b4aae70a97d7a6c2eb88" },
   "winshift.nvim": { "branch": "main", "commit": "37468ed6f385dfb50402368669766504c0e15583" },
   "yanky.nvim": { "branch": "main", "commit": "b12561386a25645adb7504e0e6a8c5dc8b31e6da" }

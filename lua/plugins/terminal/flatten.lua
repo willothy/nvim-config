@@ -9,11 +9,15 @@ local function toggle_terminal()
   -- require("nvterm.terminal").toggle("horizontal")
 end
 
+local function defer_delete(ev)
+  -- This is a bit of a hack, but if you run bufdelete immediately
+  -- the shell can occasionally freeze
+  vim.schedule(function() vim.api.nvim_buf_delete(ev.buf, {}) end)
+end
+
 return {
   {
-    -- "willothy/flatten.nvim",
-    "IndianBoy42/flatten.nvim",
-    branch = "misc",
+    "willothy/flatten.nvim",
     cond = true,
     lazy = false,
     priority = 1000,
@@ -26,32 +30,21 @@ return {
       },
       pipe_path = function()
         -- If running in a terminal inside Neovim:
-        if vim.env.NVIM then return vim.env.NVIM end
-        -- If running in a Kitty terminal,
-        -- all tabs/windows/os-windows in the same instance of kitty will open in the first neovim instance
-        if vim.env.WEZTERM_UNIX_SOCKET then
-          local list = vim.json.decode(
-            vim
-              .system({ "wezterm", "cli", "list", "--format", "json" })
-              :wait().stdout
-          )
-          local cur_tab
-          for _, pane in ipairs(list) do
-            if pane.pane_id == tonumber(vim.env.WEZTERM_PANE) then
-              cur_tab = pane.tab_id
-              break
-            end
-          end
-          local addr = ("%s/%s"):format(
-            vim.fn.stdpath("run"),
-            "wezterm.nvim-"
-              .. vim.env.WEZTERM_UNIX_SOCKET:match("gui%-sock%-(%d+)")
-              .. "-"
-              .. cur_tab
-          )
-          if not vim.loop.fs_stat(addr) then vim.fn.serverstart(addr) end
-          return addr
-        end
+        local nvim = os.getenv("NVIM")
+        if nvim then return nvim end
+
+        -- If running in a Wezterm terminal,
+        -- all tabs/windows/os-windows in the same instance of wezterm will open in the first neovim instance
+        local wezterm = os.getenv("WEZTERM_UNIX_SOCKET")
+        if not wezterm then return end
+
+        local addr = ("%s/%s"):format(
+          vim.fn.stdpath("run"),
+          "wezterm.nvim-" .. wezterm:match("gui%-sock%-(%d+)")
+        )
+        if not vim.loop.fs_stat(addr) then vim.fn.serverstart(addr) end
+
+        return addr
       end,
       callbacks = {
         should_block = function(argv) return vim.tbl_contains(argv, "-b") end,
@@ -61,7 +54,11 @@ return {
             toggle_terminal()
           else
             -- If it's a normal file, just switch to its window
+            -- If it's not in the current wezterm pane, switch to that pane.
             vim.api.nvim_set_current_win(winnr)
+            require("wezterm").switch_pane.id(
+              tonumber(os.getenv("WEZTERM_PANE"))
+            )
           end
 
           -- If the file is a git commit, create one-shot autocmd to delete its buffer on write
@@ -70,21 +67,12 @@ return {
             vim.api.nvim_create_autocmd("BufWritePost", {
               buffer = bufnr,
               once = true,
-              callback = function()
-                -- This is a bit of a hack, but if you run bufdelete immediately
-                -- the shell can occasionally freeze
-                vim.defer_fn(
-                  function() vim.api.nvim_buf_delete(bufnr, {}) end,
-                  50
-                )
-              end,
+              callback = defer_delete,
             })
           end
         end,
-        block_end = function()
-          -- After blocking ends (for a git commit, etc), reopen the terminal
-          vim.defer_fn(toggle_terminal, 50)
-        end,
+        -- After blocking ends (for a git commit, etc), reopen the terminal
+        block_end = vim.schedule_wrap(toggle_terminal),
       },
     },
   },
