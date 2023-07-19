@@ -78,5 +78,12 @@ return {
     config = true,
     event = "User ExtraLazy",
   },
-  "kkharji/sqlite.lua",
+  {
+    "kkharji/sqlite.lua",
+  },
+  {
+    "nacro90/numb.nvim",
+    config = true,
+    event = "User ExtraLazy",
+  },
 }

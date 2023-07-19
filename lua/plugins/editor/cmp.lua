@@ -44,33 +44,12 @@ return {
   {
     "zbirenbaum/copilot.lua",
     lazy = true,
-    event = { "InsertEnter", "CmdLineEnter" },
-    config = function()
-      vim.api.nvim_create_autocmd(
-        { "User VeryLazy", "BufReadPost", "CursorHold" },
-        {
-          once = true,
-          callback = function() require("copilot").setup(copilot_opt) end,
-        }
-      )
-    end,
+    event = { "InsertEnter", "CmdLineEnter", "User VeryLazy" },
+    config = function() require("copilot").setup(copilot_opt) end,
   },
   {
     "kylechui/nvim-surround",
     event = "VeryLazy",
-    opts = {
-      keymaps = {
-        insert = false,
-        insert_line = false,
-        normal = false,
-        normal_cur = false,
-        normal_line = false,
-        normal_cur_line = false,
-        visual = "S",
-        visual_line = false,
-        delete = "dS",
-        change = "cS",
-      },
-    },
+    config = true,
   },
 }

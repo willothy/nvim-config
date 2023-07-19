@@ -1,17 +1,22 @@
 return {
   {
     "folke/which-key.nvim",
-    dependencies = {
-      "mrjones2014/legendary.nvim",
-    },
     config = function()
       vim.o.timeout = true
       vim.o.timeoutlen = 300
       require("which-key").setup({
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
-        operators = {},
+        plugins = {
+          presets = {
+            operators = true,
+            windows = false,
+            nav = true,
+            z = true,
+            g = true,
+          },
+        },
+        operators = {
+          gc = nil,
+        },
         key_labels = {
           ["<space>"] = "SPC",
           ["<cr>"] = "RET",
@@ -19,14 +24,28 @@ return {
         },
       })
     end,
+    event = "VeryLazy",
   },
   {
     "mrjones2014/legendary.nvim",
     dependencies = {
       "kkharji/sqlite.lua",
+      "nvim-telescope/telescope.nvim",
     },
-    opts = { which_key = {
-      auto_register = true,
-    } },
+    cmd = "Legendary",
+    opts = {
+      funcs = {},
+      autocmds = {},
+      commands = {},
+      keymaps = {},
+      which_key = {
+        auto_register = true,
+      },
+      extensions = {
+        nvim_tree = true,
+        -- smart_splits = true,
+        op_nvim = false,
+      },
+    },
   },
 }

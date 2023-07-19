@@ -11,6 +11,7 @@ return {
         },
       }
       local focus = require("focus")
+
       focus.setup({
         ui = {
           cursorline = false,
@@ -35,7 +36,7 @@ return {
     "echasnovski/mini.animate",
     opts = {
       cursor = { enable = false },
-      scroll = { enable = false },
+      scroll = { enable = true },
       open = { enable = false },
       close = { enable = false },
     },
@@ -47,20 +48,45 @@ return {
   },
   {
     "mrjones2014/smart-splits.nvim",
-    opts = {
-      multiplexer_integration = "wezterm",
+    config = function()
+      require("smart-splits").setup({
+        at_edge = "wrap",
+        resize_mode = {
+          hooks = {
+            on_leave = require("bufresize").register,
+          },
+        },
+        ignore_events = {
+          "WinResized",
+          "BufWinEnter",
+          "BufEnter",
+          "WinEnter",
+        },
+      })
+    end,
+    event = "VeryLazy",
+  },
+  {
+    "kwkarlwang/bufresize.nvim",
+    event = "VeryLazy",
+    register = {
+      trigger_events = { "BufWinEnter", "WinEnter" },
+    },
+    resize = {
+      trigger_events = { "VimResized" },
     },
   },
   {
-    "sindrets/winshift.nvim",
+    "tummetott/winshift.nvim",
+    branch = "not_triggering_optionset_event",
     config = true,
-    cmd = "WinShift"
+    cmd = "WinShift",
   },
-  -- {
-  --   "willothy/winborder.nvim",
-  --   dir = "~/projects/lua/winborder.nvim/",
-  --   config = true,
-  --   enabled = false,
-  --   event = "VeryLazy",
-  -- },
+  {
+    "willothy/winborder.nvim",
+    -- dir = "~/projects/lua/winborder.nvim/",
+    config = true,
+    enabled = false,
+    event = "VeryLazy",
+  },
 }

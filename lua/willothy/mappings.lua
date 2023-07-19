@@ -1,21 +1,10 @@
 if vim.g.minimal then return end
 
 local function register(modes, mappings, opts)
-  if type(modes) == "table" then
-    vim.iter(modes):each(
-      function(mode)
-        require("which-key").register(
-          mappings,
-          vim.tbl_deep_extend("keep", { mode = mode }, opts or {})
-        )
-      end
-    )
-  else
-    require("which-key").register(
-      mappings,
-      vim.tbl_deep_extend("keep", { mode = modes }, opts or {})
-    )
-  end
+  require("which-key").register(
+    mappings,
+    vim.tbl_deep_extend("keep", { mode = modes }, opts or {})
+  )
 end
 
 local function mkportal(title, items, callback, opts)
@@ -131,7 +120,7 @@ vim.keymap.set(
 )
 
 -- Dap
-register({ "n" }, {})
+-- register({ "n" }, {})
 
 -- Spider
 register({ "n", "o", "x" }, {
@@ -154,7 +143,7 @@ register({ "n", "o", "x" }, {
   },
 })
 
-register({ "n", "i" }, {
+require("which-key").register({
   ["<C-e>"] = {
     function() require("harpoon.ui").toggle_quick_menu() end,
     "Toggle harpoon quick menu",
@@ -175,110 +164,168 @@ register({ "n", "i" }, {
     function() vim.cmd("write") end,
     "Save",
   },
-})
+}, { mode = { "n", "i" } })
 
 register("n", {
   ["<Tab>"] = { "V>", "Indent line" },
   ["<S-Tab>"] = { "V<", "Unindent line" },
 })
 
-register({ "n", "t" }, {
+require("which-key").register({
   ["<C-Up>"] = {
     function() require("smart-splits").move_cursor_up() end,
-    "Move to window up",
+    "which_key_ignore",
   },
   ["<C-Down>"] = {
     function() require("smart-splits").move_cursor_down() end,
-    "Move to window down",
+    "which_key_ignore",
   },
   ["<C-Left>"] = {
     function() require("smart-splits").move_cursor_left() end,
-    "Move to window left",
+    "which_key_ignore",
   },
   ["<C-Right>"] = {
     function() require("smart-splits").move_cursor_right() end,
-    "Move to window right",
+    "which_key_ignore",
   },
   ["<M-Up>"] = {
     function() require("smart-splits").resize_up() end,
-    "Resize to window up",
+    "which_key_ignore",
   },
   ["<M-Down>"] = {
     function() require("smart-splits").resize_down() end,
-    "Resize to window down",
+    "which_key_ignore",
   },
   ["<M-Left>"] = {
     function() require("smart-splits").resize_left() end,
 
-    "Resize to window left",
+    "which_key_ignore",
   },
   ["<M-Right>"] = {
     function() require("smart-splits").resize_right() end,
-    "Resize to window right",
+    "which_key_ignore",
   },
+  ["<C-k>"] = {
+    function() require("smart-splits").move_cursor_up() end,
+    "which_key_ignore",
+  },
+  ["<C-j>"] = {
+    function() require("smart-splits").move_cursor_down() end,
+    "which_key_ignore",
+  },
+  ["<C-h>"] = {
+    function() require("smart-splits").move_cursor_left() end,
+    "which_key_ignore",
+  },
+  ["<C-l>"] = {
+    function() require("smart-splits").move_cursor_right() end,
+    "which_key_ignore",
+  },
+}, { mode = { "n", "t" } })
+
+register({ "n", "t" }, {
   ["<C-w>"] = {
     name = "window",
     ["<Up>"] = {
       function() require("smart-splits").move_cursor_up() end,
-      "Move to window above",
+      "which_key_ignore",
     },
     ["<Down>"] = {
       function() require("smart-splits").move_cursor_down() end,
-      "Move to window below",
+      "which_key_ignore",
     },
     ["<Left>"] = {
       function() require("smart-splits").move_cursor_left() end,
-      "Move to window left",
+      "which_key_ignore",
     },
     ["<Right>"] = {
       function() require("smart-splits").move_cursor_right() end,
-      "Move to window right",
+      "which_key_ignore",
     },
     ["k"] = {
       function() require("smart-splits").move_cursor_up() end,
-      "Move to window abovw",
+      "which_key_ignore",
     },
     ["j"] = {
       function() require("smart-splits").move_cursor_down() end,
-      "Move to window below",
+      "which_key_ignore",
     },
     ["h"] = {
       function() require("smart-splits").move_cursor_left() end,
-      "Move to window left",
+      "which_key_ignore",
     },
     ["l"] = {
       function() require("smart-splits").move_cursor_right() end,
-      "Move to window right",
+      "which_key_ignore",
     },
     ["="] = {
       function() require("focus").focus_equalise() end,
-      "Equalize window sizes",
+      "equalize",
     },
-    ["g"] = {
-      function() require("focus").resize() end,
-      "Autoresize based on golden ratio",
-    },
-    ["m"] = {
+    ["|"] = {
       function() require("focus").focus_maximise() end,
-      "Maximize focused window",
+      "maximize",
     },
-    ["f"] = {
-      function() require("nvim-window").pick() end,
-      "Pick window",
+    ["\\"] = {
+      function() require("focus").focus_max_or_equal() end,
+      "max or equal",
     },
-    x = {
+    ["+"] = {
       function()
-        require("winshift")
-        vim.api.nvim_exec("WinShift swap", true)
+        require("focus").focus_disable()
+        require("focus").focus_enable()
+        require("focus").resize()
       end,
-      "Swap windows",
+      "golden ratio",
     },
-    ["<C-w>"] = {
+    v = { "split vertically" },
+    s = { "split horizontally" },
+    T = { "move to new tab" },
+    f = {
+      function() require("nvim-window").pick() end,
+      "pick",
+    },
+    w = {
       function()
         require("winshift")
         vim.api.nvim_exec("WinShift", true)
       end,
-      "Enter WinShift mode",
+      "winshift",
+    },
+    x = {
+      name = "+swap",
+      l = {
+        function() require("smart-splits").swap_buf_right() end,
+        "Swap buffer with window to the right",
+      },
+      h = {
+        function() require("smart-splits").swap_buf_left() end,
+        "Swap buffer with window to the left",
+      },
+      j = {
+        function() require("smart-splits").swap_buf_down() end,
+        "Swap buffer with window below",
+      },
+      k = {
+        function() require("smart-splits").swap_buf_up() end,
+        "Swap buffer with window above",
+      },
+      ["<Right>"] = {
+        function() require("smart-splits").swap_buf_right() end,
+        "Swap buffer with window to the right",
+      },
+      ["<Left>"] = {
+        function() require("smart-splits").swap_buf_left() end,
+        "Swap buffer with window to the left",
+      },
+      ["<Down>"] = {
+        function() require("smart-splits").swap_buf_down() end,
+        "Swap buffer with window below",
+      },
+      ["<Up>"] = {
+        function() require("smart-splits").swap_buf_up() end,
+        "Swap buffer with window above",
+      },
     },
   },
 })

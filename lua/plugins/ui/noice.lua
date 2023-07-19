@@ -126,15 +126,15 @@ return {
         routes = {
           {
             filter = {
-              any = {
-                { find = "%dL" },
-              },
+              find = "%d+L, %d+B written",
             },
             opts = { stop = false, skip = true },
             view = "notify",
           },
           {
-            filter = { find = "%dL" },
+            filter = {
+              find = "%d+L, %d+B written",
+            },
             view = "mini",
             opts = { stop = true },
           },

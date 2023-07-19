@@ -18,7 +18,7 @@ end
 return {
   {
     "willothy/flatten.nvim",
-    dir = "~/projects/lua/flatten/",
+    branch = "perf",
     cond = true,
     lazy = false,
     priority = 1000,
@@ -29,24 +29,24 @@ return {
         --
         -- end,
       },
-      -- pipe_path = function()
-      --   -- If running in a terminal inside Neovim:
-      --   local nvim = os.getenv("NVIM")
-      --   if nvim then return nvim end
-      --
-      --   -- If running in a Wezterm terminal,
-      --   -- all tabs/windows/os-windows in the same instance of wezterm will open in the first neovim instance
-      --   local wezterm = os.getenv("WEZTERM_UNIX_SOCKET")
-      --   if not wezterm then return end
-      --
-      --   local addr = ("%s/%s"):format(
-      --     vim.fn.stdpath("run"),
-      --     "wezterm.nvim-" .. wezterm:match("gui%-sock%-(%d+)")
-      --   )
-      --   if not vim.loop.fs_stat(addr) then vim.fn.serverstart(addr) end
-      --
-      --   return addr
-      -- end,
+      pipe_path = function()
+        -- If running in a terminal inside Neovim:
+        local nvim = os.getenv("NVIM")
+        if nvim then return nvim end
+
+        -- If running in a Wezterm terminal,
+        -- all tabs/windows/os-windows in the same instance of wezterm will open in the first neovim instance
+        local wezterm = os.getenv("WEZTERM_UNIX_SOCKET")
+        if not wezterm then return end
+
+        local addr = ("%s/%s"):format(
+          vim.fn.stdpath("run"),
+          "wezterm.nvim-" .. wezterm:match("gui%-sock%-(%d+)")
+        )
+        if not vim.loop.fs_stat(addr) then vim.fn.serverstart(addr) end
+
+        return addr
+      end,
       callbacks = {
         should_block = function(argv) return vim.tbl_contains(argv, "-b") end,
         post_open = function(bufnr, winnr, ft, is_blocking)

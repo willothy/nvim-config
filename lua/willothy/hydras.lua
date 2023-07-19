@@ -10,12 +10,38 @@ end
 
 --- Lazy-load hydras on body keys
 local Hydra = function(hintfunc, config)
-  vim.keymap.set(config.mode, config.body, function()
-    vim.keymap.del(config.mode, config.body)
-    config.hint = hintfunc(config)
-    local h = require("hydra")(config)
-    h:activate()
-  end, { desc = "[Hydra] " .. config.name })
+  -- require("which-key").register({
+  --   [config.body] = {
+  --     "+" .. string.lower(config.name),
+  --     function()
+  --       vim.keymap.del(config.mode, config.body)
+  --       config.hint = hintfunc(config)
+  --       local h = require("hydra")(config)
+  --       h:activate()
+  --     end,
+  --   },
+  -- }, { mode = config.mode })
+  -- local maps = {
+  --   [config.body] = { function() end, "+" .. string.lower(config.name) },
+  --   -- ["_"] = "which_key_ignore",
+  -- }
+  -- for i, head in ipairs(config.heads) do
+  --   -- if head[3].desc then maps[head[1]] = head[3].desc end
+  -- end
+  -- require("which-key").register(
+  --   maps,
+  --   --[[ { [config.body] = maps } ]]
+  --   { mode = config.mode }
+  -- )
+  -- local this
+  -- vim.keymap.set(config.mode, config.body, function()
+  --   -- vim.keymap.del(config.mode, config.body)
+  --   if this == nil then
+  --     config.hint = hintfunc(config)
+  --     this = require("hydra")(config)
+  --   end
+  --   this:activate()
+  -- end, { desc = "+telescope" })
 end
 
 local cmd = require("hydra.keymap-util").cmd

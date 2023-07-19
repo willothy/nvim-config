@@ -65,7 +65,7 @@ local function cmp_opt()
           fallback()
         end
       end, { "i", "c" }),
-      ["<CR>"] = cmp.mapping(function(fallback) fallback() end, { "i", "c" }),
+      -- ["<CR>"] = cmp.mapping(function(fallback) fallback() end, { "i", "c" }),
       ["<Tab>"] = cmp.mapping(function(fallback)
         local suggestion = require("copilot.suggestion")
         if suggestion.is_visible() then

@@ -2,6 +2,7 @@ return {
   {
     "mg979/vim-visual-multi",
     event = "User ExtraLazy",
+    enabled = false,
     config = function()
       vim.api.nvim_exec2(
         [[

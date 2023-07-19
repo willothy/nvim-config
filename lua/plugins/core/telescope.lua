@@ -3,7 +3,7 @@ local function get_filename(path)
   return path:sub(start, #path)
 end
 
-local function add_selected_to_harpoon(prompt_bufnr)
+local function add_to_harpoon(prompt_bufnr)
   local fb_utils = require("telescope._extensions.file_browser.utils")
   local files = fb_utils.get_selected_files(prompt_bufnr) -- get selected files
   if #files == 0 then
@@ -35,26 +35,44 @@ local function create_and_add_to_harpoon(prompt_bufnr)
   end
 end
 
+local function edit(prompt_bufnr)
+  require("telescope.actions.set").edit(prompt_bufnr, "stopinsert! | edit")
+end
+
+local function split(prompt_bufnr)
+  require("telescope.actions.set").edit(prompt_bufnr, "stopinsert! | split")
+end
+
+local function vsplit(prompt_bufnr)
+  require("telescope.actions.set").edit(prompt_bufnr, "stopinsert! | vsplit")
+end
+
 local function config()
   local t = require("telescope")
   t.setup({
     extensions = {
       ["ui-select"] = {
-        require("telescope.themes").get_dropdown({}),
+        require("telescope.themes").get_cursor({}),
       },
       file_browser = {
         theme = "ivy",
         hijack_netrw = true,
         mappings = {
           ["i"] = {
-            ["<C-a>"] = add_selected_to_harpoon,
+            ["<C-a>"] = add_to_harpoon,
             ["<C-n>"] = create_and_add_to_harpoon,
+            -- ["<CR>"] = edit,
+            -- ["<C-v>"] = split,
+            -- ["<C-h>"] = vsplit,
           },
           ["n"] = {
             ["c"] = create_and_add_to_harpoon,
-            ["a"] = add_selected_to_harpoon,
+            ["a"] = add_to_harpoon,
           },
         },
+      },
+      heading = {
+        treesitter = true,
       },
     },
   })
@@ -66,25 +84,34 @@ local function config()
   t.load_extension("macros")
   t.load_extension("scope")
   t.load_extension("yank_history")
+
+  t.load_extension("heading")
+
+  vim.api.nvim_create_autocmd("BufWinLeave", {
+    callback = function(ev)
+      if vim.bo[ev.buf].filetype == "TelescopePrompt" then
+        vim.cmd("silent! stopinsert!")
+      end
+    end,
+  })
 end
 
 return {
   {
     "nvim-telescope/telescope.nvim",
-    lazy = true,
     config = config,
     cmd = "Telescope",
   },
   {
     "nvim-telescope/telescope-ui-select.nvim",
-    lazy = true,
   },
   {
     "nvim-telescope/telescope-file-browser.nvim",
-    lazy = true,
   },
   {
     "molecule-man/telescope-menufacture",
-    lazy = true,
+  },
+  {
+    "crispgm/telescope-heading.nvim",
   },
 }

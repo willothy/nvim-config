@@ -9,7 +9,7 @@ vim.cmd.colorscheme("minimus")
 
 vim.o.shell = "bash"
 
-vim.o.shortmess = "WfilnxoOCFI"
+vim.o.shortmess = "filnxoOCFI"
 
 o.swapfile = true
 o.backup = false
@@ -19,7 +19,6 @@ o.hlsearch = false
 o.incsearch = true
 o.lazyredraw = true
 o.cursorline = false
-o.ttyfast = true
 
 o.termguicolors = true
 
