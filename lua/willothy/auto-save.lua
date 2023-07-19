@@ -117,19 +117,19 @@ function M.setup(opts)
         return vim.api.nvim_buf_is_valid(bufnr)
           and vim.bo[bufnr].buftype == ""
           and vim.bo[bufnr].buflisted == true
-        -- and vim.bo[bufnr].modifiable == true
-        -- and vim.bo[bufnr].readonly == false
+          and vim.bo[bufnr].modifiable == true
+          and vim.bo[bufnr].readonly == false
       end,
-      -- function(bufnr)
-      --   local ft = vim.bo[bufnr].filetype
-      --   local ignore = {
-      --     help = true,
-      --     qf = true,
-      --     gitcommit = true,
-      --     gitrebase = true,
-      --   }
-      --   return ignore[ft] == nil
-      -- end,
+      function(bufnr)
+        local ft = vim.bo[bufnr].filetype
+        local ignore = {
+          help = true,
+          qf = true,
+          gitcommit = true,
+          gitrebase = true,
+        }
+        return ignore[ft] == nil
+      end,
       function(bufnr) return vim.api.nvim_buf_get_name(bufnr) ~= "" end,
       function(bufnr)
         return vim.diagnostic.get(bufnr, { severity = 1 })[1] == nil
