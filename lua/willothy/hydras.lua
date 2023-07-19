@@ -17,12 +17,16 @@ end
 --- Lazy-load hydras on body keys, and add the body as a group
 --- in which-key
 local Hydra = function(hintfunc, config)
+  if config == nil and type(hintfunc) == "table" then
+    config = hintfunc
+    hintfunc = nil
+  end
   local this
   if config.body and config.body ~= "" then
     vim.keymap.set(config.mode, config.body, function()
       if this == nil then
         config.body = nil
-        config.hint = hintfunc(config)
+        if hintfunc then config.hint = hintfunc(config) end
         this = require("hydra")(config)
       end
       this:activate()
@@ -129,7 +133,7 @@ end, {
     color = "blue",
     invoke_on_body = true,
     hint = {
-      position = "middle",
+      position = "bottom-left",
       border = "rounded",
     },
   },

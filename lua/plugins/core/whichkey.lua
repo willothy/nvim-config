@@ -22,6 +22,10 @@ return {
           ["<cr>"] = "RET",
           ["<tab>"] = "TAB",
         },
+        window = {
+          -- position = "top",
+          winblend = 20,
+        },
       })
     end,
     event = "VeryLazy",

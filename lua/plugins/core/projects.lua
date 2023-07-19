@@ -88,7 +88,6 @@ return {
   },
   {
     "willothy/savior.nvim",
-    dir = "~/projects/lua/savior.nvim/",
     config = true,
     event = "User ExtraLazy",
   },
