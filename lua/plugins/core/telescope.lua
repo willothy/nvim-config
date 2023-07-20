@@ -35,18 +35,6 @@ local function create_and_add_to_harpoon(prompt_bufnr)
   end
 end
 
-local function edit(prompt_bufnr)
-  require("telescope.actions.set").edit(prompt_bufnr, "stopinsert! | edit")
-end
-
-local function split(prompt_bufnr)
-  require("telescope.actions.set").edit(prompt_bufnr, "stopinsert! | split")
-end
-
-local function vsplit(prompt_bufnr)
-  require("telescope.actions.set").edit(prompt_bufnr, "stopinsert! | vsplit")
-end
-
 local function config()
   local t = require("telescope")
   t.setup({
@@ -61,9 +49,6 @@ local function config()
           ["i"] = {
             ["<C-a>"] = add_to_harpoon,
             ["<C-n>"] = create_and_add_to_harpoon,
-            -- ["<CR>"] = edit,
-            -- ["<C-v>"] = split,
-            -- ["<C-h>"] = vsplit,
           },
           ["n"] = {
             ["c"] = create_and_add_to_harpoon,
@@ -76,8 +61,8 @@ local function config()
       },
     },
   })
+
   t.load_extension("file_browser")
-  t.load_extension("ui-select")
   t.load_extension("menufacture")
   t.load_extension("projects")
   t.load_extension("noice")
@@ -85,6 +70,7 @@ local function config()
   t.load_extension("scope")
   t.load_extension("yank_history")
 
+  t.load_extension("ui-select")
   t.load_extension("heading")
 
   vim.api.nvim_create_autocmd("BufWinLeave", {
@@ -99,19 +85,13 @@ end
 return {
   {
     "nvim-telescope/telescope.nvim",
+    dependencies = {
+      "nvim-telescope/telescope-ui-select.nvim",
+      "nvim-telescope/telescope-file-browser.nvim",
+      "molecule-man/telescope-menufacture",
+      "crispgm/telescope-heading.nvim",
+    },
     config = config,
-    cmd = "Telescope",
-  },
-  {
-    "nvim-telescope/telescope-ui-select.nvim",
-  },
-  {
-    "nvim-telescope/telescope-file-browser.nvim",
-  },
-  {
-    "molecule-man/telescope-menufacture",
-  },
-  {
-    "crispgm/telescope-heading.nvim",
+    event = "User ExtraLazy",
   },
 }

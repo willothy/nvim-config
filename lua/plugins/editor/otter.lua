@@ -6,8 +6,7 @@ return {
       "neovim/nvim-lspconfig",
       "nvim-treesitter/nvim-treesitter",
     },
-    lazy = true,
-    ft = "markdown",
+    event = "User ExtraLazy",
     config = function()
       require("otter").setup({})
 

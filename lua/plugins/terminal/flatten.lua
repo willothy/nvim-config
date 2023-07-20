@@ -18,7 +18,6 @@ end
 return {
   {
     "willothy/flatten.nvim",
-    branch = "perf",
     cond = true,
     lazy = false,
     priority = 1000,

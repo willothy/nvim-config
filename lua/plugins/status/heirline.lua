@@ -220,11 +220,17 @@ return {
           init = function(self)
             self.mode = vim.fn.mode(1) -- :h mode()
           end,
-          provider = function(self) return self.mode_names[self.mode] end,
+          provider = function(self)
+            if require("hydra.statusline").is_active() then
+              return require("hydra.statusline").get_name()
+            end
+            return self.mode_names[self.mode]
+          end,
           hl = hl.A,
           update = {
             "ModeChanged",
-            pattern = "*:*",
+            "User HydraEnter",
+            "User HydraLeave",
             callback = vim.schedule_wrap(
               function() vim.cmd("redrawstatus") end
             ),

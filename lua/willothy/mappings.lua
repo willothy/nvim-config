@@ -281,51 +281,63 @@ register({ "n", "t" }, {
     v = { "split vertically" },
     s = { "split horizontally" },
     T = { "move to new tab" },
+    H = { "swap left" },
+    J = { "swap down" },
+    K = { "swap up" },
+    L = { "swap right" },
     f = {
-      function() require("nvim-window").pick() end,
-      "pick",
-    },
-    w = {
       function()
-        require("winshift")
-        vim.api.nvim_exec("WinShift", true)
+        local win = require("window-picker").pick_window()
+        if not win then return end
+        vim.api.nvim_set_current_win(win)
       end,
-      "winshift",
+      "pick - focus",
     },
     x = {
-      name = "+swap",
-      l = {
-        function() require("smart-splits").swap_buf_right() end,
-        "Swap buffer with window to the right",
-      },
-      h = {
-        function() require("smart-splits").swap_buf_left() end,
-        "Swap buffer with window to the left",
-      },
-      j = {
-        function() require("smart-splits").swap_buf_down() end,
-        "Swap buffer with window below",
-      },
-      k = {
-        function() require("smart-splits").swap_buf_up() end,
-        "Swap buffer with window above",
-      },
-      ["<Right>"] = {
-        function() require("smart-splits").swap_buf_right() end,
-        "Swap buffer with window to the right",
-      },
-      ["<Left>"] = {
-        function() require("smart-splits").swap_buf_left() end,
-        "Swap buffer with window to the left",
-      },
-      ["<Down>"] = {
-        function() require("smart-splits").swap_buf_down() end,
-        "Swap buffer with window below",
-      },
-      ["<Up>"] = {
-        function() require("smart-splits").swap_buf_up() end,
-        "Swap buffer with window above",
-      },
+      function()
+        local win = require("window-picker").pick_window()
+        if not win then return end
+
+        local buf = vim.api.nvim_win_get_buf(win)
+        local curbuf = vim.api.nvim_get_current_buf()
+        local curwin = vim.api.nvim_get_current_win()
+        if buf == curbuf or win == curwin then return end
+
+        vim.api.nvim_win_set_buf(win, curbuf)
+        vim.api.nvim_win_set_buf(curwin, buf)
+      end,
+      "pick - swap",
+    },
+    q = {
+      function()
+        local win = require("window-picker").pick_window({
+          filter_rules = {
+            include_current_win = true,
+            -- bo = {
+            --   buftype = {
+            --     "",
+            --     "nofile",
+            --   },
+            -- },
+          },
+        })
+        if not win then return end
+        local ok, res = pcall(vim.api.nvim_win_close, win, false)
+        if not ok then
+          if vim.startswith(res, "Vim:E444") then
+            vim.ui.select({ "Close", "Cancel" }, {
+              prompt = "Close window?",
+            }, function(i)
+              if i == "Close" then
+                vim.api.nvim_exec2("qa!", { output = true })
+              end
+            end)
+          else
+            vim.notify("could not close window", vim.log.levels.WARN)
+          end
+        end
+      end,
+      "pick - close",
     },
   },
 })

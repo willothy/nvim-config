@@ -82,10 +82,7 @@ return {
     end,
   },
   {
-    "willothy/murmur.lua",
-    dir = "~/projects/lua/murmur.lua/",
-    -- enabled = false,
-    -- branch = "hl-sanitize",
+    "nyngwang/murmur.lua",
     event = "VeryLazy",
     config = function()
       require("murmur").setup({

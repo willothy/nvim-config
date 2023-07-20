@@ -130,10 +130,11 @@ end
 ---@param opts { args: string[]?, callback: fun()? } Spawn configuration
 ---@return Task
 function Executor:spawn(task, opts)
+  opts = opts or {}
   local id = self:free_id()
   local ty = type(task)
   if ty == "function" then
-    task = Task:new(task)
+    task = Task:new(task, opts.callback, id)
   elseif ty == "string" then
     local cmd = task
     task = Task:new(function()

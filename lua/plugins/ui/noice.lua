@@ -5,7 +5,7 @@ return {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
     },
-    lazy = false,
+    event = "UiEnter",
     config = function()
       require("noice").setup({
         presets = {
@@ -82,7 +82,6 @@ return {
               luasnip = true,
               throttle = 50,
             },
-            view = nil,
             opts = {},
           },
           hover = {
@@ -109,12 +108,6 @@ return {
           enabled = true,
           backend = "nui",
         },
-        format = {
-          notify = {
-            pattern = { "auto-save%w*" },
-            kind = "test",
-          },
-        },
         messages = {
           enabled = true, -- enables the Noice messages UI
           view = "notify", -- default view for messages
@@ -123,20 +116,24 @@ return {
           view_history = "messages", -- view for :messages
           view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
         },
+        -- notify = {
+        --   enabled = true,
+        --   view = "mini",
+        -- },
         routes = {
           {
             filter = {
-              find = "%d+L, %d+B written",
-            },
-            opts = { stop = false, skip = true },
-            view = "notify",
-          },
-          {
-            filter = {
-              find = "%d+L, %d+B written",
+              any = {
+                { find = "%d+L, %d+B written" },
+                { find = "%d+ change[s]?; before #%d+" },
+                { find = "%d+ change[s]?; after #%d+" },
+              },
             },
             view = "mini",
-            opts = { stop = true },
+            opts = {
+              stop = true,
+              skip = false,
+            },
           },
         },
       })

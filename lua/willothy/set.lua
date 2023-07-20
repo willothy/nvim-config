@@ -1,5 +1,5 @@
 local o = vim.o
-local O = vim.opt
+local opt = vim.opt
 local icons = require("willothy.icons")
 
 vim.api.nvim_exec('let &t_Cs = "\\e[4:0m"', true)
@@ -9,7 +9,9 @@ vim.cmd.colorscheme("minimus")
 
 vim.o.shell = "bash"
 
-vim.o.shortmess = "filnxoOCFI"
+vim.o.shortmess = "filnxoOCFIs"
+
+vim.o.virtualedit = "block"
 
 o.swapfile = true
 o.backup = false
@@ -17,7 +19,6 @@ o.undofile = true
 
 o.hlsearch = false
 o.incsearch = true
-o.lazyredraw = true
 o.cursorline = false
 
 o.termguicolors = true
@@ -31,19 +32,30 @@ o.mousemoveevent = true
 o.conceallevel = 2
 
 o.foldcolumn = "1"
-o.fillchars = [[eob: ,fold: ,foldopen:]]
-  .. icons.fold.open
-  .. [[,foldsep: ,foldclose:]]
-  .. icons.fold.closed
 o.foldlevel = 99
 o.foldenable = true
 o.foldlevelstart = 99
 
+opt.fillchars = {
+  horiz = "─",
+  horizup = "┴",
+  horizdown = "┬",
+  vert = "│",
+  vertleft = "┤",
+  vertright = "├",
+  verthoriz = "┼",
+  fold = "⠀",
+  eob = " ",
+  diff = "┃",
+  msgsep = " ",
+  foldsep = " ",
+  foldclose = icons.fold.closed,
+  foldopen = icons.fold.open,
+}
+
 o.laststatus = 3
 
-O.splitkeep = "screen"
-
-O.listchars = { tab = "  ", extends = "", precedes = "" }
+opt.splitkeep = "screen"
 
 o.number = true
 o.relativenumber = true
@@ -58,8 +70,6 @@ o.wrap = false
 o.numberwidth = 1
 o.number = true
 o.relativenumber = true
-
-O.numberwidth._info.default = 1
 
 vim.api.nvim_create_autocmd({
   "TermResponse",

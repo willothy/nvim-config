@@ -43,8 +43,51 @@ return {
     event = "VeryLazy",
   },
   {
-    "yorickpeterse/nvim-window",
-    config = true,
+    "willothy/nvim-window-picker",
+    event = "User ExtraLazy",
+    config = function()
+      require("window-picker").setup({
+        show_prompt = false,
+        hint = "floating-big-letter",
+        filter_rules = {
+          autoselect_one = false,
+          include_current_win = false,
+          bo = {
+            buftype = {
+              "nofile",
+              "nowrite",
+            },
+          },
+        },
+        selection_chars = "asdfwertzxcv",
+        picker_config = {
+          floating_big_letter = {
+            font = {
+              a = "a",
+              s = "s",
+              d = "d",
+              f = "f",
+              w = "w",
+              e = "e",
+              r = "r",
+              t = "t",
+              z = "z",
+              x = "x",
+              c = "c",
+              v = "v",
+            },
+            window = {
+              config = {
+                border = "none",
+              },
+              options = {
+                winhighlight = "NormalFloat:TabLineSel,FloatBorder:TabLineSel",
+              },
+            },
+          },
+        },
+      })
+    end,
   },
   {
     "mrjones2014/smart-splits.nvim",

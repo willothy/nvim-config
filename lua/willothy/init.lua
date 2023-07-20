@@ -19,6 +19,10 @@ require("lazy").setup({
     wrap = false,
     border = "rounded",
   },
+  install = {
+    missing = false,
+    colorscheme = { "minimus" },
+  },
   browser = "brave",
   diff = {
     cmd = "diffview.nvim",
