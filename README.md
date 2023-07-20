@@ -8,7 +8,7 @@ My Neovim config after many hours of optimizating and tweaking. Contains lots of
 
 - Over 110 plugins
 - Under 20ms startup on my desktop
-- 30-40ms startup time on my laptop
+- 20-40ms startup time on my laptop
 
 ### Tab scoped sessions and buffers
 
