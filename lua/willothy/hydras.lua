@@ -513,9 +513,6 @@ Hydra({
     { "v", pcmd("vsplit", "E36") },
     { "<C-v>", pcmd("vsplit", "E36"), { desc = false } },
 
-    { "w", "<C-w>w", { exit = true, desc = false } },
-    { "<C-w>", "<C-w>w", { exit = true, desc = false } },
-
     { "z", cmd("FocusMaximise"), { exit = true, desc = "maximize" } },
     { "<C-z>", cmd("FocusMaximise"), { exit = true, desc = false } },
 

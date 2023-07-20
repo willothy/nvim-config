@@ -205,14 +205,9 @@ local lsp_settings = {
         checkThirdParty = false,
       },
       completion = {
-        workspaceWord = true,
         callSnippet = "Disable",
       },
-      misc = {
-        parameters = {
-          "--log-level=info",
-        },
-      },
+      misc = {},
       diagnostics = {
         disable = { "incomplete-signature-doc" },
         enable = false,
@@ -247,7 +242,7 @@ local lsp_settings = {
       hint = {
         enable = true,
         setType = true,
-        arrayIndex = "Enable",
+        arrayIndex = "Disable",
         await = true,
         paramName = "All",
         paramType = true,
@@ -422,6 +417,33 @@ local function lsp_setup()
     warden = {
       line_highlight = true,
     },
+    underline = false,
+    virtual_lines = true,
+    signs = true,
+    severity_sort = true,
+    float = {
+      header = setmetatable({}, {
+        __index = function(_, k)
+          local arr = {
+            function()
+              return string.format(
+                "diagnostics: %s %s",
+                require("nvim-web-devicons").get_icon_by_filetype(
+                  vim.bo.filetype
+                ),
+                vim.bo.filetype
+              )
+            end,
+            function() return "NoiceMini" end,
+          }
+          return arr[k]()
+        end,
+      }),
+      source = "always",
+      border = "rounded",
+      focusable = false,
+    },
+    update_in_insert = true,
     virtual_text = {
       prefix = "",
       format = function(diag)
@@ -435,15 +457,6 @@ local function lsp_setup()
         end
         return string.format("%s %s", icons.diagnostics[severity], diag.message)
       end,
-    },
-    signs = true,
-    update_in_insert = true,
-    underline = false,
-    severity_sort = true,
-    float = {
-      source = "always",
-      border = "rounded",
-      focusable = false,
     },
   })
 end

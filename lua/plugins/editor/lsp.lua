@@ -189,6 +189,6 @@ return {
   },
   -- {
   --   "williamboman/warden.nvim",
-  --   event = "User ExtraLazy",
+  --   event = "UiEnter",
   -- },
 }

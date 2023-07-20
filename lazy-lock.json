@@ -100,6 +100,7 @@
   "trouble.nvim": { "branch": "main", "commit": "20d1b30d6925213abece21d35858a16e11d1e9fc" },
   "ufo": { "branch": "main", "commit": "43e39ec74cd57c45ca9d8229a796750f6083b850" },
   "undotree": { "branch": "master", "commit": "0e11ba7325efbbb3f3bebe06213afa3e7ec75131" },
+  "warden.nvim": { "branch": "main", "commit": "334a49f534319e49fd53fc170f7860daf51c2f2c" },
   "wezterm.nvim": { "branch": "main", "commit": "9e209cb4afb2b785c116bbe2d9777cb82d700671" },
   "which-key.nvim": { "branch": "main", "commit": "38b990f6eabf62014018b4aae70a97d7a6c2eb88" },
   "winshift.nvim": { "branch": "not_triggering_optionset_event", "commit": "e9efa99cce1f53c15f48236ba56add82003f8f40" },
