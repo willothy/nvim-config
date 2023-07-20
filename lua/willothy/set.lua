@@ -53,9 +53,15 @@ opt.fillchars = {
   foldopen = icons.fold.open,
 }
 
-o.laststatus = 3
-
 opt.splitkeep = "screen"
+
+opt.sessionoptions = {
+  "buffers",
+  "tabpages",
+  "globals",
+}
+
+o.laststatus = 3
 
 o.number = true
 o.relativenumber = true

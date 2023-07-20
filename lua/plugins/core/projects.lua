@@ -2,12 +2,14 @@ return {
   {
     "stevearc/resession.nvim",
     config = function()
-      local curtab = vim.api.nvim_get_current_tabpage
-      local tabnr = vim.api.nvim_tabpage_get_number
-      local cwd = vim.fn.getcwd
       local resession = require("resession")
 
       resession.setup({
+        extensions = {
+          scope = {
+            enable_in_tab = true,
+          },
+        },
         autosave = {
           enabled = true,
           interval = 300,
@@ -18,17 +20,12 @@ return {
           local bufhidden = vim.bo[bufnr].bufhidden
           local name = vim.api.nvim_buf_get_name(bufnr)
           tabpage = vim.api.nvim_tabpage_get_number(tabpage)
-          if
-            bufhidden == "wipe"
-            or bufhidden == "unload"
-            or bufhidden == "delete"
-            or bufhidden == "hide"
-            or vim.bo[bufnr].buflisted == false
-          then
+
+          if bufhidden == "wipe" or vim.bo[bufnr].buflisted == false then
             return false
           end
 
-          return vim.startswith(name, cwd(-1, tabpage))
+          return vim.startswith(name, vim.fn.getcwd(-1, tabpage))
         end,
         buf_filter = function(bufnr)
           local filetype = vim.bo[bufnr].filetype
@@ -51,22 +48,29 @@ return {
       if vim.fn.argc(-1) == 0 then
         -- Save these to a different directory, so our manual sessions don't get polluted
         resession.load(
-          cwd(-1, -1),
-          { dir = "dirsession", silence_errors = true }
+          vim.fn.getcwd(-1),
+          { dir = "dirsession", silence_errors = false }
         )
       end
       vim.api.nvim_create_autocmd("VimLeavePre", {
         callback = function()
           resession.save_tab("last", { notify = false })
-          local name = cwd(-1, tabnr(curtab()))
-          resession.save_tab(name, { dir = "dirsession", notify = false })
+          local saved = {}
+          vim.iter(vim.api.nvim_list_tabpages()):each(function(tab)
+            local cwd = vim.fn.getcwd(-1, tab)
+            if not saved[cwd] then
+              resession.save_tab(cwd, { dir = "dirsession", notify = false })
+              saved[cwd] = true
+            end
+          end)
         end,
       })
     end,
     dependencies = {
       "ahmedkhalf/project.nvim",
+      "tiagovla/scope.nvim",
     },
-    event = "User ExtraLazy", --"UiEnter",
+    event = "User ExtraLazy",
   },
   {
     "ahmedkhalf/project.nvim",
@@ -88,6 +92,7 @@ return {
   },
   {
     "willothy/savior.nvim",
+    dir = "~/projects/lua/savior.nvim/",
     config = true,
     event = "User ExtraLazy",
   },
