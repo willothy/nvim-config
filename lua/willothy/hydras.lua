@@ -516,8 +516,8 @@ Hydra({
     { "w", "<C-w>w", { exit = true, desc = false } },
     { "<C-w>", "<C-w>w", { exit = true, desc = false } },
 
-    { "z", cmd("FocusMaximaze"), { exit = true, desc = "maximize" } },
-    { "<C-z>", cmd("FocusMaximaze"), { exit = true, desc = false } },
+    { "z", cmd("FocusMaximise"), { exit = true, desc = "maximize" } },
+    { "<C-z>", cmd("FocusMaximise"), { exit = true, desc = false } },
 
     { "o", "<C-w>o", { exit = true, desc = "remain only" } },
     { "<C-o>", "<C-w>o", { exit = true, desc = false } },

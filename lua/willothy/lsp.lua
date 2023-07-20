@@ -419,6 +419,9 @@ local function lsp_setup()
   })
 
   diagnostic.config({
+    warden = {
+      line_highlight = true,
+    },
     virtual_text = {
       prefix = "",
       format = function(diag)

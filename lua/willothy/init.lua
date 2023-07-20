@@ -20,7 +20,7 @@ require("lazy").setup({
     border = "rounded",
   },
   install = {
-    missing = false,
+    missing = true,
     colorscheme = { "minimus" },
   },
   browser = "brave",

@@ -71,7 +71,7 @@ return {
   },
   {
     "j-hui/fidget.nvim",
-    enabled=false,
+    enabled = false,
     branch = "legacy",
     opts = {
       text = {
@@ -187,4 +187,8 @@ return {
     lazy = true,
     event = "LspAttach",
   },
+  -- {
+  --   "williamboman/warden.nvim",
+  --   event = "User ExtraLazy",
+  -- },
 }
