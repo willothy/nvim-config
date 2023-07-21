@@ -182,8 +182,8 @@ end, {
     },
     {
       "u",
-      cmd("silent! UndotreeToggle"),
-      { desc = "undotree" },
+      telescope("undo"),
+      { desc = "edit hist." },
     },
     {
       "<Enter>",

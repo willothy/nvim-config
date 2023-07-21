@@ -3,6 +3,8 @@ local function get_filename(path)
   return path:sub(start, #path)
 end
 
+local side_by_side_min = 110
+
 local function add_to_harpoon(prompt_bufnr)
   local fb_utils = require("telescope._extensions.file_browser.utils")
   local files = fb_utils.get_selected_files(prompt_bufnr) -- get selected files
@@ -37,7 +39,42 @@ end
 
 local function config()
   local t = require("telescope")
+  local undo = {
+    use_delta = true,
+    side_by_side = vim.o.columns > side_by_side_min,
+    entry_format = "$STAT, $TIME",
+    layout_strategy = "bottom_pane",
+    sorting_strategy = "ascending",
+    results_title = false,
+    layout_config = {
+      preview_width = vim.o.columns > side_by_side_min and 0.75 or 0.65,
+      preview_cutoff = 1,
+      height = 0.8,
+      width = 0.9,
+    },
+    border = true,
+    borderchars = {
+      prompt = { "─", " ", " ", " ", "─", "─", " ", " " },
+      results = { " " },
+      preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+    },
+    mappings = {
+      i = {
+        ["<cr>"] = require("telescope-undo.actions").yank_additions,
+        ["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
+        ["<C-cr>"] = require("telescope-undo.actions").restore,
+      },
+    },
+  }
   t.setup({
+    pickers = {
+      find_files = {
+        layout_config = {
+          preview_cutoff = 1,
+        },
+        theme = "ivy",
+      },
+    },
     extensions = {
       ["ui-select"] = {
         require("telescope.themes").get_cursor({}),
@@ -56,8 +93,19 @@ local function config()
           },
         },
       },
+      undo = undo,
+      macros = {
+        theme = "ivy",
+      },
       heading = {
         treesitter = true,
+      },
+      fzf = {
+        fuzzy = true, -- false will only do exact matching
+        override_generic_sorter = true, -- override the generic sorter
+        override_file_sorter = true, -- override the file sorter
+        case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+        -- the default case_mode is "smart_case"
       },
     },
   })
@@ -69,6 +117,8 @@ local function config()
   t.load_extension("macros")
   t.load_extension("scope")
   t.load_extension("yank_history")
+  t.load_extension("undo")
+  t.load_extension("fzf")
 
   t.load_extension("ui-select")
   t.load_extension("heading")
@@ -80,6 +130,22 @@ local function config()
       end
     end,
   })
+
+  vim.api.nvim_create_autocmd("VimResized", {
+    callback = function(_ev)
+      local width = vim.api.nvim_get_option("columns")
+      undo.side_by_side = width > side_by_side_min
+      undo.layout_config.preview_width = vim.o.columns > side_by_side_min
+          and 0.75
+        or 0.65
+      require("telescope._extensions.undo").setup(undo)
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "TelescopePreviewerLoaded",
+    callback = function() vim.wo.wrap = false end,
+  })
 end
 
 return {
@@ -90,6 +156,11 @@ return {
       "nvim-telescope/telescope-file-browser.nvim",
       "molecule-man/telescope-menufacture",
       "crispgm/telescope-heading.nvim",
+      "debugloop/telescope-undo.nvim",
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+      },
     },
     config = config,
     event = "User ExtraLazy",

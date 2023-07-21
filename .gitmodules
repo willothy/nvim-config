@@ -1,0 +1,6 @@
+[submodule "futures.nvim"]
+	path = futures.nvim
+	url = git@github.com:willothy/futures.nvim
+[submodule "lua/futures"]
+	path = lua/futures
+	url = git@github.com:willothy/futures.nvim

@@ -86,4 +86,7 @@ return {
     config = true,
     event = "User ExtraLazy",
   },
+  {
+    "willothy/futures.nvim",
+  },
 }

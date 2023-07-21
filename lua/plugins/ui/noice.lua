@@ -17,6 +17,11 @@ return {
           enabled = true,
         },
         views = {
+          mini = {
+            win_options = {
+              winblend = 0,
+            },
+          },
           cmdline_popup = {
             position = {
               row = "35%",

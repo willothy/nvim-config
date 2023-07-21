@@ -261,7 +261,7 @@ local function setup_null()
       builtins.formatting.stylua,
       builtins.diagnostics.selene,
       builtins.formatting.prettier,
-      builtins.diagnostics.todo_comments,
+      -- builtins.diagnostics.todo_comments,
       builtins.formatting.asmfmt,
       builtins.formatting.beautysh,
       -- builtins.formatting.pyink,
@@ -279,8 +279,20 @@ local function setup_null()
     },
     on_attach = lsp_attach,
     should_attach = function(bufnr)
+      local ignored = {
+        "TelescopePrompt",
+        "neo-tree",
+        "SidebarNvim",
+        "Undotree",
+        "NvimTree",
+        "lazy",
+        "terminal",
+      }
       if not vim.bo[bufnr].buflisted then return false end
+      local win = vim.fn.bufwinid(bufnr)
+      if vim.wo[win].diff then return false end
       if vim.bo[bufnr].buftype ~= "" then return false end
+      if ignored[vim.bo[bufnr].filetype] then return false end
       return true
     end,
   })
