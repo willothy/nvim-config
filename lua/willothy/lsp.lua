@@ -53,12 +53,12 @@ local function lsp_maps(bufnr)
   map("n", "gD", buf.declaration, "Go to declaration")
   map("n", "gT", buf.type_definition, "Go to type definition")
   map("n", "gi", buf.implementation, "Go to implementation")
-  map(
-    "n",
-    "K",
-    function() require("rust-tools").hover_actions.hover_actions() end,
-    "Hover docs"
-  )
+  -- map(
+  --   "n",
+  --   "K",
+  --   function() require("rust-tools").hover_actions.hover_actions() end,
+  --   "Hover docs"
+  -- )
   map("n", "<leader>ws", buf.workspace_symbol, "Find workspace symbol")
   -- map("n", "<leader>fd", diagnostic.open_float, "Diagnostic float")
   map("n", "[d", diagnostic.goto_next, "Next diagnostic")

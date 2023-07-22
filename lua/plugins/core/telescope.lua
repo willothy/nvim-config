@@ -122,6 +122,7 @@ local function config()
 
   t.load_extension("ui-select")
   t.load_extension("heading")
+  t.load_extension("attempt")
 
   vim.api.nvim_create_autocmd("BufWinLeave", {
     callback = function(ev)

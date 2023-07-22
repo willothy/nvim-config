@@ -16,16 +16,10 @@ return {
           notify = false,
         },
         tab_buf_filter = function(tabpage, bufnr)
-          if vim.bo[bufnr].buftype ~= "" then return false end
-          local bufhidden = vim.bo[bufnr].bufhidden
-          local name = vim.api.nvim_buf_get_name(bufnr)
-          tabpage = vim.api.nvim_tabpage_get_number(tabpage)
-
-          if bufhidden == "wipe" or vim.bo[bufnr].buflisted == false then
-            return false
-          end
-
-          return vim.startswith(name, vim.fn.getcwd(-1, tabpage))
+          return vim.startswith(
+            vim.api.nvim_buf_get_name(bufnr),
+            vim.fn.getcwd(-1, vim.api.nvim_tabpage_get_number(tabpage))
+          )
         end,
         buf_filter = function(bufnr)
           local filetype = vim.bo[bufnr].filetype
@@ -48,21 +42,25 @@ return {
       if vim.fn.argc(-1) == 0 then
         -- Save these to a different directory, so our manual sessions don't get polluted
         resession.load(
-          vim.fn.getcwd(-1),
+          vim.fn.getcwd(),
           { dir = "dirsession", silence_errors = false }
         )
       end
       vim.api.nvim_create_autocmd("VimLeavePre", {
         callback = function()
-          resession.save_tab("last", { notify = false })
-          local saved = {}
+          resession.save("last", { notify = false })
+          -- resession.save_tab(
+          --   vim.fn.getcwd(-1),
+          --   { dir = "dirsession", notify = false }
+          -- )
           vim.iter(vim.api.nvim_list_tabpages()):each(function(tab)
-            local cwd = vim.fn.getcwd(-1, tab)
-            if not saved[cwd] then
+            local win = vim.api.nvim_tabpage_get_win(tab)
+            vim.api.nvim_win_call(win, function()
+              local cwd = vim.fn.getcwd(-1)
               resession.save_tab(cwd, { dir = "dirsession", notify = false })
-              saved[cwd] = true
-            end
+            end)
           end)
+          -- resession.save_all({ notify = false })
         end,
       })
     end,
@@ -74,21 +72,33 @@ return {
   },
   {
     "ahmedkhalf/project.nvim",
-    event = "User ExtraLazy",
-    config = function()
-      require("project_nvim").setup({
-        patterns = {
-          ".git",
-          "Cargo.toml",
-        },
-        scope_chdir = "tab",
-      })
-    end,
+    name = "project_nvim",
+    event = "VeryLazy",
+    opts = {
+      detection_methods = { "lsp", "pattern" },
+      patterns = {
+        ".git",
+        "Cargo.toml",
+        "Makefile",
+        "package.json",
+        "^.config/",
+        "^~/projects/*/",
+      },
+      exclude_dirs = {
+        "~/.local/",
+        "~/.cargo/",
+      },
+      ignore_lsp = { "null-ls", "savior" },
+      silent_chdir = false,
+      show_hidden = true,
+      scope_chdir = "tab",
+    },
   },
   {
     "tiagovla/scope.nvim",
     config = true,
-    event = "User ExtraLazy",
+    event = "UiEnter",
+    -- event = "User ExtraLazy",
   },
   {
     "willothy/savior.nvim",

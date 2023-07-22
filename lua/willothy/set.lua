@@ -82,18 +82,3 @@ vim.api.nvim_create_autocmd({
 }, {
   callback = function() vim.cmd("checktime") end,
 })
-
-local groupname = "return_to_mark"
-vim.api.nvim_create_augroup(groupname, { clear = true })
-
-vim.api.nvim_create_autocmd({ "BufReadPost" }, {
-  group = groupname,
-  pattern = "*",
-  callback = function()
-    local line = vim.fn.line([['"]])
-    if line > 0 and line <= vim.api.nvim_buf_line_count(0) then
-      vim.cmd.normal({ [[g`"zz]], bang = true })
-    end
-  end,
-  once = false,
-})
