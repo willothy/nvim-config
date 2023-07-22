@@ -432,8 +432,23 @@ register({ "n", "x" }, {
 })
 
 require("which-key").register({
-  v = "view",
+  v = {
+    name = "view",
+    o = {
+      function() require("telescope.builtin").oldfiles() end,
+      "oldfiles",
+    },
+    r = {
+      function() require("telescope.builtin").registers() end,
+      "registers",
+    },
+    s = {
+      function() require("telescope.builtin").lsp_document_symbols() end,
+      "document symbols",
+    },
+  },
   r = "lsp",
+  m = "marks",
   a = {
     function() require("harpoon.mark").add_file() end,
     "Add file to harpoon",
@@ -484,29 +499,21 @@ require("which-key").register({
       end,
       "Send to terminal",
     },
+    d = {
+      function() require("dapui").toggle() end,
+      "dap ui",
+    },
     p = {
       function() require("willothy.terminals").py:toggle() end,
-      "Python repl",
+      "python repl",
     },
     l = {
       function() require("willothy.terminals").lua:toggle() end,
-      "Lua repl",
+      "lua repl",
     },
     c = {
-      name = "Actions",
-      a = "Code actions",
-      o = {
-        function() require("telescope.builtin").oldfiles() end,
-        "Telescope oldfiles",
-      },
-      r = {
-        function() require("telescope.builtin").registers() end,
-        "Telescope registers",
-      },
-      s = {
-        function() require("telescope.builtin").lsp_document_symbols() end,
-        "Telescope LSP document symbols",
-      },
+      name = "actions",
+      a = "code actions",
     },
   },
   b = {
@@ -540,23 +547,22 @@ require("which-key").register({
       function() require("willothy.util").browse(vim.loop.os_homedir()) end,
       "Browse home directory",
     },
-    cr = {
-      function()
-        require("willothy.util").browse(require("willothy.util").crate_root())
-      end,
-      "Browse crate root",
+  },
+  n = {
+    name = "dotfiles",
+    v = {
+      function() require("willothy.util").browse(vim.fn.stdpath("config")) end,
+      "nvim config",
     },
-    pc = {
+    z = {
       function()
-        require("willothy.util").browse(require("willothy.util").parent_crate())
+        require("willothy.util").browse(vim.fn.stdpath("config") .. "/../zsh")
       end,
-      "Browse parent crate",
+      "zsh config",
     },
   },
   c = {
-    name = "comment",
-    c = "Comment current line",
-    b = "Block comment current line",
+    name = "codelens",
   },
   g = {
     name = "git",
@@ -577,21 +583,6 @@ require("which-key").register({
         end
       end,
       "Diffview",
-    },
-  },
-  d = {
-    name = "Debugging",
-    t = {
-      function() require("dapui").toggle() end,
-      "Toggle DAP UI",
-    },
-  },
-  ["l$"] = "Add comment at end of line",
-  n = {
-    name = "neovim",
-    v = {
-      function() require("willothy.util").browse(vim.fn.stdpath("config")) end,
-      "Browse nvim config",
     },
   },
   j = {

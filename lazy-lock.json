@@ -112,6 +112,7 @@
   "ufo": { "branch": "main", "commit": "43e39ec74cd57c45ca9d8229a796750f6083b850" },
   "undotree": { "branch": "master", "commit": "0e11ba7325efbbb3f3bebe06213afa3e7ec75131" },
   "venn.nvim": { "branch": "main", "commit": "c114563960b8fb1197695d42798d1f3e7190b798" },
+  "vim-lastplace": { "branch": "master", "commit": "cef9d62165cd26c3c2b881528a5290a84347059e" },
   "wezterm.nvim": { "branch": "main", "commit": "9e209cb4afb2b785c116bbe2d9777cb82d700671" },
   "which-key.nvim": { "branch": "main", "commit": "38b990f6eabf62014018b4aae70a97d7a6c2eb88" },
   "winshift.nvim": { "branch": "not_triggering_optionset_event", "commit": "e9efa99cce1f53c15f48236ba56add82003f8f40" },

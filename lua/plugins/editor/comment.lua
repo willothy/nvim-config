@@ -1,14 +1,11 @@
 local opt = {
-  toggler = { -- Normal Mode
-    line = "<leader>cc",
-    block = "<leader>cb",
-  },
+  -- toggler = { -- Normal Mode
+  --   line = "<leader>cc",
+  --   block = "<leader>cb",
+  -- },
   opleader = { -- Visual Mode
     block = "<leader>c",
     line = "<leader>C",
-  },
-  extra = {
-    eol = "<leader>l$",
   },
 }
 

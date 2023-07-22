@@ -533,7 +533,7 @@ Hydra({
   },
 })
 
-Hydra({
+local diagram = Hydra({
   name = "Draw Diagram",
   hint = [[
  Arrow^^^^^^   Select region with <C-v> 
@@ -551,7 +551,6 @@ Hydra({
     on_exit = function() vim.o.virtualedit = "block" end,
   },
   mode = "n",
-  body = "<leader>,d",
   heads = {
     { "H", "<C-v>h:VBox<CR>" },
     { "J", "<C-v>j:VBox<CR>" },
@@ -561,3 +560,9 @@ Hydra({
     { "<Esc>", nil, { exit = true } },
   },
 })
+
+vim.api.nvim_create_user_command(
+  "DrawDiagram",
+  function() diagram:activate() end,
+  {}
+)

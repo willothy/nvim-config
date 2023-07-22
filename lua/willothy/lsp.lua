@@ -49,46 +49,43 @@ local function lsp_maps(bufnr)
     setmap(m, lhs, rhs, vim.tbl_deep_extend("keep", opts, { desc = desc }))
   end
 
-  map("n", "gd", buf.definition, "Go to definition")
-  map("n", "gD", buf.declaration, "Go to declaration")
-  map("n", "gT", buf.type_definition, "Go to type definition")
-  map("n", "gi", buf.implementation, "Go to implementation")
-  -- map(
-  --   "n",
-  --   "K",
-  --   function() require("rust-tools").hover_actions.hover_actions() end,
-  --   "Hover docs"
-  -- )
-  map("n", "<leader>ws", buf.workspace_symbol, "Find workspace symbol")
-  -- map("n", "<leader>fd", diagnostic.open_float, "Diagnostic float")
-  map("n", "[d", diagnostic.goto_next, "Next diagnostic")
-  map("n", "]d", diagnostic.goto_prev, "Previous diagnostic")
+  map("n", "gd", buf.definition, "definition")
+  map("n", "gD", buf.declaration, "declaration")
+  map("n", "gT", buf.type_definition, "type definition")
+  map("n", "gi", buf.implementation, "implementation")
+  map(
+    "n",
+    "K",
+    function() require("rust-tools").hover_actions.hover_actions() end,
+    "hover"
+  )
+  map("n", "[d", diagnostic.goto_next, "diagnostic 󰞘")
+  map("n", "]d", diagnostic.goto_prev, "󰞗 diagnostic")
   map("n", "<leader>ca", function()
     -- require("actions-preview").code_actions()
     -- local win = vim.api.nvim_get_current_win()
     -- require("rust-tools").code_action_group.code_action_group()
     -- vim.api.nvim_set_current_win(win)
     require("hollywood").code_actions()
-  end, "Code actions")
-  map("n", "<leader>vh", function() buf.signature_help() end, "Signature help")
+  end, "code actions")
 
   local trouble = require("trouble").open
-  map("n", "<leader>rr", utils.bind(trouble, "lsp_references"), "References")
-  map("n", "<leader>vd", utils.bind(trouble, "lsp_definitions"), "Definitions")
+  map("n", "<leader>rr", utils.bind(trouble, "lsp_references"), "references")
+  map("n", "<leader>vd", utils.bind(trouble, "lsp_definitions"), "definitions")
   map(
     "n",
     "<leader>vd",
     utils.bind(trouble, "lsp_type_definitions"),
     "Type definitions"
   )
-  map("n", "<leader>vq", utils.bind(trouble, "quickfix"), "Quickfix")
-  map("n", "<leader>vl", utils.bind(trouble, "loclist"), "Loclist")
+  map("n", "<leader>vq", utils.bind(trouble, "quickfix"), "quickfix")
+  map("n", "<leader>vl", utils.bind(trouble, "loclist"), "loclist")
 
   local increname = function()
     vim.api.nvim_feedkeys(":IncRename " .. fn.expand("<cword>"), "n", false)
   end
-  setmap("n", "<leader>rn", increname, { expr = true, desc = "Rename" })
-  setmap("n", "<F2>", increname, { expr = true, desc = "Rename" })
+  setmap("n", "<leader>rn", increname, { expr = true, desc = "rename" })
+  setmap("n", "<F2>", increname, { expr = true, desc = "rename" })
 end
 
 local format

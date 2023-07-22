@@ -120,7 +120,7 @@ return {
   {
     "LunarVim/bigfile.nvim",
     opts = {
-      filesize = 2,
+      filesize = 4,
       pattern = { "*" },
       features = {
         "treesitter",
