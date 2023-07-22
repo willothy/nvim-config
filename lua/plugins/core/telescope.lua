@@ -107,22 +107,31 @@ local function config()
         case_mode = "smart_case", -- or "ignore_case" or "respect_case"
         -- the default case_mode is "smart_case"
       },
+      bookmarks = {
+        selected_browser = "brave",
+        url_open_command = "xdg-open",
+      },
     },
   })
 
-  t.load_extension("file_browser")
-  t.load_extension("menufacture")
-  t.load_extension("projects")
-  t.load_extension("noice")
-  t.load_extension("macros")
-  t.load_extension("scope")
-  t.load_extension("yank_history")
-  t.load_extension("undo")
-  t.load_extension("fzf")
+  local function scheduled(extension)
+    vim.schedule(function() require("telescope").load_extension(extension) end)
+  end
 
-  t.load_extension("ui-select")
-  t.load_extension("heading")
-  t.load_extension("attempt")
+  scheduled("file_browser")
+  scheduled("menufacture")
+  scheduled("projects")
+  scheduled("noice")
+  scheduled("macros")
+  scheduled("scope")
+  scheduled("yank_history")
+  scheduled("undo")
+  scheduled("fzf")
+
+  scheduled("ui-select")
+  scheduled("heading")
+  scheduled("attempt")
+  scheduled("bookmarks")
 
   vim.api.nvim_create_autocmd("BufWinLeave", {
     callback = function(ev)
@@ -158,12 +167,13 @@ return {
       "molecule-man/telescope-menufacture",
       "crispgm/telescope-heading.nvim",
       "debugloop/telescope-undo.nvim",
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-      },
+      "dhruvmanila/browser-bookmarks.nvim",
     },
     config = config,
     event = "User ExtraLazy",
+  },
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
   },
 }

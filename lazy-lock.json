@@ -9,6 +9,7 @@
   "aerial.nvim": { "branch": "master", "commit": "8a59ed2dc9563833ee0277b5bfd2e06faf95c2ab" },
   "attempt.nvim": { "branch": "main", "commit": "e6c5f29db1628f0b11cc47bb0e78b43bc1cf8f08" },
   "bigfile.nvim": { "branch": "main", "commit": "9616b73670ffeb92679677554ded88854ae42cf8" },
+  "browser-bookmarks.nvim": { "branch": "main", "commit": "e643372d509d138d3244f917283b13f52a9cf5eb" },
   "bufdelete.nvim": { "branch": "master", "commit": "07d1f8ba79dec59d42b975a4df1c732b2e4e37b4" },
   "bufresize.nvim": { "branch": "master", "commit": "3b19527ab936d6910484dcc20fb59bdb12322d8b" },
   "cellular-automaton.nvim": { "branch": "main", "commit": "679943b8e1e5ef79aaeeaf4b00782c52eb4e928f" },

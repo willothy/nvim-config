@@ -66,7 +66,7 @@ return {
           end,
           size = { height = 0.4 },
         },
-        { ft = "qf", title = "QuickFix" },
+        -- { ft = "qf", title = "QuickFix" },
         {
           ft = "help",
           size = { height = 0.4 },
