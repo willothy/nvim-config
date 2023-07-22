@@ -346,6 +346,20 @@ register("t", {
   ["<Esc>"] = { "<C-\\><C-n>", "Exit terminal" },
 })
 
+local function find_tab_direction(dir)
+  local current_tab = vim.api.nvim_get_current_tabpage()
+  local all_tabs = vim.api.nvim_list_tabpages()
+
+  local next
+  for i, tab in ipairs(all_tabs) do
+    if tab == current_tab then
+      next = all_tabs[(i + dir - 1) % #all_tabs + 1]
+    end
+  end
+
+  if next then vim.api.nvim_set_current_tabpage(next) end
+end
+
 require("which-key").register({
   ["["] = {
     name = "prev",
@@ -357,6 +371,18 @@ require("which-key").register({
       function() require("cokeline.mappings").by_step("switch", -1) end,
       "Move previous buffer",
     },
+    t = {
+      function()
+        local count = vim.v.count
+        if count == 0 then count = 1 end
+        find_tab_direction(-count)
+      end,
+      "Previous tab",
+    },
+    e = {
+      function() vim.diagnostic.goto_prev({ severity = "error" }) end,
+      "Previous error",
+    },
   },
   ["]"] = {
     name = "next",
@@ -367,6 +393,18 @@ require("which-key").register({
     B = {
       function() require("cokeline.mappings").by_step("switch", 1) end,
       "Move next buffer",
+    },
+    t = {
+      function()
+        local count = vim.v.count
+        if count == 0 then count = 1 end
+        find_tab_direction(count)
+      end,
+      "Next tab",
+    },
+    e = {
+      function() vim.diagnostic.goto_next({ severity = "error" }) end,
+      "Next error",
     },
   },
 })

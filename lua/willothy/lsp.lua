@@ -503,6 +503,8 @@ local filetypes = {
       capabilities = mkcaps(false),
       attach = lsp_attach,
       filetypes = { "zsh", "sh", "bash" },
+      root_dir = require("lspconfig.util").root_pattern(".git", ".zshrc"),
+      single_file_support = false,
     })
   end,
 }

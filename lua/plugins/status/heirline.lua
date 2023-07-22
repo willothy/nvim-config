@@ -508,6 +508,20 @@ return {
           hl = hl.C,
         })
 
+        local WorkDir = Component({
+          -- init = function(self)
+          --   if not self.cwd then self.cwd = vim.fn.getcwd(-1) end
+          -- end,
+          provider = function(self) return self.cwd end,
+          update = {
+            "DirChanged",
+            "VimEnter",
+            "UiEnter",
+            callback = function(self) self.cwd = vim.fn.getcwd(-1) end,
+          },
+          hl = hl.C,
+        })
+
         -- Statusline item format
         --
         -- Usually, the statusline consists of multiple printf style % items for showing various info about current file, e.g., %F is used to show the full path of current file. The complete format for items are as follows:
@@ -533,6 +547,7 @@ return {
             }, hl.C),
             Harpoon,
             Space(1),
+            WorkDir,
             {
               provider = "%<",
             },

@@ -49,10 +49,6 @@ return {
       vim.api.nvim_create_autocmd("VimLeavePre", {
         callback = function()
           resession.save("last", { notify = false })
-          -- resession.save_tab(
-          --   vim.fn.getcwd(-1),
-          --   { dir = "dirsession", notify = false }
-          -- )
           vim.iter(vim.api.nvim_list_tabpages()):each(function(tab)
             local win = vim.api.nvim_tabpage_get_win(tab)
             vim.api.nvim_win_call(win, function()
@@ -60,7 +56,6 @@ return {
               resession.save_tab(cwd, { dir = "dirsession", notify = false })
             end)
           end)
-          -- resession.save_all({ notify = false })
         end,
       })
     end,
@@ -73,22 +68,25 @@ return {
   {
     "ahmedkhalf/project.nvim",
     name = "project_nvim",
-    event = "VeryLazy",
+    event = "User ExtraLazy",
     opts = {
-      detection_methods = { "lsp", "pattern" },
+      detection_methods = {
+        "lsp",
+        "pattern",
+      },
       patterns = {
+        "^.config/",
         ".git",
         "Cargo.toml",
         "Makefile",
-        "package.json",
-        "^.config/",
         "^~/projects/*/",
+        "package.json",
       },
       exclude_dirs = {
         "~/.local/",
         "~/.cargo/",
       },
-      ignore_lsp = { "null-ls", "savior" },
+      ignore_lsp = { "null-ls", "savior", "copilot" },
       silent_chdir = false,
       show_hidden = true,
       scope_chdir = "tab",
@@ -97,8 +95,7 @@ return {
   {
     "tiagovla/scope.nvim",
     config = true,
-    event = "UiEnter",
-    -- event = "User ExtraLazy",
+    event = "User ExtraLazy",
   },
   {
     "willothy/savior.nvim",
@@ -112,9 +109,9 @@ return {
   --     local tabnames = require("tabnames")
   --     tabnames.setup({
   --       auto_suggest_names = true,
-  --       default_tab_name = tabnames.tab_name_presets.short_tab_cwd,
+  --       default_tab_name = tabnames.tab_name_presets.tab_cwd,
   --       experimental = {
-  --         session_support = false,
+  --         session_support = true,
   --       },
   --     })
   --   end,
