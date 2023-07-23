@@ -586,10 +586,12 @@ require("which-key").register({
     },
   },
   j = {
-    name = "portal",
-    gd = { portal_diagnostics, "global diagnostics" },
+    name = "jump",
+    -- gd = { portal_diagnostics, "global diagnostics" },
     d = {
-      function() portal_diagnostics({ buffer = 0 }) end,
+      function()
+        portal_diagnostics({ buffer = vim.api.nvim_get_current_buf() })
+      end,
       "diagnostics",
     },
     r = { portal_references, "references" },
@@ -624,22 +626,3 @@ require("which-key").register({
 }, {
   mode = "v",
 })
-
--- require("which-key").register({
---   ["<C-j>"] = {
---     function() vim.cmd("norm! j") end,
---     "move cursor down",
---   },
---   ["<C-k>"] = {
---     function() vim.cmd("norm! k") end,
---     "move cursor up",
---   },
---   ["<C-h>"] = {
---     function() vim.cmd("norm! h") end,
---     "move cursor left",
---   },
---   ["<C-l>"] = {
---     function() vim.cmd("norm! l") end,
---     "move cursor right",
---   },
--- }, { mode = { "i", "c" } })
