@@ -10,6 +10,10 @@ return {
           title = "Sidebar",
         },
         {
+          ft = "gh",
+          title = "Gists",
+        },
+        {
           title = "Files",
           ft = "neo-tree",
           filter = function(buf)

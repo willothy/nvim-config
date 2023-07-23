@@ -171,4 +171,9 @@ return {
     end,
     cmd = "Attempt",
   },
+  {
+    "rawnly/gist.nvim",
+    cmd = { "GistCreate", "GistCreateFromFile", "GistsList" },
+    config = true,
+  },
 }

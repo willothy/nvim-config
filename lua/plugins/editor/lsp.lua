@@ -187,6 +187,11 @@ return {
     lazy = true,
     event = "LspAttach",
   },
+  {
+    "VidocqH/lsp-lens.nvim",
+    config = true,
+    event = "LspAttach",
+  },
   -- {
   --   "williamboman/warden.nvim",
   --   event = "UiEnter",

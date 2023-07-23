@@ -70,13 +70,13 @@ local function lsp_maps(bufnr)
   end, "code actions")
 
   local trouble = require("trouble").open
-  map("n", "<leader>rr", utils.bind(trouble, "lsp_references"), "references")
-  map("n", "<leader>vd", utils.bind(trouble, "lsp_definitions"), "definitions")
+  map("n", "<leader>cr", utils.bind(trouble, "lsp_references"), "references")
+  map("n", "<leader>cd", utils.bind(trouble, "lsp_definitions"), "definitions")
   map(
     "n",
-    "<leader>vd",
+    "<leader>cd",
     utils.bind(trouble, "lsp_type_definitions"),
-    "Type definitions"
+    "type definitions"
   )
   map("n", "<leader>vq", utils.bind(trouble, "quickfix"), "quickfix")
   map("n", "<leader>vl", utils.bind(trouble, "loclist"), "loclist")
@@ -84,7 +84,7 @@ local function lsp_maps(bufnr)
   local increname = function()
     vim.api.nvim_feedkeys(":IncRename " .. fn.expand("<cword>"), "n", false)
   end
-  setmap("n", "<leader>rn", increname, { expr = true, desc = "rename" })
+  setmap("n", "<leader>cn", increname, { expr = true, desc = "rename" })
   setmap("n", "<F2>", increname, { expr = true, desc = "rename" })
 end
 

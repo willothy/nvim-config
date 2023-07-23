@@ -1,5 +1,3 @@
-https://github.com/booperlv/nvim-gomove|1 col 1| https://github.com/booperlv/nvim-gomove
-https://github.com/VidocqH/lsp-lens.nvim|1 col 1| https://github.com/VidocqH/lsp-lens.nvim
 https://github.com/rawnly/gist.nvim|1 col 1| https://github.com/rawnly/gist.nvim
 https://github.com/dstein64/nvim-scrollview|1 col 1| https://github.com/dstein64/nvim-scrollview
 https://github.com/jbyuki/one-small-step-for-vimkind|1 col 1| https://github.com/jbyuki/one-small-step-for-vimkind
@@ -16,4 +14,3 @@ https://github.com/folke/paint.nvim|1 col 1| https://github.com/folke/paint.nvim
 https://github.com/b0o/SchemaStore.nvim|1 col 1| https://github.com/b0o/SchemaStore.nvim
 https://github.com/nvim-lua/lsp-status.nvim|1 col 1| https://github.com/nvim-lua/lsp-status.nvim
 https://github.com/rmagatti/goto-preview|1 col 1| https://github.com/rmagatti/goto-preview
-https://github.com/dhruvmanila/browser-bookmarks.nvim|1 col 1| https://github.com/dhruvmanila/browser-bookmarks.nvim

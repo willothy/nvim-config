@@ -346,14 +346,14 @@ register("t", {
   ["<Esc>"] = { "<C-\\><C-n>", "Exit terminal" },
 })
 
-local function find_tab_direction(dir)
+local function find_tab_direction(step)
   local current_tab = vim.api.nvim_get_current_tabpage()
   local all_tabs = vim.api.nvim_list_tabpages()
 
   local next
   for i, tab in ipairs(all_tabs) do
     if tab == current_tab then
-      next = all_tabs[(i + dir - 1) % #all_tabs + 1]
+      next = all_tabs[(i + step - 1) % #all_tabs + 1]
     end
   end
 
@@ -446,23 +446,27 @@ require("which-key").register({
       function() require("telescope.builtin").lsp_document_symbols() end,
       "document symbols",
     },
+    l = {
+      name = "legendary",
+      k = {
+        "<cmd>Legendary keymaps<cr>",
+        "keymaps",
+      },
+      a = {
+        "<cmd>Legendary autocmds<CR>",
+        "autocmds",
+      },
+      c = {
+        "<cmd>Legendary commands<cr>",
+        "commands",
+      },
+      f = {
+        "<cmd>Legendary functions<cr>",
+        "functions",
+      },
+    },
   },
-  r = "lsp",
   m = "marks",
-  a = {
-    function() require("harpoon.mark").add_file() end,
-    "Add file to harpoon",
-  },
-  -- f = {
-  --   name = "telescope",
-  --   f = "find files",
-  --   s = "live grep",
-  --   g = "git files",
-  --   r = "resume",
-  --   p = "projects",
-  --   u = "undotree",
-  --   ["<Enter>"] = "builtin pickers",
-  -- },
   t = {
     name = "toggle",
     u = { vim.cmd.UndotreeToggle, "Toggle undotree" },
@@ -520,37 +524,38 @@ require("which-key").register({
     name = "buffer",
     p = {
       function() require("cokeline.mappings").pick("focus") end,
-      "Pick buffer",
+      "pick & focus",
     },
     x = {
       function() require("cokeline.mappings").pick("close") end,
-      "Delete buffer",
+      "pick & close",
+    },
+    a = {
+      function() require("harpoon.mark").add_file() end,
+      "add to harpoon",
     },
   },
   p = {
-    name = "project",
+    name = "files",
     f = {
       function() require("willothy.util").browse("~/projects/") end,
-      "Browse projects",
+      "projects",
     },
     v = {
       function() require("willothy.util").browse() end,
-      "Browse current directory",
+      "current directory",
     },
     r = {
       function()
         require("willothy.util").browse(require("willothy.util").project_root())
       end,
-      "Browse project root",
+      "project root",
     },
     h = {
       function() require("willothy.util").browse(vim.loop.os_homedir()) end,
-      "Browse home directory",
+      "home directory",
     },
-  },
-  n = {
-    name = "dotfiles",
-    v = {
+    n = {
       function() require("willothy.util").browse(vim.fn.stdpath("config")) end,
       "nvim config",
     },
@@ -563,6 +568,10 @@ require("which-key").register({
   },
   c = {
     name = "codelens",
+    a = {
+      function() require("hollywood").code_actions() end,
+      "code actions",
+    },
   },
   g = {
     name = "git",

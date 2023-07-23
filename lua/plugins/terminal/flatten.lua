@@ -18,10 +18,12 @@ end
 return {
   {
     "willothy/flatten.nvim",
+    dir = "~/projects/lua/flatten/",
     cond = true,
     lazy = false,
     priority = 1000,
     opts = {
+      nest_if_no_args = true,
       window = {
         open = "alternate",
         -- open = function(files, argv, stdin_buf_id)

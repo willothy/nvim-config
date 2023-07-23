@@ -38,10 +38,10 @@ return {
       require("statuscol").setup({
         relculright = true,
         segments = {
-          {
-            text = { " " },
-            condition = { ok and winborder or false },
-          },
+          --{
+          --  text = { " " },
+          --  condition = { ok and winborder or false },
+          --},
           {
             sign = {
               name = { "GitSigns*" },
