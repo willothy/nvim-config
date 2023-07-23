@@ -515,10 +515,6 @@ require("which-key").register({
       function() require("willothy.terminals").lua:toggle() end,
       "lua repl",
     },
-    c = {
-      name = "actions",
-      a = "code actions",
-    },
   },
   b = {
     name = "buffer",

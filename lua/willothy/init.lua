@@ -85,7 +85,7 @@ vim.api.nvim_create_autocmd("User", {
     require("willothy.commands")
 
     -- setup annoying "use hjkl" messages
-    require("willothy.hjkl")()
+    -- require("willothy.hjkl")()
   end,
 })
 
