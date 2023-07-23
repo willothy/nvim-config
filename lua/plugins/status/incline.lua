@@ -70,20 +70,16 @@ return {
     config = function()
       require("incline").setup({
         window = {
-          padding = 1,
+          padding = 0,
           padding_char = " ",
           margin = {
             horizontal = 0,
-            vertical = {
-              top = 0,
-              bottom = 0,
-            },
+            vertical = 0,
           },
           placement = {
             horizontal = "right",
             vertical = "top",
           },
-          options = {},
         },
         highlight = {
           groups = {
@@ -109,11 +105,12 @@ return {
           local buffer = {
             -- get_search_term(props),
             -- get_diagnostic_label(props),
-            get_git_diff(props),
-            { ft_icon, guifg = ft_color },
             { " " },
+            get_git_diff(props),
+            { ft_icon, " ", guifg = ft_color },
             {
               filename,
+              " ",
               gui = modified,
             },
           }
