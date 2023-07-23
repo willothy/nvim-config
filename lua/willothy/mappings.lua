@@ -364,11 +364,21 @@ require("which-key").register({
   ["["] = {
     name = "prev",
     b = {
-      function() require("cokeline.mappings").by_step("focus", -1) end,
+      function()
+        require("cokeline.mappings").by_step(
+          "focus",
+          -(vim.v.count >= 1 and vim.v.count or 1)
+        )
+      end,
       "Focus previous buffer",
     },
     B = {
-      function() require("cokeline.mappings").by_step("switch", -1) end,
+      function()
+        require("cokeline.mappings").by_step(
+          "switch",
+          -(vim.v.count >= 1 and vim.v.count or 1)
+        )
+      end,
       "Move previous buffer",
     },
     t = {
@@ -387,11 +397,21 @@ require("which-key").register({
   ["]"] = {
     name = "next",
     b = {
-      function() require("cokeline.mappings").by_step("focus", 1) end,
+      function()
+        require("cokeline.mappings").by_step(
+          "focus",
+          (vim.v.count >= 1 and vim.v.count or 1)
+        )
+      end,
       "Focus next buffer",
     },
     B = {
-      function() require("cokeline.mappings").by_step("switch", 1) end,
+      function()
+        require("cokeline.mappings").by_step(
+          "switch",
+          (vim.v.count >= 1 and vim.v.count or 1)
+        )
+      end,
       "Move next buffer",
     },
     t = {
