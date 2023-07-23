@@ -624,3 +624,22 @@ require("which-key").register({
 }, {
   mode = "v",
 })
+
+-- require("which-key").register({
+--   ["<C-j>"] = {
+--     function() vim.cmd("norm! j") end,
+--     "move cursor down",
+--   },
+--   ["<C-k>"] = {
+--     function() vim.cmd("norm! k") end,
+--     "move cursor up",
+--   },
+--   ["<C-h>"] = {
+--     function() vim.cmd("norm! h") end,
+--     "move cursor left",
+--   },
+--   ["<C-l>"] = {
+--     function() vim.cmd("norm! l") end,
+--     "move cursor right",
+--   },
+-- }, { mode = { "i", "c" } })

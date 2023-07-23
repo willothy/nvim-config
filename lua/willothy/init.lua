@@ -71,7 +71,73 @@ vim.api.nvim_create_autocmd("User", {
   once = true,
   callback = vim.schedule_wrap(function()
     -- require("lazy").load("willothy")
+
     initialize()
+
+    -- STOP USING THE DAMN ARROW KEYS
+    -- local arrows = {
+    --   [vim.keycode("<Up>")] = "<Up>",
+    --   [vim.keycode("<Down>")] = "<Down>",
+    --   [vim.keycode("<Left>")] = "<Left>",
+    --   [vim.keycode("<Right>")] = "<Right>",
+    -- }
+
+    local modes = {
+      "n",
+      "i",
+      "v",
+      "x",
+      --wtf else do I do in command mode??
+      --[[ , "c" ]]
+    }
+    local alternates = {
+      i = {
+        ["<Up>"] = "<C-k>",
+        ["<Down>"] = "<C-j>",
+        ["<Left>"] = "<C-h>",
+        ["<Right>"] = "<C-l>",
+      },
+      c = {
+        ["<Up>"] = "<C-k>",
+        ["<Down>"] = "<C-j>",
+        ["<Left>"] = "<C-h>",
+        ["<Right>"] = "<C-l>",
+      },
+      n = {
+        ["<Up>"] = "k",
+        ["<Down>"] = "j",
+        ["<Left>"] = "h",
+        ["<Right>"] = "l",
+      },
+      v = {
+        ["<Up>"] = "k",
+        ["<Down>"] = "j",
+        ["<Left>"] = "h",
+        ["<Right>"] = "l",
+      },
+    }
+    local message = function(key)
+      return key,
+        function()
+          local mode = vim.api.nvim_get_mode().mode
+          local msg = ("use %s !!"):format(
+            (alternates[mode] or {})[key] or "hjkl"
+          )
+          vim.notify(msg, "error")
+        end
+    end
+
+    local norm = function(cmd)
+      return function() vim.cmd.normal(cmd) end
+    end
+    vim.keymap.set({ "i", "c" }, "<C-j>", norm("j"), { noremap = true })
+    vim.keymap.set({ "i", "c" }, "<C-k>", norm("k"), { noremap = true })
+    vim.keymap.set({ "i", "c" }, "<C-h>", norm("h"), { noremap = true })
+    vim.keymap.set({ "i", "c" }, "<C-l>", norm("l"), { noremap = true })
+    vim.keymap.set(modes, message("<Up>"))
+    vim.keymap.set(modes, message("<Down>"))
+    vim.keymap.set(modes, message("<Left>"))
+    vim.keymap.set(modes, message("<Right>"))
   end),
 })
 
