@@ -6,7 +6,7 @@
   "NeoColumn.nvim": { "branch": "main", "commit": "456bd054b65a5a8bb8a8cb4b3afc5bbbedcb0994" },
   "NeoComposer.nvim": { "branch": "main", "commit": "76212fe75e23f757bd8cc31c8522c3d4490e5ffd" },
   "actions-preview.nvim": { "branch": "master", "commit": "3028c9a35853bb5fb77670fb58537ce28085329c" },
-  "aerial.nvim": { "branch": "master", "commit": "8a59ed2dc9563833ee0277b5bfd2e06faf95c2ab" },
+  "aerial.nvim": { "branch": "master", "commit": "fb1f08c9f90e8b0c04b2f2c5d95d06288a14c5b2" },
   "attempt.nvim": { "branch": "main", "commit": "e6c5f29db1628f0b11cc47bb0e78b43bc1cf8f08" },
   "bigfile.nvim": { "branch": "main", "commit": "9616b73670ffeb92679677554ded88854ae42cf8" },
   "browser-bookmarks.nvim": { "branch": "main", "commit": "e643372d509d138d3244f917283b13f52a9cf5eb" },
