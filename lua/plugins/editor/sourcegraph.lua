@@ -7,9 +7,7 @@ return {
       require("sg").setup({
         on_attach = require("willothy.lsp").lsp_attach,
       })
-      -- vim.api.nvim_create_autocmd("BufEnter", {
-      --   pattern = "c",
-      -- })
     end,
+    build = "nvim -l build/init.lua",
   },
 }
