@@ -3,30 +3,16 @@ local icons = require("willothy.icons")
 return {
   {
     "folke/neodev.nvim",
-    ft = "lua",
-    config = function()
-      vim.api.nvim_create_autocmd("User VeryLazy", {
-        once = true,
-        callback = function()
-          require("neodev").setup({
-            library = {
-              enabled = true,
-              plugins = true,
-              runtime = true,
-              types = true,
-            },
-            lspconfig = false,
-            pathStrict = true,
-          })
-          local lsp = require("willothy.lsp")
-          require("lspconfig").lua_ls.setup({
-            settings = lsp.lsp_settings["lua_ls"],
-            attach = lsp.lsp_attach,
-            before_init = require("neodev.lsp").before_init,
-          })
-        end,
-      })
-    end,
+    opts = {
+      library = {
+        enabled = true,
+        plugins = true,
+        runtime = true,
+        types = true,
+      },
+      lspconfig = true,
+      pathStrict = true,
+    },
   },
   {
     "willothy/hollywood.nvim",
@@ -118,7 +104,10 @@ return {
   },
   {
     "williamboman/mason.nvim",
-    event = "User ExtraLazy",
+    event = "VeryLazy",
+    opts = {
+      PATH = "prepend",
+    },
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
       "jay-babu/mason-null-ls.nvim",

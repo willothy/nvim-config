@@ -360,6 +360,7 @@ local function setup_rust()
 end
 
 local function lsp_setup()
+  require("neodev")
   require("mason").setup()
 
   local lspconfig = require("lspconfig")
