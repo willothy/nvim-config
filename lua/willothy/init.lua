@@ -79,8 +79,6 @@ vim.api.nvim_create_autocmd("User", {
   pattern = "ExtraLazy",
   once = true,
   callback = function()
-    require("willothy.async")
-
     -- setup commands
     require("willothy.commands")
 
