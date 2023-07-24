@@ -199,4 +199,10 @@ return {
       })
     end,
   },
+  -- TODO: This is cool. Figure out what is does.
+  -- {
+  --   "notomo/thetto.nvim",
+  --   config = true,
+  --   event = "User ExtraLazy",
+  -- },
 }

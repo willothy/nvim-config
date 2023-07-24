@@ -77,11 +77,13 @@ return {
           ft = "dapui_console",
           title = "Debug Console",
           wo = { winbar = " Debug Console" },
+          size = { height = 0.23 },
         },
         {
           ft = "dap-repl",
           title = "Debug REPL",
           wo = { winbar = false },
+          size = { height = 0.23 },
         },
         {
           ft = "terminal",
