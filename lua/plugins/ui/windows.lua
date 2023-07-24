@@ -3,18 +3,16 @@ return {
     "nvim-focus/focus.nvim",
     config = function()
       local disable = {
-        filetype = {
-          "neo-tree",
-          "SidebarNvim",
-          "Trouble",
-          "terminal",
-          "dapui_console",
-          "dapui_watches",
-          "dapui_stacks",
-          "dapui_breakpoints",
-          "dapui_scopes",
-          "dap-repl",
-        },
+        ["neo-tree"] = true,
+        ["SidebarNvim"] = true,
+        ["Trouble"] = true,
+        ["terminal"] = true,
+        ["dapui_console"] = true,
+        ["dapui_watches"] = true,
+        ["dapui_stacks"] = true,
+        ["dapui_breakpoints"] = true,
+        ["dapui_scopes"] = true,
+        ["dap-repl"] = true,
       }
       local focus = require("focus")
 
@@ -28,10 +26,9 @@ return {
       local group = vim.api.nvim_create_augroup("focus_ft", { clear = true })
       vim.api.nvim_create_autocmd("FileType", {
         group = group,
-        callback = function()
-          if vim.tbl_contains(disable.filetype, vim.bo.filetype) then
-            vim.b.focus_disable = true
-          end
+        callback = function(ev)
+          local ft = vim.bo[ev.buf].filetype
+          if disable[ft] then vim.b.focus_disable = true end
         end,
         desc = "Disable focus autoresize for FileType",
       })

@@ -19,14 +19,14 @@ return {
           filter = function(buf)
             return vim.b[buf].neo_tree_source == "filesystem"
           end,
-          pinned = true,
+          --pinned = true,
           open = "Neotree",
           size = { height = 0.5 },
         },
         {
           ft = "aerial",
           title = "Document Symbols",
-          pinned = true,
+          --pinned = true,
           open = function() require("aerial").open() end,
         },
         { title = "Neotest Summary", ft = "neotest-summary" },
@@ -46,9 +46,39 @@ return {
           -- pinned = true,
           open = "Neotree buffers",
         },
+        {
+          title = "Watches",
+          ft = "dapui_watches",
+          size = { height = 0.25 },
+        },
+        {
+          title = "Stacks",
+          ft = "dapui_stacks",
+          size = { height = 0.25 },
+        },
+        {
+          title = "Breakpoints",
+          ft = "dapui_breakpoints",
+          size = { height = 0.25 },
+        },
+        {
+          title = "Scopes",
+          ft = "dapui_scopes",
+          size = { height = 0.25 },
+        },
         "neo-tree",
       },
       bottom = {
+        {
+          ft = "dapui_console",
+          title = "Debug Console",
+          -- size = { height = 0.25 },
+        },
+        {
+          ft = "dap-repl",
+          title = "Debug REPL",
+          -- size = { height = 0.25 },
+        },
         {
           ft = "terminal",
           title = "Terminal",

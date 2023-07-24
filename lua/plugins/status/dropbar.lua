@@ -14,14 +14,23 @@ local function config()
           return false
         end
         if vim.wo[win].diff then return false end
+        local filetype = vim.bo[buf].filetype
+        local disabled = {
+          "Trouble",
+          "terminal",
+          "qf",
+          "noice",
+          "dapui_scopes",
+          "dapui_breakpoints",
+          "dapui_stacks",
+          "dapui_watches",
+          "dapui_console",
+          "dap-repl",
+        }
         return vim.bo[buf].buflisted
           and vim.bo[buf].buftype == ""
           and vim.api.nvim_buf_get_name(buf) ~= ""
-          and vim.bo[buf].filetype ~= "Trouble"
-          and vim.bo[buf].filetype ~= "terminal"
-          and vim.bo[buf].filetype ~= "qf"
-          and vim.bo[buf].filetype ~= "noice"
-          and not vim.wo[win].diff
+          and not disabled[filetype]
       end,
       update_events = {
         win = {
