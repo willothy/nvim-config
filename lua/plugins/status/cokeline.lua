@@ -297,16 +297,21 @@ local function cokeline()
     },
     run = {
       text = function()
-        -- if require("dap").session() then
-        --   return string.format(" %s ", icons.dap.action.stop)
-        -- end
+        if require("dap").session() then
+          return string.format(" %s ", icons.dap.action.stop)
+        end
         return string.format(" %s ", icons.dap.action.start)
       end,
       bg = "TabLineFill",
       fg = function(cx) return cx.is_hovered and p.lemon_chiffon or p.blue end,
       on_click = function(_id, _clicks, button, _modifiers, _buffer)
         if button == "l" then
-          require("dapui").toggle()
+          if require("dap").session() then
+            -- require("dapui").close()
+            require("dap").terminate()
+          else
+            require("willothy.dap").launch()
+          end
         else
           vim.cmd("Greyjoy")
         end

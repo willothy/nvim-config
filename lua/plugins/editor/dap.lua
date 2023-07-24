@@ -1,6 +1,20 @@
 local function setup()
   local dap = require("dap")
 
+  dap.listeners.after.event_initialized["dapui_config"] = function()
+    require("dapui").open()
+  end
+  dap.listeners.after.disconnect["dapui_config"] = function()
+    require("dap.repl").close()
+    require("dapui").close()
+  end
+  dap.listeners.before.event_terminated["dapui_config"] = function()
+    require("dapui").close()
+  end
+  dap.listeners.before.event_exited["dapui_config"] = function()
+    require("dapui").close()
+  end
+
   dap.configurations.rust = {
     {
       name = "Launch",
@@ -43,13 +57,6 @@ local function setup()
     })
   end
 
-  local launchers = {
-    lua = function()
-      require("osv").run_this()
-      -- require("osv").launch({ port = 8086 })
-    end,
-  }
-
   vim.keymap.set(
     "n",
     "<F8>",
@@ -80,23 +87,12 @@ local function setup()
     function() require("dap.ui.widgets").hover() end,
     { noremap = true, desc = "dap hover" }
   )
-  vim.keymap.set("n", "<F5>", function()
-    local filetype = vim.bo.filetype
-    local launch = launchers[filetype]
-    if launch then
-      local ok, res = pcall(launch)
-      if ok then
-        require("dapui").open()
-      else
-        vim.notify(
-          ("Failed to start debugger for %s: %s"):format(filetype, res),
-          "error"
-        )
-      end
-    else
-      vim.notify(("No debugger available for %s"):format(filetype), "warn")
-    end
-  end, { noremap = true, desc = "launch debugger" })
+  vim.keymap.set(
+    "n",
+    "<F5>",
+    function() require("willothy.dap").launch() end,
+    { noremap = true, desc = "launch debugger" }
+  )
 end
 
 return {
