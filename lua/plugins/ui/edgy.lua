@@ -50,21 +50,25 @@ return {
           title = "Watches",
           ft = "dapui_watches",
           size = { height = 0.25 },
+          wo = { winbar = " Watching" },
         },
         {
           title = "Stacks",
           ft = "dapui_stacks",
           size = { height = 0.25 },
+          wo = { winbar = " Stacks" },
         },
         {
           title = "Breakpoints",
           ft = "dapui_breakpoints",
           size = { height = 0.25 },
+          wo = { winbar = " Breakpoints" },
         },
         {
           title = "Scopes",
           ft = "dapui_scopes",
           size = { height = 0.25 },
+          wo = { winbar = " Scopes" },
         },
         "neo-tree",
       },
@@ -72,17 +76,17 @@ return {
         {
           ft = "dapui_console",
           title = "Debug Console",
-          -- size = { height = 0.25 },
+          wo = { winbar = " Debug Console" },
         },
         {
           ft = "dap-repl",
           title = "Debug REPL",
-          -- size = { height = 0.25 },
+          wo = { winbar = false },
         },
         {
           ft = "terminal",
           title = "Terminal",
-          pinned = true,
+          -- pinned = true,
           open = function() require("willothy.terminals").main:open() end,
           filter = function(_buf, win)
             return not vim.api.nvim_win_get_config(win).zindex

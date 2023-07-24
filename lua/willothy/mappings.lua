@@ -287,7 +287,13 @@ register({ "n", "t" }, {
     L = { "swap right" },
     f = {
       function()
-        local win = require("window-picker").pick_window()
+        local win = require("window-picker").pick_window({
+          filter_rules = {
+            bo = {
+              buftype = {},
+            },
+          },
+        })
         if not win then return end
         vim.api.nvim_set_current_win(win)
       end,
@@ -295,7 +301,17 @@ register({ "n", "t" }, {
     },
     x = {
       function()
-        local win = require("window-picker").pick_window()
+        local win = require("window-picker").pick_window({
+          filter_rules = {
+            bo = {
+              buftype = {
+                "nofile",
+                "nowrite",
+                "prompt",
+              },
+            },
+          },
+        })
         if not win then return end
 
         local buf = vim.api.nvim_win_get_buf(win)

@@ -111,6 +111,14 @@ local function config()
         selected_browser = "brave",
         url_open_command = "xdg-open",
       },
+      frecency = {
+        ignore_patterns = { "*.git/*", "*/tmp/*", "/home/willothy/.dotfiles/*" },
+        show_scores = true,
+        workspaces = {
+          ["dotfiles"] = "/home/willothy/.config/",
+          ["projects"] = "/home/willothy/projects/",
+        },
+      },
     },
   })
 
@@ -132,6 +140,7 @@ local function config()
   scheduled("heading")
   scheduled("attempt")
   scheduled("bookmarks")
+  scheduled("frecency")
 
   vim.api.nvim_create_autocmd("BufWinLeave", {
     callback = function(ev)
@@ -168,6 +177,7 @@ return {
       "crispgm/telescope-heading.nvim",
       "debugloop/telescope-undo.nvim",
       "dhruvmanila/browser-bookmarks.nvim",
+      "nvim-telescope/telescope-frecency.nvim",
     },
     config = config,
     event = "User ExtraLazy",
@@ -175,5 +185,10 @@ return {
   {
     "nvim-telescope/telescope-fzf-native.nvim",
     build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+  },
+  {
+
+    "nvim-telescope/telescope-frecency.nvim",
+    dependencies = { "kkharji/sqlite.lua" },
   },
 }

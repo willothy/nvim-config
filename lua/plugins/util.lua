@@ -176,4 +176,27 @@ return {
     cmd = { "GistCreate", "GistCreateFromFile", "GistsList" },
     config = true,
   },
+  {
+    "Saecki/crates.nvim",
+    config = function()
+      require("crates").setup({
+        null_ls = {
+          enabled = true,
+          name = "crates.nvim",
+        },
+      })
+      require("cmp").setup.buffer({ sources = { { name = "crates" } } })
+    end,
+    event = "BufRead Cargo.toml",
+  },
+  {
+    "tomiis4/Hypersonic.nvim",
+    event = "CmdlineEnter",
+    cmd = "Hypersonic",
+    config = function()
+      require("hypersonic").setup({
+        -- config
+      })
+    end,
+  },
 }

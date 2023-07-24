@@ -82,7 +82,7 @@ local function cmp_opt()
       end, { "i", "c" }),
     },
     sources = cmp.config.sources({
-      { name = "nvim_lsp", priority = 1, max_item_count = 5, group_index = 1 },
+      { name = "nvim_lsp", priority = 1, max_item_count = 10, group_index = 1 },
       { name = "luasnip", priority = 2, max_item_count = 5, group_index = 1 },
       { name = "buffer", priority = 3, max_item_count = 5, group_index = 2 },
       {

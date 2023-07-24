@@ -103,6 +103,11 @@ return {
     event = "LspAttach",
   },
   {
+    "theHamsta/nvim-dap-virtual-text",
+    config = true,
+    event = "User ExtraLazy",
+  },
+  {
     "rcarriga/nvim-dap-ui",
     dependencies = {
       "mfussenegger/nvim-dap",
