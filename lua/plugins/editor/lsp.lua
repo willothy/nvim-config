@@ -174,12 +174,14 @@ return {
       },
     },
     lazy = true,
+    enabled = false,
     event = "LspAttach",
   },
   {
     "VidocqH/lsp-lens.nvim",
     config = true,
     event = "LspAttach",
+    enabled = false,
   },
   -- {
   --   "williamboman/warden.nvim",

@@ -98,7 +98,10 @@ local function setup_format()
   })
 end
 
+---@param client lsp.Client
+---@param bufnr integer
 local function lsp_attach(client, bufnr)
+  client.capabilities = mkcaps(true)
   lsp_maps(bufnr)
   if not format then setup_format() end
 
