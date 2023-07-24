@@ -51,8 +51,9 @@ local function get_git_diff(props)
   }
   local labels = {}
   local signs = vim.api.nvim_buf_get_var(props.buf, "gitsigns_status_dict")
+  if not signs then return nil end
   for name, info in pairs(icons) do
-    if tonumber(signs[name]) and signs[name] > 0 then
+    if signs[name] and tonumber(signs[name]) and signs[name] > 0 then
       table.insert(labels, {
         info[1] .. " " .. signs[name] .. " ",
         group = info[2],
@@ -67,6 +68,7 @@ return {
   {
     "b0o/incline.nvim",
     event = "User ExtraLazy",
+    enabled = false,
     config = function()
       require("incline").setup({
         window = {
@@ -105,9 +107,8 @@ return {
           local buffer = {
             -- get_search_term(props),
             -- get_diagnostic_label(props),
-            { " " },
-            get_git_diff(props),
-            { ft_icon, " ", guifg = ft_color },
+            -- { " ", get_git_diff(props) or "" },
+            { " ", ft_icon, " ", guifg = ft_color },
             {
               filename,
               " ",

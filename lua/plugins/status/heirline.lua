@@ -238,12 +238,19 @@ return {
         })
 
         local Location = Component({
-          init = function(self)
-            self.line = vim.fn.line(".")
-            self.col = vim.fn.col(".")
-            self.maxline = vim.fn.line("$")
-          end,
+          update = {
+            "BufEnter",
+            "BufNew",
+            "CursorMoved",
+            "CursorMovedI",
+            callback = function(self)
+              self.line = vim.fn.line(".")
+              self.col = vim.fn.col(".")
+              self.maxline = vim.fn.line("$")
+            end,
+          },
           provider = function(self)
+            if not self.line then return "" end
             local s = math.floor((self.line / self.maxline) * 100)
               .. "%%/"
               .. string.format("%d:%d", self.maxline, self.col)
@@ -256,7 +263,7 @@ return {
 
         local copilot_init = false
         local Copilot = Component({
-          init = function(self)
+          init = vim.schedule_wrap(function(self)
             self.ready = false
 
             if not copilot_init then
@@ -277,7 +284,7 @@ return {
             self.status = {
               status = "Normal",
             }
-          end,
+          end),
           provider = function(self)
             if not self.ready then return "" end
             local icon = icons.git.copilot_err
@@ -296,11 +303,15 @@ return {
 
         local Env = function(var)
           return Component({
-            provider = function()
-              local val = os.getenv(var)
-              return (val and val ~= "") and val .. " " or ""
+            provider = function(self)
+              if not self.val then self.val = os.getenv(var) end
+              return (self.val and self.val ~= "") and self.val .. " " or ""
             end,
             hl = hl.C,
+            update = {
+              "BufEnter",
+              callback = function(self) self.val = os.getenv(var) end,
+            },
           })
         end
 
@@ -430,20 +441,32 @@ return {
         })
 
         local Git = Component({
+          update = {
+            "BufEnter",
+            "User VeryLazy",
+            callback = function(self) self:fetch() end,
+          },
           condition = conditions.is_git_repo,
-          init = function(self)
-            self.status_dict = vim.b.gitsigns_status_dict
-            self.has_changes = self.status_dict.added ~= 0
-              or self.status_dict.removed ~= 0
-              or self.status_dict.changed ~= 0
-            self.added = function() return self.status_dict.added or 0 end
-            self.removed = function() return self.status_dict.removed or 0 end
-            self.modified = function() return self.status_dict.changed or 0 end
-          end,
+          static = {
+            fetch = function(self)
+              self.status_dict = vim.b.gitsigns_status_dict
+              if not self.status_dict then return "" end
+              self.has_changes = self.status_dict.added ~= 0
+                or self.status_dict.removed ~= 0
+                or self.status_dict.changed ~= 0
+              self.added = function() return self.status_dict.added or 0 end
+              self.removed = function() return self.status_dict.removed or 0 end
+              self.modified = function() return self.status_dict.changed or 0 end
+            end,
+          },
           hl = hl.C,
           {
             -- git branch name
             provider = function(self)
+              if not self.status_dict then
+                vim.schedule(function() self:fetch() end)
+                return ""
+              end
               local head = self.status_dict.head
               if not head or head == "" then head = "<empty>" end
               return string.format("%s %s ", icons.git.branch, head)
@@ -453,6 +476,7 @@ return {
           {
             -- git diff added
             provider = function(self)
+              if not self.status_dict then return "" end
               if self.added() > 0 then
                 return string.format(
                   "%s %s",
@@ -468,6 +492,7 @@ return {
           {
             -- git diff removed
             provider = function(self)
+              if not self.status_dict then return "" end
               if self.removed() > 0 then
                 return string.format(
                   "%s %s",
@@ -483,6 +508,7 @@ return {
           {
             -- git diff changed
             provider = function(self)
+              if not self.status_dict then return "" end
               if self.modified() > 0 then
                 return string.format(
                   "%s %s",
@@ -509,13 +535,15 @@ return {
         })
 
         local WorkDir = Component({
-          -- init = function(self)
-          --   if not self.cwd then self.cwd = vim.fn.getcwd(-1) end
-          -- end,
+          init = vim.schedule_wrap(function(self)
+            if not self.init then
+              self.cwd = vim.fn.getcwd(-1)
+              vim.cmd.redrawstatus()
+            end
+          end),
           provider = function(self) return self.cwd end,
           update = {
             "DirChanged",
-            "VimEnter",
             "UiEnter",
             callback = function(self) self.cwd = vim.fn.getcwd(-1) end,
           },
