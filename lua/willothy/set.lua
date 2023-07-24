@@ -25,7 +25,7 @@ o.termguicolors = true
 
 o.scrolloff = 16
 
-o.updatetime = 150
+o.updatetime = 500
 o.mousemodel = "extend"
 o.mousemoveevent = true
 
