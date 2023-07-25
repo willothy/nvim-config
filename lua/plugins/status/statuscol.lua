@@ -36,6 +36,12 @@ return {
       if ok then winborder = winborder.utils.statuscol end
 
       local curwin = vim.api.nvim_get_current_win()
+      vim.api.nvim_create_autocmd(
+        { "WinEnter", "BufEnter", "WinNew", "BufNew", "BufAdd" },
+        {
+          callback = function() curwin = vim.api.nvim_get_current_win() end,
+        }
+      )
 
       require("statuscol").setup({
         relculright = true,
@@ -65,9 +71,7 @@ return {
             text = { builtin.lnumfunc },
             condition = {
               function(args)
-                if args.virtnum == 0 or not curwin then
-                  curwin = vim.api.nvim_get_current_win()
-                end
+                if not curwin then curwin = vim.api.nvim_get_current_win() end
                 return args.relnum == 0 and args.win == curwin
               end,
             },
@@ -78,9 +82,7 @@ return {
             text = { builtin.lnumfunc, " " },
             condition = {
               function(args)
-                if args.virtnum == 0 or not curwin then
-                  curwin = vim.api.nvim_get_current_win()
-                end
+                if not curwin then curwin = vim.api.nvim_get_current_win() end
                 return (args.relnum ~= 0) or (args.win ~= curwin)
               end,
               true,
