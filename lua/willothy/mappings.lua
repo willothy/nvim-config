@@ -343,6 +343,7 @@ register({ "n", "t" }, {
       function()
         local win = require("window-picker").pick_window({
           filter_rules = {
+            autoselect_one = false,
             bo = {
               buftype = {
                 "nofile",
@@ -353,10 +354,18 @@ register({ "n", "t" }, {
           },
         })
         if not win then return end
+        local curwin = vim.api.nvim_get_current_win()
+        if
+          require("stickybuf").is_pinned(win)
+          or require("stickybuf").is_pinned(curwin)
+        then
+          -- hack to fix window dimming
+          vim.api.nvim_set_current_win(curwin)
+          return
+        end
 
         local buf = vim.api.nvim_win_get_buf(win)
         local curbuf = vim.api.nvim_get_current_buf()
-        local curwin = vim.api.nvim_get_current_win()
         if buf == curbuf or win == curwin then return end
 
         vim.api.nvim_win_set_buf(win, curbuf)
@@ -369,12 +378,7 @@ register({ "n", "t" }, {
         local win = require("window-picker").pick_window({
           filter_rules = {
             include_current_win = true,
-            -- bo = {
-            --   buftype = {
-            --     "",
-            --     "nofile",
-            --   },
-            -- },
+            autoselect_one = false,
           },
         })
         if not win then return end

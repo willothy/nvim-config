@@ -58,7 +58,7 @@ return {
         show_prompt = false,
         hint = "floating-big-letter",
         filter_rules = {
-          autoselect_one = true,
+          autoselect_one = false,
           include_current_win = false,
           bo = {
             filetype = {
@@ -149,5 +149,10 @@ return {
     config = true,
     enabled = false,
     event = "VeryLazy",
+  },
+  {
+    "stevearc/stickybuf.nvim",
+    opts = {},
+    event = "User ExtraLazy",
   },
 }
