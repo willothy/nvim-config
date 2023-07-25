@@ -1,6 +1,8 @@
 return {
   {
-    "folke/which-key.nvim",
+    "willothy/which-key.nvim",
+    branch = "description-sort",
+    -- dir = "~/projects/lua/which-key.nvim/",
     config = function()
       vim.o.timeout = true
       vim.o.timeoutlen = 300
@@ -8,7 +10,7 @@ return {
         plugins = {
           presets = {
             operators = true,
-            windows = false,
+            windows = true,
             nav = true,
             z = true,
             g = true,
@@ -26,6 +28,7 @@ return {
           -- position = "top",
           winblend = 20,
         },
+        sort_by_description = true,
       })
     end,
     event = "VeryLazy",

@@ -1,6 +1,7 @@
 return {
   {
     "folke/edgy.nvim",
+    dir = "~/projects/lua/edgy.nvim/",
     lazy = true,
     event = "VeryLazy",
     config = function()
@@ -14,7 +15,6 @@ return {
         end
         return round(vim.o.lines / 4)
       end
-      local bottom_size = { height = get_size() }
       require("edgy").setup({
         left = {
           {
@@ -74,7 +74,7 @@ return {
           {
             title = "Scopes",
             ft = "dapui_scopes",
-            size = bottom_size,
+            size = { height = get_size },
             wo = { winbar = " Scopes" },
           },
           "neo-tree",
@@ -84,13 +84,13 @@ return {
             ft = "dapui_console",
             title = "Debug Console",
             wo = { winbar = " Debug Console" },
-            size = bottom_size,
+            size = { height = get_size },
           },
           {
             ft = "dap-repl",
             title = "Debug REPL",
             wo = { winbar = false, statuscolumn = "" },
-            size = bottom_size,
+            size = { height = get_size },
           },
           {
             ft = "terminal",
@@ -116,7 +116,7 @@ return {
           {
             ft = "qf",
             title = "QuickFix",
-            size = bottom_size,
+            size = { height = get_size },
           },
           {
             ft = "help",
@@ -128,7 +128,7 @@ return {
 
         options = {
           -- left = { size = 0.25 },
-          bottom = { size = get_size() },
+          bottom = { size = get_size },
         },
 
         exit_when_last = true,
@@ -139,18 +139,6 @@ return {
           cps = 180,
           on_begin = function() vim.g.minianimate_disable = true end,
         },
-      })
-      vim.api.nvim_create_autocmd("VimResized", {
-        callback = function()
-          local cur = require("edgy.config").options.bottom.size
-          if cur % 2 == 0 then
-            require("edgy.config").options.bottom.size =
-              math.floor(vim.o.lines / 4)
-          else
-            require("edgy.config").options.bottom.size =
-              math.ceil(vim.o.lines / 4)
-          end
-        end,
       })
     end,
   },

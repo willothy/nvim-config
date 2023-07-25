@@ -47,7 +47,6 @@ return {
   },
   {
     "willothy/nvim-window-picker",
-    dir = "~/projects/lua/nvim-window-picker/",
     event = "User ExtraLazy",
     config = function()
       require("window-picker").setup({
@@ -67,15 +66,16 @@ return {
           },
         },
         selection_chars = "asdfwertzxcv",
-        create_chars = "uiop",
+        create_chars = "hjkl",
         picker_config = {
           floating_big_letter = {
             font = {
+              -- pick chars
+              w = "w",
               a = "a",
               s = "s",
               d = "d",
               f = "f",
-              w = "w",
               e = "e",
               r = "r",
               t = "t",
@@ -84,10 +84,10 @@ return {
               c = "c",
               v = "v",
               -- create chars
-              u = "u",
-              i = "i",
-              o = "o",
-              p = "p",
+              h = "h",
+              j = "j",
+              k = "k",
+              l = "l",
             },
             window = {
               config = {

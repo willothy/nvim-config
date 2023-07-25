@@ -104,7 +104,9 @@ return {
   },
   {
     "theHamsta/nvim-dap-virtual-text",
-    config = true,
+    opts = {
+      clear_on_continue = true,
+    },
     event = "User ExtraLazy",
   },
   {

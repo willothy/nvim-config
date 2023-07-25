@@ -258,17 +258,25 @@ register({ "n", "t" }, {
       function() require("smart-splits").move_cursor_right() end,
       "which_key_ignore",
     },
+    ["-"] = { "<nop>", "which_key_ignore" },
+    ["<"] = { "<nop>", "which_key_ignore" },
+    [">"] = { "<nop>", "which_key_ignore" },
+    ["_"] = { "<nop>", "which_key_ignore" },
+    o = {
+      "<nop>",
+      "which_key_ignore",
+    },
     ["="] = {
       function() require("focus").focus_equalise() end,
-      "equalize",
+      "resize: equalize",
     },
     ["|"] = {
       function() require("focus").focus_maximise() end,
-      "maximize",
+      "resize: maximize",
     },
     ["\\"] = {
       function() require("focus").focus_max_or_equal() end,
-      "max or equal",
+      "resize: max or equal",
     },
     ["+"] = {
       function()
@@ -276,15 +284,49 @@ register({ "n", "t" }, {
         require("focus").focus_enable()
         require("focus").resize()
       end,
-      "golden ratio",
+      "resize: golden ratio",
     },
-    v = { "split vertically" },
-    s = { "split horizontally" },
+    V = {
+      function()
+        local opt = vim.o.splitright
+        vim.o.splitright = true
+        vim.cmd("vsplit")
+        vim.o.splitright = opt
+      end,
+      "split: right",
+    },
+    v = {
+      function()
+        local opt = vim.o.splitright
+        vim.o.splitright = false
+        vim.cmd("vsplit")
+        vim.o.splitright = opt
+      end,
+      "split: left",
+    },
+    S = {
+      function()
+        local opt = vim.o.splitbelow
+        vim.o.splitbelow = true
+        vim.cmd("split")
+        vim.o.splitbelow = opt
+      end,
+      "split: below",
+    },
+    s = {
+      function()
+        local opt = vim.o.splitbelow
+        vim.o.splitbelow = false
+        vim.cmd("split")
+        vim.o.splitbelow = opt
+      end,
+      "split: above",
+    },
+    H = { "swap: left" },
+    J = { "swap: down" },
+    K = { "swap: up" },
+    L = { "swap: right" },
     T = { "move to new tab" },
-    H = { "swap left" },
-    J = { "swap down" },
-    K = { "swap up" },
-    L = { "swap right" },
     f = {
       function()
         local win = require("window-picker").pick_or_create({
@@ -298,7 +340,7 @@ register({ "n", "t" }, {
         if not win then return end
         vim.api.nvim_set_current_win(win)
       end,
-      "pick - focus",
+      "pick: focus",
     },
     x = {
       function()
@@ -323,7 +365,7 @@ register({ "n", "t" }, {
         vim.api.nvim_win_set_buf(win, curbuf)
         vim.api.nvim_win_set_buf(curwin, buf)
       end,
-      "pick - swap",
+      "pick: swap",
     },
     q = {
       function()
@@ -354,7 +396,7 @@ register({ "n", "t" }, {
           end
         end
       end,
-      "pick - close",
+      "pick: close",
     },
   },
 })
