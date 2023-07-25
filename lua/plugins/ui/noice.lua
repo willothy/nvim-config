@@ -126,20 +126,20 @@ return {
           enabled = true,
         },
         routes = {
-          -- {
-          --   filter = {
-          --     any = {
-          --       { find = "%d+L, %d+B written" },
-          --       { find = "%d+ change[s]?; before #%d+" },
-          --       { find = "%d+ change[s]?; after #%d+" },
-          --     },
-          --   },
-          --   view = "mini",
-          --   opts = {
-          --     stop = true,
-          --     skip = false,
-          --   },
-          -- },
+          {
+            filter = {
+              any = {
+                { find = "%d+L, %d+B written" },
+                { find = "%d+ change[s]?; before #%d+" },
+                { find = "%d+ change[s]?; after #%d+" },
+              },
+            },
+            view = "mini",
+            opts = {
+              stop = true,
+              skip = false,
+            },
+          },
         },
       })
 
@@ -199,7 +199,6 @@ return {
               row = next_row,
               border = "rounded",
               style = "minimal",
-              zindex = 1001,
             }
           end,
           function(state, win)
