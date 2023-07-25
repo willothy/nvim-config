@@ -21,6 +21,13 @@ return {
   {
     "NeogitOrg/neogit",
     dependencies = "nvim-lua/plenary.nvim",
-    config = true,
+    event = "VeryLazy",
+    opts = {
+      kind = "auto",
+      integrations = {
+        telescope = true,
+        diffview = true,
+      },
+    },
   },
 }

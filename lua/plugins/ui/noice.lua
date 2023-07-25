@@ -122,25 +122,24 @@ return {
           view_history = "messages", -- view for :messages
           view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
         },
-        -- notify = {
-        --   enabled = true,
-        --   view = "mini",
-        -- },
+        notify = {
+          enabled = true,
+        },
         routes = {
-          {
-            filter = {
-              any = {
-                { find = "%d+L, %d+B written" },
-                { find = "%d+ change[s]?; before #%d+" },
-                { find = "%d+ change[s]?; after #%d+" },
-              },
-            },
-            view = "mini",
-            opts = {
-              stop = true,
-              skip = false,
-            },
-          },
+          -- {
+          --   filter = {
+          --     any = {
+          --       { find = "%d+L, %d+B written" },
+          --       { find = "%d+ change[s]?; before #%d+" },
+          --       { find = "%d+ change[s]?; after #%d+" },
+          --     },
+          --   },
+          --   view = "mini",
+          --   opts = {
+          --     stop = true,
+          --     skip = false,
+          --   },
+          -- },
         },
       })
 
@@ -200,6 +199,7 @@ return {
               row = next_row,
               border = "rounded",
               style = "minimal",
+              zindex = 1001,
             }
           end,
           function(state, win)
