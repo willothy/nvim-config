@@ -201,7 +201,11 @@ return {
   },
   {
     "willothy/modenr.nvim",
-    config = true,
+    dir = "~/projects/lua/modenr.nvim",
+    -- enabled = false,
+    opts = {
+      hide_cursorline = true,
+    },
     event = "User ExtraLazy",
   },
   -- TODO: This is cool. Figure out what is does.
