@@ -195,13 +195,6 @@ return {
     cmd = "Hypersonic",
     config = true,
   },
-  {
-    "willothy/modenr.nvim",
-    opts = {
-      hide_cursorline = true,
-    },
-    event = "User ExtraLazy",
-  },
   -- TODO: This is cool. Figure out what is does.
   -- {
   --   "notomo/thetto.nvim",

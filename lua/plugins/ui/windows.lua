@@ -1,6 +1,9 @@
 return {
   {
     "willothy/focus.nvim",
+    dependencies = {
+      "willothy/modenr.nvim",
+    },
     branch = "lua-cmds",
     config = function()
       local disable = {
@@ -24,6 +27,7 @@ return {
           winhighlight = false,
         },
       })
+      require("willothy.modenr")
       local group = vim.api.nvim_create_augroup("focus_ft", { clear = true })
       vim.api.nvim_create_autocmd("FileType", {
         group = group,

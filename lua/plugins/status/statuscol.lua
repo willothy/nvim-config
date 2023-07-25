@@ -59,8 +59,25 @@ return {
             click = "v:lua.ScSa",
           },
           {
+            text = { builtin.lnumfunc },
+            condition = {
+              function(args)
+                return args.lnum == vim.api.nvim_win_get_cursor(args.win)[1]
+                  and args.win == vim.api.nvim_get_current_win()
+              end,
+            },
+            hl = "CursorLineNr",
+            click = "v:lua.ScLa",
+          },
+          {
             text = { builtin.lnumfunc, " " },
-            condition = { builtin.not_empty, true },
+            condition = {
+              function(args)
+                return (args.lnum ~= vim.api.nvim_win_get_cursor(args.win)[1])
+                  or (args.win ~= vim.api.nvim_get_current_win())
+              end,
+              true,
+            },
             click = "v:lua.ScLa",
           },
           {
