@@ -16,5 +16,6 @@ return {
         current = "DiffText",
       },
     },
+    event = "User ExtraLazy",
   },
 }

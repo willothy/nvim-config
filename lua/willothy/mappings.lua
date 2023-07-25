@@ -287,11 +287,12 @@ register({ "n", "t" }, {
     L = { "swap right" },
     f = {
       function()
-        local win = require("window-picker").pick_window({
+        local win = require("window-picker").pick_or_create({
           filter_rules = {
             bo = {
               buftype = {},
             },
+            include_current_win = false,
           },
         })
         if not win then return end
