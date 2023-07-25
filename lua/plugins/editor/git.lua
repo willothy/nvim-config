@@ -18,4 +18,9 @@ return {
     },
     event = "User ExtraLazy",
   },
+  {
+    "NeogitOrg/neogit",
+    dependencies = "nvim-lua/plenary.nvim",
+    config = true,
+  },
 }
