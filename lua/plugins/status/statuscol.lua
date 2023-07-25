@@ -35,18 +35,21 @@ return {
       local ok, winborder = pcall(require, "winborder")
       if ok then winborder = winborder.utils.statuscol end
 
+      local curwin = vim.api.nvim_get_current_win()
+
       require("statuscol").setup({
         relculright = true,
         segments = {
-          --{
-          --  text = { " " },
-          --  condition = { ok and winborder or false },
-          --},
+          {
+            text = { " " },
+            condition = { ok and winborder or false },
+          },
           {
             sign = {
               name = { "GitSigns*" },
               maxwidth = 1,
               colwidth = 1,
+              minwidth = 1,
             },
             click = "v:lua.ScSa",
           },
@@ -62,8 +65,10 @@ return {
             text = { builtin.lnumfunc },
             condition = {
               function(args)
-                return args.lnum == vim.api.nvim_win_get_cursor(args.win)[1]
-                  and args.win == vim.api.nvim_get_current_win()
+                if args.virtnum == 0 or not curwin then
+                  curwin = vim.api.nvim_get_current_win()
+                end
+                return args.relnum == 0 and args.win == curwin
               end,
             },
             hl = "CursorLineNr",
@@ -73,8 +78,10 @@ return {
             text = { builtin.lnumfunc, " " },
             condition = {
               function(args)
-                return (args.lnum ~= vim.api.nvim_win_get_cursor(args.win)[1])
-                  or (args.win ~= vim.api.nvim_get_current_win())
+                if args.virtnum == 0 or not curwin then
+                  curwin = vim.api.nvim_get_current_win()
+                end
+                return (args.relnum ~= 0) or (args.win ~= curwin)
               end,
               true,
             },
@@ -102,7 +109,6 @@ return {
         },
       })
 
-      local curwin = vim.api.nvim_get_current_win()
       local tab = vim.api.nvim_get_current_tabpage()
       local wins = vim.api.nvim_tabpage_list_wins(tab)
 
