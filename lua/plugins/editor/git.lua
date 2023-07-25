@@ -24,6 +24,7 @@ return {
     event = "VeryLazy",
     opts = {
       kind = "auto",
+      disable_builtin_notifications = true,
       integrations = {
         telescope = true,
         diffview = true,
