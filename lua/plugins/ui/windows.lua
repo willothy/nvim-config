@@ -1,7 +1,7 @@
 return {
   {
-    "nvim-focus/focus.nvim",
-    dir = "~/projects/lua/focus.nvim/",
+    "willothy/focus.nvim",
+    branch = "lua-cmds",
     config = function()
       local disable = {
         ["neo-tree"] = true,
