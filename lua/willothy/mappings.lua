@@ -647,12 +647,11 @@ require("which-key").register({
   },
   g = {
     name = "git",
-    f = { vim.cmd.Git, "Open fugitive" },
-    b = {
-      function() require("blam").peek() end,
-      "Peek line blame",
+    n = {
+      function() require("neogit").open() end,
+      "neogit",
     },
-    g = {
+    d = {
       function()
         -- hacky way of toggling diffview
         local diffview = require("diffview")
@@ -663,7 +662,7 @@ require("which-key").register({
           diffview.open()
         end
       end,
-      "Diffview",
+      "diffview",
     },
   },
   j = {

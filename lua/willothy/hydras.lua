@@ -340,6 +340,7 @@ local git_hydra_hint = [[
 
 Hydra({
   name = "Git",
+  shortname = "hydra",
   hint = git_hydra_hint,
   config = {
     color = "pink",
