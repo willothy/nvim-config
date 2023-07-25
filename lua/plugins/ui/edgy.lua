@@ -1,7 +1,7 @@
 return {
   {
-    "folke/edgy.nvim",
-    dir = "~/projects/lua/edgy.nvim/",
+    "willothy/edgy.nvim",
+    branch = "size-funcs",
     lazy = true,
     event = "VeryLazy",
     config = function()

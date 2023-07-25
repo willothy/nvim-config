@@ -40,7 +40,7 @@ return {
     "echasnovski/mini.animate",
     opts = {
       cursor = { enable = false },
-      scroll = { enable = false },
+      scroll = { enable = true },
       open = { enable = false },
       close = { enable = false },
     },

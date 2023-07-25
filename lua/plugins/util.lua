@@ -193,16 +193,10 @@ return {
     "tomiis4/Hypersonic.nvim",
     event = "CmdlineEnter",
     cmd = "Hypersonic",
-    config = function()
-      require("hypersonic").setup({
-        -- config
-      })
-    end,
+    config = true,
   },
   {
     "willothy/modenr.nvim",
-    dir = "~/projects/lua/modenr.nvim",
-    -- enabled = false,
     opts = {
       hide_cursorline = true,
     },

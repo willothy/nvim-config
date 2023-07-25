@@ -119,9 +119,6 @@ vim.keymap.set(
   function() require("willothy.terminals").toggle() end
 )
 
--- Dap
--- register({ "n" }, {})
-
 -- Spider
 register({ "n", "o", "x" }, {
   name = "spider",
