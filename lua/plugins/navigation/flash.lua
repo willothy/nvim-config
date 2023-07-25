@@ -122,13 +122,19 @@ end
 function Locations:render()
   local config = Locations.config
   for _, loc in ipairs(Locations.list) do
-    vim.api.nvim_buf_set_extmark(0, Locations.ns, loc.pos[1] - 1, loc.pos[2] - 1, {
-      virt_text = {
-        { loc.label, loc.first and config.hl.primary or config.hl.secondary },
-      },
-      virt_text_pos = "overlay",
-      priority = 6000,
-    })
+    vim.api.nvim_buf_set_extmark(
+      0,
+      Locations.ns,
+      loc.pos[1] - 1,
+      loc.pos[2] - 1,
+      {
+        virt_text = {
+          { loc.label, loc.first and config.hl.primary or config.hl.secondary },
+        },
+        virt_text_pos = "overlay",
+        priority = 6000,
+      }
+    )
   end
 end
 
@@ -210,17 +216,20 @@ return {
           })
         end
 
-        vim.api.nvim_create_autocmd({ "BufLeave", "CursorMoved", "InsertEnter" }, {
-          group = vim.api.nvim_create_augroup("flash_char", { clear = true }),
-          callback = function(event)
-            if
-              (event.event == "InsertEnter" or not Char.jumping)
-              and Char.state
-            then
-              Char.state:hide()
-            end
-          end,
-        })
+        vim.api.nvim_create_autocmd(
+          { "BufLeave", "CursorMoved", "InsertEnter" },
+          {
+            group = vim.api.nvim_create_augroup("flash_char", { clear = true }),
+            callback = function(event)
+              if
+                (event.event == "InsertEnter" or not Char.jumping)
+                and Char.state
+              then
+                Char.state:hide()
+              end
+            end,
+          }
+        )
 
         vim.on_key(function(key)
           if Char.state and key == Util.ESC and vim.fn.mode() == "n" then
@@ -275,7 +284,7 @@ return {
         desc = "Remote Flash",
       },
       {
-        "R",
+        "<M-r>",
         mode = { "n", "o", "x" },
         function()
           -- show labeled treesitter nodes around the search matches
