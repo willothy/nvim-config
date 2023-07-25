@@ -1,9 +1,6 @@
 return {
   {
     "willothy/focus.nvim",
-    dependencies = {
-      "willothy/modenr.nvim",
-    },
     branch = "lua-cmds",
     config = function()
       local disable = {
