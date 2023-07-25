@@ -199,6 +199,11 @@ return {
       })
     end,
   },
+  {
+    "willothy/modenr.nvim",
+    config = true,
+    event = "User ExtraLazy",
+  },
   -- TODO: This is cool. Figure out what is does.
   -- {
   --   "notomo/thetto.nvim",
