@@ -1,7 +1,6 @@
 return {
   {
-    "willothy/edgy.nvim",
-    branch = "size-funcs",
+    "folke/edgy.nvim",
     lazy = true,
     event = "VeryLazy",
     config = function()
