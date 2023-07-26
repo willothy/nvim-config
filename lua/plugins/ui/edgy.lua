@@ -15,6 +15,15 @@ return {
         return round(vim.o.lines / 4)
       end
       require("edgy").setup({
+        right = {
+          {
+            ft = "NeogitStatus",
+            title = "Neogit",
+            size = { width = 0.3 },
+            open = "Neogit",
+            pinned = true,
+          },
+        },
         left = {
           {
             ft = "SidebarNvim",
@@ -130,12 +139,14 @@ return {
         },
 
         exit_when_last = true,
+        close_when_all_hidden = false,
 
         animate = {
           enabled = true,
           fps = 60,
           cps = 180,
           on_begin = function() vim.g.minianimate_disable = true end,
+          on_end = function() vim.g.minianimate_disable = false end,
         },
       })
     end,
