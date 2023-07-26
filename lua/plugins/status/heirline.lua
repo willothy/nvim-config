@@ -384,7 +384,6 @@ return {
               local harpoon = require("harpoon.mark")
               self.current = harpoon.get_current_index()
               self.nfiles = harpoon.get_length()
-              vim.cmd.redrawstatus()
               if ev.event == "User" and ev.file == "ExtraLazy" then
                 vim.api.nvim_create_autocmd("BufEnter", {
                   callback = function()

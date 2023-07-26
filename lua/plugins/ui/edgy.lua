@@ -76,7 +76,6 @@ return {
             size = { height = get_size },
             wo = { winbar = " Scopes" },
           },
-          "neo-tree",
         },
         bottom = {
           {

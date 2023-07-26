@@ -457,6 +457,7 @@ end
 return {
   {
     "willothy/nvim-cokeline",
+    dir = "~/projects/lua/cokeline/",
     config = function() require("cokeline").setup(cokeline()) end,
     lazy = true,
     event = "User ExtraLazy",

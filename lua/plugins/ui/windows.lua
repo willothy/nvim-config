@@ -1,6 +1,7 @@
 return {
   {
     "nvim-focus/focus.nvim",
+    dir = "~/projects/lua/focus.nvim/",
     config = function()
       local disable = {
         ["neo-tree"] = true,
@@ -29,7 +30,7 @@ return {
         group = group,
         callback = function(ev)
           local ft = vim.bo[ev.buf].filetype
-          if disable[ft] then vim.b.focus_disable = true end
+          if disable[ft] then vim.w.focus_disable = true end
         end,
         desc = "Disable focus autoresize for FileType",
       })
