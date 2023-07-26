@@ -13,6 +13,10 @@ return {
         ["dapui_breakpoints"] = true,
         ["dapui_scopes"] = true,
         ["dap-repl"] = true,
+        ["NeogitStatus"] = true,
+        ["NeogitLogView"] = true,
+        ["NeogitPopup"] = true,
+        ["NeogitCommitMessage"] = true,
       }
       local focus = require("focus")
 

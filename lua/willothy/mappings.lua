@@ -650,24 +650,21 @@ require("which-key").register({
     },
   },
   g = {
+    -- mappings here defined in plugins/editor/git.lua
     name = "git",
-    n = {
-      function() require("neogit").open() end,
-      "neogit",
-    },
-    d = {
-      function()
-        -- hacky way of toggling diffview
-        local diffview = require("diffview")
-        local lib = require("diffview.lib")
-        if lib.get_current_view() then
-          diffview.close()
-        else
-          diffview.open()
-        end
-      end,
-      "diffview",
-    },
+    -- d = {
+    --   function()
+    --     -- hacky way of toggling diffview
+    --     local diffview = require("diffview")
+    --     local lib = require("diffview.lib")
+    --     if lib.get_current_view() then
+    --       diffview.close()
+    --     else
+    --       diffview.open()
+    --     end
+    --   end,
+    --   "diffview",
+    -- },
   },
   j = {
     name = "jump",

@@ -32,6 +32,16 @@ return {
             title = "Commit message",
             size = { width = 0.3 },
           },
+          {
+            ft = "NeogitLogView",
+            title = "Neogit log",
+            size = { width = 0.3 },
+          },
+          {
+            ft = "NeogitReflogView",
+            title = "Neogit log",
+            size = { width = 0.3 },
+          },
         },
         left = {
           {
