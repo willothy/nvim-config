@@ -21,7 +21,16 @@ return {
             title = "Neogit",
             size = { width = 0.3 },
             open = "Neogit",
-            pinned = true,
+          },
+          {
+            ft = "NeogitPopup",
+            title = "Neogit",
+            size = { width = 0.3 },
+          },
+          {
+            ft = "NeogitCommitMessage",
+            title = "Commit message",
+            size = { width = 0.3 },
           },
         },
         left = {
@@ -140,6 +149,11 @@ return {
 
         exit_when_last = true,
         close_when_all_hidden = false,
+
+        keys = {
+          ["q"] = false,
+          ["Q"] = false,
+        },
 
         animate = {
           enabled = true,
