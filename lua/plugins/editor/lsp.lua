@@ -24,27 +24,33 @@ return {
       "MunifTanjim/nui.nvim",
     },
     opts = {
-      backend = { "nui", "telescope" },
+      backend = { "nui" },
       nui = {
+        -- component direction. "col" or "row"
+        dir = "col",
+        -- keymap for selection component: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/menu#keymap
+        keymap = nil,
+        -- options for nui Layout component: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/layout
         layout = {
-          relative = "cursor",
-          size = {
-            width = "auto",
-            height = "auto",
+          position = {
+            row = 1,
+            col = 1,
           },
-          -- position = "auto",
-          min_width = 15,
-          min_height = 5,
+          -- size = {
+          --   width = "60%",
+          --   height = "90%",
+          -- },
+          -- min_width = 40,
+          -- min_height = 10,
+          relative = "cursor",
         },
-        -- options for preview area: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/popup
         preview = {
-          size = "80%",
+          size = "30%",
           border = {
             style = "rounded",
             padding = { 0, 0 },
           },
         },
-        -- options for selection area: https://github.com/MunifTanjim/nui.nvim/tree/main/lua/nui/menu
         select = {
           size = "20%",
           border = {

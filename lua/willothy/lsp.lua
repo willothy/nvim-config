@@ -62,11 +62,11 @@ local function lsp_maps(bufnr)
   map("n", "[d", diagnostic.goto_next, "diagnostic 󰞘")
   map("n", "]d", diagnostic.goto_prev, "󰞗 diagnostic")
   map("n", "<leader>ca", function()
-    -- require("actions-preview").code_actions()
+    require("actions-preview").code_actions()
     -- local win = vim.api.nvim_get_current_win()
     -- require("rust-tools").code_action_group.code_action_group()
     -- vim.api.nvim_set_current_win(win)
-    require("hollywood").code_actions()
+    -- require("hollywood").code_actions()
   end, "code actions")
 
   local trouble = require("trouble").open

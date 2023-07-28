@@ -1,6 +1,7 @@
 return {
   {
     "nvim-focus/focus.nvim",
+    dir = "~/projects/lua/focus.nvim/",
     config = function()
       local disable = {
         ["neo-tree"] = true,
@@ -26,6 +27,14 @@ return {
           signcolumn = false,
           winhighlight = false,
         },
+        autoresize = {
+          -- width = 180,
+          -- minwidth = 200,
+          animation = {
+            enable = true,
+            easing = "linear",
+          },
+        },
       })
       require("willothy.modenr")
       local group = vim.api.nvim_create_augroup("focus_ft", { clear = true })
@@ -42,6 +51,7 @@ return {
   },
   {
     "echasnovski/mini.animate",
+    -- enabled = false,
     opts = {
       scroll = { enable = false },
       cursor = { enable = false },

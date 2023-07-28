@@ -15,6 +15,7 @@ return {
   },
   {
     "Aasim-A/scrollEOF.nvim",
+    -- enabled = false,
     config = true,
     event = "User ExtraLazy",
   },
@@ -133,7 +134,9 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       local template = function(lang)
-        return function() return require("willothy.templates")[lang] end
+        return function()
+          return require("willothy.templates")[lang]
+        end
       end
       require("attempt").setup({
         dir = "/tmp/attempt.nvim/",
