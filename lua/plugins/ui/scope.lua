@@ -108,6 +108,11 @@ return {
         },
       })
 
+      local enabled = true
+      vim.api.nvim_create_user_command("MurmurToggle", function()
+        enabled = not enabled
+      end, { nargs = 0 })
+
       local au = vim.api.nvim_create_augroup("murmur_au", { clear = true })
 
       -- To create IDE-like no blinking diagnostic message with `cursor` scope. (should be paired with the callback above)
@@ -119,7 +124,7 @@ return {
           if vim.w.diag_shown then return end
 
           -- open float-win when hovering on a cursor-word.
-          if vim.w.cursor_word ~= "" then
+          if vim.w.cursor_word ~= "" and enabled then
             local buf = vim.diagnostic.open_float({
               scope = "cursor",
               close_events = {
@@ -133,7 +138,9 @@ return {
               group = au,
               buffer = buf,
               once = true,
-              callback = function() vim.w.diag_shown = false end,
+              callback = function()
+                vim.w.diag_shown = false
+              end,
             })
             vim.w.diag_shown = true
           else

@@ -54,7 +54,21 @@ local function lsp_maps(bufnr)
   map("n", "gT", buf.type_definition, "type definition")
   map("n", "gi", buf.implementation, "implementation")
   map("n", "K", function()
+    vim.cmd.MurmurToggle()
     require("rust-tools").hover_actions.hover_actions()
+    local function await_close()
+      local state = require("rust-tools").hover_actions._state
+      local count = 0
+      for _ in pairs(state) do
+        count = count + 1
+      end
+      if count == 0 then
+        vim.cmd.MurmurToggle()
+      else
+        vim.defer_fn(await_close, 250)
+      end
+    end
+    vim.defer_fn(await_close, 250)
   end, "hover")
   map("n", "[d", diagnostic.goto_next, "diagnostic 󰞘")
   map("n", "]d", diagnostic.goto_prev, "󰞗 diagnostic")
