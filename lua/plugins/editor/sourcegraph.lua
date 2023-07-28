@@ -2,6 +2,7 @@ return {
   {
     "sourcegraph/sg.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
+    -- dir = "~/projects/lua/sg.nvim/",
     event = "User ExtraLazy",
     config = function()
       require("sg").setup({

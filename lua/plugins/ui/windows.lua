@@ -1,7 +1,7 @@
 return {
   {
     "nvim-focus/focus.nvim",
-    dir = "~/projects/lua/focus.nvim/",
+    -- dir = "~/projects/lua/focus.nvim/",
     config = function()
       local disable = {
         ["neo-tree"] = true,
@@ -62,7 +62,7 @@ return {
   },
   {
     "willothy/nvim-window-picker",
-    dir = "~/projects/lua/nvim-window-picker/",
+    -- dir = "~/projects/lua/nvim-window-picker/",
     event = "User ExtraLazy",
     config = function()
       require("window-picker").setup({

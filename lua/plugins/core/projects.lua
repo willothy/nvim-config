@@ -79,7 +79,7 @@ return {
         ".git",
         "Cargo.toml",
         "Makefile",
-        "^~/projects/*/",
+        -- "^~/projects/*/*/",
         "package.json",
       },
       exclude_dirs = {
@@ -87,7 +87,7 @@ return {
         "~/.cargo/",
       },
       ignore_lsp = { "null-ls", "savior", "copilot" },
-      silent_chdir = true,
+      silent_chdir = false,
       show_hidden = true,
       scope_chdir = "tab",
     },

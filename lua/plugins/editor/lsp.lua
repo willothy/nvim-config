@@ -3,16 +3,11 @@ local icons = require("willothy.icons")
 return {
   {
     "folke/neodev.nvim",
-    opts = {
-      library = {
-        enabled = true,
-        plugins = true,
-        runtime = true,
-        types = true,
-      },
-      lspconfig = true,
-      pathStrict = true,
-    },
+    ft = "lua",
+    config = function()
+      require("lspconfig")
+      vim.cmd.LspStart("lua_ls")
+    end,
   },
   {
     "willothy/hollywood.nvim",

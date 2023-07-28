@@ -1,5 +1,7 @@
 local neogit = function(popup)
-  return function() require("neogit").open({ popup }) end
+  return function()
+    require("neogit").open({ popup })
+  end
 end
 
 return {

@@ -59,9 +59,16 @@ local function initialize()
   -- setup hydras
   require("willothy.hydras")
 
-  vim.defer_fn(
-    function() vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" }) end,
-    100
+  vim.defer_fn(function()
+    vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" })
+  end, 100)
+  -- Inform vim how to enable undercurl in wezterm
+  vim.api.nvim_exec2(
+    [[
+let &t_Cs = "\e[4:3m"
+let &t_Ce = "\e[4:0m"
+    ]],
+    { output = false }
   )
 end
 

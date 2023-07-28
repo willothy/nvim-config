@@ -47,24 +47,29 @@ local commands = {
     nargs = "?",
     bang = true,
   },
+  CurrentDirRTP = {
+    function(args)
+      local cwd = vim.fn.getcwd(-1)
+      vim.opt.rtp:prepend(cwd)
+    end,
+    desc = "Add the cwd to vim's runtime path",
+  },
 }
 
-vim.iter(commands):each(
-  function(name, cmd)
-    vim.api.nvim_create_user_command(name, cmd[1], {
-      buffer = cmd.buffer,
-      nargs = cmd.nargs,
-      bar = cmd.bar,
-      bang = cmd.bang,
-      complete = cmd.complete,
-      force = cmd.force,
-      preview = cmd.preview,
-      desc = cmd.desc,
-      range = cmd.range,
-      count = cmd.count,
-      addr = cmd.addr,
-      register = cmd.register,
-      keepscript = cmd.keepscript,
-    })
-  end
-)
+vim.iter(commands):each(function(name, cmd)
+  vim.api.nvim_create_user_command(name, cmd[1], {
+    buffer = cmd.buffer,
+    nargs = cmd.nargs,
+    bar = cmd.bar,
+    bang = cmd.bang,
+    complete = cmd.complete,
+    force = cmd.force,
+    preview = cmd.preview,
+    desc = cmd.desc,
+    range = cmd.range,
+    count = cmd.count,
+    addr = cmd.addr,
+    register = cmd.register,
+    keepscript = cmd.keepscript,
+  })
+end)

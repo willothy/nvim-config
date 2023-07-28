@@ -53,12 +53,9 @@ local function lsp_maps(bufnr)
   map("n", "gD", buf.declaration, "declaration")
   map("n", "gT", buf.type_definition, "type definition")
   map("n", "gi", buf.implementation, "implementation")
-  map(
-    "n",
-    "K",
-    function() require("rust-tools").hover_actions.hover_actions() end,
-    "hover"
-  )
+  map("n", "K", function()
+    require("rust-tools").hover_actions.hover_actions()
+  end, "hover")
   map("n", "[d", diagnostic.goto_next, "diagnostic 󰞘")
   map("n", "]d", diagnostic.goto_prev, "󰞗 diagnostic")
   map("n", "<leader>ca", function()
@@ -363,7 +360,6 @@ local function setup_rust()
 end
 
 local function lsp_setup()
-  require("neodev")
   require("mason").setup()
 
   local lspconfig = require("lspconfig")
@@ -376,6 +372,28 @@ local function lsp_setup()
           capabilities = capabilities,
           on_attach = lsp_attach,
           settings = lsp_settings[server_name],
+        })
+      end,
+      lua_ls = function()
+        require("neodev").setup({
+          library = {
+            enabled = true,
+            plugins = true,
+            runtime = true,
+            types = true,
+          },
+          lspconfig = false,
+          pathStrict = true,
+        })
+        lspconfig.lua_ls.setup({
+          capabilities = capabilities,
+          on_attach = lsp_attach,
+          settings = lsp_settings.lua_ls,
+          root_dir = require("lspconfig.util").root_pattern(
+            ".git",
+            fn.getcwd()
+          ),
+          before_init = require("neodev.lsp").before_init,
         })
       end,
     },
@@ -430,7 +448,7 @@ local function lsp_setup()
     warden = {
       line_highlight = true,
     },
-    underline = false,
+    underline = true,
     virtual_lines = true,
     signs = true,
     severity_sort = true,
@@ -447,7 +465,9 @@ local function lsp_setup()
                 vim.bo.filetype
               )
             end,
-            function() return "NoiceMini" end,
+            function()
+              return "NoiceMini"
+            end,
           }
           return arr[k]()
         end,
@@ -475,6 +495,9 @@ local function lsp_setup()
 end
 
 local filetypes = {
+  lua = function()
+    vim.cmd.LspStart("lua_ls")
+  end,
   asm = function()
     local lspconfig = require("lspconfig")
     lspconfig.asm_lsp.setup({
