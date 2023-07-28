@@ -105,15 +105,15 @@ local function cokeline()
         return buffer.devicon.icon
       end,
       fg = function(buffer)
-        -- return buffer.is_focused and "TabLineSel"
         return (mappings.is_picking_focus() and "DiagnosticWarn")
           or (mappings.is_picking_close() and "DiagnosticError")
           or buffer.devicon.color
       end,
-      style = function(_)
-        return (mappings.is_picking_focus() or mappings.is_picking_close())
-            and "italic,bold"
-          or nil
+      italic = function(_)
+        return mappings.is_picking_focus() or mappings.is_picking_close()
+      end,
+      bold = function(_)
+        return mappings.is_picking_focus() or mappings.is_picking_close()
       end,
       truncation = { priority = 1 },
     },
@@ -137,11 +137,11 @@ local function cokeline()
     },
     filename = {
       text = function(buffer) return buffer.filename end,
-      style = function(buffer)
-        if buffer.is_focused then return "bold" end
-        if buffer.is_hovered then return "underline" end
-        return nil
+      bold = function(buffer) return buffer.is_focused end,
+      underline = function(buffer)
+        return buffer.is_hovered and not buffer.is_focused
       end,
+      sp = "#ff0000",
       fg = function(buffer)
         --[[ if buffer.is_focused then
           return "TabLine"
@@ -275,7 +275,7 @@ local function cokeline()
         end
       end,
       fg = "TabLine",
-      style = "bold",
+      bold = true,
       truncation = { priority = 1 },
       on_click = function(_, _, _, _, buffer) buffer:delete() end,
     },
