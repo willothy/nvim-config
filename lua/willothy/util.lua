@@ -99,7 +99,9 @@ end
 
 function M.bind(func, ...)
   local args = ...
-  return function(...) func(args, ...) end
+  return function(...)
+    func(args, ...)
+  end
 end
 
 function M.reload(mod)
@@ -133,31 +135,27 @@ function M.list_bufs()
   return buf_list
 end
 
-vim.api.nvim_create_user_command(
-  "Bd",
-  function() require("bufdelete").bufdelete(0, true) end,
-  {}
-)
+vim.api.nvim_create_user_command("Bd", function()
+  require("bufdelete").bufdelete(0, true)
+end, {})
 
 vim.api.nvim_create_user_command("Bda", function()
   local bufs = vim
     .iter(vim.fn.getbufinfo({ buflisted = 1 }))
-    :map(function(buf) return buf.bufnr end)
+    :map(function(buf)
+      return buf.bufnr
+    end)
     :totable()
   require("bufdelete").bufdelete(bufs, true)
 end, {})
 
-vim.api.nvim_create_user_command(
-  "LuaAttach",
-  function() require("luapad").attach() end,
-  {}
-)
+vim.api.nvim_create_user_command("LuaAttach", function()
+  require("luapad").attach()
+end, {})
 
-vim.api.nvim_create_user_command(
-  "LuaDetach",
-  function() require("luapad").detach() end,
-  {}
-)
+vim.api.nvim_create_user_command("LuaDetach", function()
+  require("luapad").detach()
+end, {})
 
 function M.longest_line(lines)
   local longest = 0
@@ -297,6 +295,37 @@ function M.pipe(data, ...)
   if #lines > 0 and lines[1] ~= "" then
     vim.api.nvim_buf_set_lines(buf, cursor[1], cursor[1], false, lines)
   end
+end
+
+function M.func_info(func)
+  local info = debug.getinfo(func)
+  local ret = {}
+  for k, v in pairs(info) do
+    if type(v) == "table" then
+      ret[k] = vim.inspect(v)
+    else
+      ret[k] = v
+    end
+  end
+  return ret
+end
+
+function M.upvalues(f, dbg)
+  local ret = {}
+
+  local i = 1
+  while true do
+    local name, value = debug.getupvalue(f, i)
+    if not name then break end
+    if dbg and type(value) == "function" then
+      table.insert(ret, i, { name, M.func_info(value) })
+    else
+      table.insert(ret, i, { name, value })
+    end
+    i = i + 1
+  end
+
+  return ret
 end
 
 return M

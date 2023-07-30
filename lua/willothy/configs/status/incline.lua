@@ -43,6 +43,7 @@ local function get_diagnostic_label(props)
   return label
 end
 
+-- selene: allow(unused_variable)
 local function get_git_diff(props)
   local icons = {
     removed = { "", "GitSignsDelete" },
@@ -64,66 +65,57 @@ local function get_git_diff(props)
   return labels
 end
 
-return {
-  {
-    "b0o/incline.nvim",
-    event = "User ExtraLazy",
-    enabled = false,
-    config = function()
-      require("incline").setup({
-        window = {
-          padding = 0,
-          padding_char = " ",
-          margin = {
-            horizontal = 0,
-            vertical = 0,
-          },
-          placement = {
-            horizontal = "right",
-            vertical = "top",
-          },
-        },
-        highlight = {
-          groups = {
-            InclineNormal = {
-              default = true,
-              group = "TabLine",
-            },
-            InclineNormalNC = {
-              default = true,
-              group = "TabLine",
-            },
-          },
-        },
-        render = function(props)
-          local filename =
-            vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-          local ft_icon, ft_color =
-            require("nvim-web-devicons").get_icon_color(filename)
-          local modified = vim.api.nvim_buf_get_option(props.buf, "modified")
-              and "bold,italic"
-            or "bold"
-
-          local buffer = {
-            -- get_search_term(props),
-            -- get_diagnostic_label(props),
-            -- { " ", get_git_diff(props) or "" },
-            { " ", ft_icon, " ", guifg = ft_color },
-            {
-              filename,
-              " ",
-              gui = modified,
-            },
-          }
-          return buffer
-        end,
-      })
-      vim.schedule(function()
-        -- hacky force refresh for incline
-        vim.api.nvim_exec_autocmds("BufRead", {
-          buffer = vim.api.nvim_get_current_buf(),
-        })
-      end)
-    end,
+require("incline").setup({
+  window = {
+    padding = 0,
+    padding_char = " ",
+    margin = {
+      horizontal = 0,
+      vertical = 0,
+    },
+    placement = {
+      horizontal = "right",
+      vertical = "top",
+    },
   },
-}
+  highlight = {
+    groups = {
+      InclineNormal = {
+        default = true,
+        group = "TabLine",
+      },
+      InclineNormalNC = {
+        default = true,
+        group = "TabLine",
+      },
+    },
+  },
+  render = function(props)
+    local filename =
+      vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+    local ft_icon, ft_color =
+      require("nvim-web-devicons").get_icon_color(filename)
+    local modified = vim.api.nvim_buf_get_option(props.buf, "modified")
+        and "bold,italic"
+      or "bold"
+
+    local buffer = {
+      -- get_search_term(props),
+      -- get_diagnostic_label(props),
+      -- { " ", get_git_diff(props) or "" },
+      { " ", ft_icon, " ", guifg = ft_color },
+      {
+        filename,
+        " ",
+        gui = modified,
+      },
+    }
+    return buffer
+  end,
+})
+vim.schedule(function()
+  -- hacky force refresh for incline
+  vim.api.nvim_exec_autocmds("BufRead", {
+    buffer = vim.api.nvim_get_current_buf(),
+  })
+end)

@@ -3,8 +3,25 @@ local neogit = function(popup)
     require("neogit").open({ popup })
   end
 end
+local bar = require("willothy.icons").git.signs.bar
 
 return {
+  {
+    "lewis6991/gitsigns.nvim",
+    event = "User ExtraLazy",
+    opts = {
+      signs = {
+        untracked = { text = bar },
+        add = { text = bar },
+        change = { text = bar },
+        delete = { text = bar },
+        topdelete = { text = bar },
+        changedelete = { text = bar },
+      },
+      trouble = false,
+      signcolumn = true,
+    },
+  },
   {
     "sindrets/diffview.nvim",
     dependencies = {

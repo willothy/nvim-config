@@ -103,9 +103,9 @@ local format
 local function setup_format()
   format = require("lsp-format")
   format.setup({
-    exclude = {
-      clangd = true,
-    },
+    -- exclude = {
+    --   clangd = true,
+    -- },
   })
 end
 
@@ -132,6 +132,7 @@ local lsp_settings = {
   ["asm-lsp"] = {},
   clangd = {
     semanticHighlighting = true,
+    single_file_support = false,
   },
   ["rust-analyzer"] = {
     diagnostics = {
@@ -271,10 +272,15 @@ local function setup_null()
     sources = {
       builtins.formatting.stylua,
       builtins.diagnostics.selene,
-      builtins.formatting.prettier,
+      builtins.formatting.prettier.with({
+        filetypes = { "toml", "js", "css", "html", "json", "markdown" },
+      }),
       -- builtins.diagnostics.todo_comments,
       builtins.formatting.asmfmt,
       builtins.formatting.beautysh,
+      builtins.formatting.clang_format.with({
+        filetypes = { "c", "cpp" },
+      }),
       -- builtins.formatting.pyink,
       -- builtins.formatting.markdownlint,
       builtins.formatting.taplo,

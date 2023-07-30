@@ -44,6 +44,7 @@ return {
   { "famiu/bufdelete.nvim" },
   {
     "ecthelionvi/NeoComposer.nvim",
+    requires = { "kkharji/sqlite.lua" },
     event = "User ExtraLazy",
     opts = {
       colors = {
