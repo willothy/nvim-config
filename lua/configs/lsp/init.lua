@@ -1,4 +1,4 @@
-local utils = require("willothy.util")
+local bind = require("willothy.util.func").bind
 local setmap = vim.keymap.set
 local buf = vim.lsp.buf
 local diagnostic = vim.diagnostic
@@ -45,16 +45,16 @@ local function lsp_attach(client, bufnr)
   end, "code actions")
 
   local trouble = require("trouble").open
-  map("n", "<leader>cr", utils.bind(trouble, "lsp_references"), "references")
-  map("n", "<leader>cd", utils.bind(trouble, "lsp_definitions"), "definitions")
+  map("n", "<leader>cr", bind(trouble, "lsp_references"), "references")
+  map("n", "<leader>cd", bind(trouble, "lsp_definitions"), "definitions")
   map(
     "n",
     "<leader>cd",
-    utils.bind(trouble, "lsp_type_definitions"),
+    bind(trouble, "lsp_type_definitions"),
     "type definitions"
   )
-  map("n", "<leader>vq", utils.bind(trouble, "quickfix"), "quickfix")
-  map("n", "<leader>vL", utils.bind(trouble, "loclist"), "loclist")
+  map("n", "<leader>vq",bind(trouble, "quickfix"), "quickfix")
+  map("n", "<leader>vL",bind(trouble, "loclist"), "loclist")
 
   local increname = function()
     vim.api.nvim_feedkeys(":IncRename " .. fn.expand("<cword>"), "n", false)

@@ -48,11 +48,80 @@ local commands = {
     bang = true,
   },
   CurrentDirRTP = {
-    function(args)
+    function()
       local cwd = vim.fn.getcwd(-1)
       vim.opt.rtp:prepend(cwd)
     end,
     desc = "Add the cwd to vim's runtime path",
+  },
+  Browse = {
+    function(args)
+      local target
+      if args and args["args"] then
+        target = args["args"]
+      else
+        target = vim.fn.getcwd(-1)
+      end
+      require("telescope").extensions.file_browser.file_browser({ cwd = target })
+    end,
+    nargs = "?",
+    desc = "Browse the provided directory or the current directory",
+  },
+  Reload = {
+    function(args)
+      local util = require("willothy.util")
+      if args and args["args"] ~= "" then
+        util.reload(args["args"])
+      else
+        util.reload(util.current_mod())
+      end
+    end,
+    nargs = "?",
+    desc = "Reload the current module",
+  },
+  Bd = {
+    function()
+      require("bufdelete").bufdelete(0, true)
+    end,
+    desc = "Close the current buffer",
+  },
+  Bda = {
+    function()
+      local bufs = vim
+        .iter(vim.fn.getbufinfo({ buflisted = 1 }))
+        :map(function(buf)
+          return buf.bufnr
+        end)
+        :totable()
+      require("bufdelete").bufdelete(bufs, true)
+    end,
+    desc = "Close all buffers",
+  },
+  LuaAttach = {
+    function()
+      require("luapad").attach()
+    end,
+    desc = "Attach a Lua REPL to the current buffer",
+  },
+  LuaDetach = {
+    function()
+      require("luapad").detach()
+    end,
+    desc = "Detach the Lua REPL from the current buffer",
+  },
+  Scratch = {
+    function(args)
+      local f = vim.fn.tempname()
+      local buf = vim.api.nvim_create_buf(false, true)
+      vim.api.nvim_buf_set_name(buf, f)
+      vim.bo[buf].filetype = (args.args and (#args.args > 1)) and args.args[1]
+        or "lua"
+      vim.bo[buf].buftype = ""
+      vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+      vim.api.nvim_buf_set_option(buf, "swapfile", false)
+      vim.api.nvim_set_current_buf(buf)
+    end,
+    desc = "Open a scratch buffer",
   },
 }
 

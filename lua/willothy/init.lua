@@ -1,4 +1,4 @@
-require("willothy.set")
+require("willothy.settings")
 
 local function initialize()
   -- setup mappings

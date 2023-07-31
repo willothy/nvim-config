@@ -11,7 +11,7 @@ end
 local function heirline()
   local utils = require("heirline.utils")
   local conditions = require("heirline.conditions")
-  local get_hex = require("willothy.hl").fetch_attr
+  local get_hex = require("willothy.util.hl").fetch_attr
 
   local highlights = {
     Normal = {
@@ -424,10 +424,8 @@ local function heirline()
                 { pattern = "UpdateNeoComposerUI" }
               )
             end
-            -- for i, v in ipairs(upvalues) do
             for i = #upvalues, 1, -1 do
               debug.setupvalue(wrapped, i + 1, upvalues[i][2])
-              -- debug.upvaluejoin(wrapped, i + 1, f, i + 1)
             end
             setfenv(wrapped, env)
             return wrapped
@@ -436,8 +434,7 @@ local function heirline()
           local state = require("NeoComposer.macro")
           for k, v in pairs(state) do
             if type(v) == "function" then
-              local upvalues = require("willothy.util").upvalues(v)
-              -- local env = getfenv(v)
+              local upvalues = require("willothy.util").debug.upvalues(v)
               local f = with_update(v, upvalues)
               state[k] = f
             end
