@@ -72,7 +72,7 @@
   "numb.nvim": { "branch": "master", "commit": "2c89245d1185e02fec1494c45bc765a38b6b40b3" },
   "nvim-autopairs": { "branch": "master", "commit": "ae5b41ce880a6d850055e262d6dfebd362bb276e" },
   "nvim-cmp": { "branch": "main", "commit": "c4e491a87eeacf0408902c32f031d802c7eafce8" },
-  "nvim-cokeline": { "branch": "main", "commit": "c2842a51df781d357cd3408c411a7bec147b57ae" },
+  "nvim-cokeline": { "branch": "main", "commit": "e0db4891c8ce35428463269184ba01f8f4169efe" },
   "nvim-dap": { "branch": "master", "commit": "2f28ea843bcdb378b171a66ddcd568516e431d55" },
   "nvim-dap-ui": { "branch": "master", "commit": "85b16ac2309d85c88577cd8ee1733ce52be8227e" },
   "nvim-dap-virtual-text": { "branch": "master", "commit": "57f1dbd0458dd84a286b27768c142e1567f3ce3b" },

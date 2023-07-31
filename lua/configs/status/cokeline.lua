@@ -152,7 +152,20 @@ local components = {
     underline = function(buffer)
       return buffer.is_hovered and not buffer.is_focused
     end,
-    sp = "#ff0000",
+    sp = function(buffer)
+      --[[ if buffer.is_focused then
+          return "TabLine"
+        else ]]
+      if buffer.diagnostics.errors ~= 0 then
+        return "DiagnosticError"
+      elseif buffer.diagnostics.warnings ~= 0 then
+        return "DiagnosticWarn"
+      elseif buffer.diagnostics.infos ~= 0 then
+        return "DiagnosticInfo"
+      else
+        return "TabLine"
+      end
+    end,
     fg = function(buffer)
       --[[ if buffer.is_focused then
           return "TabLine"
