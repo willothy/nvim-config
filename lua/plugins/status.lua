@@ -32,9 +32,10 @@ return {
     end,
   },
   {
-    "b0o/incline.nvim",
+    "willothy/incline.nvim",
+    -- dir = "~/projects/lua/incline.nvim/",
     event = "User ExtraLazy",
-    enabled = false,
+    -- enabled = false,
     config = function()
       require("configs.status.incline")
     end,

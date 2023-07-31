@@ -67,15 +67,18 @@ end
 
 require("incline").setup({
   window = {
-    padding = 0,
+    padding = 1,
     padding_char = " ",
     margin = {
       horizontal = 0,
-      vertical = 0,
+      vertical = {
+        top = 0,
+        bottom = 0,
+      },
     },
-    placement = {
-      horizontal = "right",
-      vertical = "top",
+    overlap = {
+      winbar = true,
+      tabline = false,
     },
   },
   highlight = {
@@ -103,10 +106,9 @@ require("incline").setup({
       -- get_search_term(props),
       -- get_diagnostic_label(props),
       -- { " ", get_git_diff(props) or "" },
-      { " ", ft_icon, " ", guifg = ft_color },
+      { ft_icon, " ", guifg = ft_color },
       {
         filename,
-        " ",
         gui = modified,
       },
     }
