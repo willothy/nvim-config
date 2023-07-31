@@ -2,16 +2,20 @@ local dap = require("dap")
 
 dap.listeners.after.event_initialized["dapui_config"] = function()
   require("dapui").open()
+  require("nvim-dap-virtual-text").refresh()
 end
 dap.listeners.after.disconnect["dapui_config"] = function()
   require("dap.repl").close()
   require("dapui").close()
+  require("nvim-dap-virtual-text").refresh()
 end
 dap.listeners.before.event_terminated["dapui_config"] = function()
   require("dapui").close()
+  require("nvim-dap-virtual-text").refresh()
 end
 dap.listeners.before.event_exited["dapui_config"] = function()
   require("dapui").close()
+  require("nvim-dap-virtual-text").refresh()
 end
 
 dap.configurations.rust = {
