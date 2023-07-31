@@ -201,6 +201,7 @@ return {
   },
   {
     "creativenull/dotfyle-metadata.nvim",
+    cmd = { "DotfyleGenerate", "DotfyleOpen" },
   },
   -- TODO: This is cool. Figure out what is does.
   -- {

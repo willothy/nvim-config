@@ -23,9 +23,16 @@ return {
   {
     "NeogitOrg/neogit",
     dependencies = "nvim-lua/plenary.nvim",
-    event = "VeryLazy",
+    event = "User ExtraLazy",
     config = function()
       require("configs.git.neogit")
+    end,
+  },
+  {
+    "linrongbin16/gitlinker.nvim",
+    event = "User ExtraLazy",
+    config = function()
+      require("configs.git.gitlinker")
     end,
   },
 }

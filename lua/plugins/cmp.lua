@@ -9,18 +9,21 @@ return {
       "hrsh7th/cmp-nvim-lsp-document-symbol",
       "dmitmel/cmp-cmdline-history",
       "saadparwaiz1/cmp_luasnip",
+      "rcarriga/cmp-dap",
 
       -- Snippets
       "L3MON4D3/LuaSnip",
     },
     event = { "InsertEnter", "CmdLineEnter" },
-    config = function() require("configs.editor.cmp") end,
+    config = function()
+      require("configs.editor.cmp")
+    end,
   },
   {
     "windwp/nvim-autopairs",
     event = "VeryLazy",
     config = function()
-       require("configs.editor.autopairs")
+      require("configs.editor.autopairs")
     end,
   },
   {
@@ -31,7 +34,9 @@ return {
   {
     "zbirenbaum/copilot.lua",
     event = { "InsertEnter", "CmdLineEnter", "VeryLazy" },
-    config = function() require("configs.editor.copilot") end,
+    config = function()
+      require("configs.editor.copilot")
+    end,
   },
   {
     "kylechui/nvim-surround",

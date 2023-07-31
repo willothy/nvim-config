@@ -786,6 +786,14 @@ require("which-key").register({
     r = neogit.rebase,
     S = neogit.stash,
     s = neogit.status,
+    B = {
+      function()
+        require("gitlinker").link({
+          action = require("gitlinker.actions").system,
+        })
+      end,
+      "open in browser",
+    },
   },
   j = {
     name = "jump",
