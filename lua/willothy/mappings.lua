@@ -585,7 +585,7 @@ local neogit = setmetatable({}, {
   __index = function(_, popup)
     return {
       function()
-        require("neogit").open({ popup })
+        require("neogit").open(popup ~= "status" and { popup } or nil)
       end,
       popup,
     }
@@ -744,7 +744,9 @@ require("which-key").register({
     },
     r = {
       function()
-        require("willothy.util.fs").browse(require("willothy.util.fs").project_root())
+        require("willothy.util.fs").browse(
+          require("willothy.util.fs").project_root()
+        )
       end,
       "project root",
     },
@@ -762,7 +764,9 @@ require("which-key").register({
     },
     z = {
       function()
-        require("willothy.util.fs").browse(vim.fn.stdpath("config") .. "/../zsh")
+        require("willothy.util.fs").browse(
+          vim.fn.stdpath("config") .. "/../zsh"
+        )
       end,
       "zsh config",
     },
