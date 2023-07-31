@@ -199,6 +199,9 @@ return {
     cmd = "Hypersonic",
     config = true,
   },
+  {
+    "creativenull/dotfyle-metadata.nvim",
+  },
   -- TODO: This is cool. Figure out what is does.
   -- {
   --   "notomo/thetto.nvim",

@@ -25,6 +25,7 @@
   "crates.nvim": { "branch": "main", "commit": "4ce7c51b881e58f1e2f8f437f30e4e583cbac319" },
   "deferred-clipboard.nvim": { "branch": "master", "commit": "810a29d166eaa41afc220cc7cd85eeaa3c43b37f" },
   "diffview.nvim": { "branch": "main", "commit": "e91110d2a7f8e2f667666aba6ea089ff823f8748" },
+  "dotfyle-metadata.nvim": { "branch": "main", "commit": "dd665193cb4758bb39ed83a439b841f295a465cf" },
   "dropbar.nvim": { "branch": "master", "commit": "f8865e154a1bfbef515be1b0e52f989bce2a42da" },
   "edgy.nvim": { "branch": "main", "commit": "4ccc1c67ae2b1a0c55f18c83d03b714e2bb1bae4" },
   "flash.nvim": { "branch": "main", "commit": "967117690bd677cb7b6a87f0bc0077d2c0be3a27" },
