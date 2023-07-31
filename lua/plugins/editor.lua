@@ -31,8 +31,10 @@ return {
     "folke/neodev.nvim",
     ft = "lua",
     config = function()
-      require("lspconfig")
-      vim.cmd.LspStart("lua_ls")
+      vim.defer_fn(function()
+        require("lspconfig")
+        vim.cmd.LspStart("lua_ls")
+      end, 1000)
     end,
   },
   {

@@ -203,10 +203,8 @@ return {
     "creativenull/dotfyle-metadata.nvim",
     cmd = { "DotfyleGenerate", "DotfyleOpen" },
   },
-  -- TODO: This is cool. Figure out what is does.
-  -- {
-  --   "notomo/thetto.nvim",
-  --   config = true,
-  --   event = "User ExtraLazy",
-  -- },
+  {
+    "lewis6991/fileline.nvim",
+    lazy = false,
+  },
 }

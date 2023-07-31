@@ -29,6 +29,7 @@
   "dotfyle-metadata.nvim": { "branch": "main", "commit": "dd665193cb4758bb39ed83a439b841f295a465cf" },
   "dropbar.nvim": { "branch": "master", "commit": "f8865e154a1bfbef515be1b0e52f989bce2a42da" },
   "edgy.nvim": { "branch": "main", "commit": "4ccc1c67ae2b1a0c55f18c83d03b714e2bb1bae4" },
+  "fileline.nvim": { "branch": "main", "commit": "b8dfff3bc95b6b55c1790876ac9374699673eb85" },
   "flash.nvim": { "branch": "main", "commit": "967117690bd677cb7b6a87f0bc0077d2c0be3a27" },
   "flatten.nvim": { "branch": "main", "commit": "f1618e04c477a74bc0aba465a0d96ae5baee67c4" },
   "focus.nvim": { "branch": "master", "commit": "a994282f957840ee3419ad62a36be9d4e155560c" },
