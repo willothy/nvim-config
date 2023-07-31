@@ -7,6 +7,10 @@ return {
   },
   {
     "willothy/flatten.nvim",
+    dependencies = {
+      -- hacky way of ensuring fileline deals with files before flatten sends them
+      "lewis6991/fileline.nvim",
+    },
     cond = true,
     lazy = false,
     priority = 1000,
