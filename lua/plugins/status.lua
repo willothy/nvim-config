@@ -2,7 +2,7 @@ return {
   {
     "willothy/nvim-cokeline",
     config = function()
-      require("willothy.configs.status.cokeline")
+      require("configs.status.cokeline")
     end,
     lazy = true,
     event = "User ExtraLazy",
@@ -10,14 +10,14 @@ return {
   {
     "rebelot/heirline.nvim",
     config = function()
-      require("willothy.configs.status.heirline")
+      require("configs.status.heirline")
     end,
     event = "UiEnter",
   },
   {
     "willothy/dropbar.nvim",
     config = function()
-      require("willothy.configs.status.dropbar")
+      require("configs.status.dropbar")
     end,
     event = "VeryLazy",
   },
@@ -28,7 +28,7 @@ return {
     },
     event = "User ExtraLazy",
     config = function()
-      require("willothy.configs.status.statuscol")
+      require("configs.status.statuscol")
     end,
   },
   {
@@ -36,7 +36,7 @@ return {
     event = "User ExtraLazy",
     enabled = false,
     config = function()
-      require("willothy.configs.status.incline")
+      require("configs.status.incline")
     end,
   },
   {

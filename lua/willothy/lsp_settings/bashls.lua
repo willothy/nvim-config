@@ -1,0 +1,5 @@
+return {
+  bashIde = {
+    includeAllWorkspaceSymbols = true,
+  },
+}

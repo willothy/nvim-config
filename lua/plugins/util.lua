@@ -105,7 +105,7 @@ return {
     "ecthelionvi/NeoColumn.nvim",
     event = "User ExtraLazy",
     opts = {
-      always_on = true,
+      always_on = false,
     },
   },
   {

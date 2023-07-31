@@ -19,16 +19,14 @@ local function mkportal(title, items, callback, opts)
   if opts.filter then iter = iter:filter(opts.filter) end
   if opts.map then iter = iter:map(opts.map) end
   iter = iter
-    :map(
-      function(v, _i)
-        return Content:new({
-          type = v.title or title,
-          buffer = v.bufnr,
-          cursor = { row = v.lnum, col = v.col },
-          callback = callback,
-        })
-      end
-    )
+    :map(function(v, _i)
+      return Content:new({
+        type = v.title or title,
+        buffer = v.bufnr,
+        cursor = { row = v.lnum, col = v.col },
+        callback = callback,
+      })
+    end)
     :take(opts.max_results)
 
   local res = {
@@ -113,52 +111,68 @@ local function portal_references(context)
   )
 end
 
-vim.keymap.set(
-  { "n", "i", "t" },
-  "<C-Enter>",
-  function() require("willothy.terminals").toggle() end
-)
+vim.keymap.set({ "n", "i", "t" }, "<C-Enter>", function()
+  require("willothy.terminals").toggle()
+end)
 
 -- Spider
 register({ "n", "o", "x" }, {
   name = "spider",
   w = {
-    function() require("spider").motion("w") end,
+    function()
+      require("spider").motion("w")
+    end,
     "Spider-w",
   },
   e = {
-    function() require("spider").motion("e") end,
+    function()
+      require("spider").motion("e")
+    end,
     "Spider-e",
   },
   b = {
-    function() require("spider").motion("b") end,
+    function()
+      require("spider").motion("b")
+    end,
     "Spider-b",
   },
   ge = {
-    function() require("spider").motion("ge") end,
+    function()
+      require("spider").motion("ge")
+    end,
     "Spider-ge",
   },
 })
 
 require("which-key").register({
   ["<C-e>"] = {
-    function() require("harpoon.ui").toggle_quick_menu() end,
+    function()
+      require("harpoon.ui").toggle_quick_menu()
+    end,
     "Toggle harpoon quick menu",
   },
   ["<M-k>"] = {
-    function() require("moveline").up() end,
+    function()
+      require("moveline").up()
+    end,
     "Move line up",
   },
   ["<M-j>"] = {
-    function() require("moveline").down() end,
+    function()
+      require("moveline").down()
+    end,
     "Move line down",
   },
   ["<F1>"] = {
-    function() require("cokeline.mappings").pick("focus") end,
+    function()
+      require("cokeline.mappings").pick("focus")
+    end,
     "Pick buffer",
   },
   ["<C-s>"] = {
-    function() vim.cmd("write") end,
+    function()
+      vim.cmd("write")
+    end,
     "Save",
   },
 }, { mode = { "n", "i" } })
@@ -170,52 +184,76 @@ register("n", {
 
 require("which-key").register({
   ["<C-Up>"] = {
-    function() require("smart-splits").move_cursor_up() end,
+    function()
+      require("smart-splits").move_cursor_up()
+    end,
     "which_key_ignore",
   },
   ["<C-Down>"] = {
-    function() require("smart-splits").move_cursor_down() end,
+    function()
+      require("smart-splits").move_cursor_down()
+    end,
     "which_key_ignore",
   },
   ["<C-Left>"] = {
-    function() require("smart-splits").move_cursor_left() end,
+    function()
+      require("smart-splits").move_cursor_left()
+    end,
     "which_key_ignore",
   },
   ["<C-Right>"] = {
-    function() require("smart-splits").move_cursor_right() end,
+    function()
+      require("smart-splits").move_cursor_right()
+    end,
     "which_key_ignore",
   },
   ["<M-Up>"] = {
-    function() require("smart-splits").resize_up() end,
+    function()
+      require("smart-splits").resize_up()
+    end,
     "which_key_ignore",
   },
   ["<M-Down>"] = {
-    function() require("smart-splits").resize_down() end,
+    function()
+      require("smart-splits").resize_down()
+    end,
     "which_key_ignore",
   },
   ["<M-Left>"] = {
-    function() require("smart-splits").resize_left() end,
+    function()
+      require("smart-splits").resize_left()
+    end,
 
     "which_key_ignore",
   },
   ["<M-Right>"] = {
-    function() require("smart-splits").resize_right() end,
+    function()
+      require("smart-splits").resize_right()
+    end,
     "which_key_ignore",
   },
   ["<C-k>"] = {
-    function() require("smart-splits").move_cursor_up() end,
+    function()
+      require("smart-splits").move_cursor_up()
+    end,
     "which_key_ignore",
   },
   ["<C-j>"] = {
-    function() require("smart-splits").move_cursor_down() end,
+    function()
+      require("smart-splits").move_cursor_down()
+    end,
     "which_key_ignore",
   },
   ["<C-h>"] = {
-    function() require("smart-splits").move_cursor_left() end,
+    function()
+      require("smart-splits").move_cursor_left()
+    end,
     "which_key_ignore",
   },
   ["<C-l>"] = {
-    function() require("smart-splits").move_cursor_right() end,
+    function()
+      require("smart-splits").move_cursor_right()
+    end,
     "which_key_ignore",
   },
 }, { mode = { "n", "t" } })
@@ -224,35 +262,51 @@ register({ "n", "t" }, {
   ["<C-w>"] = {
     name = "window",
     ["<Up>"] = {
-      function() require("smart-splits").move_cursor_up() end,
+      function()
+        require("smart-splits").move_cursor_up()
+      end,
       "which_key_ignore",
     },
     ["<Down>"] = {
-      function() require("smart-splits").move_cursor_down() end,
+      function()
+        require("smart-splits").move_cursor_down()
+      end,
       "which_key_ignore",
     },
     ["<Left>"] = {
-      function() require("smart-splits").move_cursor_left() end,
+      function()
+        require("smart-splits").move_cursor_left()
+      end,
       "which_key_ignore",
     },
     ["<Right>"] = {
-      function() require("smart-splits").move_cursor_right() end,
+      function()
+        require("smart-splits").move_cursor_right()
+      end,
       "which_key_ignore",
     },
     ["k"] = {
-      function() require("smart-splits").move_cursor_up() end,
+      function()
+        require("smart-splits").move_cursor_up()
+      end,
       "which_key_ignore",
     },
     ["j"] = {
-      function() require("smart-splits").move_cursor_down() end,
+      function()
+        require("smart-splits").move_cursor_down()
+      end,
       "which_key_ignore",
     },
     ["h"] = {
-      function() require("smart-splits").move_cursor_left() end,
+      function()
+        require("smart-splits").move_cursor_left()
+      end,
       "which_key_ignore",
     },
     ["l"] = {
-      function() require("smart-splits").move_cursor_right() end,
+      function()
+        require("smart-splits").move_cursor_right()
+      end,
       "which_key_ignore",
     },
     ["-"] = { "<nop>", "which_key_ignore" },
@@ -264,15 +318,21 @@ register({ "n", "t" }, {
       "which_key_ignore",
     },
     ["="] = {
-      function() require("focus").focus_equalise() end,
+      function()
+        require("focus").focus_equalise()
+      end,
       "resize: equalize",
     },
     ["|"] = {
-      function() require("focus").focus_maximise() end,
+      function()
+        require("focus").focus_maximise()
+      end,
       "resize: maximize",
     },
     ["\\"] = {
-      function() require("focus").focus_max_or_equal() end,
+      function()
+        require("focus").focus_max_or_equal()
+      end,
       "resize: max or equal",
     },
     ["+"] = {
@@ -450,7 +510,9 @@ require("which-key").register({
       "Previous tab",
     },
     e = {
-      function() vim.diagnostic.goto_prev({ severity = "error" }) end,
+      function()
+        vim.diagnostic.goto_prev({ severity = "error" })
+      end,
       "Previous error",
     },
   },
@@ -483,7 +545,9 @@ require("which-key").register({
       "Next tab",
     },
     e = {
-      function() vim.diagnostic.goto_next({ severity = "error" }) end,
+      function()
+        vim.diagnostic.goto_next({ severity = "error" })
+      end,
       "Next error",
     },
   },
@@ -495,35 +559,58 @@ register({ "n", "t" }, {
     "Diagnostics",
   },
   ["<S-CR>"] = {
-    function() require("willothy.terminals").toggle() end,
+    function()
+      require("willothy.terminals").toggle()
+    end,
     "Toggle terminal",
   },
 })
 
 register({ "n", "x" }, {
   ["<C-F>"] = {
-    function() require("ssr").open() end,
+    function()
+      require("ssr").open()
+    end,
     "Structural Search/Replace",
   },
   ["<C-CR>"] = {
-    function() require("cokeline.mappings").pick("focus") end,
+    function()
+      require("cokeline.mappings").pick("focus")
+    end,
     "Pick buffer",
   },
+})
+
+local neogit = setmetatable({}, {
+  __index = function(_, popup)
+    return {
+      function()
+        require("neogit").open({ popup })
+      end,
+      popup,
+    }
+  end,
 })
 
 require("which-key").register({
   v = {
     name = "view",
     o = {
-      function() require("telescope.builtin").oldfiles() end,
+      function()
+        require("telescope.builtin").oldfiles()
+      end,
       "oldfiles",
     },
     r = {
-      function() require("telescope.builtin").registers() end,
+      function()
+        require("telescope.builtin").registers()
+      end,
       "registers",
     },
     s = {
-      function() require("telescope.builtin").lsp_document_symbols() end,
+      function()
+        require("telescope.builtin").lsp_document_symbols()
+      end,
       "document symbols",
     },
     l = {
@@ -546,16 +633,28 @@ require("which-key").register({
       },
     },
   },
-  m = "marks",
+  m = {
+    name = "marks",
+    r = {
+      function()
+        require("reach").marks()
+      end,
+      "reach: marks",
+    },
+  },
   t = {
     name = "toggle",
     u = { vim.cmd.UndotreeToggle, "Toggle undotree" },
     t = {
-      function() require("willothy.terminals").toggle() end,
+      function()
+        require("willothy.terminals").toggle()
+      end,
       "Toggle terminal",
     },
     f = {
-      function() require("willothy.terminals").toggle_float() end,
+      function()
+        require("willothy.terminals").toggle_float()
+      end,
       "Toggle floating terminal",
     },
     h = {
@@ -584,41 +683,63 @@ require("which-key").register({
       "Send to terminal",
     },
     d = {
-      function() require("dapui").toggle() end,
+      function()
+        require("dapui").toggle()
+      end,
       "dap ui",
     },
     p = {
-      function() require("willothy.terminals").py:toggle() end,
+      function()
+        require("willothy.terminals").py:toggle()
+      end,
       "python repl",
     },
     l = {
-      function() require("willothy.terminals").lua:toggle() end,
+      function()
+        require("willothy.terminals").lua:toggle()
+      end,
       "lua repl",
     },
   },
   b = {
     name = "buffer",
+    r = {
+      function()
+        require("reach").buffers()
+      end,
+      "reach: buffers",
+    },
     p = {
-      function() require("cokeline.mappings").pick("focus") end,
+      function()
+        require("cokeline.mappings").pick("focus")
+      end,
       "pick & focus",
     },
     x = {
-      function() require("cokeline.mappings").pick("close") end,
+      function()
+        require("cokeline.mappings").pick("close")
+      end,
       "pick & close",
     },
     a = {
-      function() require("harpoon.mark").add_file() end,
+      function()
+        require("harpoon.mark").add_file()
+      end,
       "add to harpoon",
     },
   },
   p = {
     name = "files",
     f = {
-      function() require("willothy.util").browse("~/projects/") end,
+      function()
+        require("willothy.util").browse("~/projects/")
+      end,
       "projects",
     },
     v = {
-      function() require("willothy.util").browse() end,
+      function()
+        require("willothy.util").browse()
+      end,
       "current directory",
     },
     r = {
@@ -628,11 +749,15 @@ require("which-key").register({
       "project root",
     },
     h = {
-      function() require("willothy.util").browse(vim.loop.os_homedir()) end,
+      function()
+        require("willothy.util").browse(vim.loop.os_homedir())
+      end,
       "home directory",
     },
     n = {
-      function() require("willothy.util").browse(vim.fn.stdpath("config")) end,
+      function()
+        require("willothy.util").browse(vim.fn.stdpath("config"))
+      end,
       "nvim config",
     },
     z = {
@@ -645,26 +770,22 @@ require("which-key").register({
   c = {
     name = "codelens",
     a = {
-      function() require("hollywood").code_actions() end,
+      function()
+        require("hollywood").code_actions()
+      end,
       "code actions",
     },
   },
   g = {
-    -- mappings here defined in plugins/editor/git.lua
     name = "git",
-    -- d = {
-    --   function()
-    --     -- hacky way of toggling diffview
-    --     local diffview = require("diffview")
-    --     local lib = require("diffview.lib")
-    --     if lib.get_current_view() then
-    --       diffview.close()
-    --     else
-    --       diffview.open()
-    --     end
-    --   end,
-    --   "diffview",
-    -- },
+    c = neogit.commit,
+    b = neogit.branch,
+    l = neogit.log,
+    p = neogit.push,
+    d = neogit.diff,
+    r = neogit.rebase,
+    S = neogit.stash,
+    s = neogit.status,
   },
   j = {
     name = "jump",
@@ -677,16 +798,27 @@ require("which-key").register({
     },
     r = { portal_references, "references" },
     j = {
-      function() require("portal.builtin").jumplist.tunnel() end,
+      function()
+        require("portal.builtin").jumplist.tunnel()
+      end,
       "jumplist",
     },
-    h = { function() require("portal.builtin").harpoon.tunnel() end, "harpoon" },
+    h = {
+      function()
+        require("portal.builtin").harpoon.tunnel()
+      end,
+      "harpoon",
+    },
     q = {
-      function() require("portal.builtin").quickfix.tunnel() end,
+      function()
+        require("portal.builtin").quickfix.tunnel()
+      end,
       "quickfix",
     },
     c = {
-      function() require("portal.builtin").changelist.tunnel() end,
+      function()
+        require("portal.builtin").changelist.tunnel()
+      end,
       "changelist",
     },
   },
@@ -694,11 +826,15 @@ require("which-key").register({
 
 require("which-key").register({
   ["<M-k>"] = {
-    function() require("moveline").block_up() end,
+    function()
+      require("moveline").block_up()
+    end,
     "Move block up",
   },
   ["<M-j>"] = {
-    function() require("moveline").block_down() end,
+    function()
+      require("moveline").block_down()
+    end,
     "Move block down",
   },
   ["<Tab>"] = { ">gv", "Indent line" },
@@ -706,4 +842,114 @@ require("which-key").register({
   ["<C-c>"] = { '"+y', "Copy selection" },
 }, {
   mode = "v",
+})
+
+local function fmt(name, is_after)
+  return string.format("%s %s", name, is_after and "󱞣" or "󱞽")
+end
+
+require("which-key").register({
+  p = {
+    "<Plug>(YankyPutAfter)",
+    fmt("Put", true),
+  },
+  P = {
+    "<Plug>(YankyPutBefore)",
+    fmt("Put"),
+  },
+  gp = {
+    "<Plug>(YankyGPutAfter)",
+    fmt("GPut", true),
+  },
+  gP = {
+    "<Plug>(YankyGPutBefore)",
+    fmt("GPut"),
+  },
+  ["]y"] = {
+    "<Plug>(YankyCycleForward)",
+    fmt("Yanky: cycle", true),
+  },
+  ["[y"] = {
+    "<Plug>(YankyCycleBackward)",
+    fmt("Yanky: cycle"),
+  },
+}, { mode = { "n", "x", "v" } })
+
+require("which-key").register({
+  s = {
+    function()
+      require("flash").jump()
+    end,
+    "flash: jump",
+  },
+  ["<M-s>"] = {
+    function()
+      require("flash").jump({ reverse = true })
+    end,
+    "flash: treesitter",
+  },
+  ["<M-r>"] = {
+    function()
+      -- show labeled treesitter nodes around the search matches
+      require("flash").treesitter_search()
+    end,
+    "flash: treesitter Search",
+  },
+}, { mode = { "n", "x" } })
+
+require("which-key").register({
+  r = {
+    function()
+      require("flash").remote()
+    end,
+    "flash: remote",
+  },
+}, { mode = "o" })
+
+require("which-key").register({
+  ["<C-s>"] = {
+    function()
+      require("flash").toggle()
+    end,
+    "flash: toggle flash search",
+  },
+}, { mode = "c" })
+
+require("which-key").register({
+  ["<F5>"] = {
+    function()
+      require("configs.debugging.dap").launch()
+    end,
+    "dap: launch debugger",
+  },
+  ["<F8>"] = {
+    function()
+      require("dap").toggle_breakpoint()
+    end,
+    "dap: toggle breakpoint",
+  },
+  ["<F9>"] = {
+    function()
+      require("dap").continue()
+    end,
+    "dap: continue",
+  },
+  ["<F10>"] = {
+    function()
+      require("dap").step_over()
+    end,
+    "dap: step over",
+  },
+  ["<S-F10>"] = {
+    function()
+      require("dap").step_into()
+    end,
+    "dap: step into",
+  },
+  ["<F12>"] = {
+    function()
+      require("dap.ui.widgets").hover()
+    end,
+    "dap: step out",
+  },
 })
