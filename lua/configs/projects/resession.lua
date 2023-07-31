@@ -38,6 +38,7 @@ resession.setup({
 if
   vim.fn.argc(-1) == 0
   and vim.tbl_contains(vim.v.argv, "-l") == false
+  and not require("flatten").is_guest()
   and not vim.g.nosession
 then
   -- Save these to a different directory, so our manual sessions don't get polluted

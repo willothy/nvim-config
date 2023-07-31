@@ -169,12 +169,6 @@ require("which-key").register({
     end,
     "Pick buffer",
   },
-  ["<C-s>"] = {
-    function()
-      vim.cmd("write")
-    end,
-    "Save",
-  },
 }, { mode = { "n", "i" } })
 
 register("n", {

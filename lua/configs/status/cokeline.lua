@@ -132,7 +132,7 @@ local components = {
     end,
     fg = function(buffer)
       if buffer.is_focused then
-        return "TabLineSel"
+        return require("cokeline.hlgroups").get_hl_attr("TabLineSel", "bg")
       else
         return "TabLine"
       end
