@@ -34,11 +34,14 @@ resession.setup({
   end,
 })
 
--- Only load the session if nvim was started with no args
 if
+  -- Only load the session if nvim was started with no args
   vim.fn.argc(-1) == 0
-  and vim.tbl_contains(vim.v.argv, "-l") == false
+  -- Don't load in nested sessions
   and not require("flatten").is_guest()
+  -- Don't load when running build scripts
+  and vim.tbl_contains(vim.v.argv, "-l") == false
+  -- Don't load if manually disabled
   and not vim.g.nosession
 then
   -- Save these to a different directory, so our manual sessions don't get polluted

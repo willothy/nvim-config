@@ -115,22 +115,22 @@ require("noice").setup({
   notify = {
     enabled = true,
   },
-  routes = {
-    {
-      filter = {
-        any = {
-          { find = "%d+L, %d+B written$" },
-          { find = "%d+ change[s]?; before #%d+" },
-          { find = "%d+ change[s]?; after #%d+" },
-        },
-      },
-      view = "mini",
-      opts = {
-        stop = true,
-        skip = false,
-      },
-    },
-  },
+  -- routes = {
+  --   {
+  --     filter = {
+  --       any = {
+  --         { find = "%d+L, %d+B written$" },
+  --         { find = "%d+ change[s]?; before #%d+" },
+  --         { find = "%d+ change[s]?; after #%d+" },
+  --       },
+  --     },
+  --     view = "mini",
+  --     opts = {
+  --       stop = true,
+  --       skip = false,
+  --     },
+  --   },
+  -- },
 })
 
 vim.notify_mini = function(msg, opts)

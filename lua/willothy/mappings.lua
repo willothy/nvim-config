@@ -7,110 +7,6 @@ local function register(modes, mappings, opts)
   )
 end
 
-local function mkportal(title, items, callback, opts)
-  opts = vim.tbl_deep_extend("keep", opts or {}, {
-    max_results = 4,
-  })
-  local Content = require("portal.content")
-  local Iterator = require("portal.iterator")
-  local Portal = require("portal")
-
-  local iter = Iterator:new(items)
-  if opts.filter then iter = iter:filter(opts.filter) end
-  if opts.map then iter = iter:map(opts.map) end
-  iter = iter
-    :map(function(v, _i)
-      return Content:new({
-        type = v.title or title,
-        buffer = v.bufnr,
-        cursor = { row = v.lnum, col = v.col },
-        callback = callback,
-      })
-    end)
-    :take(opts.max_results)
-
-  local res = {
-    source = iter,
-    slots = opts.slots,
-  }
-  Portal.tunnel(res)
-end
-
-local function portal_diagnostics(opts)
-  opts = vim.tbl_deep_extend("keep", opts or {}, {
-    max_results = 4,
-  })
-  local diagnostics = vim.diagnostic.get(opts.buffer or nil)
-  local Content = require("portal.content")
-  local Iterator = require("portal.iterator")
-  local Portal = require("portal")
-
-  local iter = Iterator:new(diagnostics)
-    :take(4)
-    :map(function(v, _i)
-      return Content:new({
-        type = "diagnostics",
-        buffer = v.bufnr,
-        cursor = { row = v.lnum, col = 1 },
-        extra = v.col,
-        callback = function(content)
-          local buf = content.buffer
-          local cursor = content.cursor
-          local win = vim.api.nvim_get_current_win()
-          local bufnr = vim.api.nvim_win_get_buf(win)
-          if buf ~= bufnr then vim.api.nvim_set_current_buf(buf) end
-          vim.api.nvim_win_set_cursor(win, { cursor.row, content.extra })
-        end,
-      })
-    end)
-    :take(opts.max_results)
-  local res = {
-    source = iter,
-    slots = nil,
-  }
-  Portal.tunnel(res)
-end
-
-local function portal_references(context)
-  local params = vim.lsp.util.make_position_params()
-  params.context = context or {
-    includeDeclaration = true,
-  }
-  vim.lsp.buf_request(
-    0,
-    "textDocument/references",
-    params,
-    function(err, result)
-      if err then
-        vim.notify(err.message)
-        return
-      end
-      if not result then
-        vim.notify("no references found")
-        return
-      end
-      local references = result
-      mkportal("references", references, function(content)
-        local buf = content.buffer
-        local cursor = content.cursor
-        local win = vim.api.nvim_get_current_win()
-        local bufnr = vim.api.nvim_win_get_buf(win)
-        if buf ~= bufnr then vim.api.nvim_set_current_buf(buf) end
-        vim.api.nvim_win_set_cursor(win, { cursor.row + 1, cursor.col })
-      end, {
-        map = function(v)
-          return {
-            title = "references",
-            bufnr = vim.uri_to_bufnr(v.uri),
-            lnum = v.range.start.line,
-            col = v.range.start.character,
-          }
-        end,
-      })
-    end
-  )
-end
-
 vim.keymap.set({ "n", "i", "t" }, "<C-Enter>", function()
   require("willothy.terminals").toggle()
 end)
@@ -168,6 +64,12 @@ require("which-key").register({
       require("cokeline.mappings").pick("focus")
     end,
     "Pick buffer",
+  },
+  ["<C-s>"] = {
+    function()
+      vim.cmd("write")
+    end,
+    "Save",
   },
 }, { mode = { "n", "i" } })
 
@@ -635,6 +537,28 @@ require("which-key").register({
       end,
       "reach: marks",
     },
+    h = {
+      function()
+        require("harpoon.mark").toggle_file()
+      end,
+      "harpoon: toggle current file",
+    },
+    H = {
+      function()
+        require("harpoon.ui").toggle_quick_menu()
+      end,
+      "harpoon: files",
+    },
+    d = {
+      function()
+        if vim.v.count == 0 then
+          require("dropbar.api").pick()
+        else
+          require("dropbar.api").pick(vim.v.count)
+        end
+      end,
+      "dropbar: pick",
+    },
   },
   t = {
     name = "toggle",
@@ -643,25 +567,13 @@ require("which-key").register({
       function()
         require("willothy.terminals").toggle()
       end,
-      "Toggle terminal",
+      "terminal: toggle",
     },
     f = {
       function()
         require("willothy.terminals").toggle_float()
       end,
-      "Toggle floating terminal",
-    },
-    h = {
-      function()
-        local h = require("harpoon.mark")
-        local buf = vim.api.nvim_buf_get_name(0)
-        if not h.get_current_index() then
-          h.add_file(buf) -- mark is not in list
-        else
-          h.rm_file(buf) -- mark is in list
-        end
-      end,
-      "Toggle current harpoon mark",
+      "terminal: float toggle",
     },
     s = {
       function()
@@ -674,7 +586,7 @@ require("which-key").register({
           end
         end)
       end,
-      "Send to terminal",
+      "terminal: send",
     },
     d = {
       function()
@@ -715,11 +627,11 @@ require("which-key").register({
       end,
       "pick & close",
     },
-    a = {
+    Q = {
       function()
-        require("harpoon.mark").add_file()
+        require("bufdelete").bufdelete(vim.v.count)
       end,
-      "add to harpoon",
+      "close current",
     },
   },
   p = {
@@ -795,14 +707,20 @@ require("which-key").register({
   },
   j = {
     name = "jump",
-    -- gd = { portal_diagnostics, "global diagnostics" },
     d = {
       function()
-        portal_diagnostics({ buffer = vim.api.nvim_get_current_buf() })
+        require("configs.navigation.portal").diagnostics({
+          buffer = vim.api.nvim_get_current_buf(),
+        })
       end,
       "diagnostics",
     },
-    r = { portal_references, "references" },
+    r = {
+      function()
+        require("configs.navigation.portal").references()
+      end,
+      "references",
+    },
     j = {
       function()
         require("portal.builtin").jumplist.tunnel()
@@ -857,11 +775,11 @@ end
 require("which-key").register({
   p = {
     "<Plug>(YankyPutAfter)",
-    fmt("Put", true),
+    fmt("put", true),
   },
   P = {
     "<Plug>(YankyPutBefore)",
-    fmt("Put"),
+    fmt("put"),
   },
   gp = {
     "<Plug>(YankyGPutAfter)",
@@ -873,11 +791,11 @@ require("which-key").register({
   },
   ["]y"] = {
     "<Plug>(YankyCycleForward)",
-    fmt("Yanky: cycle", true),
+    fmt("yanky: cycle", true),
   },
   ["[y"] = {
     "<Plug>(YankyCycleBackward)",
-    fmt("Yanky: cycle"),
+    fmt("yanky: cycle"),
   },
 }, { mode = { "n", "x", "v" } })
 

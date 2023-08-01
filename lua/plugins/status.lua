@@ -5,7 +5,6 @@ return {
     config = function()
       require("configs.status.cokeline")
     end,
-    lazy = true,
     event = "User ExtraLazy",
   },
   {
@@ -16,7 +15,7 @@ return {
     event = "UiEnter",
   },
   {
-    "willothy/dropbar.nvim",
+    "Bekaboo/dropbar.nvim",
     config = function()
       require("configs.status.dropbar")
     end,
@@ -36,7 +35,6 @@ return {
     "willothy/incline.nvim",
     -- dir = "~/projects/lua/incline.nvim/",
     event = "User ExtraLazy",
-    -- enabled = false,
     config = function()
       require("configs.status.incline")
     end,
