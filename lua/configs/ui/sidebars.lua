@@ -20,6 +20,12 @@ M.neotree = {
   source_selector = {
     winbar = false,
   },
+  sources = {
+    "filesystem",
+    "buffers",
+    "git_status",
+    "diagnostics",
+  },
 }
 
 M.aerial = {

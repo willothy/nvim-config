@@ -27,6 +27,7 @@ return {
       require("configs.ui.notify")
     end,
   },
+  -- scope
   {
     "echasnovski/mini.indentscope",
     name = "mini.indentscope",
@@ -52,6 +53,7 @@ return {
       require("configs.ui.murmur")
     end,
   },
+  -- sidebars
   {
     "sidebar-nvim/sidebar.nvim",
     cmd = "SidebarNvimOpen",
@@ -69,6 +71,7 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
       "MunifTanjim/nui.nvim",
+      "mrbjarksen/neo-tree-diagnostics.nvim",
     },
   },
   {

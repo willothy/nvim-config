@@ -47,6 +47,14 @@ require("edgy").setup({
       title = "Gists",
     },
     {
+      ft = "aerial",
+      title = "Document Symbols",
+      open = function()
+        require("aerial").open()
+      end,
+    },
+    { title = "Neotest Summary", ft = "neotest-summary" },
+    {
       title = "Files",
       ft = "neo-tree",
       filter = function(buf)
@@ -56,13 +64,19 @@ require("edgy").setup({
       size = { height = 0.5 },
     },
     {
-      ft = "aerial",
-      title = "Document Symbols",
-      open = function()
-        require("aerial").open()
+      title = "Diagnostics",
+      ft = "neo-tree",
+      filter = function(buf)
+        return vim.b[buf].neo_tree_source == "diagnostics"
       end,
     },
-    { title = "Neotest Summary", ft = "neotest-summary" },
+    {
+      title = "Netman",
+      ft = "neo-tree",
+      filter = function(buf)
+        return vim.b[buf].neo_tree_source == "netman.ui.neo-tree"
+      end,
+    },
     {
       title = "Git",
       ft = "neo-tree",
