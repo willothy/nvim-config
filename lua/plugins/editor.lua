@@ -203,7 +203,6 @@ return {
   },
   {
     "pynappo/tabnames.nvim",
-    enabled = false,
     event = "User ExtraLazy",
     config = function()
       require("configs.projects.tabnames")
