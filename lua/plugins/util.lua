@@ -207,4 +207,14 @@ return {
     "lewis6991/fileline.nvim",
     lazy = false,
   },
+  {
+    "tzachar/highlight-undo.nvim",
+    config = true,
+    event = "User ExtraLazy",
+  },
+  {
+    "stevearc/oil.nvim",
+    config = true,
+    cmd = "Oil",
+  },
 }

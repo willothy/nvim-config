@@ -27,4 +27,8 @@ return {
     config = true,
     cmd = "ReachOpen",
   },
+  {
+    "rhysd/accelerated-jk",
+    event = "User ExtraLazy",
+  },
 }

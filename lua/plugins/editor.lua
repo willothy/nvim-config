@@ -21,7 +21,7 @@ return {
   {
     "ThePrimeagen/refactoring.nvim",
     config = true,
-    event = "User ExtraLazy",
+    event = "LspAttach",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
@@ -175,7 +175,6 @@ return {
   {
     "stevearc/resession.nvim",
     dependencies = {
-      "ahmedkhalf/project.nvim",
       "tiagovla/scope.nvim",
     },
     config = function()

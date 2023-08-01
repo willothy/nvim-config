@@ -44,17 +44,21 @@ local function lsp_attach(client, bufnr)
     -- require("hollywood").code_actions()
   end, "code actions")
 
-  local trouble = require("trouble").open
-  map("n", "<leader>cr", bind(trouble, "lsp_references"), "references")
-  map("n", "<leader>cd", bind(trouble, "lsp_definitions"), "definitions")
+  local trouble = function(list)
+    return function()
+      require("trouble").open(list)
+    end
+  end
+  map("n", "<leader>cr", trouble("lsp_references"), "references")
+  map("n", "<leader>cd", trouble("lsp_definitions"), "definitions")
   map(
     "n",
     "<leader>cd",
     bind(trouble, "lsp_type_definitions"),
     "type definitions"
   )
-  map("n", "<leader>vq",bind(trouble, "quickfix"), "quickfix")
-  map("n", "<leader>vL",bind(trouble, "loclist"), "loclist")
+  map("n", "<leader>vq", trouble("quickfix"), "quickfix")
+  map("n", "<leader>vL", trouble("loclist"), "loclist")
 
   local increname = function()
     vim.api.nvim_feedkeys(":IncRename " .. fn.expand("<cword>"), "n", false)
