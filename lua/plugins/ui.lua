@@ -1,4 +1,4 @@
-local anyline = true
+local anyline = false
 
 return {
   {
