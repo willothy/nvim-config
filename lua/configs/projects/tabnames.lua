@@ -1,11 +1,10 @@
 local tabnames = require("tabnames")
 
+local f = vim.fn
+
 local function short_cwd(tabnr)
-  local cwd = vim.fn.getcwd(-1, tabnr)
-
-  cwd = vim.fn.fnamemodify(cwd, ":~")
-
-  return cwd
+  local cwd = f.fnamemodify(f.getcwd(-1, tabnr), ":~")
+  return f.pathshorten(cwd, 4)
 end
 
 tabnames.setup({
