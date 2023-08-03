@@ -21,6 +21,7 @@ return {
   {
     "willothy/wezterm.nvim",
     config = true,
+    cmd = "WeztermSpawn",
   },
   {
     "desdic/greyjoy.nvim",
