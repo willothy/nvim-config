@@ -386,16 +386,7 @@ require("which-key").register({
           -(vim.v.count >= 1 and vim.v.count or 1)
         )
       end,
-      "Focus previous buffer",
-    },
-    B = {
-      function()
-        require("cokeline.mappings").by_step(
-          "switch",
-          -(vim.v.count >= 1 and vim.v.count or 1)
-        )
-      end,
-      "Move previous buffer",
+      "buffer",
     },
     t = {
       function()
@@ -403,13 +394,19 @@ require("which-key").register({
         if count == 0 then count = 1 end
         find_tab_direction(-count)
       end,
-      "Previous tab",
+      "tab",
     },
     e = {
       function()
         vim.diagnostic.goto_prev({ severity = "error" })
       end,
-      "Previous error",
+      "error",
+    },
+    m = {
+      function()
+        require("marks").prev()
+      end,
+      "mark",
     },
   },
   ["]"] = {
@@ -421,16 +418,7 @@ require("which-key").register({
           (vim.v.count >= 1 and vim.v.count or 1)
         )
       end,
-      "Focus next buffer",
-    },
-    B = {
-      function()
-        require("cokeline.mappings").by_step(
-          "switch",
-          (vim.v.count >= 1 and vim.v.count or 1)
-        )
-      end,
-      "Move next buffer",
+      "buffer",
     },
     t = {
       function()
@@ -438,13 +426,19 @@ require("which-key").register({
         if count == 0 then count = 1 end
         find_tab_direction(count)
       end,
-      "Next tab",
+      "tab",
     },
     e = {
       function()
         vim.diagnostic.goto_next({ severity = "error" })
       end,
-      "Next error",
+      "error",
+    },
+    m = {
+      function()
+        require("marks").next()
+      end,
+      "mark",
     },
   },
 })
@@ -530,35 +524,10 @@ require("which-key").register({
     },
   },
   m = {
-    name = "marks",
-    r = {
-      function()
-        require("reach").marks()
-      end,
-      "reach: marks",
-    },
-    h = {
-      function()
-        require("harpoon.mark").toggle_file()
-      end,
-      "harpoon: toggle current file",
-    },
-    H = {
-      function()
-        require("harpoon.ui").toggle_quick_menu()
-      end,
-      "harpoon: files",
-    },
-    d = {
-      function()
-        if vim.v.count == 0 then
-          require("dropbar.api").pick()
-        else
-          require("dropbar.api").pick(vim.v.count)
-        end
-      end,
-      "dropbar: pick",
-    },
+    function()
+      require("reach").marks()
+    end,
+    "marks",
   },
   t = {
     name = "toggle",
@@ -606,6 +575,18 @@ require("which-key").register({
       end,
       "lua repl",
     },
+    h = {
+      function()
+        require("harpoon.mark").toggle_file()
+      end,
+      "harpoon: toggle current file",
+    },
+    H = {
+      function()
+        require("harpoon.ui").toggle_quick_menu()
+      end,
+      "harpoon: files",
+    },
   },
   b = {
     name = "buffer",
@@ -614,6 +595,16 @@ require("which-key").register({
         require("reach").buffers()
       end,
       "reach: buffers",
+    },
+    s = {
+      function()
+        if vim.v.count == 0 then
+          require("dropbar.api").pick()
+        else
+          require("dropbar.api").pick(vim.v.count)
+        end
+      end,
+      "dropbar: open",
     },
     p = {
       function()

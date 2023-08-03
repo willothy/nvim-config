@@ -102,6 +102,7 @@ return {
   },
   {
     "willothy/moveline.nvim",
+    event = "User ExtraLazy",
     -- dir = '~/projects/neovim/moveline/',
     build = "make",
   },
