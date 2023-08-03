@@ -102,9 +102,10 @@ return {
   },
   {
     "willothy/moveline.nvim",
+    branch = "oxi",
     event = "User ExtraLazy",
-    -- dir = '~/projects/neovim/moveline/',
-    build = "make",
+    -- dir = "~/projects/rust/moveline.nvim/",
+    build = "make build",
   },
   {
     "nvim-neotest/neotest",

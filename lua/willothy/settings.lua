@@ -22,6 +22,7 @@ o.incsearch = true
 o.cursorline = false
 
 o.termguicolors = true
+o.modeline = false
 
 o.scrolloff = 16
 
@@ -80,5 +81,7 @@ o.relativenumber = true
 vim.api.nvim_create_autocmd({
   "TermResponse",
 }, {
-  callback = function() vim.cmd("checktime") end,
+  callback = function()
+    vim.cmd("checktime")
+  end,
 })
