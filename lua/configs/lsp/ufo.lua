@@ -35,11 +35,14 @@ local ufo = require("ufo")
 ufo.setup({
   fold_virt_text_handler = handler,
 })
-vim.schedule(function()
-  local tab = vim.api.nvim_get_current_tabpage()
-  local visited = {}
-  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tab)) do
-    local bufnr = vim.api.nvim_win_get_buf(win)
-    if not visited[bufnr] then visited[bufnr] = true end
-  end
-end)
+
+vim.api.nvim_create_autocmd({ "BufEnter", "BufNew", "BufReadPost" }, {
+  callback = function(ev)
+    local buf = ev.buf
+    if not ufo.hasAttached(buf) then ufo.attach(buf) end
+  end,
+})
+
+for buf in next, vim.api.nvim_list_bufs() do
+  if not ufo.hasAttached(buf) then ufo.attach(buf) end
+end

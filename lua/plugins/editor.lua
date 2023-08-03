@@ -3,6 +3,7 @@ return {
     "lukas-reineke/headlines.nvim",
     dependencies = "nvim-treesitter/nvim-treesitter",
     config = true,
+    ft = { "markdown", "help", "txt" },
     event = "User ExtraLazy",
   },
   {
@@ -10,6 +11,7 @@ return {
   },
   {
     "willothy/hollywood.nvim",
+    event = "LspAttach",
     dir = "~/projects/lua/hollywood.nvim",
   },
   {
@@ -57,7 +59,7 @@ return {
     config = function()
       require("configs.editor.comment")
     end,
-    event = "VeryLazy",
+    -- event = "VeryLazy",
   },
   {
     "cshuaimin/ssr.nvim",
@@ -68,6 +70,7 @@ return {
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = "Trouble",
     config = function()
       require("configs.editor.trouble")
     end,
@@ -80,7 +83,18 @@ return {
   {
     "sourcegraph/sg.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
-    event = "User ExtraLazy",
+    cmd = {
+      "SourcegraphLink",
+      "SourcegraphSearch",
+      "SourcegraphLogin",
+      "SourcegraphBuild",
+      "CodyExplain",
+      "CodyAsk",
+      "CodyChat",
+      "CodyDo",
+      "CodyToggle",
+      "CodyHistory",
+    },
     config = function()
       require("configs.lsp.sourcegraph")
     end,
@@ -90,7 +104,6 @@ return {
     "willothy/moveline.nvim",
     -- dir = '~/projects/neovim/moveline/',
     build = "make",
-    event = "VeryLazy",
   },
   {
     "nvim-neotest/neotest",
@@ -99,7 +112,6 @@ return {
       "nvim-treesitter/nvim-treesitter",
       "rouge8/neotest-rust",
     },
-    lazy = true,
     event = "LspAttach",
     config = function()
       require("configs.editor.neotest")
@@ -112,7 +124,7 @@ return {
       "neovim/nvim-lspconfig",
       "nvim-treesitter/nvim-treesitter",
     },
-    event = "User ExtraLazy",
+    ft = { "markdown", "txt" },
     config = function()
       require("configs.editor.otter")
     end,

@@ -65,7 +65,7 @@ return {
     config = function()
       require("configs.lsp.ufo")
     end,
-    lazy = true,
+    event = "User ExtraLazy",
   },
   {
     "jose-elias-alvarez/null-ls.nvim",
