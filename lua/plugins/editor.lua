@@ -226,4 +226,12 @@ return {
       require("configs.editor.yanky")
     end,
   },
+  {
+    "chentoast/marks.nvim",
+    event = "User ExtraLazy",
+    opts = {},
+    --config = function()
+    --  require("configs.editor.marks")
+    --end,
+  },
 }

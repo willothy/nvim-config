@@ -35,7 +35,3 @@ local ufo = require("ufo")
 ufo.setup({
   fold_virt_text_handler = handler,
 })
-
-for buf in next, vim.api.nvim_list_bufs() do
-  if not ufo.hasAttached(buf) then ufo.attach(buf) end
-end
