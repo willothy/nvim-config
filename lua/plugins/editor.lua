@@ -228,7 +228,7 @@ return {
     end,
   },
   {
-    "chentoast/marks.nvim",
+    "willothy/marks.nvim",
     event = "User ExtraLazy",
     opts = {},
     --config = function()
