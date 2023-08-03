@@ -36,13 +36,6 @@ ufo.setup({
   fold_virt_text_handler = handler,
 })
 
-vim.api.nvim_create_autocmd({ "BufEnter", "BufNew", "BufReadPost" }, {
-  callback = function(ev)
-    local buf = ev.buf
-    if not ufo.hasAttached(buf) then ufo.attach(buf) end
-  end,
-})
-
 for buf in next, vim.api.nvim_list_bufs() do
   if not ufo.hasAttached(buf) then ufo.attach(buf) end
 end

@@ -68,6 +68,9 @@ local function lsp_attach(client, bufnr)
 
   require("lsp-format").on_attach(client)
 
+  local ufo = require("ufo")
+  if not ufo.hasAttached(bufnr) then ufo.attach(bufnr) end
+
   if client.supports_method("textDocument/inlayHints") then
     vim.lsp.inlay_hint(bufnr, true)
   end
