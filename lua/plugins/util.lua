@@ -120,17 +120,6 @@ return {
     event = "User ExtraLazy",
   },
   {
-    "LunarVim/bigfile.nvim",
-    opts = {
-      filesize = 4,
-      pattern = { "*" },
-      features = {
-        "treesitter",
-      },
-    },
-    event = "User VeryLazy",
-  },
-  {
     "m-demare/attempt.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
