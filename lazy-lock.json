@@ -1,4 +1,5 @@
 {
+  "BufEx.nvim": { "branch": "main", "commit": "6e44bcfa270658fa6a669b838ee12f9827906deb" },
   "ChatGPT.nvim": { "branch": "main", "commit": "ef0cf1f28a22bbf2e9be531f4856d2cace57e4b2" },
   "Comment.nvim": { "branch": "master", "commit": "d0cbbfb539898a275dc4398446ab0ae3b94819bf" },
   "Hypersonic.nvim": { "branch": "main", "commit": "a98dbd6b5ac1aac3cd895990e08d1ea40e67a9e3" },

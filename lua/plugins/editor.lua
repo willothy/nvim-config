@@ -59,7 +59,7 @@ return {
     config = function()
       require("configs.editor.comment")
     end,
-    -- event = "VeryLazy",
+    event = "VeryLazy",
   },
   {
     "cshuaimin/ssr.nvim",
@@ -231,8 +231,10 @@ return {
     "willothy/marks.nvim",
     event = "User ExtraLazy",
     opts = {},
-    --config = function()
-    --  require("configs.editor.marks")
-    --end,
   },
+  -- {
+  --   "tomiis4/BufEx.nvim",
+  --   lazy = false,
+  --   config = true,
+  -- },
 }
