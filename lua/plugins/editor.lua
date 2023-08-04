@@ -231,7 +231,7 @@ return {
   {
     "willothy/marks.nvim",
     event = "User ExtraLazy",
-    opts = {},
+    config = true,
   },
   -- {
   --   "tomiis4/BufEx.nvim",
