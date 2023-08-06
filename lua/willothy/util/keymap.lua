@@ -80,7 +80,11 @@ function M.bind(module, name, ...)
   local args = { ... }
 
   return function()
-    require(module)[name](unpack(args))
+    if type(module) == "string" then
+      require(module)[name](unpack(args))
+    elseif type(module) == "function" then
+      module(name, unpack(args))
+    end
   end
 end
 

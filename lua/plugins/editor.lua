@@ -153,14 +153,14 @@ return {
       require("configs.editor.treesitter")
     end,
   },
-  {
-    "Cassin01/wf.nvim",
-    version = "*",
-    config = function()
-      require("wf").setup()
-    end,
-    event = "VeryLazy",
-  },
+  -- {
+  --   "Cassin01/wf.nvim",
+  --   version = "*",
+  --   config = function()
+  --     require("wf").setup()
+  --   end,
+  --   event = "VeryLazy",
+  -- },
   {
     "willothy/which-key.nvim",
     -- enabled = false,
