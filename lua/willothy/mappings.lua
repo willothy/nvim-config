@@ -76,6 +76,12 @@ require("which-key").register({
 register("n", {
   ["<Tab>"] = { "V>", "Indent line" },
   ["<S-Tab>"] = { "V<", "Unindent line" },
+  M = {
+    function()
+      require("multicursors").start()
+    end,
+    "multicursor",
+  },
 })
 
 require("which-key").register({
@@ -503,7 +509,7 @@ require("which-key").register({
       end,
       "document symbols",
     },
-    l = {
+    L = {
       name = "legendary",
       k = {
         "<cmd>Legendary keymaps<cr>",
@@ -563,17 +569,20 @@ require("which-key").register({
       end,
       "dap ui",
     },
-    p = {
-      function()
-        require("willothy.terminals").py:toggle()
-      end,
-      "python repl",
-    },
-    l = {
-      function()
-        require("willothy.terminals").lua:toggle()
-      end,
-      "lua repl",
+    r = {
+      name = "repl",
+      p = {
+        function()
+          require("willothy.terminals").py:toggle()
+        end,
+        "python",
+      },
+      l = {
+        function()
+          require("willothy.terminals").lua:toggle()
+        end,
+        "lua",
+      },
     },
     h = {
       function()
@@ -744,17 +753,18 @@ require("which-key").register({
     function()
       require("moveline").block_up()
     end,
-    "Move block up",
+    "move: up",
   },
   ["<M-j>"] = {
     function()
       require("moveline").block_down()
     end,
-    "Move block down",
+    "move: down",
   },
-  ["<Tab>"] = { ">gv", "Indent line" },
-  ["<S-Tab>"] = { "<gv", "Unindent line" },
-  ["<C-c>"] = { '"+y', "Copy selection" },
+  ["<Tab>"] = { ">gv", "indent: increase" },
+  ["<S-Tab>"] = { "<gv", "indent: decrease" },
+  ["<C-c>"] = { '"+y', "copy selection" },
+  ["M"] = { ":MCvisual<CR>", "multicursor mode" },
 }, {
   mode = "v",
 })

@@ -206,4 +206,17 @@ return {
     config = true,
     cmd = "Oil",
   },
+  {
+    "ziontee113/color-picker.nvim",
+    config = true,
+    cmd = {
+      "PickColor",
+      "PickColorInsert",
+    },
+  },
+  -- {
+  --   "levouh/tint.nvim",
+  --   config = true,
+  --   event = "User ExtraLazy",
+  -- },
 }

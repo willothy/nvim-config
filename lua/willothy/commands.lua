@@ -69,7 +69,7 @@ local commands = {
   },
   Reload = {
     function(args)
-      local util = require("willothy.util")
+      local util = require("willothy.util.debug")
       if args and args["args"] ~= "" then
         util.reload(args["args"])
       else

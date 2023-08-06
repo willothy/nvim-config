@@ -47,12 +47,23 @@ return {
     end,
   },
   {
-    "mg979/vim-visual-multi",
+    "smoka7/multicursors.nvim",
     event = "User ExtraLazy",
-    enabled = false,
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "anuvyklack/hydra.nvim",
+    },
     config = function()
-      require("configs.editor.visual-multi")
+      require("configs.editor.multicursor")
     end,
+    cmd = {
+      "MCstart",
+      "MCvisual",
+      "MCclear",
+      "MCpattern",
+      "MCvisualPattern",
+      "MCunderCursor",
+    },
   },
   {
     "numToStr/Comment.nvim",
