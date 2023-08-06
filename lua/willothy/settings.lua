@@ -28,6 +28,7 @@ o.scrolloff = 16
 
 o.updatetime = 500
 o.mousemodel = "extend"
+o.mousetime = 200
 o.mousemoveevent = true
 
 o.conceallevel = 2
@@ -67,7 +68,6 @@ o.laststatus = 3
 o.number = true
 o.relativenumber = true
 
-o.expandtab = true
 o.tabstop = vim.bo.filetype == "lua" and 2 or 4
 o.shiftwidth = vim.bo.filetype == "lua" and 2 or 4
 o.softtabstop = -1

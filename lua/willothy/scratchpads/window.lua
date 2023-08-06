@@ -27,7 +27,9 @@ end
 
 ---@param id window
 function View:apply(id)
-  vim.api.nvim_win_call(id, function() vim.fn.winrestview(self) end)
+  vim.api.nvim_win_call(id, function()
+    vim.fn.winrestview(self)
+  end)
 end
 
 ---@class Focus.Window
@@ -253,7 +255,9 @@ vim.api.nvim_create_autocmd("WinEnter", {
 })
 
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
-  callback = function() tree:draw() end,
+  callback = function()
+    tree:draw()
+  end,
 })
 
 vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {

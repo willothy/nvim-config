@@ -85,6 +85,59 @@ register("n", {
 })
 
 require("which-key").register({
+  g = {
+    name = "goto",
+    r = {
+      function()
+        require("trouble").open("lsp_references")
+      end,
+      "references",
+    },
+    d = {
+      function()
+        require("trouble").open("lsp_definitions")
+      end,
+      "diagnostics",
+    },
+    D = {
+      vim.lsp.buf.declaration,
+      "declaration",
+    },
+    T = {
+      function()
+        require("trouble").open("lsp_type_definitions")
+      end,
+      "type definition",
+    },
+    i = {
+      vim.lsp.buf.implementation,
+      "implementation",
+    },
+  },
+  K = {
+    -- vim.lsp.buf.hover,
+    function()
+      vim.cmd.MurmurToggle()
+      require("rust-tools").hover_actions.hover_actions()
+      local function await_close()
+        local state = require("rust-tools").hover_actions._state
+        local count = 0
+        for _ in pairs(state) do
+          count = count + 1
+        end
+        if count == 0 then
+          vim.cmd.MurmurToggle()
+        else
+          vim.defer_fn(await_close, 250)
+        end
+      end
+      vim.defer_fn(await_close, 250)
+    end,
+    "hover",
+  },
+}, { mode = { "n", "v" } })
+
+require("which-key").register({
   ["<C-Up>"] = {
     function()
       require("smart-splits").move_cursor_up()
@@ -414,6 +467,10 @@ require("which-key").register({
       end,
       "mark",
     },
+    d = {
+      vim.diagnostic.goto_prev,
+      "diagnostic",
+    },
   },
   ["]"] = {
     name = "next",
@@ -445,6 +502,10 @@ require("which-key").register({
         require("marks").next()
       end,
       "mark",
+    },
+    d = {
+      vim.diagnostic.goto_next,
+      "diagnostic",
     },
   },
 })
@@ -508,6 +569,18 @@ require("which-key").register({
         require("telescope.builtin").lsp_document_symbols()
       end,
       "document symbols",
+    },
+    q = {
+      function()
+        require("trouble").open("quickfix")
+      end,
+      "quickfix",
+    },
+    l = {
+      function()
+        require("trouble").open("loclist")
+      end,
+      "loclist",
     },
     L = {
       name = "legendary",
@@ -878,3 +951,17 @@ require("which-key").register({
     "dap: step out",
   },
 })
+
+-- remove all mouse mappings
+local disable = {
+  "<2-LeftMouse>",
+  "<3-LeftMouse>",
+  "<4-LeftMouse>",
+  "<2-RightMouse>",
+  "<3-RightMouse>",
+  "<4-RightMouse>",
+}
+
+for _, v in ipairs(disable) do
+  vim.keymap.set({ "n", "v", "i" }, v, "<Nop>", { silent = true })
+end

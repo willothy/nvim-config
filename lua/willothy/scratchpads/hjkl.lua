@@ -54,7 +54,9 @@ return function()
   }
 
   local norm = function(cmd)
-    return function() vim.cmd.normal({ cmd, bang = true }) end
+    return function()
+      vim.cmd.normal({ cmd, bang = true })
+    end
   end
   vim.keymap.set({ "i" }, "<C-j>", norm("j"), { noremap = true })
   vim.keymap.set({ "i" }, "<C-k>", norm("k"), { noremap = true })
@@ -77,7 +79,9 @@ return function()
           alternates[mode][arrows[key]] or "h/j/k/l or C-h/j/k/l"
         )
         vim.notify(msg, "error")
-        debounce:start(1000, 0, function() last = nil end)
+        debounce:start(1000, 0, function()
+          last = nil
+        end)
       end
     end
   end)

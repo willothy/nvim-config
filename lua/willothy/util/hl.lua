@@ -82,6 +82,8 @@ function M.hl(group)
   )
 end
 
-function M.fetch_attr(group, attr) return M.sanitize(M.hl(group))[attr] end
+function M.fetch_attr(group, attr)
+  return M.sanitize(M.hl(group))[attr]
+end
 
 return M

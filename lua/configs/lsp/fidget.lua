@@ -1,15 +1,15 @@
 require("fidget").setup({
   text = {
-    spinner = "pipe", --"dots",
+    spinner = "pipe",
     done = "✓",
     commenced = "+",
     completed = "✓",
   },
   fmt = {
-    stack_upwards = false,
+    stack_upwards = true,
   },
   align = {
-    bottom = false,
+    bottom = true,
     right = true,
   },
   window = {

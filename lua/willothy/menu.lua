@@ -37,9 +37,13 @@ function Menu:new(title)
   return o
 end
 
-function Menu:add_entry(entry) table.insert(self.entries, entry) end
+function Menu:add_entry(entry)
+  table.insert(self.entries, entry)
+end
 
-function Menu:remove_entry(idx) table.remove(self.entries, idx) end
+function Menu:remove_entry(idx)
+  table.remove(self.entries, idx)
+end
 
 function Menu:with_submenu(submenu)
   self:add_entry(submenu)
@@ -70,7 +74,9 @@ function Menu:build(parent)
       table.insert(
         lines,
         Nui.Menu.item(entry.title .. " >", {
-          on_submit = function() entry:build(result):mount() end,
+          on_submit = function()
+            entry:build(result):mount()
+          end,
           on_focus = function() end,
         })
       )
@@ -112,10 +118,9 @@ function Menu:build(parent)
       if item.on_focus then item.on_focus() end
     end,
   })
-  result:on(
-    require("nui.utils.autocmd").event.BufLeave,
-    function() result:unmount() end
-  )
+  result:on(require("nui.utils.autocmd").event.BufLeave, function()
+    result:unmount()
+  end)
   result.parent = parent
   return result
 end

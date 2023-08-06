@@ -1,4 +1,6 @@
-local function escape(str) return str:gsub("\\", "\\\\") end
+local function escape(str)
+  return str:gsub("\\", "\\\\")
+end
 
 ---@class Lines
 ---@field dimensions integer[]
@@ -22,9 +24,13 @@ function Lines:new(data)
   return setmetatable(o, Lines)
 end
 
-function Lines:width() return self.dimensions[2] end
+function Lines:width()
+  return self.dimensions[2]
+end
 
-function Lines:height() return self.dimensions[1] end
+function Lines:height()
+  return self.dimensions[1]
+end
 
 function Lines:truncate_width(width)
   local lines = {}
@@ -121,7 +127,9 @@ function Lines:overlay(other, row, col, force)
   return self
 end
 
-function Lines:render() return table.concat(self.data, "\n") end
+function Lines:render()
+  return table.concat(self.data, "\n")
+end
 
 function Lines:actions(actions, width)
   local processed = {}
@@ -151,10 +159,9 @@ function Lines:actions(actions, width)
   end
 
   for left, right in
-    vim
-      .iter(left_col)
-      :enumerate()
-      :map(function(i, l) return l, right_col[i] end)
+    vim.iter(left_col):enumerate():map(function(i, l)
+      return l, right_col[i]
+    end)
   do
     local line
     local left_len = #left

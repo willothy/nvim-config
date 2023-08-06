@@ -13,13 +13,15 @@ local class = function(name)
   end
 end
 
-local test = class "test" {
+local test = class("test")({
   init = function(self, a, b)
     self.a = a
     self.b = b
   end,
-  test = function(self) print(self.a, self.b) end,
-}
+  test = function(self)
+    print(self.a, self.b)
+  end,
+})
 
 local t = test(1, 2)
 t:test()

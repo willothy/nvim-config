@@ -15,7 +15,6 @@ return {
   },
   {
     "Aasim-A/scrollEOF.nvim",
-    -- enabled = false,
     config = true,
     event = "User ExtraLazy",
   },
@@ -212,6 +211,49 @@ return {
     cmd = {
       "PickColor",
       "PickColorInsert",
+    },
+  },
+  {
+    "krady21/compiler-explorer.nvim",
+    config = true,
+    cmd = {
+      "CECompile",
+      "CECompileLive",
+      "CEFormat",
+      "CEAddLibrary",
+      "CELoadExample",
+      "CEOpenWebsite",
+      "CEDeleteCache",
+      "CEShowTooltip",
+      "CEGotoLabel",
+    },
+  },
+  {
+    "notomo/piemenu.nvim",
+    dir = "~/projects/lua/piemenu.nvim/",
+    config = function()
+      require("configs.editor.piemenu")
+    end,
+    keys = {
+      {
+        "<RightMouse>",
+        function()
+          local mouse = vim.fn.getmousepos()
+          local win = vim.api.nvim_get_current_win()
+          local view = vim.fn.winsaveview()
+
+          require("piemenu").start("main", {
+            position = {
+              mouse.screenrow,
+              mouse.screencol,
+            },
+          })
+          vim.api.nvim_win_call(win, function()
+            vim.fn.winrestview(view)
+          end)
+        end,
+        mode = { "n", "v" },
+      },
     },
   },
   -- {

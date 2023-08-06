@@ -104,6 +104,8 @@ function M.toggle()
   end
 end
 
-function M.toggle_float() M.float:toggle() end
+function M.toggle_float()
+  M.float:toggle()
+end
 
 return M

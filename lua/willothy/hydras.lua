@@ -108,19 +108,19 @@ Hydra(function(config)
   backups = Lines:actions(backups):trim_trailing_whitespace()
 
   local first = true
-  exits = Lines:new(
-    vim
-      .iter(exits)
-      :map(function(exit) return exit.key end)
-      :fold("", function(a, v)
-        if first == true then
-          first = false
-          return "_" .. v .. "_"
-        else
-          return a .. ", " .. "_" .. v .. "_"
-        end
-      end) .. ": close"
-  ):trim_trailing_whitespace()
+  exits = Lines:new(vim
+    .iter(exits)
+    :map(function(exit)
+      return exit.key
+    end)
+    :fold("", function(a, v)
+      if first == true then
+        first = false
+        return "_" .. v .. "_"
+      else
+        return a .. ", " .. "_" .. v .. "_"
+      end
+    end) .. ": close"):trim_trailing_whitespace()
 
   local vert_size = maps.dimensions[1]
     + exits.dimensions[1]
@@ -294,18 +294,12 @@ Hydra({
           -- the next line in the file, but not to the next row on the
           -- screen under your previous position as in other editors. These
           -- bindings fixes this.
-          vim.keymap.set(
-            "n",
-            "k",
-            function() return vim.v.count > 0 and "k" or "gk" end,
-            { expr = true, desc = "k or gk" }
-          )
-          vim.keymap.set(
-            "n",
-            "j",
-            function() return vim.v.count > 0 and "j" or "gj" end,
-            { expr = true, desc = "j or gj" }
-          )
+          vim.keymap.set("n", "k", function()
+            return vim.v.count > 0 and "k" or "gk"
+          end, { expr = true, desc = "k or gk" })
+          vim.keymap.set("n", "j", function()
+            return vim.v.count > 0 and "j" or "gj"
+          end, { expr = true, desc = "j or gj" })
         else
           vim.o.wrap = false
           vim.keymap.del("n", "k")
@@ -368,7 +362,9 @@ Hydra({
       "J",
       function()
         if vim.wo.diff then return "]c" end
-        vim.schedule(function() gitsigns.next_hunk() end)
+        vim.schedule(function()
+          gitsigns.next_hunk()
+        end)
         return "<Ignore>"
       end,
       { expr = true, desc = "next hunk" },
@@ -377,7 +373,9 @@ Hydra({
       "K",
       function()
         if vim.wo.diff then return "[c" end
-        vim.schedule(function() gitsigns.prev_hunk() end)
+        vim.schedule(function()
+          gitsigns.prev_hunk()
+        end)
         return "<Ignore>"
       end,
       { expr = true, desc = "prev hunk" },
@@ -394,12 +392,16 @@ Hydra({
     { "b", gitsigns.blame_line, { desc = "blame" } },
     {
       "B",
-      function() gitsigns.blame_line({ full = true }) end,
+      function()
+        gitsigns.blame_line({ full = true })
+      end,
       { desc = "blame show full" },
     },
     {
       "/",
-      function() pcall(gitsigns.show) end,
+      function()
+        pcall(gitsigns.show)
+      end,
       { exit = true, desc = "show base file" },
     }, -- show the base of the file
     {
@@ -488,20 +490,60 @@ Hydra({
   mode = "n",
   body = "<C-w>w",
   heads = {
-    { "h", function() require("smart-splits").move_cursor_left() end },
-    { "j", function() require("smart-splits").move_cursor_down() end },
-    { "k", function() require("smart-splits").move_cursor_up() end },
-    { "l", function() require("smart-splits").move_cursor_right() end },
+    {
+      "h",
+      function()
+        require("smart-splits").move_cursor_left()
+      end,
+    },
+    {
+      "j",
+      function()
+        require("smart-splits").move_cursor_down()
+      end,
+    },
+    {
+      "k",
+      function()
+        require("smart-splits").move_cursor_up()
+      end,
+    },
+    {
+      "l",
+      function()
+        require("smart-splits").move_cursor_right()
+      end,
+    },
 
     { "H", cmd("WinShift left") },
     { "J", cmd("WinShift down") },
     { "K", cmd("WinShift up") },
     { "L", cmd("WinShift right") },
 
-    { "<C-h>", function() require("smart-splits").resize_left(5) end },
-    { "<C-j>", function() require("smart-splits").resize_down(5) end },
-    { "<C-k>", function() require("smart-splits").resize_up(5) end },
-    { "<C-l>", function() require("smart-splits").resize_right(5) end },
+    {
+      "<C-h>",
+      function()
+        require("smart-splits").resize_left(5)
+      end,
+    },
+    {
+      "<C-j>",
+      function()
+        require("smart-splits").resize_down(5)
+      end,
+    },
+    {
+      "<C-k>",
+      function()
+        require("smart-splits").resize_up(5)
+      end,
+    },
+    {
+      "<C-l>",
+      function()
+        require("smart-splits").resize_right(5)
+      end,
+    },
     { "=", cmd("FocusEqualise"), { desc = "equalize", exit = true } },
 
     { "s", pcmd("split", "E36") },
@@ -517,7 +559,9 @@ Hydra({
 
     {
       "b",
-      function() require("cokeline.mappings").pick("focus") end,
+      function()
+        require("cokeline.mappings").pick("focus")
+      end,
       { exit = true, desc = "choose buffer" },
     },
 
@@ -543,8 +587,12 @@ local diagram = Hydra({
     hint = {
       border = "rounded",
     },
-    on_enter = function() vim.o.virtualedit = "all" end,
-    on_exit = function() vim.o.virtualedit = "block" end,
+    on_enter = function()
+      vim.o.virtualedit = "all"
+    end,
+    on_exit = function()
+      vim.o.virtualedit = "block"
+    end,
   },
   mode = "n",
   heads = {
@@ -557,8 +605,6 @@ local diagram = Hydra({
   },
 })
 
-vim.api.nvim_create_user_command(
-  "DrawDiagram",
-  function() diagram:activate() end,
-  {}
-)
+vim.api.nvim_create_user_command("DrawDiagram", function()
+  diagram:activate()
+end, {})
