@@ -43,14 +43,21 @@ end
 local group = function(obj)
   return setmetatable(obj, {
     __add = function(self, other)
+      local modes = {}
       if type(other) == "string" then
-        table.insert(self, other)
+        for _, mode in ipairs(self) do
+          table.insert(modes, mode)
+        end
+        table.insert(modes, other)
       elseif type(other) == "table" then
+        for _, mode in ipairs(self) do
+          table.insert(modes, mode)
+        end
         for _, mode in ipairs(other) do
-          table.insert(self, mode)
+          table.insert(modes, mode)
         end
       end
-      return self
+      return modes
     end,
   })
 end

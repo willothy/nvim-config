@@ -421,34 +421,83 @@ local pcmd = require("hydra.keymap-util").pcmd
 --   config = {
 --     on_key = function()
 --       -- Preserve animation
---       vim.wait(200, function() vim.cmd("redraw") end, 30, false)
+--       vim.wait(200, function()
+--         vim.cmd("redraw")
+--       end, 30, false)
 --     end,
 --   },
 --   heads = {
---     { "h", function() vim.cmd("BufferPrevious") end, { on_key = false } },
+--     {
+--       "h",
+--       function()
+--         vim.cmd("BufferPrevious")
+--       end,
+--       { on_key = false },
+--     },
 --     {
 --       "l",
---       function() vim.cmd("BufferNext") end,
+--       function()
+--         vim.cmd("BufferNext")
+--       end,
 --       { desc = "choose", on_key = false },
 --     },
 --
---     { "H", function() vim.cmd("BufferMovePrevious") end },
---     { "L", function() vim.cmd("BufferMoveNext") end, { desc = "move" } },
+--     {
+--       "H",
+--       function()
+--         vim.cmd("BufferMovePrevious")
+--       end,
+--     },
+--     {
+--       "L",
+--       function()
+--         vim.cmd("BufferMoveNext")
+--       end,
+--       { desc = "move" },
+--     },
 --
---     { "p", function() vim.cmd("BufferPin") end, { desc = "pin" } },
+--     {
+--       "p",
+--       function()
+--         vim.cmd("BufferPin")
+--       end,
+--       { desc = "pin" },
+--     },
 --
---     { "d", function() vim.cmd("BufferClose") end, { desc = "close" } },
---     { "c", function() vim.cmd("BufferClose") end, { desc = false } },
---     { "q", function() vim.cmd("BufferClose") end, { desc = false } },
+--     {
+--       "d",
+--       function()
+--         vim.cmd("BufferClose")
+--       end,
+--       { desc = "close" },
+--     },
+--     {
+--       "c",
+--       function()
+--         vim.cmd("BufferClose")
+--       end,
+--       { desc = false },
+--     },
+--     {
+--       "q",
+--       function()
+--         vim.cmd("BufferClose")
+--       end,
+--       { desc = false },
+--     },
 --
 --     {
 --       "od",
---       function() vim.cmd("BufferOrderByDirectory") end,
+--       function()
+--         vim.cmd("BufferOrderByDirectory")
+--       end,
 --       { desc = "by directory" },
 --     },
 --     {
 --       "ol",
---       function() vim.cmd("BufferOrderByLanguage") end,
+--       function()
+--         vim.cmd("BufferOrderByLanguage")
+--       end,
 --       { desc = "by language" },
 --     },
 --     { "<Esc>", nil, { exit = true } },
@@ -469,7 +518,7 @@ local window_hint = [[
  ^ ^ _k_ ^ ^  ^ ^ _K_ ^ ^   ^   _<C-k>_   ^   _s_: horizontally 
  _h_ ^ ^ _l_  _H_ ^ ^ _L_   _<C-h>_ _<C-l>_   _v_: vertically
  ^ ^ _j_ ^ ^  ^ ^ _J_ ^ ^   ^   _<C-j>_   ^   _q_: close
- focus^^^^^^  window^^^^^^  ^_=_: equalize^   _z_: maximize
+ focus^^^^^^  ^swap ^^^^^   ^_=_: equalize^   _z_: maximize
  ^ ^ ^ ^ ^ ^  ^ ^ ^ ^ ^ ^   ^^ ^          ^   _o_: remain only
  _b_: choose buffer
 ]]
