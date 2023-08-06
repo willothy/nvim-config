@@ -1,14 +1,5 @@
 return {
   {
-    "aznhe21/actions-preview.nvim",
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-    },
-    config = function()
-      require("configs.lsp.actions-preview")
-    end,
-  },
-  {
     "j-hui/fidget.nvim",
     branch = "legacy",
     config = function()
@@ -76,10 +67,17 @@ return {
   },
   {
     "kosayoda/nvim-lightbulb",
+    enabled = false,
     config = function()
       require("configs.lsp.lightbulb")
     end,
-    enabled = false,
     event = "LspAttach",
+  },
+  {
+    "dnlhc/glance.nvim",
+    config = function()
+      require("configs.lsp.glance")
+    end,
+    cmd = "Glance",
   },
 }

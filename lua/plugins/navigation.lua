@@ -1,3 +1,13 @@
+local spider = function(motion)
+  return {
+    motion,
+    function()
+      require("spider").motion(motion)
+    end,
+    desc = "spider-" .. motion,
+    mode = { "n", "o", "x" },
+  }
+end
 return {
   {
     "folke/flash.nvim",
@@ -20,7 +30,12 @@ return {
   },
   {
     "chrisgrieser/nvim-spider",
-    lazy = true,
+    keys = {
+      spider("w"),
+      spider("b"),
+      spider("e"),
+      spider("ge"),
+    },
   },
   {
     "toppair/reach.nvim",

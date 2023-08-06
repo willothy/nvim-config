@@ -329,7 +329,7 @@ local git_hydra_hint = [[
  _K_: prev hunk   _u_: undo last stage   _p_: preview hunk   _B_: blame show full 
  ^ ^              _S_: stage buffer      ^ ^                 _/_: show base file
  ^
- ^ ^              _<Enter>_: Neogit              _q_: exit
+ ^ ^              _<Enter>_: Neogit           _q_, _<Esc>_: exit
 ]]
 
 Hydra({
@@ -406,12 +406,11 @@ Hydra({
     }, -- show the base of the file
     {
       "<Enter>",
-      function()
-        if pcall(require, "neogit") then vim.cmd("Neogit") end
-      end,
+      vim.cmd.Neogit,
       { exit = true, desc = "Neogit" },
     },
     { "q", nil, { exit = true, nowait = true, desc = "exit" } },
+    { "<Esc>", nil, { exit = true, nowait = true, desc = "exit" } },
   },
 })
 

@@ -11,35 +11,6 @@ vim.keymap.set({ "n", "i", "t" }, "<C-Enter>", function()
   require("willothy.terminals").toggle()
 end)
 
--- Spider
-register({ "n", "o", "x" }, {
-  name = "spider",
-  w = {
-    function()
-      require("spider").motion("w")
-    end,
-    "Spider-w",
-  },
-  e = {
-    function()
-      require("spider").motion("e")
-    end,
-    "Spider-e",
-  },
-  b = {
-    function()
-      require("spider").motion("b")
-    end,
-    "Spider-b",
-  },
-  ge = {
-    function()
-      require("spider").motion("ge")
-    end,
-    "Spider-ge",
-  },
-})
-
 require("which-key").register({
   ["<C-e>"] = {
     function()
@@ -51,13 +22,13 @@ require("which-key").register({
     function()
       require("moveline").up()
     end,
-    "Move line up",
+    "move: up",
   },
   ["<M-j>"] = {
     function()
       require("moveline").down()
     end,
-    "Move line down",
+    "move: down",
   },
   ["<F1>"] = {
     function()
@@ -89,15 +60,15 @@ require("which-key").register({
     name = "goto",
     r = {
       function()
-        require("trouble").open("lsp_references")
+        require("glance").open("references")
       end,
       "references",
     },
     d = {
       function()
-        require("trouble").open("lsp_definitions")
+        require("glance").open("definitions")
       end,
-      "diagnostics",
+      "definitions",
     },
     D = {
       vim.lsp.buf.declaration,
@@ -105,12 +76,14 @@ require("which-key").register({
     },
     T = {
       function()
-        require("trouble").open("lsp_type_definitions")
+        require("glance").open("type_definitions")
       end,
       "type definition",
     },
     i = {
-      vim.lsp.buf.implementation,
+      function()
+        require("glance").open("implementations")
+      end,
       "implementation",
     },
   },
@@ -757,6 +730,34 @@ require("which-key").register({
         require("hollywood").code_actions()
       end,
       "code actions",
+    },
+    r = {
+      function()
+        require("glance").open("references")
+      end,
+      "references",
+    },
+    d = {
+      function()
+        require("glance").open("definitions")
+      end,
+      "definitions",
+    },
+    D = {
+      vim.lsp.buf.declaration,
+      "declaration",
+    },
+    T = {
+      function()
+        require("glance").open("type_definitions")
+      end,
+      "type definition",
+    },
+    i = {
+      function()
+        require("glance").open("implementations")
+      end,
+      "implementations",
     },
   },
   g = {

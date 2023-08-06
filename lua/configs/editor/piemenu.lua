@@ -17,7 +17,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     end, { buffer = ev.buf })
     vim.keymap.set("n", "<Esc>", function()
       require("piemenu").cancel()
-    end)
+    end, { buffer = ev.buf })
   end,
 })
 

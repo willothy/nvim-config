@@ -1,6 +1,7 @@
 local api = vim.api
 
-local function mode_name(mode)
+local function mode_name()
+  local mode = api.nvim_get_mode().mode
   local mode_names = {
     ["n"] = "Normal",
     ["i"] = "Insert",
@@ -18,10 +19,9 @@ local function mode_name(mode)
 end
 
 local function update_mode()
-  local mode = api.nvim_get_mode().mode
-  mode = mode_name(mode)
-  local hl = vim.api.nvim_get_hl(0, { name = mode .. "Mode", link = false })
-  vim.api.nvim_set_hl(0, "CursorLineNr", hl)
+  local mode = mode_name()
+  local hl = api.nvim_get_hl(0, { name = mode .. "Mode", link = false })
+  api.nvim_set_hl(0, "CursorLineNr", hl)
 end
 
 local function create_autocmds()

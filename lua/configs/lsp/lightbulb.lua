@@ -1,6 +1,4 @@
-local icons = require("willothy.icons")
-
-require("lightbulb").setup({
+require("nvim-lightbulb").setup({
   ignore = {
     ft = {
       "harpoon",
@@ -10,16 +8,23 @@ require("lightbulb").setup({
       "Trouble",
       "terminal",
     },
-    clients = { "null-ls" },
+    -- clients = { "null-ls" },
   },
   autocmd = {
     enabled = true,
-    updatetime = -1,
+    -- updatetime = -1,
   },
   sign = {
+    enabled = false,
+  },
+  float = {
     enabled = true,
-    priority = 100,
-    hl = "DiagnosticSignWarn",
-    text = icons.lsp.action_hint,
+    text = "",
+    hl = "DiagnosticInfo",
+    win_opts = {
+      winblend = 100,
+      focusable = false,
+      anchor = "NE",
+    },
   },
 })
