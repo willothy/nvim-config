@@ -251,6 +251,12 @@ return {
     event = "User ExtraLazy",
     config = true,
   },
+  {
+    "echasnovski/mini.files",
+    config = function()
+      require("configs.editor.mini-files")
+    end,
+  },
   -- {
   --   "tomiis4/BufEx.nvim",
   --   lazy = false,

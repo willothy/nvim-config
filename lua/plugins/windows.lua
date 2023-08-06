@@ -27,11 +27,10 @@ return {
     config = function()
       require("configs.windows.smart-splits")
     end,
-    event = "VeryLazy",
+    event = "User ExtraLazy",
   },
   {
     "kwkarlwang/bufresize.nvim",
-    event = "VeryLazy",
     config = function()
       require("configs.windows.bufresize")
     end,
