@@ -1,9 +1,6 @@
 require("willothy.settings")
 
 local function initialize()
-  -- setup mappings
-  require("willothy.keymap")
-
   -- setup hydras
   require("willothy.hydras")
 
@@ -32,6 +29,9 @@ vim.api.nvim_create_autocmd("User", {
   pattern = "ExtraLazy",
   once = true,
   callback = function()
+    -- setup mappings
+    require("willothy.keymap")
+
     -- setup commands
     require("willothy.commands")
 
