@@ -22,6 +22,11 @@ register({
     bind("trouble", "open", "loclist"),
     "loclist",
   },
+  d = {
+    bind("dapui", "toggle"),
+    "dap ui",
+  },
+  u = { vim.cmd.UndotreeToggle, "undotree" },
   L = {
     k = {
       bind("Legendary", "keymaps"),
