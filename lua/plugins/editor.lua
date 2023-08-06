@@ -4,7 +4,6 @@ return {
     dependencies = "nvim-treesitter/nvim-treesitter",
     config = true,
     ft = { "markdown", "help", "txt" },
-    event = "User ExtraLazy",
   },
   {
     "anuvyklack/hydra.nvim",
@@ -48,7 +47,6 @@ return {
   },
   {
     "smoka7/multicursors.nvim",
-    event = "User ExtraLazy",
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
       "anuvyklack/hydra.nvim",
@@ -196,7 +194,7 @@ return {
     config = function()
       require("configs.editor.telescope")
     end,
-    event = "User ExtraLazy",
+    -- event = "User ExtraLazy",
   },
   {
     "nvim-telescope/telescope-fzf-native.nvim",

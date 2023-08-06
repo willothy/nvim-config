@@ -18,7 +18,6 @@ return {
   {
     "willothy/nvim-window-picker",
     -- dir = "~/projects/lua/nvim-window-picker/",
-    event = "User ExtraLazy",
     config = function()
       require("configs.windows.window-picker")
     end,

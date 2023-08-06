@@ -338,10 +338,9 @@ local components = {
     on_click = function(_id, _clicks, button, _modifiers, _buffer)
       if button == "l" then
         if require("dap").session() then
-          -- require("dapui").close()
           require("dap").terminate()
         else
-          require("willothy.dap").launch()
+          require("configs.debugging").launch()
         end
       else
         vim.cmd("Greyjoy")

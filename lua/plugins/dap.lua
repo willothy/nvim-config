@@ -4,15 +4,15 @@ return {
     "mfussenegger/nvim-dap",
     config = function()
       require("configs.debugging.dap")
+      require("nvim-dap-virtual-text")
     end,
-    event = "LspAttach",
+    -- event = "LspAttach",
   },
   {
     "theHamsta/nvim-dap-virtual-text",
     opts = {
       clear_on_continue = true,
     },
-    event = "User ExtraLazy",
   },
   {
     "rcarriga/nvim-dap-ui",

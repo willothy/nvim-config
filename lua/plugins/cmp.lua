@@ -29,7 +29,14 @@ return {
   {
     "windwp/nvim-ts-autotag",
     config = true,
-    event = "VeryLazy",
+    ft = {
+      "html",
+      "javascript",
+      "javascriptreact",
+      "typescriptreact",
+      "svelte",
+      "vue",
+    },
   },
   {
     "zbirenbaum/copilot.lua",
