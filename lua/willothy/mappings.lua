@@ -1,74 +1,14 @@
 if vim.g.minimal then return end
 
-local neogit = setmetatable({}, {
-  __index = function(_, popup)
-    return {
-      function()
-        require("neogit").open(popup ~= "status" and { popup } or nil)
-      end,
-      popup,
-    }
-  end,
-})
-
 require("which-key").register({
   v = {
     name = "view",
-    o = {
-      function()
-        require("telescope.builtin").oldfiles()
-      end,
-      "oldfiles",
-    },
-    r = {
-      function()
-        require("telescope.builtin").registers()
-      end,
-      "registers",
-    },
-    s = {
-      function()
-        require("telescope.builtin").lsp_document_symbols()
-      end,
-      "document symbols",
-    },
-    q = {
-      function()
-        require("trouble").open("quickfix")
-      end,
-      "quickfix",
-    },
-    l = {
-      function()
-        require("trouble").open("loclist")
-      end,
-      "loclist",
-    },
     L = {
       name = "legendary",
-      k = {
-        "<cmd>Legendary keymaps<cr>",
-        "keymaps",
-      },
-      a = {
-        "<cmd>Legendary autocmds<CR>",
-        "autocmds",
-      },
-      c = {
-        "<cmd>Legendary commands<cr>",
-        "commands",
-      },
-      f = {
-        "<cmd>Legendary functions<cr>",
-        "functions",
-      },
     },
   },
-  m = {
-    function()
-      require("reach").marks()
-    end,
-    "marks",
+  g = {
+    name = "git",
   },
   t = {
     name = "toggle",
@@ -247,25 +187,6 @@ require("which-key").register({
         require("glance").open("implementations")
       end,
       "implementations",
-    },
-  },
-  g = {
-    name = "git",
-    c = neogit.commit,
-    b = neogit.branch,
-    l = neogit.log,
-    p = neogit.push,
-    d = neogit.diff,
-    r = neogit.rebase,
-    S = neogit.stash,
-    s = neogit.status,
-    B = {
-      function()
-        require("gitlinker").link({
-          action = require("gitlinker.actions").system,
-        })
-      end,
-      "open in browser",
     },
   },
   j = {

@@ -53,3 +53,10 @@ register({
     "Save",
   },
 }, modes.non_editing + modes.insert)
+
+register({
+  m = {
+    bind("reach", "marks"),
+    "marks",
+  },
+}, modes.non_editing, "<leader>")
