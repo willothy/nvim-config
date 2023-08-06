@@ -25,6 +25,7 @@ vim.api.nvim_create_autocmd("User", {
   once = true,
   callback = vim.schedule_wrap(function()
     -- require("lazy").load("willothy")
+    require("willothy.keymap")
 
     initialize()
   end),

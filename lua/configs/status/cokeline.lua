@@ -382,8 +382,8 @@ local function harpoon_sorter()
     elseif mb and not ma then
       return false
     elseif ma == nil and mb == nil then
-      ma = a.index
-      mb = b.index
+      ma = a._valid_index
+      mb = b._valid_index
     end
     return ma < mb
   end

@@ -80,4 +80,24 @@ return {
     end,
     cmd = "Glance",
   },
+  {
+    "dgagn/diagflow.nvim",
+    opts = {
+      placement = "top",
+      scope = "line",
+      show_sign = true,
+      update_event = {
+        "DiagnosticChanged",
+        "BufReadPost",
+        "TextChanged",
+      },
+      render_event = {
+        "DiagnosticChanged",
+        "TextChanged",
+        "CursorMoved",
+        "CursorHold",
+      },
+    },
+    event = "LspAttach",
+  },
 }

@@ -154,11 +154,20 @@ return {
     end,
   },
   {
+    "Cassin01/wf.nvim",
+    version = "*",
+    config = function()
+      require("wf").setup()
+    end,
+    event = "VeryLazy",
+  },
+  {
     "willothy/which-key.nvim",
+    -- enabled = false,
     branch = "description-sort",
     -- dir = "~/projects/lua/which-key.nvim/",
     config = function()
-      require("configs.editor.which-key")
+      -- require("configs.editor.which-key")
     end,
     event = "VeryLazy",
   },

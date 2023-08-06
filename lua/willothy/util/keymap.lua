@@ -9,4 +9,79 @@ function M.find(mode, lhs)
   end
 end
 
+function M.register(tree, modes, prefix)
+  local function traverse(node, lhs)
+    local t = type(node)
+    if
+      t ~= "table"
+      or type(node[1]) == "string"
+      or type(node[1]) == "function"
+    then
+      local rhs, opts
+      if t == "function" or t == "string" then
+        rhs = node
+        opts = {}
+      else
+        rhs = node[1]
+        opts = {
+          desc = node.desc or node[2],
+          silent = node.silent,
+          expr = node.expr,
+          noremap = node.noremap,
+        }
+      end
+      vim.keymap.set(modes, lhs, rhs, opts)
+    else
+      for k, v in pairs(node) do
+        traverse(v, lhs .. k)
+      end
+    end
+  end
+  traverse(tree, prefix or "")
+end
+
+local group = function(obj)
+  return setmetatable(obj, {
+    __add = function(self, other)
+      if type(other) == "string" then
+        table.insert(self, other)
+      elseif type(other) == "table" then
+        for _, mode in ipairs(other) do
+          table.insert(self, mode)
+        end
+      end
+      return self
+    end,
+  })
+end
+
+M.modes = setmetatable({
+  normal = "n",
+  visual = "v",
+  insert = "i",
+  command = "c",
+  terminal = "t",
+  pending = "o",
+  select = "s",
+  visualblock = "x",
+  replace = "r",
+  non_editing = group({ "n", "x", "v" }),
+  non_pending = group({ "n", "x", "v", "s", "i", "c", "t" }),
+  basic = group({ "n", "x", "v", "i", "c", "t" }),
+  all = group({ "n", "x", "v", "s", "i", "c", "t", "o", "r" }),
+}, {
+  __index = function(self, k)
+    if k == "empty" then return group({}) end
+    return rawget(self, k)
+  end,
+})
+
+function M.bind(module, name, ...)
+  local args = { ... }
+
+  return function()
+    require(module)[name](unpack(args))
+  end
+end
+
 return M

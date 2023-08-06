@@ -18,8 +18,8 @@ require("murmur").setup({
   },
 })
 
-local enabled = true
-vim.api.nvim_create_user_command("MurmurToggle", function()
+local enabled = false
+vim.api.nvim_create_user_command("DiagFloatToggle", function()
   enabled = not enabled
 end, { nargs = 0 })
 
