@@ -8,6 +8,7 @@ return {
   },
   {
     "sindrets/diffview.nvim",
+    cmd = "DiffViewOpen",
     config = true,
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -15,12 +16,14 @@ return {
   },
   {
     "akinsho/git-conflict.nvim",
+    cmd = { "GitConflict", "GitConflictRefresh" },
     config = function()
       require("configs.git.git-conflict")
     end,
   },
   {
     "NeogitOrg/neogit",
+    cmd = "Neogit",
     dependencies = "nvim-lua/plenary.nvim",
     config = function()
       require("configs.git.neogit")
