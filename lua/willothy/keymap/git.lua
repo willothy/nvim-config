@@ -1,5 +1,5 @@
 local keymap = require("willothy.util.keymap")
-local bind, register, modes = keymap.bind, keymap.register, keymap.modes
+local register, modes = keymap.register, keymap.modes
 
 local neogit = setmetatable({}, {
   __index = function(_, popup)
@@ -13,6 +13,7 @@ local neogit = setmetatable({}, {
 })
 
 register({
+  name = "git",
   c = neogit.commit,
   b = neogit.branch,
   l = neogit.log,

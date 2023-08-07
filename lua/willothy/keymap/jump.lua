@@ -3,6 +3,7 @@ local keymap = require("willothy.util.keymap")
 local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 
 register({
+  name = "jump",
   d = {
     function()
       require("configs.navigation.portal").diagnostics({

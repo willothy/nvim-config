@@ -7,6 +7,7 @@ register({
 }, modes.terminal)
 
 register({
+  name = "terminal",
   t = {
     function()
       require("willothy.terminals").toggle()
@@ -33,6 +34,7 @@ register({
     "terminal: send",
   },
   r = {
+    name = "repl",
     p = {
       function()
         require("willothy.terminals").py:toggle()

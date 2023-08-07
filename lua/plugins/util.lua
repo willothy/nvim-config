@@ -182,8 +182,8 @@ return {
     },
   },
   {
-    "notomo/piemenu.nvim",
-    dir = "~/projects/lua/piemenu.nvim/",
+    "willothy/piemenu.nvim",
+    enabled = false,
     config = function()
       require("configs.editor.piemenu")
     end,

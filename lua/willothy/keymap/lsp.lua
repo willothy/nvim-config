@@ -5,6 +5,7 @@ local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 local cleanup
 
 register({
+  name = "lsp",
   a = {
     function()
       local curwin = vim.api.nvim_get_current_win()
