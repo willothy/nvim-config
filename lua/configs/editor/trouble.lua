@@ -7,6 +7,8 @@ require("trouble").setup({
     hint = icons.hint,
     information = icons.info,
   },
+  auto_open = false,
+  auto_close = true,
   track_cursor = true,
   padding = false,
 })

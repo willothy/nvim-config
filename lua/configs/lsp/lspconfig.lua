@@ -53,6 +53,15 @@ require("mason-lspconfig").setup({
         settings = lsp_settings[server_name],
       })
     end,
+    zls = function()
+      lspconfig.zls.setup({
+        capabilities = capabilities,
+        on_attach = lsp_attach,
+        settings = lsp_settings.zls,
+        single_file_support = true,
+      })
+      vim.g.zig_fmt_autosave = false
+    end,
     lua_ls = function()
       require("neodev").setup({
         library = {
@@ -70,7 +79,7 @@ require("mason-lspconfig").setup({
         settings = lsp_settings.lua_ls,
         root_dir = require("lspconfig.util").root_pattern(
           ".git",
-          vim.fn.getcwd()
+          vim.api.nvim_buf_get_name(0)
         ),
         before_init = require("neodev.lsp").before_init,
       })

@@ -4,11 +4,10 @@ require("project_nvim").setup({
     "pattern",
   },
   patterns = {
-    "^.config/",
     ".git",
+    "^.config/",
     "Cargo.toml",
     "Makefile",
-    -- "^~/projects/*/*/",
     "package.json",
   },
   exclude_dirs = {

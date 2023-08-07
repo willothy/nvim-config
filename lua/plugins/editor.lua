@@ -80,6 +80,7 @@ return {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     cmd = "Trouble",
+    event = "DiagnosticChanged",
     config = function()
       require("configs.editor.trouble")
     end,
