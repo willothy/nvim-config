@@ -10,7 +10,7 @@ function M.find(mode, lhs)
 end
 
 function M.register(tree, modes, prefix)
-  local function traverse(node, lhs)
+  local function traverse(node, lhs, key)
     local t = type(node)
     if
       t ~= "table"
@@ -19,6 +19,14 @@ function M.register(tree, modes, prefix)
     then
       local rhs, opts
       if t == "function" or t == "string" then
+        if key == "name" then
+          if _G.__key_prefixes == nil then _G.__key_prefixes = {} end
+          for _, mode in ipairs(modes) do
+            if not _G.__key_prefixes[mode] then _G.__key_prefixes[mode] = {} end
+            _G.__key_prefixes[mode][lhs] = node
+          end
+          return
+        end
         rhs = node
         opts = {}
       else
@@ -33,7 +41,7 @@ function M.register(tree, modes, prefix)
       vim.keymap.set(modes, lhs, rhs, opts)
     else
       for k, v in pairs(node) do
-        traverse(v, lhs .. k)
+        traverse(v, lhs .. k, k)
       end
     end
   end

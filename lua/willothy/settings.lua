@@ -26,6 +26,9 @@ o.modeline = false
 
 o.scrolloff = 16
 
+vim.o.timeout = true
+vim.o.timeoutlen = 250
+
 o.updatetime = 500
 o.mousemodel = "extend"
 o.mousetime = 200

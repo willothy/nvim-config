@@ -131,13 +131,13 @@ function Lines:render()
   return table.concat(self.data, "\n")
 end
 
-function Lines:actions(actions, width)
+function Lines:actions(actions, width, fmt)
   local processed = {}
   for _, action in ipairs(actions) do
     if action.key ~= "" then
       table.insert(
         processed,
-        string.format("_%s_: %s", action.key, action.desc)
+        string.format(fmt or "_%s_: %s", action.key, action.desc)
       )
     else
       table.insert(processed, action.desc)

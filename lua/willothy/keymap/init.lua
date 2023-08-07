@@ -25,6 +25,8 @@ require("willothy.keymap.files")
 require("willothy.keymap.lsp")
 require("willothy.keymap.jump")
 
+if not pcall(require, "which-key") then return end
+
 require("which-key").register({
   v = {
     name = "view",

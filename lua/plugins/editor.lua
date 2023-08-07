@@ -152,21 +152,23 @@ return {
       require("configs.editor.treesitter")
     end,
   },
-  -- {
-  --   "Cassin01/wf.nvim",
-  --   version = "*",
-  --   config = function()
-  --     require("wf").setup()
-  --   end,
-  --   event = "VeryLazy",
-  -- },
+  {
+    "willothy/wf.nvim",
+    dir = "~/projects/lua/wf.nvim/",
+    version = "*",
+    event = "User ExtraLazy",
+    enabled = false,
+    config = function()
+      require("configs.editor.wf")
+    end,
+  },
   {
     "willothy/which-key.nvim",
-    -- enabled = false,
+    dir = "~/projects/lua/which-key.nvim/",
     branch = "description-sort",
     -- dir = "~/projects/lua/which-key.nvim/",
     config = function()
-      -- require("configs.editor.which-key")
+      require("configs.editor.which-key")
     end,
     event = "VeryLazy",
   },

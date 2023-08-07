@@ -35,6 +35,10 @@ vim.api.nvim_create_autocmd("User", {
     -- setup commands
     require("willothy.commands")
 
+    -- require("wf").setup({})
+    -- if not _G.__key_prefixes then _G.__key_prefixes = {} end
+    -- _G.__key_prefixes["n"]["<leader>p"] = "+projects"
+
     -- setup annoying "use hjkl" messages
     -- require("willothy.hjkl")()
   end,

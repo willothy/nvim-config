@@ -50,13 +50,16 @@ local Hydra = function(hintfunc, config)
       end
       this:activate()
     end)
-    require("which-key").register({
-      [config.body] = {
-        name = (config.shortname or config.name):lower(),
-        group = true,
-        ["a"] = "which_key_ignore",
-      },
-    }, {})
+    local ok, wk = pcall(require, "which-key")
+    if ok then
+      wk.register({
+        [config.body] = {
+          name = (config.shortname or config.name):lower(),
+          group = true,
+          ["a"] = "which_key_ignore",
+        },
+      }, {})
+    end
   else
     local ready = false
     this = setmetatable({}, {
