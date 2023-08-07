@@ -2,7 +2,7 @@ require("which-key").setup({
   plugins = {
     presets = {
       operators = true,
-      windows = true,
+      windows = false,
       nav = true,
       z = true,
       g = true,

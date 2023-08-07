@@ -7,7 +7,7 @@ vim.api.nvim_exec('let &t_Ce = "\\e[4:0m"', true)
 
 vim.cmd.colorscheme("minimus")
 
-vim.o.shell = "bash"
+vim.o.shell = "zsh"
 
 vim.o.shortmess = "filnxoOCFIs"
 

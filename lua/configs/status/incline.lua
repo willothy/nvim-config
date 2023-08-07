@@ -67,6 +67,7 @@ end
 
 require("incline").setup({
   window = {
+    zindex = 500,
     padding = 1,
     padding_char = " ",
     margin = {

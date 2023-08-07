@@ -6,7 +6,7 @@ require("fidget").setup({
     completed = "✓",
   },
   fmt = {
-    stack_upwards = true,
+    stack_upwards = false,
   },
   align = {
     bottom = true,

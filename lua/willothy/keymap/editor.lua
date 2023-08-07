@@ -4,14 +4,10 @@ local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 register({
   ["<C-F>"] = {
     bind("ssr", "open"),
-    "Structural Search/Replace",
-  },
-  ["<C-CR>"] = {
-    bind("cokeline.mappings", "pick", "focus"),
-    "Pick buffer",
+    "search/replace",
   },
   g = {
-    -- name = "goto",
+    name = "goto",
     r = {
       bind("glance", "open", "references"),
       "references",
@@ -55,6 +51,7 @@ register({
 }, modes.non_editing + modes.insert)
 
 register({
+  name = "marks",
   m = {
     bind("reach", "marks"),
     "reach: marks",

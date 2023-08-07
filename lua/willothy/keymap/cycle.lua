@@ -2,6 +2,7 @@ local keymap = require("willothy.util.keymap")
 local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 
 register({
+  name = "previous",
   b = {
     function()
       require("cokeline.mappings").by_step(
@@ -34,6 +35,7 @@ register({
 }, modes.normal, "[")
 
 register({
+  name = "next",
   b = {
     function()
       require("cokeline.mappings").by_step(

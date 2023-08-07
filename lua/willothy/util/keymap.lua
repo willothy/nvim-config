@@ -20,11 +20,7 @@ function M.register(tree, modes, prefix)
       local rhs, opts
       if t == "function" or t == "string" then
         if key == "name" then
-          if _G.__key_prefixes == nil then _G.__key_prefixes = {} end
-          for _, mode in ipairs(modes) do
-            if not _G.__key_prefixes[mode] then _G.__key_prefixes[mode] = {} end
-            _G.__key_prefixes[mode][lhs] = node
-          end
+          M.group(modes, lhs:gsub(key .. "$", ""), node, true)
           return
         end
         rhs = node
@@ -32,7 +28,7 @@ function M.register(tree, modes, prefix)
       else
         rhs = node[1]
         opts = {
-          desc = node.desc or node[2],
+          desc = node.desc or node[2] or "which_key_ignore",
           silent = node.silent,
           expr = node.expr,
           noremap = node.noremap,
@@ -101,6 +97,14 @@ function M.bind(module, name, ...)
       module(name, unpack(args))
     end
   end
+end
+
+function M.group(mode, prefix, name, noleader)
+  local wk = require("which-key")
+  wk.register(
+    { name = name },
+    { mode = mode, prefix = noleader and prefix or ("<leader>" .. prefix) }
+  )
 end
 
 return M

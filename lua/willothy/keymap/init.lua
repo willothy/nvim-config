@@ -27,33 +27,19 @@ require("willothy.keymap.jump")
 
 if not pcall(require, "which-key") then return end
 
-require("which-key").register({
-  v = {
-    name = "view",
-    L = {
-      name = "legendary",
-    },
-  },
-  m = { name = "marks" },
-  g = {
-    name = "git",
-  },
-  t = {
-    name = "terminal",
-    r = {
-      name = "repl",
-    },
-  },
-  b = {
-    name = "buffer",
-  },
-  p = {
-    name = "project",
-  },
-  c = {
-    name = "lsp",
-  },
-  j = {
-    name = "jump",
-  },
-}, { prefix = "<leader>" })
+local util = require("willothy.util.keymap")
+local modes = util.modes
+local group = util.group
+
+group(modes.non_editing, "j", "jump")
+group(modes.non_editing, "g", "git")
+group(modes.non_editing, "t", "terminal")
+group(modes.non_editing, "tr", "repl")
+--group(modes.non_editing, "b", "buffer")
+group(modes.non_editing, "p", "projects")
+group(modes.non_editing, "c", "lsp")
+-- group(modes.non_editing, "v", "view")
+-- group(modes.non_editing, "vL", "legendary")
+-- group(modes.non_editing, "m", "marks")
+-- group(modes.non_editing, "[", "previous", true)
+-- group(modes.non_editing, "]", "next", true)

@@ -1,7 +1,14 @@
 local keymap = require("willothy.util.keymap")
 local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 
+local legendary = function(filter)
+  return function()
+    local f = require("legendary.filters")
+    require("legendary").find({ filters = { f[filter]() } })
+  end
+end
 register({
+  name = "view",
   o = {
     bind("telescope.builtin", "oldfiles"),
     "oldfiles",
@@ -28,20 +35,21 @@ register({
   },
   u = { vim.cmd.UndotreeToggle, "undotree" },
   L = {
+    name = "legendary",
     k = {
-      bind("Legendary", "keymaps"),
+      legendary("keymaps"),
       "keymaps",
     },
     a = {
-      bind("Legendary", "autocmds"),
+      legendary("autocmds"),
       "autocmds",
     },
     c = {
-      bind("Legendary", "commands"),
+      legendary("commands"),
       "commands",
     },
     f = {
-      bind("Legendary", "functions"),
+      legendary("funcs"),
       "functions",
     },
   },
