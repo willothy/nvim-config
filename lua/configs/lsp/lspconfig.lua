@@ -25,7 +25,7 @@ local function mkcaps(extra)
       properties = { "documentation", "detail", "additionalTextEdits" },
     }
 
-    capabilities.offsetEncoding = "utf-8"
+    -- capabilities.offsetEncoding = "utf-8"
   end
 
   capabilities.textDocument.semanticTokens = {
@@ -44,6 +44,14 @@ local capabilities = mkcaps(true)
 local lsp_settings = require("configs.lsp").lsp_settings
 local lsp_attach = require("configs.lsp").lsp_attach
 
+lspconfig.zls.setup({
+  -- capabilities = capabilities,
+  on_attach = lsp_attach,
+  settings = lsp_settings.zls,
+  -- single_file_support = true,
+})
+vim.g.zig_fmt_autosave = false
+
 require("mason-lspconfig").setup({
   handlers = {
     function(server_name)
@@ -53,14 +61,12 @@ require("mason-lspconfig").setup({
         settings = lsp_settings[server_name],
       })
     end,
-    zls = function()
-      lspconfig.zls.setup({
-        capabilities = capabilities,
+    taplo = function()
+      lspconfig.taplo.setup({
+        -- capabilities = capabilities,
         on_attach = lsp_attach,
-        settings = lsp_settings.zls,
-        single_file_support = true,
+        settings = lsp_settings.taplo,
       })
-      vim.g.zig_fmt_autosave = false
     end,
     lua_ls = function()
       require("neodev").setup({

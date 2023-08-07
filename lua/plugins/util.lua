@@ -32,7 +32,7 @@ return {
       "ChatGPTRun",
     },
     opts = {
-      async_api_key_cmd = "lpass show --password openai_key",
+      api_key_cmd = "lpass show --password openai_key",
     },
   },
   { "mbbill/undotree", event = "VeryLazy" },
