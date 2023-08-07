@@ -1,6 +1,7 @@
 return {
   {
     "j-hui/fidget.nvim",
+    enabled = false,
     branch = "legacy",
     config = function()
       require("configs.lsp.fidget")
