@@ -83,10 +83,7 @@ require("mason-lspconfig").setup({
         capabilities = capabilities,
         on_attach = lsp_attach,
         settings = lsp_settings.lua_ls,
-        root_dir = require("lspconfig.util").root_pattern(
-          ".git",
-          vim.api.nvim_buf_get_name(0)
-        ),
+        root_dir = require("lspconfig.util").root_pattern(".git"),
         before_init = require("neodev.lsp").before_init,
       })
     end,

@@ -218,7 +218,7 @@ return {
   {
     "ahmedkhalf/project.nvim",
     name = "project_nvim",
-    event = "User ExtraLazy",
+    event = "VeryLazy",
     config = function()
       require("configs.projects.project")
     end,
@@ -235,6 +235,7 @@ return {
   },
   {
     "pynappo/tabnames.nvim",
+    enabled = false,
     event = "User ExtraLazy",
     config = function()
       require("configs.projects.tabnames")

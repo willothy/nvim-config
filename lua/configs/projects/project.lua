@@ -1,11 +1,10 @@
 require("project_nvim").setup({
   detection_methods = {
-    "lsp",
     "pattern",
+    "lsp",
   },
   patterns = {
     ".git",
-    "^.config/",
     "Cargo.toml",
     "Makefile",
     "package.json",
@@ -15,7 +14,7 @@ require("project_nvim").setup({
     "~/.cargo/",
   },
   ignore_lsp = { "null-ls", "savior", "copilot" },
-  silent_chdir = true,
+  silent_chdir = false,
   show_hidden = true,
   scope_chdir = "tab",
 })
