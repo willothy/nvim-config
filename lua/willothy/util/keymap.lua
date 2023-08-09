@@ -79,7 +79,7 @@ M.modes = setmetatable({
   non_editing = group({ "n", "x", "v" }),
   non_pending = group({ "n", "x", "v", "s", "i", "c", "t" }),
   basic = group({ "n", "x", "v", "i", "c", "t" }),
-  all = group({ "n", "x", "v", "s", "i", "c", "t", "o", "r" }),
+  all = group({ "n", "x", "v", "s", "i", "c", "t", "o" }),
 }, {
   __index = function(self, k)
     if k == "empty" then return group({}) end

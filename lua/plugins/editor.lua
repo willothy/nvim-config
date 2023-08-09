@@ -164,6 +164,7 @@ return {
   },
   {
     "willothy/which-key.nvim",
+    dir = "~/projects/lua/which-key.nvim/",
     branch = "helix",
     config = function()
       require("configs.editor.which-key")

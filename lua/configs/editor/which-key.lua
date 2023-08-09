@@ -1,15 +1,29 @@
 require("which-key").setup({
   plugins = {
     presets = {
-      operators = true,
+      operators = false,
       windows = false,
       nav = true,
       z = true,
-      g = true,
+      g = false,
+      text_objects = false,
     },
   },
   operators = {
-    gc = nil,
+    gc = "comment",
+    v = "visual",
+    [">"] = "indent",
+    ["<lt>"] = "unindent",
+    gu = "lowercase",
+    gU = "uppercase",
+    ["g~"] = "toggle case",
+    ["!"] = "ext. filter",
+    y = "yank",
+    d = "delete",
+    c = "change",
+  },
+  motions = {
+    count = true,
   },
   key_labels = {
     ["<space>"] = "SPC",
@@ -28,5 +42,5 @@ require("which-key").setup({
     align = "left", -- align columns left, center or right
   },
   sort_by_description = true,
-  -- custom_view = require("willothy.wk-view"),
+  custom_view = require("willothy.wk-view"),
 })

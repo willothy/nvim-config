@@ -9,6 +9,11 @@
 
 local M = {}
 
+M.options = {
+  show_keys = false,
+  show_help = false,
+}
+
 local win
 local buf
 
@@ -29,7 +34,7 @@ function M.show()
     row = vim.o.lines - 13,
     col = vim.o.columns,
     style = "minimal",
-    border = "rounded",
+    border = "single",
     focusable = false,
     zindex = 1000,
   }
@@ -49,7 +54,7 @@ function M.on_close(...)
 end
 
 ---@param items VisualMapping[]
-function M.render(items)
+function M.render(items, trail)
   local wants_width = 35
   local wants_height = 10
 
@@ -60,51 +65,48 @@ function M.render(items)
     local label = mapping.label
     local key = mapping.key
 
+    local len = vim.fn.strdisplaywidth(label) + vim.fn.strdisplaywidth(key) + 2
     return {
-      { label, "WhichKeyDesc" },
-      { ": ", "Normal" },
-      { key, "WhichKeyValue" },
-      len = vim.fn.strdisplaywidth(label) + vim.fn.strdisplaywidth(key) + 2,
+      { key, "WhichKey" },
+      { ": ", "WhichKeySeparator" },
+      {
+        label,
+        mapping.group and "WhichKeyGroup" or "WhichKeyDesc",
+      },
+      len = len,
     }
   end
-  local text = vim.iter(items):map(process):totable()
+  local ns = vim.api.nvim_create_namespace("wk_custom_view")
+  local max_len = 0
+  local text = vim.iter(items):map(process):map(function(l)
+    max_len = math.max(max_len, l.len)
+    l.len = nil
+    return l
+  end)
 
-  -- sort into rows and cols
-  local cols = {}
-
-  local col = 1
-  local row = 1
-  local width = 0
-  for _, line in ipairs(text) do
-    if width + line.len > wants_width then
-      row = row + 1
-      col = 1
-      width = 0
-    end
-
-    if not cols[row] then cols[row] = {} end
-    cols[row][col] = line
-    col = col + 1
-    width = width + line.len
-  end
-
-  -- translate to rows
-  local rows = {}
-
-  for _, col in ipairs(cols) do
-    local row = {}
-    for _, line in ipairs(col) do
-      vim.list_extend(row, line)
-    end
-    table.insert(rows, row)
-  end
-
-  for i, row in ipairs(rows) do
-    local line = lines:new(row)
-    rows[i] = line:render()
-  end
-
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(text, "\n"))
+  local first = text:next()
+  local rest = text:totable()
+  vim.api.nvim_buf_set_extmark(buf, ns, 0, 0, {
+    id = 1,
+    virt_text_pos = "overlay",
+    virt_text = first,
+    virt_lines = rest,
+  })
+  local config = vim.api.nvim_win_get_config(win)
+  config.title = vim
+    .iter(trail)
+    :map(function(t)
+      if t[1]:gsub("%s+", "") == "" then return end
+      if vim.startswith(t[1], " ") then
+        t[1] = " "
+        return t
+      end
+      t[1] = t[1]:gsub("^+", "")
+      return t
+    end)
+    :totable()
+  if #config.title == 0 then config.title[1] = { "" } end
+  vim.api.nvim_win_set_config(win, config)
 end
 
 function M.show_cursor() end

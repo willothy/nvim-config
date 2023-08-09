@@ -4,7 +4,7 @@ local spider = function(motion)
     function()
       require("spider").motion(motion)
     end,
-    desc = "spider-" .. motion,
+    desc = "spider: " .. motion,
     mode = { "n", "o", "x" },
   }
 end

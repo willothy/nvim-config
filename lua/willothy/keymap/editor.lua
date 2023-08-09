@@ -1,10 +1,42 @@
 local keymap = require("willothy.util.keymap")
 local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 
+local objects = {
+  w = "word",
+  W = "WORD",
+  ['"'] = 'string: ""',
+  ["'"] = "string: ''",
+  ["`"] = "string: ``",
+  ["{"] = "block { }",
+  ["}"] = "block { }",
+  B = "block { }",
+  ["<lt>"] = "block <>",
+  [">"] = "block <>",
+  ["["] = "block [",
+  ["]"] = "block [",
+  ["("] = "block (",
+  [")"] = "block (",
+  b = "block ( )",
+  P = "paragraph",
+  p = "paragraph",
+  a = { name = "around" },
+  i = { name = "inside" },
+  s = "sentence",
+  t = "tag block",
+}
+
+require("which-key").register({
+  i = objects,
+  a = objects,
+}, { mode = "o" })
+
 register({
   ["<C-F>"] = {
     bind("ssr", "open"),
     "search/replace",
+  },
+  v = {
+    name = "visual",
   },
   g = {
     name = "goto",
@@ -33,8 +65,20 @@ register({
       "implementations",
     },
   },
-  K = bind("rust-tools.hover_actions", "hover_actions"),
+  K = { bind("rust-tools.hover_actions", "hover_actions"), "lsp: hover" },
 }, modes.non_editing)
+
+require("which-key").register({
+  [";"] = { "flash: next" },
+  [","] = { "flash: prev" },
+}, { mode = modes.non_editing + "o" })
+
+require("which-key").register({
+  j = "which_key_ignore",
+  k = "which_key_ignore",
+  h = "which_key_ignore",
+  l = "which_key_ignore",
+}, { mode = modes.all })
 
 register({
   ["<F1>"] = {
@@ -175,7 +219,7 @@ register({
       -- show labeled treesitter nodes around the search matches
       require("flash").treesitter_search()
     end,
-    "flash: treesitter Search",
+    "flash: treesitter",
   },
 }, { "n", "x" })
 

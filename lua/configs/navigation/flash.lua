@@ -138,6 +138,45 @@ function Locations:render()
   end
 end
 
+function Locations:fetch(back, cursor)
+  cursor = cursor or vim.api.nvim_win_get_cursor(0)
+  local ch = Chars()
+  local lines
+  if back then
+    lines = vim
+      .iter(
+        vim.api.nvim_buf_get_lines(
+          0,
+          math.max(0, cursor[1] - Locations.config.range),
+          cursor[1],
+          false
+        )
+      )
+      :rev()
+      :totable()
+  else
+    lines = vim.api.nvim_buf_get_lines(
+      0,
+      cursor[1] - 1,
+      math.min(cursor[1] + Locations.config.range, vim.fn.line("$")),
+      false
+    )
+  end
+  for i, line in ipairs(lines) do
+    if i == 1 then
+      Locations:fetch_line(line, cursor, back, ch)
+    else
+      local row
+      if back then
+        row = cursor[1] - i + 1
+      else
+        row = cursor[1] + i - 1
+      end
+      Locations:fetch_line(line, { row, 0 }, back, ch, back == true)
+    end
+  end
+end
+
 local flash = require("flash")
 local Repeat = require("flash.repeat")
 local Util = require("flash.util")
@@ -170,41 +209,8 @@ Char.setup = function(...)
         local back = false
         if key == "F" or key == "T" then back = true end
         local cursor = vim.api.nvim_win_get_cursor(0)
-        local ch = Chars()
-        local lines
-        if back then
-          lines = vim
-            .iter(
-              vim.api.nvim_buf_get_lines(
-                0,
-                math.max(0, cursor[1] - Locations.config.range),
-                cursor[1],
-                false
-              )
-            )
-            :rev()
-            :totable()
-        else
-          lines = vim.api.nvim_buf_get_lines(
-            0,
-            cursor[1] - 1,
-            math.min(cursor[1] + Locations.config.range, vim.fn.line("$")),
-            false
-          )
-        end
-        for i, line in ipairs(lines) do
-          if i == 1 then
-            Locations:fetch_line(line, cursor, back, ch)
-          else
-            local row
-            if back then
-              row = cursor[1] - i + 1
-            else
-              row = cursor[1] + i - 1
-            end
-            Locations:fetch_line(line, { row, 0 }, back, ch, back == true)
-          end
-        end
+        Locations:fetch(back, cursor)
+
         Locations:render()
         Char._active = true
         Char.jump(key)
@@ -249,6 +255,7 @@ Char.setup = function(...)
       Char._active = false
       -- Char.state:hide()
       Locations:clear()
+      return nil
     end
   end)
 end
@@ -264,3 +271,15 @@ flash.setup({
     },
   },
 })
+
+return {
+  fetch = function(back, cursor)
+    Locations:fetch(back, cursor)
+  end,
+  render = function()
+    Locations:render()
+  end,
+  clear = function()
+    Locations:clear()
+  end,
+}
