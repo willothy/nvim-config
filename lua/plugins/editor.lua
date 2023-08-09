@@ -40,7 +40,7 @@ return {
   },
   {
     "smjonas/live-command.nvim",
-    cmd = { "Norm", "Reg" },
+    cmd = { "Norm", "Visual", "Reg" },
     config = function()
       require("configs.editor.live_cmd")
     end,
@@ -164,7 +164,6 @@ return {
   },
   {
     "willothy/which-key.nvim",
-    dir = "~/projects/lua/which-key.nvim/",
     branch = "helix",
     config = function()
       require("configs.editor.which-key")

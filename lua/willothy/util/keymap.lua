@@ -100,7 +100,8 @@ function M.bind(module, name, ...)
 end
 
 function M.group(mode, prefix, name, noleader)
-  local wk = require("which-key")
+  local ok, wk = pcall(require, "which-key")
+  if not ok then return end
   wk.register(
     { name = name },
     { mode = mode, prefix = noleader and prefix or ("<leader>" .. prefix) }
