@@ -47,12 +47,16 @@
 local mode = "o"
 local map = "i"
 
-local kmap = vim.api.nvim_get_keymap(mode)
-
-local found = vim.iter(kmap):find(function(mapping)
-  if vim.startswith(mapping.lhs, "<LeftRelease>") then return true end
-  -- if mapping.lhs == map then return true end
-  return false
-end)
-
-vim.print("found: ", found)
+vim.on_key(vim.schedule_wrap(function(k)
+  if k == vim.api.nvim_replace_termcodes("<space>", true, false, true) then
+    require("which-key").show(" ")
+    -- local kmap = vim.api.nvim_get_keymap(vim.api.nvim_get_mode().mode)
+  end
+  -- local found = vim
+  --   .iter(kmap)
+  --   :filter(function(mapping)
+  --     return vim.startswith(mapping.lhs, map)
+  --   end)
+  --   :totable()
+  -- vim.print(found)
+end))
