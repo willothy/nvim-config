@@ -8,6 +8,10 @@ register({
   },
   g = {
     name = "goto",
+    ["?"] = {
+      bind("which-key", "show"),
+      "whick-key",
+    },
     r = {
       bind("glance", "open", "references"),
       "references",
