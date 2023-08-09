@@ -19,7 +19,7 @@ local function lsp_attach(client, bufnr)
 
   if
     client.name ~= "taplo"
-    and client.supports_method("textDocument/inlayHints", { bufnr = bufnr })
+    and client.supports_method("textDocument/inlayHint", { bufnr = bufnr })
   then
     vim.lsp.inlay_hint(bufnr, true)
   end

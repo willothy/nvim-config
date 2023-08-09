@@ -14,6 +14,10 @@ null_ls.setup({
     builtins.formatting.clang_format.with({
       filetypes = { "c", "cpp" },
     }),
+    null_ls.builtins.diagnostics.protolint,
+    null_ls.builtins.formatting.protolint,
+    -- null_ls.builtins.diagnostics.buf,
+    -- null_ls.builtins.formatting.buf,
     -- builtins.formatting.pyink,
     -- builtins.formatting.markdownlint,
     builtins.formatting.taplo,

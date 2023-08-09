@@ -59,13 +59,35 @@ require("mason-lspconfig").setup({
         capabilities = capabilities,
         on_attach = lsp_attach,
         settings = lsp_settings[server_name],
+        root_dir = require("lspconfig.util").root_pattern(".git"),
       })
     end,
+    clangd = function()
+      lspconfig.clangd.setup({
+        capabilities = capabilities,
+        on_attach = lsp_attach,
+        settings = lsp_settings.clangd,
+        root_dir = require("lspconfig.util").root_pattern(".git"),
+        filetypes = { "c", "cpp", "h", "hpp" },
+      })
+    end,
+    -- bufls = function()
+    --   lspconfig.bufls.setup({
+    --     capabilities = capabilities,
+    --     on_attach = lsp_attach,
+    --     settings = lsp_settings.bufls,
+    --     root_dir = require("lspconfig.util").root_pattern(".git"),
+    --   })
+    -- end,
     taplo = function()
       lspconfig.taplo.setup({
         -- capabilities = capabilities,
         on_attach = lsp_attach,
         settings = lsp_settings.taplo,
+        root_dir = require("lspconfig.util").root_pattern(
+          ".git",
+          "~/.config/*"
+        ),
       })
     end,
     lua_ls = function()
@@ -93,8 +115,11 @@ require("mason-lspconfig").setup({
         capabilities = mkcaps(false),
         attach = lsp_attach,
         filetypes = { "zsh", "sh", "bash" },
-        root_dir = require("lspconfig.util").root_pattern(".git", ".zshrc"),
-        single_file_support = false,
+        root_dir = require("lspconfig.util").root_pattern(
+          ".git",
+          ".zshrc",
+          "~/.config/zsh/*"
+        ),
       })
     end,
   },
