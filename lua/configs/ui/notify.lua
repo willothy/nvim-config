@@ -77,7 +77,7 @@ end
 notify.setup({
   fps = 60,
   render = "compact",
-  timeout = 3000,
+  timeout = 5000,
   stages = anim(Dir.TOP_DOWN),
   -- top_down = false,
   background_color = "none",
