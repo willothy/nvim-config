@@ -53,6 +53,7 @@ return {
       auto_cmd = true,
     },
     cmd = "GuessIndent",
+    event = "User ExtraLazy",
   },
   {
     "Dhanus3133/LeetBuddy.nvim",

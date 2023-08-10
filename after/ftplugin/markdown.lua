@@ -1,8 +1,8 @@
 local bo = vim.bo
 local wo = vim.wo
 
-bo.tabstop = 4
-bo.shiftwidth = 4
+bo.tabstop = 2
+bo.shiftwidth = 2
 bo.softtabstop = -1
 bo.expandtab = true
 bo.smartindent = false
