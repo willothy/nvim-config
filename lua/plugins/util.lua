@@ -209,6 +209,26 @@ return {
       },
     },
   },
+  {
+    "winston0410/range-highlight.nvim",
+    dependencies = {
+      "winston0410/cmd-parser.nvim",
+    },
+    config = true,
+    event = "CmdlineEnter",
+  },
+  {
+    "karb94/neoscroll.nvim",
+    event = "User ExtraLazy",
+    config = true,
+  },
+  {
+    "Tyler-Barham/floating-help.nvim",
+    config = function()
+      require("configs.editor.floating-help")
+    end,
+    event = "CmdlineEnter",
+  },
   -- {
   --   "levouh/tint.nvim",
   --   config = true,

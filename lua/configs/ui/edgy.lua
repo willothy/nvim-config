@@ -162,8 +162,9 @@ require("edgy").setup({
       ft = "help",
       size = { height = 0.4 },
       -- don't open help files in edgy that we're editing
-      filter = function(buf)
+      filter = function(buf, win)
         return vim.bo[buf].buftype == "help"
+          and vim.api.nvim_win_get_config(win).zindex == nil
       end,
     },
   },
