@@ -1,6 +1,8 @@
 -- remove all mouse mappings
 local disable = {
   -- "<2-LeftMouse>",
+  "<LeftDrag>",
+  "<LeftRelease>",
   "<3-LeftMouse>",
   "<4-LeftMouse>",
   "<RightMouse>",

@@ -132,25 +132,3 @@ require("noice").setup({
     },
   },
 })
-
-vim.notify_mini = function(msg, opts)
-  local title = opts.title
-  local level = opts.level or vim.log.levels.INFO
-  require("noice.message.router").redirect(function()
-    vim.notify(msg, level, {
-      title = title,
-    })
-  end, {
-    { filter = {}, view = "mini" },
-  })
-end
-
-vim.redirect = function(view, msg, title)
-  require("noice.message.router").redirect(function()
-    vim.notify(msg, vim.log.levels.INFO, {
-      title = title or "Notify",
-    })
-  end, {
-    { filter = {}, view = view },
-  })
-end

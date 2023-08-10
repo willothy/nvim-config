@@ -21,4 +21,30 @@ M.telescope = setmetatable({}, {
   __index = _telescope,
 })
 
+M.notify_mini = function(msg, opts)
+  local title = opts.title
+  local level = opts.level or vim.log.levels.INFO
+  require("noice.message.router").redirect(function()
+    vim.notify(msg, level, {
+      title = title,
+    })
+  end, {
+    { filter = {}, view = "mini" },
+  })
+end
+
+M.redirect = function(view, msg, title)
+  require("noice.message.router").redirect(function()
+    vim.notify(msg, vim.log.levels.INFO, {
+      title = title or "Notify",
+    })
+  end, {
+    { filter = {}, view = view },
+  })
+end
+
+M.popup = function(msg, title)
+  M.redirect("popup", msg, title)
+end
+
 return M
