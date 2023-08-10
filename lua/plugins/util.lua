@@ -218,11 +218,6 @@ return {
     event = "CmdlineEnter",
   },
   {
-    "karb94/neoscroll.nvim",
-    event = "User ExtraLazy",
-    config = true,
-  },
-  {
     "Tyler-Barham/floating-help.nvim",
     config = function()
       require("configs.editor.floating-help")

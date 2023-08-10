@@ -185,6 +185,7 @@ return {
     config = function()
       require("configs.editor.telescope")
     end,
+    cmd = "Telescope",
     -- event = "User ExtraLazy",
   },
   {

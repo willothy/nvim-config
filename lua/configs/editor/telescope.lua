@@ -128,15 +128,15 @@ local function defer(extension)
   end, 1000)
 end
 
-defer("file_browser")
 defer("menufacture")
+defer("fzf")
+defer("file_browser")
 defer("projects")
 defer("noice")
 defer("macros")
 defer("scope")
 defer("yank_history")
 defer("undo")
-defer("fzf")
 
 defer("ui-select")
 defer("heading")
