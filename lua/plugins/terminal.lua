@@ -7,7 +7,6 @@ return {
   },
   {
     "willothy/flatten.nvim",
-    dir = "~/projects/lua/flatten/",
     dependencies = {
       -- hacky way of ensuring fileline deals with files before flatten sends them
       "lewis6991/fileline.nvim",

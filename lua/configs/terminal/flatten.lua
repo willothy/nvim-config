@@ -3,7 +3,7 @@ local saved_terminal
 require("flatten").setup({
   nest_if_no_args = true,
   window = {
-    open = "alternate",
+    open = "smart",
     -- open = function(files, argv, stdin_buf_id)
     --
     -- end,
@@ -37,11 +37,11 @@ require("flatten").setup({
       local id = term.get_focused_id()
       saved_terminal = term.get(id)
     end,
-    post_open = function(bufnr, winnr, ft, is_blocking)
+    post_open = function(bufnr, winnr, ft, is_blocking, is_diff)
       if is_blocking and saved_terminal then
         -- Hide the terminal while it's blocking
         saved_terminal:close()
-      else
+      elseif not is_diff then
         -- If it's a normal file, just switch to its window
         vim.api.nvim_set_current_win(winnr)
         -- If it's not in the current wezterm pane, switch to that pane.

@@ -11,7 +11,7 @@ return {
   {
     "willothy/hollywood.nvim",
     event = "LspAttach",
-    dir = "~/projects/lua/hollywood.nvim",
+    -- dir = "~/projects/lua/hollywood.nvim",
   },
   {
     "VidocqH/lsp-lens.nvim",
@@ -150,16 +150,6 @@ return {
     event = "VeryLazy",
     config = function()
       require("configs.editor.treesitter")
-    end,
-  },
-  {
-    "willothy/wf.nvim",
-    dir = "~/projects/lua/wf.nvim/",
-    version = "*",
-    event = "User ExtraLazy",
-    enabled = false,
-    config = function()
-      require("configs.editor.wf")
     end,
   },
   {

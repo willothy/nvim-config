@@ -41,6 +41,9 @@ require("which-key").setup({
     spacing = 3, -- spacing between columns
     align = "left", -- align columns left, center or right
   },
+  icons = {
+    group = "",
+  },
   sort_by_description = true,
   custom_view = require("willothy.wk-view"),
 })

@@ -208,29 +208,21 @@ register({
     end,
     "flash: jump",
   },
-  ["<M-s>"] = {
-    function()
-      require("flash").jump({ reverse = true })
-    end,
-    "flash: treesitter",
-  },
-  ["<M-r>"] = {
-    function()
-      -- show labeled treesitter nodes around the search matches
-      require("flash").treesitter_search()
-    end,
-    "flash: treesitter",
-  },
-}, { "n", "x" })
+}, { "n", "x", "v", "o" })
 
 register({
   r = {
     function()
-      require("flash").remote()
+      local mode = vim.api.nvim_get_mode().mode
+      if mode == "v" or mode == "V" or mode == "x" then
+        require("flash").jump()
+      else
+        require("flash").remote()
+      end
     end,
     "flash: remote",
   },
-}, modes.pending)
+}, "o")
 
 register({
   ["<C-s>"] = {
