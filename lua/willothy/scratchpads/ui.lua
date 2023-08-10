@@ -1,62 +1,50 @@
--- if not _G.bruhbuf then _G.bruhbuf = vim.api.nvim_create_buf(false, true) end
--- local buf = _G.bruhbuf
---
--- local config = {
---   relative = "editor",
---   style = "minimal",
---   border = "single",
--- }
---
--- local width = 40
--- local height = 15
---
--- config.width = width
--- config.height = height
--- config.row = vim.o.lines - height
--- config.col = vim.o.columns - width
---
--- if not _G.bruhwin then
---   _G.bruhwin = vim.api.nvim_open_win(buf, false, config)
--- end
--- local win = _G.bruhwin
---
--- local ns = vim.api.nvim_create_namespace("bufui")
---
--- local id = 1
--- -- WhichKeyDesc
--- -- WhichKeyValue
--- -- WhichKeySeparator
--- -- WhichKeyGroup
--- -- WhichKey
--- vim.api.nvim_buf_set_extmark(buf, ns, 0, 0, {
---   id = id,
---   virt_text_pos = "overlay",
---   virt_text = {
---     { "x", "WhichKey" },
---     { " " },
---     { "->", "WhichKeySeparator" },
---     { " " },
---     { "+cut", "WhichKeyGroup" },
---   },
---   virt_lines = {
---     { { "Line1", "Normal" } },
---     { { "Line3", "Visual" } },
---   },
--- })
-
-local mode = "o"
-local map = "i"
-
-vim.on_key(vim.schedule_wrap(function(k)
-  if k == vim.api.nvim_replace_termcodes("<space>", true, false, true) then
-    require("which-key").show(" ")
-    -- local kmap = vim.api.nvim_get_keymap(vim.api.nvim_get_mode().mode)
+local function set_layout(node)
+  local ty = node[1]
+  if ty == "leaf" then
+    local buf = node[2]
+    if type(buf) == "string" then
+      buf = vim.fn.bufadd(buf)
+      vim.api.nvim_buf_set_option(buf, "buflisted", true)
+    end
+    vim.api.nvim_set_current_buf(buf)
+  else
+    local winids = {}
+    for i in ipairs(node[2]) do
+      if i > 1 then
+        if ty == "row" then
+          vim.cmd("vsplit")
+        else
+          vim.cmd("split")
+        end
+      end
+      table.insert(winids, 1, vim.api.nvim_get_current_win())
+    end
+    for i, v in ipairs(node[2]) do
+      vim.api.nvim_set_current_win(winids[i])
+      set_layout(v)
+    end
   end
-  -- local found = vim
-  --   .iter(kmap)
-  --   :filter(function(mapping)
-  --     return vim.startswith(mapping.lhs, map)
-  --   end)
-  --   :totable()
-  -- vim.print(found)
-end))
+end
+
+set_layout({
+  "row",
+  {
+    {
+      "leaf",
+      vim.fn.expand("%"),
+    },
+    {
+      "col",
+      {
+        {
+          "leaf",
+          "init.lua",
+        },
+        {
+          "leaf",
+          "init.lua",
+        },
+      },
+    },
+  },
+})
