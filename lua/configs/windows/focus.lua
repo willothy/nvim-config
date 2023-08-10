@@ -31,7 +31,6 @@ focus.setup({
     },
   },
 })
-require("willothy.modenr")
 local group = vim.api.nvim_create_augroup("focus_ft", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {
   group = group,

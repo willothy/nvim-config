@@ -55,11 +55,6 @@ end
 
 ---@param items VisualMapping[]
 function View.render(items, trail)
-  local wants_width = 35
-  local wants_height = 10
-
-  local lines = require("willothy.lines")
-
   ---@param mapping VisualMapping
   local process = function(mapping)
     local label = mapping.label

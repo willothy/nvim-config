@@ -1,6 +1,6 @@
 local KeyCode = {
   Move = vim.keycode("<LeftDrag>"),
-  Resize = vim.keycode("<RightDrag>"),
+  Resize = vim.keycode("<S-LeftDrag>"),
   LeftRelease = vim.keycode("<LeftRelease>"),
   RightRelease = vim.keycode("<RightRelease>"),
   MiddleRelease = vim.keycode("<MiddleRelease>"),
@@ -67,6 +67,42 @@ function FloatDrag.setup(opts)
   end)
 end
 
+local Modenr = {}
+
+function Modenr.setup()
+  local api = vim.api
+  local function mode_name()
+    local mode = api.nvim_get_mode().mode
+    local mode_names = {
+      ["n"] = "Normal",
+      ["i"] = "Insert",
+      ["v"] = "Visual",
+      ["V"] = "Visual",
+      [""] = "Visual",
+      ["s"] = "Select",
+      ["S"] = "Select",
+      ["R"] = "Replace",
+      ["c"] = "Command",
+      ["t"] = "Terminal",
+      ["nt"] = "TerminalNormal",
+    }
+    return mode_names[mode] or "Normal"
+  end
+
+  local function update_mode()
+    local mode = mode_name()
+    local hl = api.nvim_get_hl(0, { name = mode .. "Mode", link = false })
+    api.nvim_set_hl(0, "CursorLineNr", hl)
+  end
+  update_mode()
+
+  local group = api.nvim_create_augroup("Modenr", { clear = true })
+  api.nvim_create_autocmd("ModeChanged", {
+    group = group,
+    callback = update_mode,
+  })
+end
+
 local noice = require("noice.util.hacks")
 local prev_cursor
 
@@ -81,7 +117,10 @@ local function show_cursor()
 end
 
 return {
-  setup = FloatDrag.setup,
+  setup = function()
+    FloatDrag.setup()
+    Modenr.setup()
+  end,
   show_cursor = show_cursor,
   hide_cursor = hide_cursor,
 }

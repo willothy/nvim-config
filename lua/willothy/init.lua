@@ -35,19 +35,13 @@ vim.api.nvim_create_autocmd("User", {
     -- setup commands
     require("willothy.commands")
 
-    -- require("wf").setup({})
-    -- if not _G.__key_prefixes then _G.__key_prefixes = {} end
-    -- _G.__key_prefixes["n"]["<leader>p"] = "+projects"
+    -- setup float dragging and modenr
+    require("willothy.ui").setup()
 
     -- setup annoying "use hjkl" messages
     -- require("willothy.hjkl")()
   end,
 })
-
--- setup float dragging
--- require("willothy.ui").setup({
---   resize = "<S-LeftDrag>",
--- })
 
 -- Hacky way of detaching UI
 -- vim.api.nvim_create_user_command("Detach", function()
