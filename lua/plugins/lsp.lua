@@ -82,22 +82,9 @@ return {
   },
   {
     "dgagn/diagflow.nvim",
-    opts = {
-      placement = "top",
-      scope = "line",
-      show_sign = true,
-      update_event = {
-        "DiagnosticChanged",
-        "BufReadPost",
-        "TextChanged",
-      },
-      render_event = {
-        "DiagnosticChanged",
-        "TextChanged",
-        "CursorMoved",
-        "CursorHold",
-      },
-    },
+    config = function()
+      require("configs.lsp.diagflow")
+    end,
     event = "LspAttach",
   },
 }
