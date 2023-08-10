@@ -42,11 +42,19 @@ null_ls.setup({
       "lazy",
       "terminal",
     }
-    if not vim.bo[bufnr].buflisted then return false end
+    if not vim.bo[bufnr].buflisted then
+      return false
+    end
     local win = vim.fn.bufwinid(bufnr)
-    if vim.wo[win].diff then return false end
-    if vim.bo[bufnr].buftype ~= "" then return false end
-    if ignored[vim.bo[bufnr].filetype] then return false end
+    if vim.wo[win].diff then
+      return false
+    end
+    if vim.bo[bufnr].buftype ~= "" then
+      return false
+    end
+    if ignored[vim.bo[bufnr].filetype] then
+      return false
+    end
     return true
   end,
 })

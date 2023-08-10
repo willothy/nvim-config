@@ -29,8 +29,12 @@ function M.mkportal(title, items, callback, opts)
   local Portal = require("portal")
 
   local iter = Iterator:new(items)
-  if opts.filter then iter = iter:filter(opts.filter) end
-  if opts.map then iter = iter:map(opts.map) end
+  if opts.filter then
+    iter = iter:filter(opts.filter)
+  end
+  if opts.map then
+    iter = iter:map(opts.map)
+  end
   iter = iter
     :map(function(v, _i)
       return Content:new({
@@ -71,7 +75,9 @@ function M.diagnostics(opts)
           local cursor = content.cursor
           local win = vim.api.nvim_get_current_win()
           local bufnr = vim.api.nvim_win_get_buf(win)
-          if buf ~= bufnr then vim.api.nvim_set_current_buf(buf) end
+          if buf ~= bufnr then
+            vim.api.nvim_set_current_buf(buf)
+          end
           vim.api.nvim_win_set_cursor(win, { cursor.row, content.extra })
         end,
       })
@@ -108,7 +114,9 @@ function M.references(context)
         local cursor = content.cursor
         local win = vim.api.nvim_get_current_win()
         local bufnr = vim.api.nvim_win_get_buf(win)
-        if buf ~= bufnr then vim.api.nvim_set_current_buf(buf) end
+        if buf ~= bufnr then
+          vim.api.nvim_set_current_buf(buf)
+        end
         vim.api.nvim_win_set_cursor(win, { cursor.row + 1, cursor.col })
       end, {
         map = function(v)

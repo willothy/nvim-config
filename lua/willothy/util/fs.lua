@@ -31,15 +31,21 @@ end
 
 function M.parent_crate()
   local root = M.crate_root()
-  if root == nil then return end
+  if root == nil then
+    return
+  end
   local parent = M.crate_root(root .. "../")
-  if parent == nil then vim.notify("No parent crate found") end
+  if parent == nil then
+    vim.notify("No parent crate found")
+  end
   return parent
 end
 
 function M.open_project_toml()
   local root = M.crate_root()
-  if root == nil then return end
+  if root == nil then
+    return
+  end
   vim.api.nvim_command("edit " .. string.format("%s", root) .. "/Cargo.toml")
 end
 

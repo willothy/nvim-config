@@ -65,7 +65,9 @@ function M.with()
   if term:is_open() then
     if edgy then
       local win = require("edgy").get_win(term.window)
-      if win and not win.visible then win:open() end
+      if win and not win.visible then
+        win:open()
+      end
     end
   else
     term:open()
@@ -78,7 +80,9 @@ function M.with_float()
   if term:is_open() then
     if edgy then
       local win = edgy.get_win(term.window)
-      if win and not win.visible then win:open() end
+      if win and not win.visible then
+        win:open()
+      end
     end
   else
     term:open()

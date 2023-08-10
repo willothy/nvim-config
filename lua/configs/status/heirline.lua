@@ -1,5 +1,5 @@
 local p = require("minimus.palette").hex
-local icons = require("willothy.icons")
+local icons = require("willothy.util.icons")
 
 local function handler(f, name)
   return {
@@ -248,7 +248,9 @@ local Location = Component({
     end,
   },
   provider = function(self)
-    if not self.line then return "" end
+    if not self.line then
+      return ""
+    end
     local s = math.floor((self.line / self.maxline) * 100)
       .. "%%/"
       .. string.format("%d:%d", self.maxline, self.col)
@@ -282,7 +284,9 @@ local Copilot = Component({
     }
   end),
   provider = function(self)
-    if not self.ready then return "" end
+    if not self.ready then
+      return ""
+    end
     local icon = icons.git.copilot_err
     if self.status.status == "InProgress" then
       icon = require("noice.util.spinners").spin("dots") or "\\"
@@ -300,7 +304,9 @@ local Copilot = Component({
 local Env = function(var)
   return Component({
     provider = function(self)
-      if not self.val then self.val = os.getenv(var) end
+      if not self.val then
+        self.val = os.getenv(var)
+      end
       return (self.val and self.val ~= "") and self.val .. " " or ""
     end,
     hl = hl.C,
@@ -380,7 +386,9 @@ local Harpoon = Component({
       if ev.event == "User" and ev.file == "ExtraLazy" then
         vim.api.nvim_create_autocmd("BufEnter", {
           callback = function()
-            if self.nfiles == nil then return end
+            if self.nfiles == nil then
+              return
+            end
             vim.api.nvim_exec_autocmds(
               "User",
               { pattern = "UpdateHarpoonStatus" }
@@ -401,7 +409,9 @@ local Harpoon = Component({
 
 local Recording = Component({
   provider = function()
-    if not package.loaded["NeoComposer"] then return "" end
+    if not package.loaded["NeoComposer"] then
+      return ""
+    end
     return require("NeoComposer.ui").status_recording()
   end,
   hl = hl.C,
@@ -452,7 +462,9 @@ local Git = Component({
   static = {
     fetch = function(self)
       self.status_dict = vim.b.gitsigns_status_dict
-      if not self.status_dict then return "" end
+      if not self.status_dict then
+        return ""
+      end
       self.has_changes = self.status_dict.added ~= 0
         or self.status_dict.removed ~= 0
         or self.status_dict.changed ~= 0
@@ -478,7 +490,9 @@ local Git = Component({
         return ""
       end
       local head = self.status_dict.head
-      if not head or head == "" then head = "<empty>" end
+      if not head or head == "" then
+        head = "<empty>"
+      end
       return string.format("%s %s ", icons.git.branch, head)
     end,
     hl = { fg = p.cool_gray },
@@ -486,7 +500,9 @@ local Git = Component({
   {
     -- git diff added
     provider = function(self)
-      if not self.status_dict then return "" end
+      if not self.status_dict then
+        return ""
+      end
       if self.added() > 0 then
         return string.format("%s %s", icons.git.diff.added, self.added())
           .. ((self.modified() > 0 or self.removed() > 0) and " " or "")
@@ -499,7 +515,9 @@ local Git = Component({
   {
     -- git diff removed
     provider = function(self)
-      if not self.status_dict then return "" end
+      if not self.status_dict then
+        return ""
+      end
       if self.removed() > 0 then
         return string.format("%s %s", icons.git.diff.removed, self.removed())
           .. (self.modified() > 0 and " " or "")
@@ -512,7 +530,9 @@ local Git = Component({
   {
     -- git diff changed
     provider = function(self)
-      if not self.status_dict then return "" end
+      if not self.status_dict then
+        return ""
+      end
       if self.modified() > 0 then
         return string.format("%s %s", icons.git.diff.modified, self.modified())
       else

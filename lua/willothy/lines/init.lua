@@ -41,11 +41,17 @@ function Lines:truncate_width(width)
 end
 
 function Lines:truncate_height(height, start)
-  if not start then start = 1 end
-  if start > self:height() then return Lines:new({}) end
+  if not start then
+    start = 1
+  end
+  if start > self:height() then
+    return Lines:new({})
+  end
   local lines = {}
   for i = start, height + start do
-    if self.data[i] then table.insert(lines, self.data[i]) end
+    if self.data[i] then
+      table.insert(lines, self.data[i])
+    end
   end
   return Lines:new(lines)
 end
@@ -81,12 +87,22 @@ function Lines:trim_trailing_whitespace()
 end
 
 function Lines:overlay(other, row, col, force)
-  if force == nil then force = false end
-  if not row then row = 1 end
-  if not col then col = 1 end
+  if force == nil then
+    force = false
+  end
+  if not row then
+    row = 1
+  end
+  if not col then
+    col = 1
+  end
 
-  if row < 0 then row = #self.data + row + 1 end
-  if col < 0 then col = vim.fn.strdisplaywidth(self.data[row]) + (col + 1) end
+  if row < 0 then
+    row = #self.data + row + 1
+  end
+  if col < 0 then
+    col = vim.fn.strdisplaywidth(self.data[row]) + (col + 1)
+  end
 
   local i = 0
   self.data = setmetatable(
@@ -96,10 +112,14 @@ function Lines:overlay(other, row, col, force)
         .iter(self.data)
         :skip(row - 1)
         :map(function(line, e)
-          if type(line) ~= "string" then line = e end
+          if type(line) ~= "string" then
+            line = e
+          end
           i = i + 1
           local other_line = other.data[i]
-          if not other_line then return line end
+          if not other_line then
+            return line
+          end
           local new = col > 1 and vim.fn.strcharpart(line, 0, col - 2) or ""
           for j = col, #line do
             local l1_char = vim.fn.strcharpart(line, j - 1, 1)

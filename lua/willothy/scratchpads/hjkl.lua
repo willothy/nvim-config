@@ -70,7 +70,9 @@ return function()
   local last
 
   ns = vim.on_key(function(key)
-    if debounce:is_active() and last and last == key then return end
+    if debounce:is_active() and last and last == key then
+      return
+    end
     if arrows[key] then
       local mode = vim.api.nvim_get_mode().mode
       if alternates[mode] then

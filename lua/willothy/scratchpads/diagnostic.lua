@@ -29,14 +29,22 @@ function Position:__div(other)
 end
 
 function Position:__lt(other)
-  if self.line < other.line then return true end
-  if self.line > other.line then return false end
+  if self.line < other.line then
+    return true
+  end
+  if self.line > other.line then
+    return false
+  end
   return self.col < other.col
 end
 
 function Position:__le(other)
-  if self.line < other.line then return true end
-  if self.line > other.line then return false end
+  if self.line < other.line then
+    return true
+  end
+  if self.line > other.line then
+    return false
+  end
   return self.col <= other.col
 end
 

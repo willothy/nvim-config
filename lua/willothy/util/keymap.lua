@@ -5,7 +5,9 @@ function M.find(mode, lhs)
   local raw = vim.api.nvim_replace_termcodes(lhs, true, false, false)
 
   for _, m in ipairs(map) do
-    if m.lhs == lhs or m.lhsraw == raw then return m end
+    if m.lhs == lhs or m.lhsraw == raw then
+      return m
+    end
   end
 end
 
@@ -82,7 +84,9 @@ M.modes = setmetatable({
   all = group({ "n", "x", "v", "s", "i", "c", "t", "o" }),
 }, {
   __index = function(self, k)
-    if k == "empty" then return group({}) end
+    if k == "empty" then
+      return group({})
+    end
     return rawget(self, k)
   end,
 })
@@ -101,7 +105,9 @@ end
 
 function M.group(mode, prefix, name, noleader)
   local ok, wk = pcall(require, "which-key")
-  if not ok then return end
+  if not ok then
+    return
+  end
   wk.register(
     { name = name },
     { mode = mode, prefix = noleader and prefix or ("<leader>" .. prefix) }

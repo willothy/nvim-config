@@ -6,7 +6,9 @@ end
 
 local builtin = require("statuscol.builtin")
 local ok, winborder = pcall(require, "winborder")
-if ok then winborder = winborder.utils.statuscol end
+if ok then
+  winborder = winborder.utils.statuscol
+end
 
 local curwin = vim.api.nvim_get_current_win()
 vim.api.nvim_create_autocmd(
@@ -46,7 +48,9 @@ require("statuscol").setup({
       text = { builtin.lnumfunc },
       condition = {
         function(args)
-          if not curwin then curwin = vim.api.nvim_get_current_win() end
+          if not curwin then
+            curwin = vim.api.nvim_get_current_win()
+          end
           return args.relnum == 0 and args.win == curwin
         end,
       },
@@ -57,7 +61,9 @@ require("statuscol").setup({
       text = { builtin.lnumfunc, " " },
       condition = {
         function(args)
-          if not curwin then curwin = vim.api.nvim_get_current_win() end
+          if not curwin then
+            curwin = vim.api.nvim_get_current_win()
+          end
           return (args.relnum ~= 0) or (args.win ~= curwin)
         end,
         true,

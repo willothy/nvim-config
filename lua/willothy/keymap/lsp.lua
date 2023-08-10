@@ -10,7 +10,9 @@ register({
     function()
       local curwin = vim.api.nvim_get_current_win()
       local group = require("rust-tools.code_action_group")
-      if not cleanup then cleanup = group.cleanup end
+      if not cleanup then
+        cleanup = group.cleanup
+      end
 
       group.cleanup = function()
         cleanup()

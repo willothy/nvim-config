@@ -1,10 +1,14 @@
 -- selene: allow(unused_variable)
 local function get_search_term(props)
-  if not props.focused then return "" end
+  if not props.focused then
+    return ""
+  end
 
   local count = vim.fn.searchcount({ recompute = 1, maxcount = -1 })
   local contents = vim.fn.getreg("/")
-  if string.len(contents) == 0 then return "" end
+  if string.len(contents) == 0 then
+    return ""
+  end
 
   return {
     {
@@ -39,7 +43,9 @@ local function get_diagnostic_label(props)
       )
     end
   end
-  if #label > 0 then table.insert(label, { "| " }) end
+  if #label > 0 then
+    table.insert(label, { "| " })
+  end
   return label
 end
 
@@ -52,7 +58,9 @@ local function get_git_diff(props)
   }
   local labels = {}
   local signs = vim.api.nvim_buf_get_var(props.buf, "gitsigns_status_dict")
-  if not signs then return nil end
+  if not signs then
+    return nil
+  end
   for name, info in pairs(icons) do
     if signs[name] and tonumber(signs[name]) and signs[name] > 0 then
       table.insert(labels, {
@@ -61,7 +69,9 @@ local function get_git_diff(props)
       })
     end
   end
-  if #labels > 0 then table.insert(labels, { "| " }) end
+  if #labels > 0 then
+    table.insert(labels, { "| " })
+  end
   return labels
 end
 

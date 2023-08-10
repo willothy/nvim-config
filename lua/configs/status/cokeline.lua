@@ -1,4 +1,4 @@
-local icons = require("willothy.icons")
+local icons = require("willothy.util.icons")
 local ns = vim.api.nvim_create_namespace("cokeline_diagnostics")
 
 local p = require("minimus.palette").hex
@@ -275,7 +275,9 @@ local components = {
         popup.win_config.width = width
         popup.win_config.col = mouse_col - 1
         popup:mount()
-        if not popup.bufnr then return end
+        if not popup.bufnr then
+          return
+        end
         vim.api.nvim_buf_set_extmark(popup.bufnr, ns, 0, 0, {
           id = 1,
           virt_text = text,

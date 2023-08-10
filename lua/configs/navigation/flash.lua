@@ -7,7 +7,9 @@ local function words(str, offset)
   return function()
     local start = str:find("%w+", offset)
     local word = str:match("%w+", start)
-    if start == nil or word == nil then return nil end
+    if start == nil or word == nil then
+      return nil
+    end
     offset = start + #word
     return word, start
   end
@@ -207,7 +209,9 @@ Char.setup = function(...)
         end)
       else
         local back = false
-        if key == "F" or key == "T" then back = true end
+        if key == "F" or key == "T" then
+          back = true
+        end
         local cursor = vim.api.nvim_win_get_cursor(0)
         Locations:fetch(back, cursor)
 
@@ -224,7 +228,9 @@ Char.setup = function(...)
           after()
         end
         await(function()
-          if not Char._active then return true end
+          if not Char._active then
+            return true
+          end
           local new_cursor = vim.api.nvim_win_get_cursor(0)
           return new_cursor[1] ~= cursor[1] or new_cursor[2] ~= cursor[2]
         end, function()

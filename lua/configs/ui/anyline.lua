@@ -28,7 +28,9 @@ vim.api.nvim_create_autocmd({ "BufEnter", "LspAttach", "CursorHold" }, {
         require("anyline.cache").get_cache(bufnr)
         require("anyline.markager").remove_all_marks(bufnr)
         require("anyline.setter").set_marks(bufnr)
-        if win == curwin then require("anyline.context").show_context(bufnr) end
+        if win == curwin then
+          require("anyline.context").show_context(bufnr)
+        end
       end)
     end
   end),

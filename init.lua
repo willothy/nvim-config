@@ -58,7 +58,4 @@ require("lazy").setup({
   },
 })
 
-if vim.g.started_by_firenvim then vim.g.minimal = true end
-if vim.g.minimal then return end
-
 require("willothy")

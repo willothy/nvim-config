@@ -4,7 +4,9 @@ local commands = {
       local function max_length(list)
         local max = 0
         for _, v in ipairs(list) do
-          if #v > max then max = #v end
+          if #v > max then
+            max = #v
+          end
         end
         return max
       end
@@ -108,6 +110,17 @@ local commands = {
       require("luapad").detach()
     end,
     desc = "Detach the Lua REPL from the current buffer",
+  },
+  MiniFiles = {
+    function()
+      require("mini.files")
+      if _G.MiniFiles.get_target_window() then
+        _G.MiniFiles.close()
+      else
+        _G.MiniFiles.open()
+      end
+    end,
+    desc = "Toggle mini.files",
   },
   Scratch = {
     function(args)

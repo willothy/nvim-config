@@ -39,7 +39,9 @@ return Hydra({
     {
       "J",
       function()
-        if vim.wo.diff then return "]c" end
+        if vim.wo.diff then
+          return "]c"
+        end
         local gitsigns = require("gitsigns")
         vim.schedule(function()
           gitsigns.next_hunk()
@@ -51,7 +53,9 @@ return Hydra({
     {
       "K",
       function()
-        if vim.wo.diff then return "[c" end
+        if vim.wo.diff then
+          return "[c"
+        end
         local gitsigns = require("gitsigns")
         vim.schedule(function()
           gitsigns.prev_hunk()

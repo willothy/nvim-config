@@ -1,17 +1,21 @@
-local icons = require("willothy.icons")
+local icons = require("willothy.util.icons")
 local dropbar = require("dropbar")
 
 local opts = {
   general = {
     enable = function(buf, win)
-      if vim.api.nvim_win_get_config(win).relative ~= "" then return false end
+      if vim.api.nvim_win_get_config(win).relative ~= "" then
+        return false
+      end
       if
         require("cokeline.sidebar").get_win("left") == win
         or require("cokeline.sidebar").get_win("right") == win
       then
         return false
       end
-      if vim.wo[win].diff then return false end
+      if vim.wo[win].diff then
+        return false
+      end
       local filetype = vim.bo[buf].filetype
       local disabled = {
         "Trouble",
@@ -54,13 +58,17 @@ local opts = {
       q = function()
         local api = require("dropbar.api")
         local m = api.get_current_dropbar_menu()
-        if not m then return end
+        if not m then
+          return
+        end
         m:close()
       end,
       ["<Esc>"] = function()
         local api = require("dropbar.api")
         local m = api.get_current_dropbar_menu()
-        if not m then return end
+        if not m then
+          return
+        end
         m:close()
       end,
     },

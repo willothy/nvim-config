@@ -35,7 +35,7 @@ local function mkcaps(extra)
   return capabilities
 end
 
-local icons = require("willothy.icons")
+local icons = require("willothy.util.icons")
 require("mason").setup()
 
 local lspconfig = require("lspconfig")

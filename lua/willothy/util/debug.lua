@@ -19,7 +19,9 @@ function M.upvalues(f, dbg)
   local i = 1
   while true do
     local name, value = debug.getupvalue(f, i)
-    if not name then break end
+    if not name then
+      break
+    end
     if dbg and type(value) == "function" then
       table.insert(ret, i, { name, M.func_info(value) })
     else

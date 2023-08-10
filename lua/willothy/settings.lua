@@ -1,6 +1,6 @@
 local o = vim.o
 local opt = vim.opt
-local icons = require("willothy.icons")
+local icons = require("willothy.util.icons")
 
 vim.api.nvim_exec('let &t_Cs = "\\e[4:0m"', true)
 vim.api.nvim_exec('let &t_Ce = "\\e[4:0m"', true)

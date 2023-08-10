@@ -11,7 +11,9 @@ M.Hydra = function(hintfunc, config)
 
   local on_enter = function(f)
     return function(...)
-      if f then f(...) end
+      if f then
+        f(...)
+      end
       vim.api.nvim_exec_autocmds("User", {
         pattern = "HydraEnter",
       })
@@ -19,7 +21,9 @@ M.Hydra = function(hintfunc, config)
   end
   local on_exit = function(f)
     return function(...)
-      if f then f(...) end
+      if f then
+        f(...)
+      end
       vim.api.nvim_exec_autocmds("User", {
         pattern = "HydraLeave",
       })
@@ -31,7 +35,9 @@ M.Hydra = function(hintfunc, config)
     vim.keymap.set(config.mode, config.body, function()
       if this == nil then
         config.body = nil
-        if hintfunc then config.hint = hintfunc(config) end
+        if hintfunc then
+          config.hint = hintfunc(config)
+        end
         this = require("hydra")(config)
       end
       this:activate()

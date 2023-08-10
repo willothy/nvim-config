@@ -24,7 +24,9 @@ function View.hide()
 end
 
 function View.show()
-  if win and vim.api.nvim_win_is_valid(win) then return end
+  if win and vim.api.nvim_win_is_valid(win) then
+    return
+  end
 
   buf = vim.api.nvim_create_buf(false, true)
   local config = {
@@ -91,7 +93,9 @@ function View.render(items, trail)
   config.title = vim
     .iter(trail)
     :map(function(t)
-      if t[1]:gsub("%s+", "") == "" then return end
+      if t[1]:gsub("%s+", "") == "" then
+        return
+      end
       if vim.startswith(t[1], " ") then
         t[1] = " "
         return t
@@ -100,7 +104,9 @@ function View.render(items, trail)
       return t
     end)
     :totable()
-  if #config.title == 0 then config.title[1] = { "" } end
+  if #config.title == 0 then
+    config.title[1] = { "" }
+  end
   vim.api.nvim_win_set_config(win, config)
 end
 

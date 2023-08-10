@@ -78,7 +78,9 @@ function M.move_frame(target_win)
   local curwin = vim.api.nvim_get_current_win()
   local leaf = lib.find_leaf(tree, curwin)
   local parent = leaf.parent
-  if not parent then return end
+  if not parent then
+    return
+  end
 
   local target = lib.find_leaf(tree, target_win)
 
@@ -101,7 +103,9 @@ end
 
 function M.pick_move()
   local win = picker.pick_or_create()
-  if not win then return end
+  if not win then
+    return
+  end
   M.move_frame(win)
 end
 

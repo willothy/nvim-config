@@ -11,7 +11,9 @@ local function anim(direction)
         state.message.height,
         direction
       )
-      if not next_row then return nil end
+      if not next_row then
+        return nil
+      end
       return {
         relative = "editor",
         anchor = "NE",

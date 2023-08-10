@@ -69,7 +69,9 @@ function Menu:build(parent)
           { on_submit = entry.on_submit, on_focus = entry.on_focus }
         )
       )
-      if #entry.name > max_len then max_len = #entry.name end
+      if #entry.name > max_len then
+        max_len = #entry.name
+      end
     elseif entry.type == "menu" then
       table.insert(
         lines,
@@ -80,7 +82,9 @@ function Menu:build(parent)
           on_focus = function() end,
         })
       )
-      if #entry.title > max_len then max_len = #entry.title end
+      if #entry.title > max_len then
+        max_len = #entry.title
+      end
     end
   end
   result = Nui.Menu({
@@ -109,13 +113,19 @@ function Menu:build(parent)
     },
     max_width = 20,
     on_submit = function(item)
-      if item.on_submit then item.on_submit() end
+      if item.on_submit then
+        item.on_submit()
+      end
     end,
     on_close = function()
-      if result.parent then result.parent:mount() end
+      if result.parent then
+        result.parent:mount()
+      end
     end,
     on_change = function(item, _menu)
-      if item.on_focus then item.on_focus() end
+      if item.on_focus then
+        item.on_focus()
+      end
     end,
   })
   result:on(require("nui.utils.autocmd").event.BufLeave, function()

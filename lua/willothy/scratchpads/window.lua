@@ -52,7 +52,9 @@ Window.__index = Window
 
 ---@return Focus.Window
 function Window.new(id)
-  if not vim.api.nvim_win_is_valid(id) then return end
+  if not vim.api.nvim_win_is_valid(id) then
+    return
+  end
   local self = setmetatable({}, Window)
   local info = vim.fn.getwininfo(id)
   self.wincol = info.wincol
@@ -65,7 +67,9 @@ function Window.new(id)
 end
 
 function Window:fetch()
-  if not vim.api.nvim_win_is_valid(self.id) then return end
+  if not vim.api.nvim_win_is_valid(self.id) then
+    return
+  end
   local info = vim.fn.getwininfo(self.id)
   self.wincol = info.wincol
   self.winrow = info.winrow
@@ -75,13 +79,21 @@ function Window:fetch()
 end
 
 function Window:update(width, height, view)
-  if width then self.width = width end
-  if height then self.height = height end
-  if view then self.view = view end
+  if width then
+    self.width = width
+  end
+  if height then
+    self.height = height
+  end
+  if view then
+    self.view = view
+  end
 end
 
 function Window:draw()
-  if not vim.api.nvim_win_is_valid(self.id) then return end
+  if not vim.api.nvim_win_is_valid(self.id) then
+    return
+  end
   local cur_w = vim.api.nvim_win_get_width(self.id)
   local cur_h = vim.api.nvim_win_get_height(self.id)
   if cur_w ~= self.width then
@@ -222,7 +234,9 @@ end
 function Tree:current_win()
   local curwin = vim.api.nvim_get_current_win()
   for _, win in pairs(self.windows) do
-    if win.id == curwin then return win end
+    if win.id == curwin then
+      return win
+    end
   end
 end
 
@@ -250,7 +264,9 @@ vim.api.nvim_create_autocmd("WinEnter", {
       tree:fetch()
       cur = tree:current_win()
     end
-    if cur then cur:update(160, 60) end
+    if cur then
+      cur:update(160, 60)
+    end
   end,
 })
 

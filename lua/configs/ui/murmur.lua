@@ -31,7 +31,9 @@ vim.api.nvim_create_autocmd("CursorHold", {
   pattern = "*",
   callback = function()
     -- skip when a float-win already exists.
-    if vim.w.diag_shown then return end
+    if vim.w.diag_shown then
+      return
+    end
 
     -- open float-win when hovering on a cursor-word.
     if vim.w.cursor_word ~= "" and enabled then

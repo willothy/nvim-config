@@ -37,7 +37,9 @@ local sanitize = {
       "undercurl",
       "strikethrough",
     }) do
-      if gui:find(g) then self[g] = true end
+      if gui:find(g) then
+        self[g] = true
+      end
     end
     self.gui = nil
   end,
@@ -49,7 +51,9 @@ local sanitize = {
       "undercurl",
       "strikethrough",
     }) do
-      if style:find(s) then self[s] = true end
+      if style:find(s) then
+        self[s] = true
+      end
     end
     self.style = nil
   end,
@@ -58,7 +62,9 @@ local sanitize = {
 ---@param hl table
 function M.sanitize(hl)
   for k, v in pairs(hl) do
-    if type(v) == "number" then hl[k] = M.hex(v) end
+    if type(v) == "number" then
+      hl[k] = M.hex(v)
+    end
     if sanitize[k] then
       if type(sanitize[k]) == "string" then
         hl[sanitize[k]] = hl[k]

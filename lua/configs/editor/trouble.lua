@@ -1,4 +1,4 @@
-local icons = require("willothy.icons").diagnostics
+local icons = require("willothy.util.icons").diagnostics
 
 require("trouble").setup({
   signs = {

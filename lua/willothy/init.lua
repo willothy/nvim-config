@@ -6,7 +6,8 @@ local function initialize()
 
   vim.defer_fn(function()
     vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" })
-  end, 100)
+  end, 150)
+
   -- Inform vim how to enable undercurl in wezterm
   vim.api.nvim_exec2(
     [[
@@ -37,16 +38,5 @@ vim.api.nvim_create_autocmd("User", {
 
     -- setup float dragging and modenr
     require("willothy.ui").setup()
-
-    -- setup annoying "use hjkl" messages
-    -- require("willothy.hjkl")()
   end,
 })
-
--- Hacky way of detaching UI
--- vim.api.nvim_create_user_command("Detach", function()
---   local uis = vim.api.nvim_list_uis()
---   if #uis < 1 then return end
---   local chan = uis[1].chan
---   vim.fn.chanclose(chan)
--- end, {})

@@ -1,6 +1,6 @@
-local M = {}
+local Icons = {}
 
-M.kinds = {
+Icons.kinds = {
   Method = " ",
   Function = "󰡱 ",
   Constructor = " ",
@@ -40,22 +40,22 @@ M.kinds = {
   TypeParameter = " ",
 }
 
-M.diagnostics = {
+Icons.diagnostics = {
   errors = "󰞏", --
   warnings = "", -- "",--
   hints = "", --"󰮔",
   info = "",
 }
-M.diagnostics.Error = M.diagnostics.errors
-M.diagnostics.Warn = M.diagnostics.warnings
-M.diagnostics.Hint = M.diagnostics.hints
-M.diagnostics.Info = M.diagnostics.info
+Icons.diagnostics.Error = Icons.diagnostics.errors
+Icons.diagnostics.Warn = Icons.diagnostics.warnings
+Icons.diagnostics.Hint = Icons.diagnostics.hints
+Icons.diagnostics.Info = Icons.diagnostics.info
 
-M.lsp = {
+Icons.lsp = {
   action_hint = "",
 }
 
-M.git = {
+Icons.git = {
   diff = {
     added = "",
     modified = "󰆗",
@@ -71,7 +71,7 @@ M.git = {
   copilot_warn = "",
 }
 
-M.dap = {
+Icons.dap = {
   breakpoint = {
     conditional = "",
     data = "",
@@ -101,7 +101,7 @@ M.dap = {
   console = "",
 }
 
-M.actions = {
+Icons.actions = {
   close_hexagon = "󰅜",
   close2 = "⌧",
   close_round = "󰅙",
@@ -110,12 +110,12 @@ M.actions = {
   close_box = "󰅗",
 }
 
-M.fold = {
+Icons.fold = {
   open = "",
   closed = "",
 }
 
-M.separators = {
+Icons.separators = {
   angle_quote = {
     left = "«",
     right = "»",
@@ -143,7 +143,7 @@ M.separators = {
   },
 }
 
-M.blocks = {
+Icons.blocks = {
   left = {
     "▏",
     "▎",
@@ -161,7 +161,7 @@ M.blocks = {
   },
 }
 
-M.misc = {
+Icons.misc = {
   datetime = "󱛡 ",
   modified = "●",
   fold = "⮓",
@@ -178,4 +178,4 @@ M.misc = {
   hook_disabled = "󰛣",
 }
 
-return M
+return Icons

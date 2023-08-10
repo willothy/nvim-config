@@ -10,7 +10,9 @@ local FloatDrag = {}
 
 function FloatDrag:step()
   local ok, info = pcall(vim.fn.getmousepos)
-  if not ok then return end
+  if not ok then
+    return
+  end
 
   self.screencol = info.screencol
   self.screenrow = info.screenrow
@@ -24,7 +26,9 @@ end
 function FloatDrag:drag()
   FloatDrag:step()
   local cfg = vim.api.nvim_win_get_config(self.w)
-  if cfg.relative == "" then return end
+  if cfg.relative == "" then
+    return
+  end
 
   cfg.col[false] = self.screencol - self.c - 1
   cfg.row[false] = self.screenrow - self.r - 1
@@ -35,7 +39,9 @@ function FloatDrag:resize()
   FloatDrag:step()
 
   local cfg = vim.api.nvim_win_get_config(self.w)
-  if cfg.relative == "" then return end
+  if cfg.relative == "" then
+    return
+  end
 
   cfg.width = math.max(self.screencol - cfg.col[false] - cfg.col[true], 1)
   cfg.height = math.max(self.screenrow - cfg.row[false] - cfg.row[true], 1)
@@ -50,8 +56,12 @@ end
 
 function FloatDrag.setup(opts)
   opts = opts or {}
-  if opts.resize then KeyCode.Resize = vim.keycode(opts.resize) end
-  if opts.move then KeyCode.Move = vim.keycode(opts.move) end
+  if opts.resize then
+    KeyCode.Resize = vim.keycode(opts.resize)
+  end
+  if opts.move then
+    KeyCode.Move = vim.keycode(opts.move)
+  end
   vim.on_key(function(k)
     if k == KeyCode.Move then
       FloatDrag:drag()

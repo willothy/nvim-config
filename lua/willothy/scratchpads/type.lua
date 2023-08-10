@@ -4,7 +4,9 @@ local class = function(name)
       __index = fields,
       __call = function(self, ...)
         local o = setmetatable({}, { __index = self })
-        if o.init then o:init(...) end
+        if o.init then
+          o:init(...)
+        end
         return o
       end,
       __classname = name,
