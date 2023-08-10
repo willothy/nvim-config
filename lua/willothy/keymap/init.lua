@@ -1,8 +1,8 @@
 -- remove all mouse mappings
 local disable = {
   -- "<2-LeftMouse>",
-  "<LeftDrag>",
-  "<LeftRelease>",
+  -- "<LeftDrag>",
+  -- "<LeftRelease>",
   "<3-LeftMouse>",
   "<4-LeftMouse>",
   "<RightMouse>",
@@ -12,7 +12,7 @@ local disable = {
 }
 
 for _, v in ipairs(disable) do
-  vim.keymap.set({ "n", "v", "i" }, v, "<Nop>", { silent = true })
+  vim.keymap.set({ "n", "v", "i" }, v, function() end, { expr = true })
 end
 
 require("willothy.keymap.normal")

@@ -1,5 +1,5 @@
 local KeyCode = {
-  Move = vim.keycode("<LeftDrag>"),
+  Move = vim.keycode("<M-LeftDrag>"),
   Resize = vim.keycode("<S-LeftDrag>"),
   LeftRelease = vim.keycode("<LeftRelease>"),
   RightRelease = vim.keycode("<RightRelease>"),
@@ -31,7 +31,7 @@ function FloatDrag:drag()
   end
 
   cfg.col[false] = self.screencol - self.c - 1
-  cfg.row[false] = self.screenrow - self.r - 1
+  cfg.row[false] = self.screenrow - self.r - 2
   vim.api.nvim_win_set_config(self.w, cfg)
 end
 
