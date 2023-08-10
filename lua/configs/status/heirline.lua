@@ -430,7 +430,7 @@ local Recording = Component({
         local state = require("NeoComposer.macro")
         for k, v in pairs(state) do
           if type(v) == "function" then
-            local upvalues = require("willothy.util").debug.upvalues(v)
+            local upvalues = require("willothy.util.debug").upvalues(v)
             local f = with_update(v, upvalues)
             state[k] = f
           end

@@ -2,7 +2,7 @@ require("willothy.settings")
 
 local function initialize()
   -- setup hydras
-  require("willothy.hydras")
+  require("willothy.hydras").setup()
 
   vim.defer_fn(function()
     vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" })
