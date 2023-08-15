@@ -8,6 +8,7 @@ local function get_size()
   end
   return round(vim.o.lines / 4)
 end
+
 require("edgy").setup({
   right = {
     {
@@ -111,8 +112,8 @@ require("edgy").setup({
     {
       title = "Scopes",
       ft = "dapui_scopes",
-      size = { height = get_size },
       wo = { winbar = " Scopes" },
+      size = { height = get_size },
     },
   },
   bottom = {
@@ -131,13 +132,13 @@ require("edgy").setup({
     {
       ft = "terminal",
       title = "Terminal",
-      -- pinned = true,
       open = function()
         require("willothy.terminals").main:open()
       end,
       filter = function(_buf, win)
         return not vim.api.nvim_win_get_config(win).zindex
       end,
+      size = { height = get_size },
     },
     {
       ft = "Trouble",
@@ -145,13 +146,14 @@ require("edgy").setup({
       open = function()
         require("trouble").open()
       end,
+      size = { height = get_size },
     },
     {
       ft = "noice",
       filter = function(_buf, win)
         return not vim.api.nvim_win_get_config(win).zindex
       end,
-      size = { height = 0.4 },
+      size = { height = get_size },
     },
     {
       ft = "qf",
@@ -160,12 +162,11 @@ require("edgy").setup({
     },
     {
       ft = "help",
-      size = { height = 0.4 },
-      -- don't open help files in edgy that we're editing
       filter = function(buf, win)
         return vim.bo[buf].buftype == "help"
           and vim.api.nvim_win_get_config(win).zindex == nil
       end,
+      size = { height = get_size },
     },
   },
 
@@ -175,10 +176,10 @@ require("edgy").setup({
   },
 
   exit_when_last = true,
-  close_when_all_hidden = false,
+  close_when_all_hidden = true,
 
   keys = {
-    ["q"] = false,
+    -- ["q"] = false,
     ["Q"] = false,
   },
 

@@ -8,7 +8,7 @@ M.launchers = {
 
 function M.launch()
   local filetype = vim.bo.filetype
-  local launch = require("willothy.dap").launchers[filetype]
+  local launch = require("configs.debugging").launchers[filetype]
   if launch then
     local ok, res = pcall(launch)
     if not ok then
