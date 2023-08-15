@@ -103,20 +103,13 @@ end
 
 local hl = {
   A = function(_self)
-    local mode = vim.fn.mode(1):sub(1, 1)
-    return mode_map[mode][1]
-  end,
-  ANOBG = function(_self)
-    local mode = vim.fn.mode(1):sub(1, 1)
-    return {
-      fg = mode_map[mode][1].bg,
-      bg = "none",
-    }
+    return require("willothy.ui.modenr").get_color()
   end,
   AB = function(_self)
+    local col = require("willothy.ui.modenr").get_color()
     local mode = vim.fn.mode(1):sub(1, 1)
     return {
-      fg = mode_map[mode][1].bg,
+      fg = col.fg,
       bg = mode_map[mode][2].bg,
     }
   end,
@@ -596,7 +589,7 @@ local StatusLine = {
 
       return content
     end,
-    hl = hl.ANOBG,
+    hl = hl.A,
   },
   Align,
   {

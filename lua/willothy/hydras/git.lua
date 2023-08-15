@@ -8,6 +8,8 @@ local git_hydra_hint = [[
  ^ ^              _<Enter>_: Neogit           _q_, _<Esc>_: exit
 ]]
 
+local gitsigns = require("gitsigns")
+
 return Hydra({
   name = "Git",
   shortname = "hydra",
@@ -16,21 +18,13 @@ return Hydra({
     color = "pink",
     invoke_on_body = true,
     hint = {
-      border = "rounded",
+      border = "single",
     },
     on_enter = function()
-      local gitsigns = require("gitsigns")
-      vim.cmd("mkview")
-      vim.cmd("silent! %foldopen!")
-      gitsigns.toggle_signs(true)
       gitsigns.toggle_linehl(true)
     end,
     on_exit = function()
-      local gitsigns = require("gitsigns")
-      vim.cmd("normal zv")
-      gitsigns.toggle_signs(false)
       gitsigns.toggle_linehl(false)
-      gitsigns.toggle_deleted(false)
     end,
   },
   mode = { "n", "x" },
