@@ -22,13 +22,26 @@ local objects = {
   a = { name = "around" },
   i = { name = "inside" },
   s = "sentence",
-  t = "tag block",
+  f = "function",
 }
 
 require("which-key").register({
   i = objects,
   a = objects,
 }, { mode = "o" })
+
+require("which-key").register({
+  g = {
+    name = "goto",
+    ["?"] = bind("which-key", "show"):with_desc("which-key"),
+    c = { name = "comment" },
+    b = { name = "which_key_ignore" },
+    g = "first line",
+    x = "open hovered",
+    r = bind("glance", "open", "references"):with_desc("lsp: references"),
+    d = bind("glance", "open", "definitions"):with_desc("lsp:definitions"),
+  },
+}, { mode = modes.non_editing })
 
 register({
   ["<C-F>"] = {
@@ -38,34 +51,7 @@ register({
   v = {
     name = "visual",
   },
-  g = {
-    name = "goto",
-    ["?"] = {
-      bind("which-key", "show"),
-      "whick-key",
-    },
-    r = {
-      bind("glance", "open", "references"),
-      "references",
-    },
-    d = {
-      bind("glance", "open", "definitions"),
-      "definitions",
-    },
-    D = {
-      vim.lsp.buf.declaration,
-      "declaration",
-    },
-    T = {
-      bind("glance", "open", "type_definitions"),
-      "type definition",
-    },
-    i = {
-      bind("glance", "open", "implementations"),
-      "implementations",
-    },
-  },
-  K = { bind("rust-tools.hover_actions", "hover_actions"), "lsp: hover" },
+  K = bind("rust-tools.hover_actions", "hover_actions"):with_desc("lsp: hover"),
 }, modes.non_editing)
 
 require("which-key").register({
@@ -81,89 +67,48 @@ require("which-key").register({
 }, { mode = modes.all })
 
 register({
-  ["<F1>"] = {
-    bind("cokeline.mappings", "pick", "focus"),
-    "Pick buffer",
-  },
-  ["<C-Enter>"] = { bind("willothy.terminals", "toggle"), "terminal: toggle" },
-  ["<C-e>"] = { bind("harpoon.ui", "toggle_quick_menu"), "harpoon: toggle" },
-  ["<M-k>"] = {
-    bind("moveline", "up"),
-    "move: up",
-  },
-  ["<M-j>"] = { bind("moveline", "down"), "move: down" },
-  ["<C-s>"] = {
-    vim.cmd.write,
-    "Save",
-  },
+  ["<F1>"] = bind("cokeline.mappings", "pick", "focus"):with_desc(
+    "pick buffer"
+  ),
+  ["<C-Enter>"] = bind("willothy.terminals", "toggle"):with_desc(
+    "terminal: toggle"
+  ),
+  ["<C-e>"] = bind("harpoon.ui", "toggle_quick_menu"):with_desc(
+    "harpoon: toggle"
+  ),
+  ["<M-k>"] = bind("moveline", "up"):with_desc("move: up"),
+  ["<M-j>"] = bind("moveline", "down"):with_desc("move: down"),
+  ["<C-s>"] = bind(vim.cmd.write):with_desc("save"),
 }, modes.non_editing + modes.insert)
 
 register({
+  ["<Tab>"] = { "V>", "Indent line" },
+  ["<S-Tab>"] = { "V<", "Unindent line" },
+  M = bind("multicursors", "start"),
+}, modes.normal)
+
+register({
   name = "marks",
-  m = {
-    bind("reach", "marks"),
-    "reach: marks",
-  },
-  h = {
-    function()
-      require("harpoon.mark").toggle_file()
-    end,
-    "harpoon: toggle mark",
-  },
+  d = bind("marks", "delete"):with_desc("delete mark"),
+  m = bind("reach", "marks"),
+  h = bind("harpoon.mark", "toggle_file"):with_desc("harpoon: toggle mark"),
 }, modes.non_editing, "<leader>m")
 
 register({
   ["<F5>"] = {
-    function()
-      require("configs.debugging.dap").launch()
-    end,
+    bind("configs.debugging.dap", "launch"),
     "dap: launch debugger",
   },
-  ["<F8>"] = {
-    function()
-      require("dap").toggle_breakpoint()
-    end,
-    "dap: toggle breakpoint",
-  },
-  ["<F9>"] = {
-    function()
-      require("dap").continue()
-    end,
-    "dap: continue",
-  },
-  ["<F10>"] = {
-    function()
-      require("dap").step_over()
-    end,
-    "dap: step over",
-  },
-  ["<S-F10>"] = {
-    function()
-      require("dap").step_into()
-    end,
-    "dap: step into",
-  },
-  ["<F12>"] = {
-    function()
-      require("dap.ui.widgets").hover()
-    end,
-    "dap: step out",
-  },
+  ["<F8>"] = bind("dap", "toggle_breakpoint"),
+  ["<F9>"] = bind("dap", "continue"),
+  ["<F10>"] = bind("dap", "step_over"),
+  ["<S-F10>"] = bind("dap", "step_out"),
+  ["<F12>"] = bind("dap", "step_into"),
 }, modes.normal)
 
 register({
-  ["<M-k>"] = {
-    function()
-      require("moveline").block_up()
-    end,
-    "move: up",
-  },
-  ["<M-j>"] = {
-    function()
-      require("moveline").block_down()
-    end,
-    "move: down",
-  },
+  ["<M-k>"] = { bind("moveline", "block_up"), "move: up" },
+  ["<M-j>"] = { bind("moveline", "block_down"), "move: down" },
   ["<Tab>"] = { ">gv", "indent: increase" },
   ["<S-Tab>"] = { "<gv", "indent: decrease" },
   ["<C-c>"] = { '"+y', "copy selection" },
@@ -185,11 +130,11 @@ register({
   },
   gp = {
     "<Plug>(YankyGPutAfter)",
-    fmt("GPut", true),
+    fmt("gput", true),
   },
   gP = {
     "<Plug>(YankyGPutBefore)",
-    fmt("GPut"),
+    fmt("gput"),
   },
   ["]y"] = {
     "<Plug>(YankyCycleForward)",

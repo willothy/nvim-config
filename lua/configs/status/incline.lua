@@ -82,10 +82,7 @@ require("incline").setup({
     padding_char = " ",
     margin = {
       horizontal = 0,
-      vertical = {
-        top = 0,
-        bottom = 0,
-      },
+      vertical = 0,
     },
     overlap = {
       winbar = true,

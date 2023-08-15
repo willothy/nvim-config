@@ -94,6 +94,7 @@
   "nvim-treesitter": { "branch": "master", "commit": "93ee00cd9daf8d2e3fbaa2a18b8b9adcb4471b16" },
   "nvim-treesitter-textobjects": { "branch": "master", "commit": "9e519b6146512c8e2e702faf8ac48420f4f5deec" },
   "nvim-ts-autotag": { "branch": "main", "commit": "6be1192965df35f94b8ea6d323354f7dc7a557e4" },
+  "nvim-various-textobjs": { "branch": "main", "commit": "2bfacdaa18c1be9db83a88bce7def12295850ecd" },
   "nvim-web-devicons": { "branch": "master", "commit": "ab899311f8ae00a47eae8e0879506cead8eb1561" },
   "nvim-window-picker": { "branch": "main", "commit": "aab47d2221216be6bb8a87a6d9814d13a0de283d" },
   "oil.nvim": { "branch": "master", "commit": "8f7807946a67b5f1a515946f82251e33651bae29" },
@@ -138,5 +139,6 @@
   "wezterm.nvim": { "branch": "main", "commit": "918da25519311f04134a8b36a96429a2b8785c53" },
   "which-key.nvim": { "branch": "helix", "commit": "860bdbdb7a108a89b66bbc68e09d72b71f0ab0f9" },
   "winshift.nvim": { "branch": "main", "commit": "37468ed6f385dfb50402368669766504c0e15583" },
-  "yanky.nvim": { "branch": "main", "commit": "95c2f006ea6eaed2b2d8b8b4943b8fcf13faf03f" }
+  "yanky.nvim": { "branch": "main", "commit": "95c2f006ea6eaed2b2d8b8b4943b8fcf13faf03f" },
+  "yop.nvim": { "branch": "main", "commit": "ec26d86cfa96783f6894babcc509e5287aef9a25" }
 }

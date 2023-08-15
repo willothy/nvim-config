@@ -199,6 +199,18 @@ Char.setup = function(...)
     ";",
     ",",
   }) do
+    local desc = ""
+    if key == "f" then
+      desc = "to next char"
+    elseif key == "F" then
+      desc = "to prev char"
+    elseif key == "t" then
+      desc = "before next char"
+    elseif key == "T" then
+      desc = "before prev char"
+    else
+      desc = "which_key_ignore"
+    end
     vim.keymap.set({ "n", "x", "o" }, key, function()
       if Repeat.is_repeat then
         Char.jumping = true
@@ -240,6 +252,7 @@ Char.setup = function(...)
       end
     end, {
       silent = true,
+      desc = desc,
     })
   end
 

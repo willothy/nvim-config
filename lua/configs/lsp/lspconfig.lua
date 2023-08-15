@@ -94,7 +94,14 @@ require("mason-lspconfig").setup({
       require("neodev").setup({
         library = {
           enabled = true,
-          plugins = {},
+          plugins = {
+            "nvim-treesitter",
+            "nvim-lspconfig",
+            "which-key.nvim",
+            "flatten.nvim",
+            "wezterm.nvim",
+            "rust-tools.nvim",
+          },
           runtime = true,
           types = true,
         },

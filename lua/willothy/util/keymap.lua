@@ -12,23 +12,37 @@ function M.find(mode, lhs)
 end
 
 function M.register(tree, modes, prefix)
+  if type(modes) == "string" then
+    modes = { modes }
+  end
   local function traverse(node, lhs, key)
     local t = type(node)
     if
       t ~= "table"
       or type(node[1]) == "string"
       or type(node[1]) == "function"
+      or type(node[1]) == "table"
     then
       local rhs, opts
-      if t == "function" or t == "string" then
-        if key == "name" then
-          M.group(modes, lhs:gsub(key .. "$", ""), node, true)
-          return
-        end
+      if t == "function" then
         rhs = node
         opts = {}
       else
+        if t == "string" and key == "name" then
+          M.group(modes, lhs:gsub(key .. "$", ""), node, true)
+          return
+        end
         rhs = node[1]
+        if not rhs then
+          vim.print(node)
+          return
+        end
+        if type(rhs) == "table" then
+          local prev = rhs
+          rhs = function(...)
+            prev(...)
+          end
+        end
         opts = {
           desc = node.desc or node[2] or "which_key_ignore",
           silent = node.silent,
@@ -91,16 +105,45 @@ M.modes = setmetatable({
   end,
 })
 
-function M.bind(module, name, ...)
+local Binding = {}
+Binding.__index = Binding
+Binding.__call = function(self, ...)
+  self[1](...)
+end
+
+M.Binding = Binding
+
+---@param map fun() | string
+---@param desc string?
+function Binding.new(map, desc)
+  return setmetatable({ map, desc }, Binding)
+end
+
+function Binding:with_desc(desc)
+  self[2] = desc
+  return self
+end
+
+function M.bind(mod, name, ...)
   local args = { ... }
 
-  return function()
-    if type(module) == "string" then
-      require(module)[name](unpack(args))
-    elseif type(module) == "function" then
-      module(name, unpack(args))
+  local fn = function()
+    if type(mod) == "string" then
+      require(mod)[name](unpack(args))
+    elseif type(mod) == "function" then
+      mod(name, unpack(args))
     end
   end
+
+  local desc
+  local display_name = (name or ""):gsub("[-_]", " ")
+  if type(mod) == "string" then
+    desc = ("%s: %s"):format(mod, display_name)
+  else
+    desc = ("%s"):format(display_name)
+  end
+
+  return Binding.new(fn, desc)
 end
 
 function M.group(mode, prefix, name, noleader)

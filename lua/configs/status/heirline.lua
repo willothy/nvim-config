@@ -333,7 +333,7 @@ local Devicon = Component({
     return { fg = self.icon_color }
   end,
   static = {
-    fetch = vim.schedule_wrap(function(self)
+    fetch = function(self)
       local filename = vim.fn.expand("%")
       local extension = vim.fn.fnamemodify(filename, ":e")
       local devicons = require("nvim-web-devicons")
@@ -344,7 +344,7 @@ local Devicon = Component({
           { default = true }
         )
       end
-    end),
+    end,
   },
   update = {
     "User",
@@ -619,9 +619,9 @@ require("heirline").setup({
   statusline = BG(StatusLine),
 })
 
-local update = vim.schedule_wrap(function()
+local update = function()
   vim.api.nvim_exec_autocmds("User", { pattern = "UpdateHeirlineComponents" })
-end)
+end
 
 vim.defer_fn(function()
   vim.api.nvim_create_autocmd({
@@ -629,6 +629,7 @@ vim.defer_fn(function()
     "UiEnter",
     "BufEnter",
     "ModeChanged",
+    "TermEnter",
   }, {
     group = vim.api.nvim_create_augroup(
       "heirline_update_cmds",

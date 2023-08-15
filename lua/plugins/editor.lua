@@ -1,5 +1,9 @@
 return {
   {
+    "zdcthomas/yop.nvim",
+    config = true,
+  },
+  {
     "lukas-reineke/headlines.nvim",
     dependencies = "nvim-treesitter/nvim-treesitter",
     config = true,
@@ -146,11 +150,16 @@ return {
     build = ":TSUpdate",
     dependencies = {
       "nvim-treesitter/nvim-treesitter-textobjects",
+      "chrisgrieser/nvim-various-textobjs",
     },
     event = "VeryLazy",
     config = function()
       require("configs.editor.treesitter")
     end,
+  },
+  {
+    "chrisgrieser/nvim-various-textobjs",
+    config = true,
   },
   {
     "willothy/which-key.nvim",

@@ -96,7 +96,11 @@ local function win_buf_height(win)
 end
 
 function Scrollbar:update()
-  if not vim.api.nvim_win_is_valid(self.winnr) then
+  if
+    vim.api.nvim_win_is_valid(self.winnr) == false
+    -- or vim.api.nvim_get_current_tabpage()
+    --   ~= vim.api.nvim_win_get_tabpage(self.winnr)
+  then
     return self:hide()
   end
 
@@ -190,19 +194,17 @@ local ScrollBarManager = {
   bars = {},
 }
 
-local list_wins = vim.api.nvim_list_wins
-
 function ScrollBarManager.update()
   local old = vim.iter(ScrollBarManager.bars):fold({}, function(acc, winnr)
     acc[winnr] = true
     return acc
   end)
   vim
-    .iter(list_wins())
+    .iter(vim.api.nvim_tabpage_list_wins(0))
     :filter(function(win)
       local winbuf = vim.api.nvim_win_get_buf(win)
       return vim.bo[winbuf].filetype ~= "noice"
-        and vim.bo[winbuf].buflisted == true
+        and vim.bo[winbuf].buftype == ""
         and vim.api.nvim_win_get_config(win).zindex == nil
     end)
     :each(function(win)
@@ -217,6 +219,7 @@ function ScrollBarManager.update()
         ScrollBarManager.bars[win]:mount()
       end
       old[win] = nil
+      ScrollBarManager.bars[win]:update()
     end)
   vim.iter(old):each(function(w)
     if ScrollBarManager.bars[w] then
@@ -228,12 +231,16 @@ end
 
 function ScrollBarManager.setup(opts)
   ScrollBarManager.options = opts or {}
-  vim.api.nvim_create_autocmd(
-    { "WinNew", "WinClosed", "TabNew", "TabClosed" },
-    {
-      callback = ScrollBarManager.update,
-    }
-  )
+  vim.api.nvim_create_autocmd({
+    "WinNew",
+    "WinClosed",
+    "TabNew",
+    "TabClosed",
+    "TabEnter",
+    "TermEnter",
+  }, {
+    callback = ScrollBarManager.update,
+  })
   ScrollBarManager.update()
 end
 

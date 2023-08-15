@@ -14,15 +14,10 @@ M.float = Terminal:new({
     border = "rounded",
   },
   close_on_exit = true,
-  start_in_insert = false,
-  on_open = function(term)
-    local w = vim.wo[term.window]
-    local b = vim.bo[term.bufnr]
-
-    w.number = false
-    w.relativenumber = false
-    w.numberwidth = 1
-    b.tabstop = 4
+  start_in_insert = true,
+  on_open = function()
+    vim.api.nvim_exec_autocmds("User", { pattern = "UpdateHeirlineComponents" })
+    vim.defer_fn(vim.cmd.startinsert, 40)
   end,
 })
 
@@ -32,15 +27,14 @@ M.main = Terminal:new({
   hidden = false,
   close_on_exit = true,
   direction = "horizontal",
-  start_in_insert = false,
-  on_open = function(term)
-    local w = vim.wo[term.window]
-    local b = vim.bo[term.bufnr]
-
-    w.number = false
-    w.relativenumber = false
-    w.numberwidth = 1
-    b.tabstop = 4
+  start_in_insert = true,
+  shade_terminals = false,
+  highlights = {
+    Normal = { link = "Normal" },
+  },
+  on_open = function()
+    vim.api.nvim_exec_autocmds("User", { pattern = "UpdateHeirlineComponents" })
+    vim.defer_fn(vim.cmd.startinsert, 40)
   end,
 })
 
@@ -95,11 +89,16 @@ function M.toggle()
   if term:is_open() then
     if edgy then
       local win = edgy.get_win(term.window)
-      if win and win.visible then
-        win:close()
-      elseif win then
-        win:open()
+      if vim.api.nvim_get_mode().mode == "t" then
+        vim.cmd("stopinsert!")
       end
+      vim.schedule(function()
+        if win and win.visible then
+          win:close()
+        elseif win then
+          win:open()
+        end
+      end)
     else
       term:close()
     end

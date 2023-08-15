@@ -78,6 +78,7 @@ function M.setup()
   require("willothy.hydras.diagrams")
   require("willothy.hydras.windows")
   require("willothy.hydras.buffers")
+  require("willothy.hydras.swap")
 
   vim.api.nvim_set_hl(0, "HydraBorder", { link = "CursorLineNr" })
   -- vim.api.nvim_set_hl(0, "HydraBorder", { link = "WhichKeyBorder" })

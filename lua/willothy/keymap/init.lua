@@ -12,12 +12,15 @@ local disable = {
 }
 
 for _, v in ipairs(disable) do
-  vim.keymap.set({ "n", "v", "i" }, v, function() end, { expr = true })
+  vim.keymap.set(
+    { "n", "v", "i" },
+    v,
+    function() end,
+    { expr = true, desc = "which_key_ignore" }
+  )
 end
 
-require("willothy.keymap.normal")
 require("willothy.keymap.window")
-require("willothy.keymap.editor")
 require("willothy.keymap.terminal")
 require("willothy.keymap.cycle")
 require("willothy.keymap.view")
@@ -27,3 +30,4 @@ require("willothy.keymap.buffer")
 require("willothy.keymap.projects")
 require("willothy.keymap.lsp")
 require("willothy.keymap.jump")
+require("willothy.keymap.editor")
