@@ -67,6 +67,7 @@
   "mini.indentscope": { "branch": "main", "commit": "f60e9b51a6214c73a170ffc5445ce91560981031" },
   "minimus": { "branch": "main", "commit": "a0c1002ba3b716f1539c671950723e01a0dd9d28" },
   "moveline.nvim": { "branch": "oxi", "commit": "440259cee48aaa5080fc284cfbabf186f560ea85" },
+  "mpv.nvim": { "branch": "main", "commit": "bd62ae4bbc8660be6fc6f9b20bf0d345dcce7cb2" },
   "multicursors.nvim": { "branch": "main", "commit": "f0cbd221e5bc08449e589e7fe6809298524b75dd" },
   "murmur.lua": { "branch": "main", "commit": "85d3f1c3e98fa60b523abf40f4951d4ddb44fa54" },
   "neo-tree-diagnostics.nvim": { "branch": "main", "commit": "168b6f207f657a9c670526662528e654acc60de9" },

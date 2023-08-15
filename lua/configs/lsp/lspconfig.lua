@@ -101,6 +101,7 @@ require("mason-lspconfig").setup({
             "flatten.nvim",
             "wezterm.nvim",
             "rust-tools.nvim",
+            "nui.nvim",
           },
           runtime = true,
           types = true,
