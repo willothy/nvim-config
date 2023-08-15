@@ -56,6 +56,7 @@ return {
   -- sidebars
   {
     "sidebar-nvim/sidebar.nvim",
+    event = "User ExtraLazy",
     cmd = "SidebarNvimOpen",
     opts = function()
       return require("configs.ui.sidebars").sidebar

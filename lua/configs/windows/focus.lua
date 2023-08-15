@@ -1,3 +1,6 @@
+local focus = require("focus")
+
+local group = vim.api.nvim_create_augroup("focus_ft", { clear = true })
 local disable = {
   ["neo-tree"] = true,
   ["SidebarNvim"] = true,
@@ -14,7 +17,16 @@ local disable = {
   ["NeogitPopup"] = true,
   ["NeogitCommitMessage"] = true,
 }
-local focus = require("focus")
+vim.api.nvim_create_autocmd("FileType", {
+  group = group,
+  callback = function(ev)
+    local ft = vim.bo[ev.buf].filetype
+    if disable[ft] then
+      vim.b.focus_disable = true
+    end
+  end,
+  desc = "Disable focus autoresize for FileType",
+})
 
 focus.setup({
   ui = {
@@ -26,19 +38,8 @@ focus.setup({
     -- width = 180,
     -- minwidth = 200,
     animation = {
-      enable = true,
+      enable = false,
       easing = "linear",
     },
   },
-})
-local group = vim.api.nvim_create_augroup("focus_ft", { clear = true })
-vim.api.nvim_create_autocmd("FileType", {
-  group = group,
-  callback = function(ev)
-    local ft = vim.bo[ev.buf].filetype
-    if disable[ft] then
-      vim.w.focus_disable = true
-    end
-  end,
-  desc = "Disable focus autoresize for FileType",
 })

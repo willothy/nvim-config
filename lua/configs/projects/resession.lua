@@ -51,7 +51,10 @@ if
   and not vim.g.nosession
 then
   -- Save these to a different directory, so our manual sessions don't get polluted
-  resession.load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
+  resession.load(
+    vim.fn.getcwd(),
+    { dir = "dirsession", silence_errors = true, reset = true }
+  )
 end
 vim.api.nvim_create_autocmd("VimLeavePre", {
   callback = function()
