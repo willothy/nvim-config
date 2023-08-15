@@ -136,7 +136,7 @@
   "undotree": { "branch": "master", "commit": "0e11ba7325efbbb3f3bebe06213afa3e7ec75131" },
   "venn.nvim": { "branch": "main", "commit": "c114563960b8fb1197695d42798d1f3e7190b798" },
   "wezterm.nvim": { "branch": "main", "commit": "918da25519311f04134a8b36a96429a2b8785c53" },
-  "which-key.nvim": { "branch": "helix", "commit": "97dcdb2afb4ade8df47d74f319233408e86a4363" },
+  "which-key.nvim": { "branch": "helix", "commit": "860bdbdb7a108a89b66bbc68e09d72b71f0ab0f9" },
   "winshift.nvim": { "branch": "main", "commit": "37468ed6f385dfb50402368669766504c0e15583" },
   "yanky.nvim": { "branch": "main", "commit": "95c2f006ea6eaed2b2d8b8b4943b8fcf13faf03f" }
 }

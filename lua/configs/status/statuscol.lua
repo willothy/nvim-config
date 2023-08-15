@@ -48,10 +48,7 @@ require("statuscol").setup({
       text = { builtin.lnumfunc },
       condition = {
         function(args)
-          if not curwin then
-            curwin = vim.api.nvim_get_current_win()
-          end
-          return args.relnum == 0 and args.win == curwin
+          return args.relnum == 0 and args.win == vim.api.nvim_get_current_win()
         end,
       },
       hl = "CursorLineNr",
@@ -61,10 +58,8 @@ require("statuscol").setup({
       text = { builtin.lnumfunc, " " },
       condition = {
         function(args)
-          if not curwin then
-            curwin = vim.api.nvim_get_current_win()
-          end
-          return (args.relnum ~= 0) or (args.win ~= curwin)
+          return (args.relnum ~= 0)
+            or (args.win ~= vim.api.nvim_get_current_win())
         end,
         true,
       },

@@ -16,7 +16,7 @@ return Hydra({
   config = {
     hint = {
       type = "window",
-      position = "bottom-right",
+      position = "bottom-left",
       border = "single",
       show_name = true,
     },

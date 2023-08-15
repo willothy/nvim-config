@@ -22,7 +22,7 @@ return Hydra({
     invoke_on_body = true,
     hint = {
       border = "single",
-      position = "bottom-right",
+      position = "bottom-left",
     },
   },
   mode = "n",

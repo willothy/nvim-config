@@ -147,9 +147,10 @@ require("which-key").setup({
     ["<tab>"] = "TAB",
   },
   window = {
-    position = "botright",
+    position = "botleft",
     border = "single",
     winblend = 20,
+    padding = { 1, 2, 1, -1 },
   },
   layout = {
     height = { min = 4, max = 25 }, -- min and max height of the columns

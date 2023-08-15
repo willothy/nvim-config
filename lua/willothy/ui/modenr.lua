@@ -5,8 +5,10 @@ local Modenr = {}
 
 local mode_names = {
   ["n"] = "Normal",
+  ["no"] = "Normal",
   ["i"] = "Insert",
   ["v"] = "Visual",
+  ["vo"] = "Visual",
   ["V"] = "Visual",
   [""] = "Visual",
   ["s"] = "Select",
@@ -19,27 +21,27 @@ local mode_names = {
 
 function Modenr.get_color(evt)
   evt = evt or ""
-  local mode = mode_names[api.nvim_get_mode().mode] or "Normal"
-  local hl = api.nvim_get_hl(0, { name = mode .. "Mode", link = false })
 
+  local hl
   if hydra.is_active() and evt ~= "HydraLeave" then
     local color = hydra.get_color()
     if color == "pink" then
-      color = require("minimus.palette").hex.red
+      hl = "HydraPink"
     elseif color == "red" then
-      color = require("minimus.palette").hex.persian_red
+      hl = "HydraRed"
     elseif color == "blue" then
-      color = require("minimus.palette").hex.blue
+      hl = "HydraBlue"
     elseif color == "teal" then
-      color = require("minimus.palette").hex.teal
+      hl = "HydraTeal"
     elseif color == "amaranth" then
-      color = require("minimus.palette").hex.flamingo
+      hl = "HydraAmaranth"
     end
-
-    hl.fg = color
+  else
+    local mode = mode_names[api.nvim_get_mode().mode] or "Normal"
+    hl = mode .. "Mode"
   end
 
-  return hl
+  return require("willothy.util.hl").hl(hl)
 end
 
 function Modenr.get_name()
@@ -58,7 +60,7 @@ function Modenr.setup()
   update_mode({})
 
   local group = api.nvim_create_augroup("Modenr", { clear = true })
-  api.nvim_create_autocmd("ModeChanged", {
+  api.nvim_create_autocmd({ "ModeChanged" }, {
     group = group,
     callback = update_mode,
   })

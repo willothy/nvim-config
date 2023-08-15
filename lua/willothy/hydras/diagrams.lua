@@ -12,6 +12,7 @@ local diagram = Hydra({
     invoke_on_body = false,
     hint = {
       border = "rounded",
+      position = "bottom-left",
     },
     on_enter = function()
       vim.o.virtualedit = "all"

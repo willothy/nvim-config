@@ -19,6 +19,7 @@ return Hydra({
     invoke_on_body = true,
     hint = {
       border = "single",
+      position = "bottom-left",
     },
     on_enter = function()
       gitsigns.toggle_linehl(true)

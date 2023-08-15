@@ -18,11 +18,12 @@ return Hydra({
   name = "Options",
   hint = hint,
   config = {
-    color = "amaranth",
+    -- color = "amaranth",
+    color = "pink",
     invoke_on_body = true,
     hint = {
       border = "single",
-      position = "bottom-right",
+      position = "bottom-left",
     },
   },
   mode = { "n", "x" },

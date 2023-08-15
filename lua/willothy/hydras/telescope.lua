@@ -75,7 +75,7 @@ end, {
     color = "blue",
     invoke_on_body = true,
     hint = {
-      position = "bottom-right",
+      position = "bottom-left",
       border = "single",
     },
   },
