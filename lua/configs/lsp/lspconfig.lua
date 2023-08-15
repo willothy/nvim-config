@@ -94,7 +94,7 @@ require("mason-lspconfig").setup({
       require("neodev").setup({
         library = {
           enabled = true,
-          plugins = true,
+          plugins = {},
           runtime = true,
           types = true,
         },
@@ -107,6 +107,7 @@ require("mason-lspconfig").setup({
         settings = lsp_settings.lua_ls,
         root_dir = require("lspconfig.util").root_pattern(".git"),
         before_init = require("neodev.lsp").before_init,
+        single_file_support = false,
       })
     end,
     bashls = function()
@@ -115,11 +116,7 @@ require("mason-lspconfig").setup({
         capabilities = mkcaps(false),
         attach = lsp_attach,
         filetypes = { "zsh", "sh", "bash" },
-        root_dir = require("lspconfig.util").root_pattern(
-          ".git",
-          ".zshrc",
-          "~/.config/zsh/*"
-        ),
+        root_dir = require("lspconfig.util").root_pattern(".git", ".zshrc"),
       })
     end,
   },
