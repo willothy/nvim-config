@@ -37,6 +37,14 @@ require("edgy").setup({
       title = "Neogit log",
       size = { width = 0.3 },
     },
+    {
+      ft = "help",
+      filter = function(buf, win)
+        return vim.bo[buf].buftype == "help"
+          and vim.api.nvim_win_get_config(win).zindex == nil
+      end,
+      size = { width = 0.3 },
+    },
   },
   left = {
     {
@@ -158,14 +166,6 @@ require("edgy").setup({
     {
       ft = "qf",
       title = "QuickFix",
-      size = { height = get_size },
-    },
-    {
-      ft = "help",
-      filter = function(buf, win)
-        return vim.bo[buf].buftype == "help"
-          and vim.api.nvim_win_get_config(win).zindex == nil
-      end,
       size = { height = get_size },
     },
     {

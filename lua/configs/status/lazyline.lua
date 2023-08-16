@@ -1,0 +1,3 @@
+require("lazyline").setup({
+  components = {},
+})

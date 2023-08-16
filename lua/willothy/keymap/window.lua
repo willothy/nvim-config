@@ -50,7 +50,7 @@ register({
       "resize: max or equal",
     },
     ["+"] = {
-      bind("focus", "resize"),
+      bind("focus", "focus_autoresize"),
       "resize: golden ratio",
     },
     V = {

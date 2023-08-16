@@ -13,10 +13,17 @@ local separators = {
 local close_icon_normal = icons.actions.close
 local close_icon_hovered = icons.actions.close_box
 
+local hidden = vim.api.nvim_set_hl(0, "Hidden", {
+  fg = "NONE",
+  bg = "NONE",
+  sp = "NONE",
+})
+
 local components = {
   sidebar_open = {
     text = function(buffer)
-      local open = require("cokeline.sidebar").get_win("left") and true or false
+      local open = require("cokeline.sidebar").get_win("left") and true
+        or false
       if (open and buffer.is_readonly) or (buffer.is_first and not open) then
         return string.format(" %s ", open and "󰨂" or "󰨃")
       end
@@ -243,7 +250,10 @@ local components = {
         local width = 0
         if buffer.diagnostics.errors > 0 then
           table.insert(text, {
-            icons.diagnostics.errors .. " " .. buffer.diagnostics.errors .. " ",
+            icons.diagnostics.errors
+              .. " "
+              .. buffer.diagnostics.errors
+              .. " ",
             "DiagnosticSignError",
           })
           width = width + #tostring(buffer.diagnostics.errors) + 3

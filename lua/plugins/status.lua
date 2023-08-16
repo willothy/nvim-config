@@ -1,11 +1,19 @@
 return {
   {
     "willothy/nvim-cokeline",
-    -- dir = "~/projects/lua/cokeline/",
+    dir = "~/projects/lua/cokeline/",
     config = function()
       require("configs.status.cokeline")
     end,
     event = "User ExtraLazy",
+  },
+  {
+    "willothy/lazyline.nvim",
+    enabled = false,
+    config = function()
+      require("configs.status.lazyline")
+    end,
+    event = "UiEnter",
   },
   {
     "rebelot/heirline.nvim",
@@ -38,13 +46,5 @@ return {
     config = function()
       require("configs.status.incline")
     end,
-  },
-  {
-    "lewis6991/satellite.nvim",
-    event = "User VeryLazy",
-    enabled = false,
-    opts = {
-      width = 1,
-    },
   },
 }
