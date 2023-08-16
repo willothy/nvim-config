@@ -45,13 +45,16 @@ require("which-key").register({
 
 register({
   ["<C-F>"] = {
-    bind("ssr", "open"),
+    -- bind("ssr", "open"),
+    bind("spectre", "toggle"),
     "search/replace",
   },
   v = {
     name = "visual",
   },
-  K = bind("rust-tools.hover_actions", "hover_actions"):with_desc("lsp: hover"),
+  K = bind("rust-tools.hover_actions", "hover_actions"):with_desc(
+    "lsp: hover"
+  ),
 }, modes.non_editing)
 
 require("which-key").register({

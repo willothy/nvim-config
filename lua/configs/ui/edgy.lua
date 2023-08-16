@@ -6,7 +6,7 @@ local function get_size()
       return math.floor(n)
     end
   end
-  return round(vim.o.lines / 4)
+  return round(vim.o.lines / 3.5)
 end
 
 require("edgy").setup({
@@ -165,6 +165,22 @@ require("edgy").setup({
       filter = function(buf, win)
         return vim.bo[buf].buftype == "help"
           and vim.api.nvim_win_get_config(win).zindex == nil
+      end,
+      size = { height = get_size },
+    },
+    {
+      ft = "spectre_panel",
+      title = "Spectre",
+      wo = {
+        number = false,
+        relativenumber = false,
+        signcolumn = "no",
+      },
+      filter = function(_, win)
+        if vim.api.nvim_win_get_config(win).zindex == nil then
+          vim.api.nvim_win_set_cursor(win, { 1, 0 })
+          return true
+        end
       end,
       size = { height = get_size },
     },
