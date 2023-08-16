@@ -53,7 +53,6 @@ end
 function Scrollbar:show()
   if not self.visible then
     self.visible = true
-    -- self.bar = self:_open_win({ normal = self.opts.hl_group.bar })
     self.thumb = self:_open_win({ normal = self.opts.hl_group.thumb }, true)
   end
   self:update()
@@ -62,13 +61,6 @@ end
 function Scrollbar:hide()
   if self.visible then
     self.visible = false
-    -- local bar = self.bar
-    -- if bar then
-    --   pcall(vim.api.nvim_buf_delete, bar.bufnr, { force = true })
-    --   pcall(vim.api.nvim_win_close, bar.winnr, true)
-    --   self.bar = nil
-    -- end
-
     local thumb = self.thumb
     if thumb then
       pcall(vim.api.nvim_buf_delete, thumb.bufnr, { force = true })
@@ -96,11 +88,7 @@ local function win_buf_height(win)
 end
 
 function Scrollbar:update()
-  if
-    vim.api.nvim_win_is_valid(self.winnr) == false
-    -- or vim.api.nvim_get_current_tabpage()
-    --   ~= vim.api.nvim_win_get_tabpage(self.winnr)
-  then
+  if vim.api.nvim_win_is_valid(self.winnr) == false then
     return self:hide()
   end
 
@@ -138,13 +126,6 @@ function Scrollbar:update()
       vim.tbl_deep_extend("force", vim.api.nvim_win_get_config(win), opts or {})
     vim.api.nvim_win_set_config(win, opts)
   end
-  -- win_apply_config(self.bar.winnr, {
-  --   height = dim.height,
-  --   width = 1,
-  --   col = dim.col + dim.width - 1,
-  --   row = dim.row,
-  --   zindex = zindex + 1,
-  -- })
 
   local thumb_height = math.floor(dim.height * dim.height / buf_height + 0.5)
   thumb_height = math.max(1, thumb_height)
@@ -207,7 +188,7 @@ function ScrollBarManager.update()
         ScrollBarManager.bars[win] = Scrollbar:new(
           vim.tbl_deep_extend(
             "force",
-            ScrollBarManager.options or {},
+            ScrollBarManager.options,
             { winnr = win }
           )
         )

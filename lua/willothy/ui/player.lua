@@ -1,138 +1,39 @@
+local Layout = require("nui.layout")
 local NuiLine = require("nui.line")
 local NuiText = require("nui.text")
 local Popup = require("nui.popup")
-local Layout = require("nui.layout")
+
+local playerctl = require("willothy.util.playerctl")
+
+local ns = vim.api.nvim_create_namespace("nvim_media_ctrl")
 
 local popup_cfg = {
   border = "single",
   focusable = false,
 }
 
-local empty_cfg = {
-  focusable = false,
-  border = "none",
-}
-
-local prev_btn = Popup(popup_cfg)
-local next_btn = Popup(popup_cfg)
-
-local play_btn = Popup(popup_cfg)
-
 local view = Popup(popup_cfg)
 
-local empty = Popup(empty_cfg)
-
-local layout = Layout(
-  {
-    relative = "editor",
-    position = {
-      row = 1,
-      col = vim.o.columns - 40,
-    },
-    size = {
-      width = 40,
-      height = 10,
-    },
+local layout = Layout({
+  relative = "editor",
+  position = {
+    row = 2,
+    col = vim.o.columns - 40 - 2,
   },
-  Layout.Box({
-    Layout.Box(view, { size = { width = "100%", height = 7 } }),
-    Layout.Box({
-      Layout.Box(prev_btn, { size = "14%" }),
-      Layout.Box(play_btn, { size = "14%" }),
-      Layout.Box(next_btn, { size = "14%" }),
-      Layout.Box(empty, { grow = 1 }),
-    }, { dir = "row", size = { height = 3 } }),
-  }, { dir = "col" })
-)
+  size = {
+    width = 40,
+    height = 10,
+  },
+  zindex = 100,
+}, { Layout.Box(view, { size = { width = "100%", height = 7 } }) })
 
 local Player = {}
-
-local playerctl = {}
-
-function playerctl.track(fn)
-  local fmt = vim.json.encode({
-    artist = "{{ artist }}",
-    album = "{{ album }}",
-    title = "{{ title }}",
-    length = "{{ mpris:length }}",
-    id = "{{ mpris:track }}",
-  })
-  vim.system(
-    { "playerctl", "metadata", "--format", fmt },
-    { text = true },
-    vim.schedule_wrap(function(res)
-      local code, out, err = res.code, res.stdout, res.stderr
-
-      if code == 0 and out then
-        fn(vim.json.decode(out))
-      elseif code ~= 0 then
-        vim.notify(err, "error")
-      end
-    end)
-  )
-end
-
-function playerctl.status(fn)
-  vim.system(
-    { "playerctl", "status" },
-    { text = true },
-    vim.schedule_wrap(function(res)
-      local code, out, err = res.code, res.stdout, res.stderr
-
-      if code == 0 and out then
-        fn(out)
-      elseif code ~= 0 then
-        vim.notify(err, "error")
-      end
-    end)
-  )
-end
-
-function playerctl.position(fn)
-  vim.system(
-    { "playerctl", "position" },
-    { text = true },
-    vim.schedule_wrap(function(res)
-      local code, out, err = res.code, res.stdout, res.stderr
-
-      if code == 0 and out then
-        out = out:gsub("%s+$", ""):gsub("%..*$", "")
-        fn(tonumber(out))
-      elseif code ~= 0 then
-        vim.notify(err, "error")
-      end
-    end)
-  )
-end
-
-function playerctl.play()
-  vim.system({ "playerctl", "play" }, {})
-end
-
-function playerctl.pause()
-  vim.system({ "playerctl", "pause" }, {})
-end
-
-function playerctl.stop()
-  vim.system({ "playerctl", "stop" }, {})
-end
-
-function playerctl.play_pause()
-  vim.system({ "playerctl", "play-pause" }, {})
-end
-
-function playerctl.next()
-  vim.system({ "playerctl", "next" }, {})
-end
-
-function playerctl.previous()
-  vim.system({ "playerctl", "previous" }, {})
-end
 
 function Player.setup()
   if Player.ready then
     Player.cleanup()
   end
+
   Player.track = {
     title = "",
     artist = "",
@@ -142,6 +43,47 @@ function Player.setup()
   }
   Player.position = 0
   Player.playing = false
+
+  local commands = {
+    PlayerToggle = {
+      function()
+        if layout._.mounted then
+          Player.hide()
+        else
+          Player.show()
+        end
+      end,
+      { nargs = 0 },
+    },
+    PlayerPlayPause = {
+      playerctl.play_pause,
+      { nargs = 0 },
+    },
+    PlayerPlay = {
+      playerctl.play,
+      { nargs = 0 },
+    },
+    PlayerPause = {
+      playerctl.pause,
+      { nargs = 0 },
+    },
+    PlayerNext = {
+      playerctl.next,
+      { nargs = 0 },
+    },
+    PlayerPrevious = {
+      playerctl.previous,
+      { nargs = 0 },
+    },
+  }
+
+  -- stylua: ignore start
+  vim.iter(commands)
+    :map(function(name, cmd)
+      return name, unpack(cmd)
+    end)
+    :each(vim.api.nvim_create_user_command)
+  -- stylua: ignore end
 end
 
 function Player.start_timer()
@@ -165,25 +107,10 @@ function Player.cleanup()
     end
     Player.timer = nil
   end
-  if Player.win then
-    if vim.api.nvim_win_is_valid(Player.win) then
-      vim.api.nvim_win_close(Player.win, true)
-    end
-    Player.win = nil
-  end
-  if Player.buf then
-    if vim.api.nvim_buf_is_valid(Player.buf) then
-      vim.api.nvim_buf_delete(Player.buf, { force = true })
-    end
-    Player.buf = nil
-  end
-  Player.position = 0
-  Player.playing = false
 end
 
 function Player.update()
   local n_done = 0
-  local ns = vim.api.nvim_create_namespace("nvim_media_ctrl")
   local function done()
     if n_done == 3 then
       local title = NuiLine({ NuiText(Player.track.title or "", "Special") })
@@ -235,41 +162,47 @@ function Player.update()
         NuiText(len_text, "Comment"),
       })
 
+      local PROGRESS_MAX = 40 - 3
+
       local progress_bar_txt = ""
 
       local progress_pct = Player.position / (Player.track.length / 1000000)
-      local progress_len = math.floor(40 * progress_pct)
+      local progress_len = math.floor(PROGRESS_MAX * progress_pct)
 
-      progress_bar_txt = string.rep("=", progress_len - 1) .. ">"
+      if progress_len + 1 >= PROGRESS_MAX then
+        progress_bar_txt = string.rep("=", progress_len - 1) .. "|"
+      else
+        progress_bar_txt = string.rep("=", progress_len - 1) .. ">"
+      end
 
       local progress_bar = NuiLine({
-        NuiText("[", "Keyword"),
+        Player.playing and NuiText("", "Keyword")
+          or NuiText("", "Keyword"),
+        NuiText(" "),
         NuiText(progress_bar_txt, "Comment"),
-        NuiText(string.rep(" ", 40 - progress_len - 4)),
-        NuiText("]", "Keyword"),
+        NuiText(string.rep(" ", math.max(0, PROGRESS_MAX - progress_len))),
+        NuiText(" "),
       })
 
       local blank = NuiLine({ NuiText("") })
 
-      if Player.buf and vim.api.nvim_buf_is_valid(Player.buf) then
-        title:render(Player.buf, ns, 1)
-        info:render(Player.buf, ns, 2)
+      title:render(view.bufnr, ns, 1)
+      info:render(view.bufnr, ns, 2)
 
-        blank:render(Player.buf, ns, 3)
+      blank:render(view.bufnr, ns, 3)
 
-        progress:render(Player.buf, ns, 4)
-        progress_bar:render(Player.buf, ns, 5)
-      end
+      progress:render(view.bufnr, ns, 4)
+      progress_bar:render(view.bufnr, ns, 5)
     end
   end
 
   playerctl.status(function(status)
+    status = status:gsub("%s+$", ""):gsub("^%s+", "")
     Player.playing = status == "Playing"
     n_done = n_done + 1
     done()
   end)
   playerctl.track(function(track)
-    track.length = tonumber(track.length)
     Player.track = track
     n_done = n_done + 1
     done()
@@ -286,33 +219,13 @@ function Player.show()
     return
   end
   layout:mount()
-  if Player.buf == nil or not vim.api.nvim_buf_is_valid(Player.buf) then
-    -- Player.buf = vim.api.nvim_create_buf(false, true)
-    Player.buf = view.bufnr
-  end
   Player.update()
-
-  -- local width = 40
-  -- local height = 5
-
-  -- local config = {
-  --   relative = "editor",
-  --   row = 1,
-  --   col = vim.o.columns - width,
-  --   width = width,
-  --   height = height,
-  --   style = "minimal",
-  --   border = "single",
-  -- }
-  -- Player.win = layout.winid -- vim.api.nvim_open_win(Player.buf, false, config)
   Player.start_timer()
 end
 
 function Player.hide()
-  if Player.win and vim.api.nvim_win_is_valid(Player.win) then
-    vim.api.nvim_win_close(Player.win, true)
-    Player.win = nil
-  end
+  layout:unmount()
+  Player.cleanup()
 end
 
 return Player

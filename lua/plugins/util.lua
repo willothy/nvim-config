@@ -217,9 +217,4 @@ return {
     end,
     event = "CmdlineEnter",
   },
-  -- {
-  --   "levouh/tint.nvim",
-  --   config = true,
-  --   event = "User ExtraLazy",
-  -- },
 }

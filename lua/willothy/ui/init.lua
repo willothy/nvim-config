@@ -9,6 +9,6 @@ return {
         thumb = "ScrollBar",
       },
     })
-    -- require("willothy.ui.player").setup()
+    require("willothy.ui.player").setup()
   end,
 }

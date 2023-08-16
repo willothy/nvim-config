@@ -1,7 +1,7 @@
 return {
   {
     "willothy/nvim-cokeline",
-    dir = "~/projects/lua/cokeline/",
+    -- dir = "~/projects/lua/cokeline/",
     config = function()
       require("configs.status.cokeline")
     end,
