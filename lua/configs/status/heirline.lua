@@ -2,18 +2,7 @@ local p = require("minimus.palette").hex
 local icons = require("willothy.util.icons")
 
 local conditions = require("heirline.conditions")
-local get_hex = require("willothy.util.hl").fetch_attr
-
-local highlights = {
-  Normal = {
-    fg = get_hex("Normal", "fg"),
-    bg = get_hex("Normal", "bg"),
-  },
-  TabLine = {
-    fg = get_hex("TabLine", "fg"),
-    bg = get_hex("TabLine", "bg"),
-  },
-}
+local get_hex = require("willothy.util.hl").get
 
 -- selene: allow(unused_variable)
 local A = function(self)
@@ -24,31 +13,34 @@ local A = function(self)
 end
 
 local AB = function(self)
-  self.hl = function()
+  local o = vim.deepcopy(self)
+  o.hl = function()
     local col = require("willothy.ui.modenr").get_color()
     return {
       fg = col.fg,
-      bg = highlights.TabLine.bg,
+      bg = get_hex("TabLine", "bg"),
     }
   end
-  return self
+  return o
 end
 
 local B = function(self)
-  self.hl = function()
+  local o = vim.deepcopy(self)
+  o.hl = function()
     return {
-      fg = highlights.Normal.fg,
-      bg = highlights.TabLine.bg,
+      fg = get_hex("Normal", "fg"),
+      bg = get_hex("TabLine", "bg"),
     }
   end
-  return self
+  return o
 end
 
 local C = function(self)
-  self.hl = function()
-    return { fg = p.cool_gray, bg = p.none }
+  local o = vim.deepcopy(self)
+  o.hl = function()
+    return { fg = get_hex("TabLine", "fg"), bg = p.none }
   end
-  return self
+  return o
 end
 
 local Separator = {
@@ -77,52 +69,8 @@ local Space = setmetatable({
 local Mode = {
   AB(Separator.Left),
   B({
-    static = {
-      mode_names = {
-        n = "Normal",
-        no = "Normal?",
-        nov = "Normal?",
-        noV = "Normal?",
-        ["no\22"] = "Normal?",
-        niI = "I-Normal",
-        niR = "R-Normal",
-        niV = "V-Normal",
-        nt = "T-Normal",
-        v = "Visual",
-        vs = "Visual-S",
-        V = "V-Line",
-        Vs = "V-Line-S",
-        ["\22"] = "V-Block",
-        ["\22s"] = "V-Block-S",
-        s = "Select",
-        S = "S-Line",
-        ["\19"] = "S-Block",
-        i = "Insert",
-        ic = "C-Insert",
-        ix = "X-Insert",
-        R = "Replace",
-        Rc = "C-Replace",
-        Rx = "X-Replace",
-        Rv = "V-Replace",
-        Rvc = "VC-Replace",
-        Rvx = "VX-Replace",
-        c = "Command",
-        cv = "Vim Ex",
-        r = "...",
-        rm = "More",
-        ["r?"] = "?",
-        ["!"] = "!",
-        t = "Terminal",
-      },
-    },
-    init = function(self)
-      self.mode = vim.fn.mode(1) -- :h mode()
-    end,
-    provider = function(self)
-      if require("hydra.statusline").is_active() then
-        return require("hydra.statusline").get_name()
-      end
-      return self.mode_names[self.mode]
+    provider = function()
+      return require("willothy.ui.modenr").get_name()
     end,
     update = {
       "User",
@@ -139,6 +87,7 @@ local Mode = {
 
 local Location = {
   AB(Separator.Left),
+  B(Space),
   B({
     update = {
       "BufEnter",
@@ -155,14 +104,12 @@ local Location = {
       if not self.line then
         return ""
       end
-      local s = math.floor((self.line / self.maxline) * 100)
+      return math.floor((self.line / self.maxline) * 100)
         .. "%%/"
         .. string.format("%d:%d", self.maxline, self.col)
-      local width = s:len() + math.max(#tostring(self.col), 2)
-
-      return "%" .. width .. "=" .. s .. "%" .. width .. ")"
     end,
   }),
+  B(Space),
   AB(Separator.Right),
 }
 
@@ -218,6 +165,12 @@ local Env = function(var)
           self.val = os.getenv(var)
         end
         return (self.val and self.val ~= "") and self.val .. " " or ""
+      end,
+      condition = function(self)
+        if not self.init then
+          return true
+        end
+        return self.val ~= nil
       end,
       update = {
         "BufEnter",
@@ -279,14 +232,40 @@ local Devicon = {
 }
 
 local Harpoon = {
-  provider = function(self)
-    if self.nfiles == nil or self.nfiles == 0 then
-      return icons.misc.hook_disabled
-    elseif self.current == nil then
-      return icons.misc.hook_disabled .. " " .. self.nfiles
-    end
-    return icons.misc.hook .. " " .. self.current .. "/" .. self.nfiles
-  end,
+  {
+    fallthrough = false,
+    {
+      provider = icons.misc.hook,
+      condition = function(self)
+        return self.nfiles ~= nil and self.current ~= nil
+      end,
+      Space,
+    },
+    {
+      provider = icons.misc.hook_disabled,
+      Space,
+    },
+  },
+  {
+    condition = function(self)
+      return self.nfiles ~= nil and self.current ~= nil
+    end,
+    {
+      provider = function(self)
+        return self.current
+      end,
+    },
+    { provider = "/" },
+  },
+  {
+    provider = function(self)
+      return self.nfiles
+    end,
+    condition = function(self)
+      return self.nfiles ~= nil and self.nfiles > 0
+    end,
+    Space,
+  },
   on_click = {
     callback = function()
       local buf = vim.api.nvim_buf_get_name(0)
@@ -297,28 +276,20 @@ local Harpoon = {
   },
   update = {
     "User",
-    pattern = { "ExtraLazy", "UpdateHarpoonStatus" },
-    callback = function(self, ev)
+    pattern = {
+      "ExtraLazy",
+      "UpdateHarpoonStatus",
+      "UpdateHeirlineComponents",
+    },
+    callback = function(self)
       local harpoon = require("harpoon.mark")
       self.current = harpoon.get_current_index()
-      self.nfiles = harpoon.get_length()
-      if ev.event == "User" and ev.file == "ExtraLazy" then
-        vim.api.nvim_create_autocmd("BufEnter", {
-          callback = function()
-            if self.nfiles == nil then
-              return
-            end
-            vim.api.nvim_exec_autocmds(
-              "User",
-              { pattern = "UpdateHarpoonStatus" }
-            )
-          end,
-        })
+      if not self._init then
+        self.nfiles = harpoon.get_length()
         harpoon.on("changed", function()
-          vim.api.nvim_exec_autocmds("User", {
-            pattern = "UpdateHarpoonStatus",
-          })
+          self.nfiles = harpoon.get_length()
         end)
+        self._init = true
       else
         return true
       end
@@ -328,45 +299,25 @@ local Harpoon = {
 
 local Recording = (
   C({
-    provider = function()
-      if not package.loaded["NeoComposer"] then
-        return ""
-      end
-      return require("NeoComposer.ui").status_recording() .. " "
+    provider = function(self)
+      return self.status or ""
+    end,
+    condition = function()
+      return package.loaded["NeoComposer"]
     end,
     update = {
       "User",
-      pattern = { "ExtraLazy", "UpdateNeoComposerUI" },
-      callback = function(self, ev)
-        if ev.file == "ExtraLazy" then
-          self.ready = true
-          local function with_update(f, upvalues)
-            local env = getfenv(f)
-            local wrapped = function(a, b, c)
-              f(a, b, c)
-              vim.api.nvim_exec_autocmds(
-                "User",
-                { pattern = "UpdateNeoComposerUI" }
-              )
-            end
-            for i = #upvalues, 1, -1 do
-              debug.setupvalue(wrapped, i + 1, upvalues[i][2])
-            end
-            setfenv(wrapped, env)
-            return wrapped
-          end
-          require("NeoComposer")
-          local state = require("NeoComposer.macro")
-          for k, v in pairs(state) do
-            if type(v) == "function" then
-              local upvalues = require("willothy.util.debug").upvalues(v)
-              local f = with_update(v, upvalues)
-              state[k] = f
-            end
-          end
-        end
+      pattern = {
+        "ExtraLazy",
+        "NeoComposerRecordingSet",
+        "NeoComposerPlayingSet",
+        "NeoComposerDelaySet",
+      },
+      callback = function(self)
+        self.status = require("NeoComposer.ui").status_recording()
       end,
     },
+    Space,
   })
 )
 
@@ -383,105 +334,66 @@ local Git = (
     static = {
       fetch = function(self)
         self.status_dict = vim.b.gitsigns_status_dict
-        if not self.status_dict then
-          return ""
-        end
-        self.has_changes = self.status_dict.added ~= 0
-          or self.status_dict.removed ~= 0
-          or self.status_dict.changed ~= 0
-        self.added = function()
-          return self.status_dict.added or 0
-        end
-        self.removed = function()
-          return self.status_dict.removed or 0
-        end
-        self.modified = function()
-          return self.status_dict.changed or 0
-        end
+      end,
+      added = function(self)
+        return self.status_dict and self.status_dict.added or 0
+      end,
+      removed = function(self)
+        return self.status_dict and self.status_dict.removed or 0
+      end,
+      modified = function(self)
+        return self.status_dict and self.status_dict.changed or 0
       end,
     },
     {
-      -- git branch name
       provider = function(self)
-        if not self.status_dict then
-          vim.schedule(function()
-            self:fetch()
-          end)
-          return ""
-        end
         local head = self.status_dict.head
         if not head or head == "" then
           head = "<empty>"
         end
-        return string.format("%s %s ", icons.git.branch, head)
+        return string.format("%s %s", icons.git.branch, head)
       end,
-      hl = { fg = p.cool_gray },
-    },
-    {
-      -- git diff added
-      provider = function(self)
-        if not self.status_dict then
-          return ""
-        end
-        if self.added() > 0 then
-          return string.format("%s %s", icons.git.diff.added, self.added())
-            .. ((self.modified() > 0 or self.removed() > 0) and " " or "")
-        else
-          return ""
-        end
-      end,
-      hl = { fg = p.pale_turquoise },
-    },
-    {
-      -- git diff removed
-      provider = function(self)
-        if not self.status_dict then
-          return ""
-        end
-        if self.removed() > 0 then
-          return string.format("%s %s", icons.git.diff.removed, self.removed())
-            .. (self.modified() > 0 and " " or "")
-        else
-          return ""
-        end
-      end,
-      hl = { fg = p.red },
-    },
-    {
-      -- git diff changed
-      provider = function(self)
-        if not self.status_dict then
-          return ""
-        end
-        if self.modified() > 0 then
-          return string.format(
-            "%s %s",
-            icons.git.diff.modified,
-            self.modified()
-          )
-        else
-          return ""
-        end
-      end,
-      hl = { fg = p.lemon_chiffon },
-    },
-    {
       condition = function(self)
         return self.status_dict
+          and self.status_dict.head
+          and self.status_dict.head ~= ""
       end,
+      hl = { fg = p.cool_gray },
       Space,
     },
-  })
-)
-
--- selene: allow(unused_variable)
-local Filename = (
-  C({
-    provider = function(_self)
-      local filename = vim.fn.expand("%:t")
-      filename = filename == "" and "[No Name]" or filename
-      return filename
-    end,
+    {
+      provider = function(self)
+        return string.format("%s %s", icons.git.diff.added, self:added())
+      end,
+      condition = function(self)
+        return self:added() > 0
+      end,
+      -- hl = "DiffAdd",
+      hl = { fg = p.pale_turquoise },
+      Space,
+    },
+    {
+      provider = function(self)
+        return string.format("%s %s", icons.git.diff.removed, self:removed())
+      end,
+      condition = function(self)
+        return self:removed() > 0
+      end,
+      -- hl = { fg = p.red },
+      hl = "DiffDelete",
+      Space,
+    },
+    {
+      provider = function(self)
+        return string.format("%s %s", icons.git.diff.modified, self:modified())
+      end,
+      condition = function(self)
+        return self:modified() > 0
+      end,
+      -- hl = { fg = p.lemon_chiffon },
+      hl = "DiffChange",
+      Space,
+    },
   })
 )
 
@@ -507,6 +419,50 @@ local WorkDir = (
 )
 
 local Sesh = Env("SESH_NAME")
+
+-- selene: allow(unused_variable)
+local Progress = {
+  provider = function(self)
+    if self.running and self.client then
+      local msg = ""
+      if self.message then
+        msg = msg .. self.message .. " "
+      end
+      if self.percentage then
+        msg = msg .. "(" .. self.percentage .. "%%) "
+      end
+      msg = msg .. require("noice.util.spinners").spin("dots")
+      if self.client then
+        msg = msg .. " " .. self.client
+      end
+      return msg
+    end
+    return ""
+  end,
+  hl = { fg = "gray" },
+  update = {
+    "LspProgress",
+    callback = function(self, ev)
+      if self.cache == nil or self.queue == nil then
+        self.cache = {}
+        self.queue = {}
+      end
+      if ev.file == "begin" then
+        self.running = true
+        self.client = vim.lsp.get_client_by_id(ev.data.client_id).name
+        self.message = ""
+      elseif ev.file == "end" then
+        self.running = false
+        self.client = nil
+        self.message = ""
+      else
+        local data = ev.data.result.value
+        self.message = data.title
+        self.percentage = data.percentage
+      end
+    end,
+  },
+}
 
 local function Center(group)
   return {

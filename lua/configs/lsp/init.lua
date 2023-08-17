@@ -11,6 +11,7 @@ local function lsp_attach(client, bufnr)
   setmap("n", "<F2>", increname, { expr = true, desc = "rename" })
 
   require("lsp-format").on_attach(client)
+  require("lsp-status").on_attach(client)
 
   local ufo = require("ufo")
   if vim.api.nvim_buf_is_valid(bufnr) and not ufo.hasAttached(bufnr) then

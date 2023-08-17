@@ -36,7 +36,8 @@ return {
   { "mbbill/undotree", event = "VeryLazy" },
   { "famiu/bufdelete.nvim" },
   {
-    "ecthelionvi/NeoComposer.nvim",
+    "willothy/NeoComposer.nvim",
+    dir = "~/projects/lua/NeoComposer.nvim/",
     requires = { "kkharji/sqlite.lua" },
     event = "User ExtraLazy",
     opts = {

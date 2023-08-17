@@ -89,7 +89,15 @@ function M.hl(group)
 end
 
 function M.fetch_attr(group, attr)
-  return M.sanitize(M.hl(group))[attr]
+  return M.hl(group)[attr]
+end
+
+function M.get(group, attr)
+  group = M.hl(group)
+  if attr then
+    return group[attr]
+  end
+  return group
 end
 
 return M

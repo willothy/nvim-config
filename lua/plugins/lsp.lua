@@ -1,6 +1,7 @@
 return {
   {
     "j-hui/fidget.nvim",
+    enabled = false,
     branch = "legacy",
     config = function()
       require("configs.lsp.fidget")
@@ -86,5 +87,12 @@ return {
       require("configs.lsp.diagflow")
     end,
     event = "LspAttach",
+  },
+  {
+    "nvim-lua/lsp-status.nvim",
+    event = "LspAttach",
+    config = function()
+      require("lsp-status").config({})
+    end,
   },
 }

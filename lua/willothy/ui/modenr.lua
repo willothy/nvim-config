@@ -45,7 +45,7 @@ function Modenr.get_color(evt)
 end
 
 function Modenr.get_name()
-  if hydra.is_active() then
+  if _G.Hydra and hydra.is_active() then
     return hydra.get_name()
   else
     return mode_names[api.nvim_get_mode().mode] or "Normal"
