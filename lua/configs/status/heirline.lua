@@ -8,8 +8,8 @@ local function handler(f, name)
   }
 end
 
-local utils = require("heirline.utils")
 local conditions = require("heirline.conditions")
+local utils = require("heirline.utils")
 local get_hex = require("willothy.util.hl").fetch_attr
 
 local highlights = {
@@ -263,12 +263,14 @@ local Copilot = Component({
       copilot_init = true
       return
     elseif not self.ready then
-      require("copilot.api").register_status_notification_handler(function(data)
-        self.status = data or {}
-        if self.status.status == nil or self.status.status == "" then
-          self.status.status = "InProgress"
+      require("copilot.api").register_status_notification_handler(
+        function(data)
+          self.status = data or {}
+          if self.status.status == nil or self.status.status == "" then
+            self.status.status = "InProgress"
+          end
         end
-      end)
+      )
       self.ready = true
     end
 
@@ -627,8 +629,8 @@ vim.defer_fn(function()
   vim.api.nvim_create_autocmd({
     "DirChanged",
     "UiEnter",
-    "BufEnter",
     "ModeChanged",
+    "BufEnter",
     "TermEnter",
   }, {
     group = vim.api.nvim_create_augroup(

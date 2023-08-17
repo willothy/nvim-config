@@ -54,6 +54,7 @@
   "keys.nvim": { "branch": "main", "commit": "5c0dbaf82ad482f7b9c36e565f247bc48d6604cd" },
   "keyseer.nvim": { "branch": "main", "commit": "07094f89f4289a491bbadc8eb5f594ab3a2d8d46" },
   "lazy.nvim": { "branch": "main", "commit": "dac844ed617dda4f9ec85eb88e9629ad2add5e05" },
+  "lazyline.nvim": { "branch": "main", "commit": "0b869f93b0d66ce7a77f7f91d2269f28a480f6f0" },
   "legendary.nvim": { "branch": "master", "commit": "3db15cae08d63bab40d0c38474e368f97414f090" },
   "live-command.nvim": { "branch": "main", "commit": "d460067d47948725a6f25b20f31ea8bbfdfe4622" },
   "lsp-format.nvim": { "branch": "master", "commit": "ca0df5c8544e51517209ea7b86ecc522c98d4f0a" },

@@ -9,10 +9,11 @@ return {
   },
   {
     "willothy/lazyline.nvim",
-    enabled = false,
+    dir = "~/projects/lua/lazyline/",
     config = function()
       require("configs.status.lazyline")
     end,
+    enabled = false,
     event = "UiEnter",
   },
   {
