@@ -38,5 +38,7 @@ vim.api.nvim_create_autocmd("User", {
 
     -- setup float dragging and modenr
     require("willothy.ui").setup()
+
+    require("willothy.util.fs").hijack_netrw()
   end,
 })

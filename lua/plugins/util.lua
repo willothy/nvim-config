@@ -22,8 +22,6 @@ return {
     "jackMort/ChatGPT.nvim",
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
     },
     cmd = {
       "ChatGPT",
@@ -57,10 +55,6 @@ return {
   },
   {
     "Dhanus3133/LeetBuddy.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
-    },
     cmd = {
       "LBQuestions",
       "LBQuestion",
@@ -156,7 +150,9 @@ return {
   },
   {
     "stevearc/oil.nvim",
-    config = true,
+    opts = {
+      default_file_explorer = false,
+    },
     cmd = "Oil",
   },
   {
@@ -216,5 +212,14 @@ return {
       require("configs.editor.floating-help")
     end,
     event = "CmdlineEnter",
+  },
+  {
+    "echasnovski/mini.misc",
+    config = true,
+  },
+  {
+    "jokajak/keyseer.nvim",
+    config = true,
+    cmd = "KeySeer",
   },
 }

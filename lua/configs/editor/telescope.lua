@@ -14,7 +14,7 @@ local function add_to_harpoon(prompt_bufnr)
   end
   local mark = require("harpoon.mark")
   for _, file in ipairs(files) do
-    mark.add_file(file.filename)
+    mark.toggle_file(file.filename)
   end
   if #files == 1 then
     local path = files[0] ~= nil and files[0].filename
@@ -32,55 +32,45 @@ local function create_and_add_to_harpoon(prompt_bufnr)
   local fb_actions = telescope.extensions.file_browser.actions
   local path = fb_actions.create(prompt_bufnr)
   if path ~= nil then
-    require("harpoon.mark").add_file(path)
+    require("harpoon.mark").toggle_file(path)
     print("Added " .. get_filename(path) .. " to harpoon")
   end
 end
 
-local t = require("telescope")
-local undo = {
-  use_delta = true,
-  side_by_side = vim.o.columns > side_by_side_min,
-  entry_format = "$STAT, $TIME",
-  layout_strategy = "bottom_pane",
-  sorting_strategy = "ascending",
-  results_title = false,
-  layout_config = {
-    preview_width = vim.o.columns > side_by_side_min and 0.75 or 0.65,
-    preview_cutoff = 1,
-    height = 0.8,
-    width = 0.9,
-  },
-  border = true,
+local my_theme = require("telescope.themes").get_ivy({
+  layout_strategy = "flex",
+  prompt_title = "",
+  prompt_prefix = "",
+  preview_title = "",
   borderchars = {
-    prompt = { "─", " ", " ", " ", "─", "─", " ", " " },
-    results = { " " },
     preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+    prompt = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+    results = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
   },
-  mappings = {
-    i = {
-      ["<cr>"] = require("telescope-undo.actions").yank_additions,
-      ["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
-      ["<C-cr>"] = require("telescope-undo.actions").restore,
-    },
-  },
-}
+})
+local t = require("telescope")
+
+local function with(o, theme)
+  return vim.tbl_deep_extend("keep", o, theme)
+end
+
 t.setup({
   pickers = {
     find_files = {
       layout_config = {
         preview_cutoff = 1,
       },
-      theme = "ivy",
+      theme = my_theme,
     },
+  },
+  defaults = {
+    theme = my_theme,
   },
   extensions = {
     ["ui-select"] = {
       require("telescope.themes").get_cursor({}),
     },
-    file_browser = {
-      theme = "ivy",
-      hijack_netrw = true,
+    file_browser = with({
       mappings = {
         ["i"] = {
           ["<C-a>"] = add_to_harpoon,
@@ -88,11 +78,24 @@ t.setup({
         },
         ["n"] = {
           ["c"] = create_and_add_to_harpoon,
-          ["a"] = add_to_harpoon,
+          ["<C-a>"] = add_to_harpoon,
         },
       },
-    },
-    undo = undo,
+    }, my_theme),
+    undo = with({
+      use_delta = true,
+      side_by_side = vim.o.columns > side_by_side_min,
+      entry_format = "$STAT, $TIME",
+      layout_strategy = "bottom_pane",
+      sorting_strategy = "ascending",
+      mappings = {
+        i = {
+          ["<cr>"] = require("telescope-undo.actions").yank_additions,
+          ["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
+          ["<C-cr>"] = require("telescope-undo.actions").restore,
+        },
+      },
+    }, my_theme),
     macros = {
       theme = "ivy",
     },
@@ -110,55 +113,41 @@ t.setup({
       selected_browser = "brave",
       url_open_command = "xdg-open",
     },
-    frecency = {
+    frecency = with({
       ignore_patterns = { "*.git/*", "*/tmp/*", "/home/willothy/.dotfiles/*" },
       show_scores = true,
       workspaces = {
         ["dotfiles"] = "/home/willothy/.config/",
         ["projects"] = "/home/willothy/projects/",
       },
-    },
+    }, my_theme),
   },
 })
 
--- don't need any of these right away
-local function defer(extension)
-  vim.defer_fn(function()
-    require("telescope").load_extension(extension)
-  end, 1000)
-end
+local extensions = {
+  "menufacture",
+  "ui-select",
+  "fzf",
+  "file_browser",
+  "projects",
+  "noice",
+  "macros",
+  "scope",
+  "yank_history",
+  "undo",
+  "heading",
+  "attempt",
+  "bookmarks",
+  "frecency",
+}
 
-defer("menufacture")
-defer("fzf")
-defer("file_browser")
-defer("projects")
-defer("noice")
-defer("macros")
-defer("scope")
-defer("yank_history")
-defer("undo")
-
-defer("ui-select")
-defer("heading")
-defer("attempt")
-defer("bookmarks")
-defer("frecency")
+vim.iter(extensions):each(t.load_extension)
 
 vim.api.nvim_create_autocmd("BufWinLeave", {
   callback = function(ev)
     if vim.bo[ev.buf].filetype == "TelescopePrompt" then
       vim.cmd("silent! stopinsert!")
     end
-  end,
-})
-
-vim.api.nvim_create_autocmd("VimResized", {
-  callback = function(_ev)
-    local width = vim.api.nvim_get_option("columns")
-    undo.side_by_side = width > side_by_side_min
-    undo.layout_config.preview_width = vim.o.columns > side_by_side_min and 0.75
-      or 0.65
-    require("telescope._extensions.undo").setup(undo)
   end,
 })
 

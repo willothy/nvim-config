@@ -175,7 +175,6 @@ return {
     "mrjones2014/legendary.nvim",
     dependencies = {
       "kkharji/sqlite.lua",
-      "nvim-telescope/telescope.nvim",
     },
     cmd = "Legendary",
     config = function()
@@ -184,6 +183,11 @@ return {
   },
   {
     "nvim-telescope/telescope.nvim",
+    -- dir = "~/projects/lua/telescope.nvim/",
+    config = function()
+      require("configs.editor.telescope")
+    end,
+    cmd = "Telescope",
     dependencies = {
       "nvim-telescope/telescope-ui-select.nvim",
       "nvim-telescope/telescope-file-browser.nvim",
@@ -193,19 +197,11 @@ return {
       "dhruvmanila/browser-bookmarks.nvim",
       "nvim-telescope/telescope-frecency.nvim",
     },
-    config = function()
-      require("configs.editor.telescope")
-    end,
-    cmd = "Telescope",
     -- event = "User ExtraLazy",
   },
   {
     "nvim-telescope/telescope-fzf-native.nvim",
     build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-  },
-  {
-    "nvim-telescope/telescope-frecency.nvim",
-    dependencies = { "kkharji/sqlite.lua" },
   },
   {
     "stevearc/resession.nvim",

@@ -64,7 +64,9 @@ local commands = {
       else
         target = vim.fn.getcwd(-1)
       end
-      require("telescope").extensions.file_browser.file_browser({ cwd = target })
+      require("telescope").extensions.file_browser.file_browser({
+        cwd = target,
+      })
     end,
     nargs = "?",
     desc = "Browse the provided directory or the current directory",
@@ -135,6 +137,12 @@ local commands = {
       vim.api.nvim_set_current_buf(buf)
     end,
     desc = "Open a scratch buffer",
+  },
+  BrowserSwitch = {
+    function()
+      require("willothy.util.fs").set_browser()
+    end,
+    desc = "Select a browser",
   },
 }
 

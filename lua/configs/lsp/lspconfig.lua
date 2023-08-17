@@ -102,6 +102,9 @@ require("mason-lspconfig").setup({
             "wezterm.nvim",
             "rust-tools.nvim",
             "nui.nvim",
+            "bufdelete.nvim",
+            "mini.files",
+            "harpoon",
           },
           runtime = true,
           types = true,
@@ -184,7 +187,9 @@ vim.diagnostic.config({
           function()
             return string.format(
               "diagnostics: %s %s",
-              require("nvim-web-devicons").get_icon_by_filetype(vim.bo.filetype),
+              require("nvim-web-devicons").get_icon_by_filetype(
+                vim.bo.filetype
+              ),
               vim.bo.filetype
             )
           end,

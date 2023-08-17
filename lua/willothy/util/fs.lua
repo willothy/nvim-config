@@ -1,13 +1,88 @@
 local M = {}
 
+M.browsers = {
+  telescope = function(target)
+    require("telescope").extensions.file_browser.file_browser({ cwd = target })
+  end,
+  mini = function(target)
+    require("mini.files").open(target)
+  end,
+  oil = function(target)
+    require("oil").open(target)
+  end,
+}
+
+M.browser = M.browsers.telescope
+
+function M.hijack_netrw()
+  local netrw_bufname
+
+  pcall(vim.api.nvim_clear_autocmds, { group = "FileExplorer" })
+  vim.api.nvim_create_autocmd("BufEnter", {
+    group = vim.api.nvim_create_augroup(
+      "willothy.file-browsers",
+      { clear = true }
+    ),
+    pattern = "*",
+    callback = function()
+      vim.schedule(function()
+        if vim.bo[0].filetype == "netrw" then
+          return
+        end
+        local bufname = vim.api.nvim_buf_get_name(0)
+        if vim.fn.isdirectory(bufname) == 0 then
+          _, netrw_bufname = pcall(vim.fn.expand, "#:p:h")
+          return
+        end
+
+        -- prevents reopening of file-browser if exiting without selecting a file
+        if netrw_bufname == bufname then
+          netrw_bufname = nil
+          return
+        else
+          netrw_bufname = bufname
+        end
+
+        -- ensure no buffers remain with the directory name
+        vim.api.nvim_buf_set_option(0, "bufhidden", "wipe")
+
+        M.browse(vim.fn.expand("%:p:h"))
+      end)
+    end,
+    desc = "telescope-file-browser.nvim replacement for netrw",
+  })
+end
+
+function M.set_browser()
+  require("telescope").load_extension("ui-select")
+
+  local options = vim
+    .iter(M.browsers)
+    :map(function(name)
+      return name
+    end)
+    :totable()
+  vim.ui.select(options, {
+    prompt = "Browsers",
+  }, function(item)
+    M.browser = M.browsers[item] or M.browser
+  end)
+end
+
 ---@param target string | fun():string
-function M.browse(target)
+function M.browse(target, browser)
   if target == nil then
     target = vim.fn.getcwd()
   elseif type(target) == "function" then
     target = target()
   end
-  require("telescope").extensions.file_browser.file_browser({ cwd = target })
+  local browse
+  if browser then
+    browse = M.browsers[browser] or M.browser
+  else
+    browse = M.browser
+  end
+  browse(target)
 end
 
 function M.is_root(pathname)
