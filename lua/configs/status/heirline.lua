@@ -420,55 +420,8 @@ local WorkDir = (
 
 local Sesh = Env("SESH_NAME")
 
--- selene: allow(unused_variable)
-local Progress = {
-  provider = function(self)
-    if self.running and self.client then
-      local msg = ""
-      if self.message then
-        msg = msg .. self.message .. " "
-      end
-      if self.percentage then
-        msg = msg .. "(" .. self.percentage .. "%%) "
-      end
-      msg = msg .. require("noice.util.spinners").spin("dots")
-      if self.client then
-        msg = msg .. " " .. self.client
-      end
-      return msg
-    end
-    return ""
-  end,
-  hl = { fg = "gray" },
-  update = {
-    "LspProgress",
-    callback = function(self, ev)
-      if self.cache == nil or self.queue == nil then
-        self.cache = {}
-        self.queue = {}
-      end
-      if ev.file == "begin" then
-        self.running = true
-        self.client = vim.lsp.get_client_by_id(ev.data.client_id).name
-        self.message = ""
-      elseif ev.file == "end" then
-        self.running = false
-        self.client = nil
-        self.message = ""
-      else
-        local data = ev.data.result.value
-        self.message = data.title
-        self.percentage = data.percentage
-      end
-    end,
-  },
-}
-
 local function Center(group)
   return {
-    {
-      provider = "%<",
-    },
     Align,
     group,
     Align,
@@ -480,9 +433,9 @@ local function Right(group)
     {
       provider = function()
         return "%0"
-          .. math.max(0, math.floor(vim.o.columns / 2) - 10)
+          .. math.floor(vim.o.columns / 2) - 10
           .. "."
-          .. math.floor(vim.o.columns / 2)
+          .. math.floor(vim.o.columns / 2) - 10
           .. "("
       end,
     },
@@ -497,7 +450,11 @@ local Left = function(group)
   return {
     {
       provider = function()
-        return "%-0" .. math.floor(vim.o.columns / 2) - 10 .. "("
+        return "%-"
+          .. math.floor(vim.o.columns / 2) - 10
+          .. "."
+          .. math.floor(vim.o.columns / 2) - 10
+          .. "("
       end,
     },
     group,

@@ -1,4 +1,10 @@
 require("noice").setup({
+  status = {
+    progress = {
+      event = "lsp",
+      kind = "progress",
+    },
+  },
   presets = {
     long_message_to_split = true,
     inc_rename = true,
@@ -18,7 +24,7 @@ require("noice").setup({
         col = "50%",
       },
       border = {
-        style = "rounded",
+        style = "single",
         padding = { 0, 0 },
       },
       filter_options = {},
@@ -67,7 +73,7 @@ require("noice").setup({
       ["cmp.entry.get_documentation"] = true,
     },
     progress = {
-      enabled = false,
+      enabled = true,
       view = "mini",
     },
     signature = {
@@ -97,12 +103,16 @@ require("noice").setup({
         pattern = { "^:%s*pyt?h?o?n?%s+", "^:%s*py?t?h?o?n%s*=%s*" },
         icon = "󰌠",
         lang = "python",
+        title = "python",
       },
     },
   },
   popupmenu = {
     enabled = true,
     backend = "nui",
+    win_options = {
+      winbar = "bruh",
+    },
   },
   messages = {
     enabled = true, -- enables the Noice messages UI
