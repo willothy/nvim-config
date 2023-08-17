@@ -10,6 +10,8 @@ globals:
     any: true
   coroutine.isyieldable:
     any: true
+  willothy:
+    any: true
 
   assert:
     args:

@@ -1,7 +1,7 @@
-local keymap = require("willothy.util.keymap")
+local keymap = willothy.keymap
 local register, modes = keymap.register, keymap.modes
 
-local telescope = require("willothy.util").telescope
+local telescope = willothy.fn.telescope
 
 register({
   name = "find",

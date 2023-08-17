@@ -1,5 +1,5 @@
-local telescope = require("willothy.util").telescope
-local Hydra = require("willothy.hydras").Hydra
+local telescope = willothy.fn.telescope
+local Hydra = require("willothy.modules.hydras").Hydra
 
 return Hydra(function(config)
   ---@type Lines

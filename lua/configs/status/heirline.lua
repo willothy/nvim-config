@@ -1,13 +1,13 @@
 local p = require("minimus.palette").hex
-local icons = require("willothy.util.icons")
+local icons = willothy.icons
 
 local conditions = require("heirline.conditions")
-local get_hex = require("willothy.util.hl").get
+local get_hex = willothy.hl.get
 
 -- selene: allow(unused_variable)
 local A = function(self)
   self.hl = function()
-    return require("willothy.ui.modenr").get_color()
+    return willothy.utils.mode.get_color()
   end
   return self
 end
@@ -15,7 +15,7 @@ end
 local AB = function(self)
   local o = vim.deepcopy(self)
   o.hl = function()
-    local col = require("willothy.ui.modenr").get_color()
+    local col = willothy.utils.mode.get_color()
     return {
       fg = col.fg,
       bg = get_hex("TabLine", "bg"),
@@ -70,7 +70,7 @@ local Mode = {
   AB(Separator.Left),
   B({
     provider = function()
-      return require("willothy.ui.modenr").get_name()
+      return willothy.utils.mode.get_name()
     end,
     update = {
       "User",
@@ -404,7 +404,7 @@ local WorkDir = (
     end,
     on_click = {
       callback = function(self)
-        require("willothy.util.fs").browse(self.cwd)
+        willothy.fs.browse(self.cwd)
       end,
       name = "__heirline_workdir_click",
     },

@@ -1,4 +1,4 @@
-local Hydra = require("willothy.hydras").Hydra
+local Hydra = require("willothy.modules.hydras").Hydra
 
 local git_hydra_hint = [[
  _J_: next hunk   _s_: stage hunk        _d_: show deleted   _b_: blame line
@@ -8,9 +8,7 @@ local git_hydra_hint = [[
  ^ ^              _<Enter>_: Neogit           _q_, _<Esc>_: exit
 ]]
 
-local gitsigns = require("gitsigns")
-
-return Hydra({
+local Git = Hydra({
   name = "Git",
   shortname = "hydra",
   hint = git_hydra_hint,
@@ -22,9 +20,11 @@ return Hydra({
       position = "bottom-left",
     },
     on_enter = function()
+      local gitsigns = require("gitsigns")
       gitsigns.toggle_linehl(true)
     end,
     on_exit = function()
+      local gitsigns = require("gitsigns")
       gitsigns.toggle_linehl(false)
     end,
   },
@@ -59,7 +59,11 @@ return Hydra({
       end,
       { expr = true, desc = "prev hunk" },
     },
-    { "s", ":Gitsigns stage_hunk<CR>", { silent = true, desc = "stage hunk" } },
+    {
+      "s",
+      ":Gitsigns stage_hunk<CR>",
+      { silent = true, desc = "stage hunk" },
+    },
     {
       "u",
       function()
@@ -125,3 +129,5 @@ return Hydra({
     { "<Esc>", nil, { exit = true, nowait = true, desc = "exit" } },
   },
 })
+
+return Git

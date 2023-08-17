@@ -1,4 +1,4 @@
-local Hydra = require("willothy.hydras").Hydra
+local Hydra = require("willothy.modules.hydras").Hydra
 
 local hint = [[
   ^ ^        Options

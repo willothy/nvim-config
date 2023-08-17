@@ -1,8 +1,6 @@
 return {
   {
-    "willothy/focus.nvim",
-    branch = "animation",
-    dir = "~/projects/lua/focus.nvim/",
+    "nvim-focus/focus.nvim",
     config = function()
       require("configs.windows.focus")
     end,

@@ -1,4 +1,4 @@
-local keymap = require("willothy.util.keymap")
+local keymap = willothy.keymap
 -- selene: allow(unused_variable)
 local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 
@@ -10,13 +10,13 @@ register({
   name = "terminal",
   t = {
     function()
-      require("willothy.terminals").toggle()
+      willothy.term.toggle()
     end,
     "terminal: toggle",
   },
   f = {
     function()
-      require("willothy.terminals").toggle_float()
+      willothy.term.toggle_float()
     end,
     "terminal: float toggle",
   },
@@ -27,7 +27,7 @@ register({
         completion = "shellcmd",
       }, function(v)
         if v and type(v) == "string" then
-          require("willothy.terminals").with():send(v)
+          willothy.term.with():send(v)
         end
       end)
     end,
@@ -37,13 +37,13 @@ register({
     name = "repl",
     p = {
       function()
-        require("willothy.terminals").py:toggle()
+        willothy.term.py:toggle()
       end,
       "python",
     },
     l = {
       function()
-        require("willothy.terminals").lua:toggle()
+        willothy.term.lua:toggle()
       end,
       "lua",
     },

@@ -1,4 +1,4 @@
-local icons = require("willothy.util.icons")
+local icons = willothy.icons
 local ns = vim.api.nvim_create_namespace("cokeline_diagnostics")
 
 local p = require("minimus.palette").hex

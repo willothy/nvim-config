@@ -187,7 +187,6 @@ return {
     config = function()
       require("configs.editor.telescope")
     end,
-    cmd = "Telescope",
     dependencies = {
       "nvim-telescope/telescope-ui-select.nvim",
       "nvim-telescope/telescope-file-browser.nvim",
@@ -197,6 +196,7 @@ return {
       "dhruvmanila/browser-bookmarks.nvim",
       "nvim-telescope/telescope-frecency.nvim",
     },
+    cmd = "Telescope",
     -- event = "User ExtraLazy",
   },
   {

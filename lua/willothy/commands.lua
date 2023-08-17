@@ -73,7 +73,7 @@ local commands = {
   },
   Reload = {
     function(args)
-      local util = require("willothy.util.debug")
+      local util = willothy.debug
       if args and args["args"] ~= "" then
         util.reload(args["args"])
       else
@@ -140,7 +140,7 @@ local commands = {
   },
   BrowserSwitch = {
     function()
-      require("willothy.util.fs").set_browser()
+      willothy.fs.set_browser()
     end,
     desc = "Select a browser",
   },

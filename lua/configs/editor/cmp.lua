@@ -13,7 +13,7 @@ end
 
 local luasnip = require("luasnip")
 
-local icons = require("willothy.util.icons")
+local icons = willothy.icons
 
 local opts = {
   snippet = {

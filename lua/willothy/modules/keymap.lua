@@ -132,6 +132,8 @@ function M.bind(mod, name, ...)
       require(mod)[name](unpack(args))
     elseif type(mod) == "function" then
       mod(name, unpack(args))
+    elseif type(mod) == "table" then
+      mod[name](unpack(args))
     end
   end
 

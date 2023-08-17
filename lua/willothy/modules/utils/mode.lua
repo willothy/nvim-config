@@ -1,7 +1,7 @@
 local api = vim.api
 local hydra = require("hydra.statusline")
 
-local Modenr = {}
+local M = {}
 
 local mode_names = {
   ["n"] = "Normal",
@@ -19,7 +19,7 @@ local mode_names = {
   ["nt"] = "TerminalNormal",
 }
 
-function Modenr.get_color(evt)
+function M.get_color(evt)
   evt = evt or ""
 
   local hl
@@ -41,20 +41,20 @@ function Modenr.get_color(evt)
     hl = mode .. "Mode"
   end
 
-  return require("willothy.util.hl").hl(hl)
+  return willothy.hl.hl(hl)
 end
 
-function Modenr.get_name()
-  if _G.Hydra and hydra.is_active() then
+function M.get_name()
+  if hydra.is_active() then
     return hydra.get_name()
   else
     return mode_names[api.nvim_get_mode().mode] or "Normal"
   end
 end
 
-function Modenr.setup()
+function M.setup()
   local function update_mode(ev)
-    local hl = Modenr.get_color(ev.file)
+    local hl = M.get_color(ev.file)
     api.nvim_set_hl(0, "CursorLineNr", hl)
   end
   update_mode({})
@@ -65,15 +65,10 @@ function Modenr.setup()
     callback = update_mode,
   })
   api.nvim_create_autocmd("User", {
-    pattern = "HydraEnter",
-    group = group,
-    callback = update_mode,
-  })
-  api.nvim_create_autocmd("User", {
-    pattern = "HydraLeave",
+    pattern = { "HydraEnter", "HydraLeave" },
     group = group,
     callback = update_mode,
   })
 end
 
-return Modenr
+return M

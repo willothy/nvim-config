@@ -1,4 +1,4 @@
-local Hydra = require("willothy.hydras").Hydra
+local Hydra = require("willothy.modules.hydras").Hydra
 
 local shared = require("nvim-treesitter.textobjects.shared")
 local swap = require("nvim-treesitter.textobjects.swap")

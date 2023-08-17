@@ -1,4 +1,4 @@
-local keymap = require("willothy.util.keymap")
+local keymap = willothy.keymap
 local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 
 register({
@@ -10,7 +10,7 @@ register({
     bind("trouble", "toggle", "document_diagnostics"),
     "diagnostics",
   },
-  ["<C-Up>"] = { bind("smart-splits", "move_cursor_up") },
+  ["<C-Up>"] = bind("smart-splits", "move_cursor_up"),
   ["<C-Down>"] = { bind("smart-splits", "move_cursor_down") },
   ["<C-Left>"] = { bind("smart-splits", "move_cursor_left") },
   ["<C-Right>"] = { bind("smart-splits", "move_cursor_right") },
@@ -54,19 +54,19 @@ register({
       "resize: golden ratio",
     },
     V = {
-      bind("willothy.util.window", "split_right"),
+      willothy.utils.window.split_right,
       "split: right",
     },
     v = {
-      bind("willothy.util.window", "split_left"),
+      willothy.utils.window.split_left,
       "split: left",
     },
     S = {
-      bind("willothy.util.window", "split_below"),
+      willothy.utils.window.split_below,
       "split: below",
     },
     s = {
-      bind("willothy.util.window", "split_above"),
+      willothy.utils.window.split_above,
       "split: above",
     },
     H = { "swap: left" },
@@ -75,15 +75,15 @@ register({
     L = { "swap: right" },
     T = { "move to new tab" },
     f = {
-      bind("willothy.util.window", "pick_focus"),
+      willothy.utils.window.pick_focus,
       "pick: focus",
     },
     x = {
-      bind("willothy.util.window", "pick_swap"),
+      willothy.utils.window.pick_swap,
       "pick: swap",
     },
     q = {
-      bind("willothy.util.window", "pick_close"),
+      willothy.utils.window.pick_close,
       "pick: close",
     },
   },

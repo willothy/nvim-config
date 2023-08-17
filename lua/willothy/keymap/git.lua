@@ -1,4 +1,4 @@
-local keymap = require("willothy.util.keymap")
+local keymap = willothy.keymap
 local register, modes = keymap.register, keymap.modes
 
 local neogit = setmetatable({}, {

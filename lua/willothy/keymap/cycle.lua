@@ -1,4 +1,4 @@
-local keymap = require("willothy.util.keymap")
+local keymap = willothy.keymap
 local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 
 register({
@@ -12,8 +12,10 @@ register({
     end,
     "buffer",
   },
-  t = bind("willothy.util.tabpage", "switch_by_step", -1):with_desc("tab"),
-  e = bind("vim.diagnostic", "goto_prev", { severity = "error" }):with_desc("error"),
+  t = bind(willothy.utils.tabpage, "switch_by_step", -1):with_desc("tab"),
+  e = bind("vim.diagnostic", "goto_prev", { severity = "error" }):with_desc(
+    "error"
+  ),
   m = bind("marks", "prev"):with_desc("mark"),
   d = bind("vim.diagnostic", "goto_prev"):with_desc("diagnostic"),
 }, modes.normal, "[")
@@ -29,9 +31,10 @@ register({
     end,
     "buffer",
   },
-  t = 
-    bind("willothy.util.tabpage", "switch_by_step", 1):with_desc("tab"),
-  e = bind("vim.diagnostic", "goto_next", { severity = "error" }):with_desc("error"),
+  t = bind(willothy.utils.tabpage, "switch_by_step", 1):with_desc("tab"),
+  e = bind("vim.diagnostic", "goto_next", { severity = "error" }):with_desc(
+    "error"
+  ),
   m = bind("marks", "next"):with_desc("mark"),
   d = bind("vim.diagnostic", "goto_next"):with_desc("diagnostic"),
 }, modes.normal, "]")

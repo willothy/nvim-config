@@ -10,7 +10,7 @@ function M.list_plugins()
       return acc .. name .. "\n"
     end)
 
-  require("willothy.util").popup(plugins, "installed forks")
+  willothy.fn.popup(plugins, "installed forks")
 end
 
 function M.list_forks()
@@ -40,7 +40,7 @@ function M.list_forks()
       return acc .. name .. "\n"
     end)
 
-  require("willothy.util").popup(forks, "installed forks")
+  willothy.fn.popup(forks, "installed forks")
 end
 
 return M

@@ -141,7 +141,7 @@ require("edgy").setup({
       ft = "terminal",
       title = "Terminal",
       open = function()
-        require("willothy.terminals").main:open()
+        willothy.term.main:open()
       end,
       filter = function(_buf, win)
         return not vim.api.nvim_win_get_config(win).zindex

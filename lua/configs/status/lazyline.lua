@@ -1,7 +1,7 @@
-local fs = require("willothy.util.fs")
-local hl = require("willothy.util.hl")
-local icons = require("willothy.util.icons")
-local mode = require("willothy.ui.modenr")
+local fs = willothy.fs
+local hl = willothy.hl
+local icons = willothy.icons
+local mode = willothy.utils.mode
 
 local SEP = {}
 SEP.LEFT = icons.blocks.left[4]

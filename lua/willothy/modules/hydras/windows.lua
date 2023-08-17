@@ -1,4 +1,4 @@
-local Hydra = require("willothy.hydras").Hydra
+local Hydra = require("willothy.modules.hydras").Hydra
 local pcmd = require("hydra.keymap-util").pcmd
 local cmd = require("hydra.keymap-util").cmd
 

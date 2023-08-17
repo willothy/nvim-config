@@ -31,6 +31,20 @@ M.Hydra = function(hintfunc, config)
   end
   config.config.on_exit = on_exit(config.config.on_exit)
   config.config.on_enter = on_enter(config.config.on_enter)
+  local ready = false
+  this = setmetatable({}, {
+    __index = function(_, k)
+      if not ready then
+        ready = true
+        this = require("hydra")(config)
+        if k == "activate" then
+          this:activate()
+          return function() end
+        end
+      end
+      return this[k]
+    end,
+  })
   if config.body and config.body ~= "" then
     vim.keymap.set(config.mode, config.body, function()
       if this == nil then
@@ -52,36 +66,10 @@ M.Hydra = function(hintfunc, config)
         },
       }, {})
     end
-  else
-    local ready = false
-    this = setmetatable({}, {
-      __index = function(_, k)
-        if not ready then
-          ready = true
-          this = require("hydra")(config)
-          if k == "activate" then
-            this:activate()
-            return function() end
-          end
-        end
-        return this[k]
-      end,
-    })
   end
   return this
 end
 
-function M.setup()
-  require("willothy.hydras.git")
-  require("willothy.hydras.options")
-  require("willothy.hydras.telescope")
-  require("willothy.hydras.diagrams")
-  require("willothy.hydras.windows")
-  require("willothy.hydras.buffers")
-  require("willothy.hydras.swap")
-
-  vim.api.nvim_set_hl(0, "HydraBorder", { link = "CursorLineNr" })
-  -- vim.api.nvim_set_hl(0, "HydraBorder", { link = "WhichKeyBorder" })
-end
+vim.api.nvim_set_hl(0, "HydraBorder", { link = "CursorLineNr" })
 
 return M
