@@ -13,12 +13,6 @@ local separators = {
 local close_icon_normal = icons.actions.close
 local close_icon_hovered = icons.actions.close_box
 
-local hidden = vim.api.nvim_set_hl(0, "Hidden", {
-  fg = "NONE",
-  bg = "NONE",
-  sp = "NONE",
-})
-
 local components = {
   sidebar_open = {
     text = function(buffer)
@@ -421,7 +415,7 @@ require("cokeline").setup({
     end,
   },
   components = {
-    components.sidebar_open,
+    -- components.sidebar_open,
     components.sep.left,
     components.space,
     components.devicon,

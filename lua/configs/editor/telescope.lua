@@ -55,14 +55,7 @@ local function with(o, theme)
 end
 
 t.setup({
-  pickers = {
-    find_files = {
-      layout_config = {
-        preview_cutoff = 1,
-      },
-      theme = my_theme,
-    },
-  },
+  pickers = {},
   defaults = {
     theme = my_theme,
   },
@@ -70,7 +63,8 @@ t.setup({
     ["ui-select"] = {
       require("telescope.themes").get_cursor({}),
     },
-    file_browser = with({
+    file_browser = {
+      theme = "ivy",
       mappings = {
         ["i"] = {
           ["<C-a>"] = add_to_harpoon,
@@ -81,7 +75,7 @@ t.setup({
           ["<C-a>"] = add_to_harpoon,
         },
       },
-    }, my_theme),
+    },
     undo = with({
       use_delta = true,
       side_by_side = vim.o.columns > side_by_side_min,

@@ -52,6 +52,5 @@ return {
   {
     "stevearc/stickybuf.nvim",
     config = true,
-    event = "User ExtraLazy",
   },
 }
