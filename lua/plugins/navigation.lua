@@ -46,4 +46,12 @@ return {
     "rhysd/accelerated-jk",
     event = "User ExtraLazy",
   },
+  {
+    "SUSTech-data/wildfire.nvim",
+    config = true,
+    keys = {
+      { "<CR>" },
+      { "<BS>" },
+    },
+  },
 }

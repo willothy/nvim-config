@@ -216,7 +216,7 @@ local Devicon = {
       if not self.icon then
         self.icon, self.icon_color = devicons.get_icon_color_by_filetype(
           vim.bo.filetype,
-          { default = true }
+          { default = false }
         )
       end
     end,
@@ -317,7 +317,12 @@ local Recording = (
         self.status = require("NeoComposer.ui").status_recording()
       end,
     },
-    Space,
+    {
+      condition = function(self)
+        return self.status ~= nil and self.status ~= ""
+      end,
+      Space,
+    },
   })
 )
 
@@ -420,6 +425,17 @@ local WorkDir = (
 
 local Sesh = Env("SESH_NAME")
 
+local DAPMessages = {
+  condition = function()
+    return require("dap").session() ~= nil
+  end,
+  provider = function()
+    return " " .. require("dap").status()
+  end,
+  hl = "Debug",
+  Space,
+}
+
 local function Center(group)
   return {
     Align,
@@ -475,6 +491,7 @@ local StatusLine = {
     WorkDir,
   }),
   Right({
+    DAPMessages,
     Recording,
     Devicon,
     Filetype,
@@ -504,16 +521,4 @@ vim.api.nvim_create_autocmd({
     { clear = true }
   ),
   callback = update,
-})
-
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup(
-    "heirline_colorscheme_reset",
-    { clear = true }
-  ),
-  callback = function()
-    require("heirline").setup({
-      statusline = C(StatusLine),
-    })
-  end,
 })
