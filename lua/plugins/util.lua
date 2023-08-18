@@ -223,4 +223,9 @@ return {
     config = true,
     cmd = "KeySeer",
   },
+  {
+    "echasnovski/mini.colors",
+    config = true,
+    cmd = "Colorscheme",
+  },
 }

@@ -2,16 +2,11 @@ local o = vim.o
 local opt = vim.opt
 local icons = willothy.icons
 
-vim.api.nvim_exec('let &t_Cs = "\\e[4:0m"', true)
-vim.api.nvim_exec('let &t_Ce = "\\e[4:0m"', true)
-
 vim.cmd.colorscheme("minimus")
 
-vim.o.shell = "zsh"
-
-vim.o.shortmess = "filnxoOCFIs"
-
-vim.o.virtualedit = "block"
+o.shell = "zsh"
+o.shortmess = "filnxoOCFIs"
+o.virtualedit = "block"
 
 o.swapfile = true
 o.backup = false
@@ -60,12 +55,6 @@ opt.fillchars = {
 
 opt.splitkeep = "screen"
 
-opt.sessionoptions = {
-  "buffers",
-  "tabpages",
-  "globals",
-}
-
 o.laststatus = 3
 
 o.number = true
@@ -81,10 +70,10 @@ o.numberwidth = 1
 o.number = true
 o.relativenumber = true
 
-vim.api.nvim_create_autocmd({
-  "TermResponse",
-}, {
-  callback = function()
-    vim.cmd("checktime")
-  end,
-})
+-- vim.api.nvim_create_autocmd({
+--   "TermResponse",
+-- }, {
+--   callback = function()
+--     vim.cmd("checktime")
+--   end,
+-- })

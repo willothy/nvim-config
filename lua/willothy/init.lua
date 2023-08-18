@@ -1,5 +1,4 @@
 local ns = function(modules, submodule)
-  vim.tbl_add_reverse_lookup(modules)
   if submodule then
     submodule = submodule .. "."
   else
@@ -15,7 +14,7 @@ local ns = function(modules, submodule)
         rawset(self, k, mod)
         return mod
       elseif k == "__load_all" then
-        for _, mod in ipairs(modules) do
+        for mod, _ in pairs(modules) do
           mod = require("willothy.modules." .. submodule .. mod)
           if type(mod) == "table" and mod.setup then
             mod.setup()
@@ -36,18 +35,20 @@ willothy = {}
 willothy.utils = {}
 willothy.hydras = {}
 
+willothy.ns = ns
+
 setmetatable(
   willothy,
   ns({
-    "fs",
-    "hl",
-    "fn",
-    "icons",
-    "keymap",
-    "player",
-    "term",
-    "scrollbar",
-    "terminals",
+    fs = true,
+    hl = true,
+    fn = true,
+    icons = true,
+    keymap = true,
+    player = true,
+    term = true,
+    scrollbar = true,
+    terminals = true,
     -- "floats"
   })
 )
@@ -55,62 +56,15 @@ setmetatable(
 setmetatable(
   willothy.utils,
   ns({
-    "cursor",
-    "window",
-    "tabpage",
-    "mode",
-    "plugins",
-    "debug",
+    cursor = true,
+    window = true,
+    tabpage = true,
+    mode = true,
+    plugins = true,
+    debug = true,
   }, "utils")
-)
-
-setmetatable(
-  willothy.hydras,
-  ns({
-    "git",
-    "options",
-    "telescope",
-    "diagrams",
-    "windows",
-    "buffers",
-    "swap",
-  }, "hydras")
 )
 
 require("willothy.settings")
 
 willothy.fs.hijack_netrw()
-
-vim.api.nvim_create_autocmd("User", {
-  pattern = "VeryLazy",
-  once = true,
-  callback = vim.schedule_wrap(function()
-    vim.defer_fn(function()
-      vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" })
-    end, 150)
-
-    -- Inform vim how to enable undercurl in wezterm
-    vim.api.nvim_exec2(
-      [[
-let &t_Cs = "\e[4:3m"
-let &t_Ce = "\e[4:0m"
-    ]],
-      { output = false }
-    )
-  end),
-})
-
-vim.api.nvim_create_autocmd("User", {
-  pattern = "ExtraLazy",
-  once = true,
-  callback = function()
-    -- setup hydras
-    willothy.hydras.__load_all()
-
-    -- setup mappings
-    require("willothy.keymap")
-
-    -- setup commands
-    require("willothy.commands")
-  end,
-})

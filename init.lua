@@ -19,6 +19,22 @@ require("lazy").setup({
   { import = "plugins.terminal" },
   { import = "plugins.util" },
   { import = "plugins.windows" },
+  {
+    name = "willothy.init",
+    dir = ".",
+    lazy = false,
+    config = function()
+      require("willothy")
+    end,
+  },
+  {
+    name = "willothy.lazy",
+    dir = ".",
+    event = "VeryLazy",
+    config = function()
+      require("willothy.lazy")
+    end,
+  },
 }, {
   defaults = {
     lazy = true,
@@ -57,5 +73,3 @@ require("lazy").setup({
     },
   },
 })
-
-require("willothy")

@@ -91,9 +91,14 @@ return {
   -- Color themes
   {
     "willothy/minimus",
+    -- dir = "~/projects/lua/minimus/",
     dependencies = {
       "rktjmp/lush.nvim",
     },
+  },
+  {
+    "rktjmp/shipwright.nvim",
+    cmd = "Shipwright",
   },
   {
     "folke/tokyonight.nvim",

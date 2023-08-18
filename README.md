@@ -1,4 +1,4 @@
-# nvim-config
+# nvim-configA
 
 My personal Neovim config. Over 8000LOC (I have no life). Setup for ME - I would
 not recommend using this, I cannot guarantee that it will work for you and will
@@ -10,7 +10,7 @@ parts to add to your own config :)
 ### Bloated AND Blazingly Fast™
 
 - Over 130 plugins
-- Under 20ms startup on my desktop
+- Under 15ms startup on my desktop
 - 20-40ms startup time on my laptop
 - Lazy load EVERYTHING. Only a few plugins load before UiEnter.
 - I've spent a stupid amount of time optimizing

@@ -1,7 +1,7 @@
 local icons = willothy.icons
 local ns = vim.api.nvim_create_namespace("cokeline_diagnostics")
 
-local p = require("minimus.palette").hex
+local p = require("minimus").hex
 local mappings = require("cokeline.mappings")
 local get_hex = require("cokeline.utils").get_hex
 

@@ -1,4 +1,4 @@
-local p = require("minimus.palette").hex
+local p = require("minimus").hex
 local icons = willothy.icons
 
 local conditions = require("heirline.conditions")
