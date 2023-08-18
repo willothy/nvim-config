@@ -179,34 +179,34 @@ return {
       "CEGotoLabel",
     },
   },
-  {
-    "willothy/piemenu.nvim",
-    enabled = false,
-    config = function()
-      require("configs.editor.piemenu")
-    end,
-    keys = {
-      {
-        "<RightMouse>",
-        function()
-          local mouse = vim.fn.getmousepos()
-          local win = vim.api.nvim_get_current_win()
-          local view = vim.fn.winsaveview()
-
-          require("piemenu").start("main", {
-            position = {
-              mouse.screenrow,
-              mouse.screencol,
-            },
-          })
-          vim.api.nvim_win_call(win, function()
-            vim.fn.winrestview(view)
-          end)
-        end,
-        mode = { "n", "v" },
-      },
-    },
-  },
+  -- {
+  --   "willothy/piemenu.nvim",
+  --   enabled = false,
+  --   config = function()
+  --     require("configs.editor.piemenu")
+  --   end,
+  --   keys = {
+  --     {
+  --       "<RightMouse>",
+  --       function()
+  --         local mouse = vim.fn.getmousepos()
+  --         local win = vim.api.nvim_get_current_win()
+  --         local view = vim.fn.winsaveview()
+  --
+  --         require("piemenu").start("main", {
+  --           position = {
+  --             mouse.screenrow,
+  --             mouse.screencol,
+  --           },
+  --         })
+  --         vim.api.nvim_win_call(win, function()
+  --           vim.fn.winrestview(view)
+  --         end)
+  --       end,
+  --       mode = { "n", "v" },
+  --     },
+  --   },
+  -- },
   {
     "Tyler-Barham/floating-help.nvim",
     config = function()

@@ -1,27 +1,15 @@
 vim.defer_fn(function()
-  vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" })
-
-  setmetatable(
-    willothy.hydras,
-    willothy.ns({
-      git = true,
-      options = true,
-      telescope = true,
-      diagrams = true,
-      windows = true,
-      buffers = true,
-      swap = true,
-    }, "hydras")
-  )
-
   -- setup hydras
   willothy.hydras.__load_all()
 
-  -- setup mappings
-  require("willothy.keymap")
+  -- setup ui
+  willothy.ui.__load_all()
 
-  -- setup commands
+  require("willothy.keymap")
   require("willothy.commands")
+  require("willothy.autocmds")
+
+  vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" })
 end, 150)
 
 -- Inform vim how to enable undercurl in wezterm

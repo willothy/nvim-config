@@ -117,7 +117,7 @@ local hint = [[
  _<Esc>_, _q_: quit
 ]]
 
-Hydra({
+return Hydra({
   name = "Swap",
   mode = "n",
   body = "gs",

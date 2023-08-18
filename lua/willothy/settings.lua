@@ -2,11 +2,10 @@ local o = vim.o
 local opt = vim.opt
 local icons = willothy.icons
 
-vim.cmd.colorscheme("minimus")
-
 o.shell = "zsh"
 o.shortmess = "filnxoOCFIs"
 o.virtualedit = "block"
+o.showtabline = 2
 
 o.swapfile = true
 o.backup = false
@@ -20,6 +19,7 @@ o.termguicolors = true
 o.modeline = false
 
 o.scrolloff = 16
+o.cmdheight = 0
 
 vim.o.timeout = true
 vim.o.timeoutlen = 250
@@ -69,11 +69,3 @@ o.wrap = false
 o.numberwidth = 1
 o.number = true
 o.relativenumber = true
-
--- vim.api.nvim_create_autocmd({
---   "TermResponse",
--- }, {
---   callback = function()
---     vim.cmd("checktime")
---   end,
--- })

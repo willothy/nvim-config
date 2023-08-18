@@ -11,6 +11,7 @@ return {
   },
   {
     "anuvyklack/hydra.nvim",
+    event = "User ExtraLazy",
   },
   {
     "willothy/hollywood.nvim",

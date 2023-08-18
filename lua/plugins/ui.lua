@@ -15,14 +15,14 @@ return {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
     },
-    event = "UiEnter",
+    event = "VeryLazy",
     config = function()
       require("configs.ui.noice")
     end,
   },
   {
     "rcarriga/nvim-notify",
-    event = "UiEnter",
+    event = "VeryLazy",
     config = function()
       require("configs.ui.notify")
     end,
@@ -91,10 +91,10 @@ return {
   -- Color themes
   {
     "willothy/minimus",
-    -- dir = "~/projects/lua/minimus/",
-    dependencies = {
-      "rktjmp/lush.nvim",
-    },
+    config = function()
+      vim.cmd.colorscheme("minimus")
+    end,
+    event = "UiEnter",
   },
   {
     "rktjmp/shipwright.nvim",

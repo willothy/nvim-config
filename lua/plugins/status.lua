@@ -5,7 +5,7 @@ return {
     config = function()
       require("configs.status.cokeline")
     end,
-    event = "User ExtraLazy",
+    event = "UiEnter",
   },
   {
     "willothy/lazyline.nvim",
@@ -35,7 +35,7 @@ return {
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },
-    event = "User ExtraLazy",
+    event = "UiEnter",
     config = function()
       require("configs.status.statuscol")
     end,

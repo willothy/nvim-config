@@ -10,8 +10,7 @@ local defaults = {
   winnr = 0,
   autohide = true,
   hl_group = {
-    bar = "NoiceScrollbar",
-    thumb = "NoiceScrollbarThumb",
+    thumb = "ScrollBar",
   },
   ---@type _.NuiBorderPadding
   padding = {
@@ -122,8 +121,11 @@ function Scrollbar:update()
   local zindex = vim.api.nvim_win_get_config(self.winnr).zindex or 50
 
   local function win_apply_config(win, opts)
-    opts =
-      vim.tbl_deep_extend("force", vim.api.nvim_win_get_config(win), opts or {})
+    opts = vim.tbl_deep_extend(
+      "force",
+      vim.api.nvim_win_get_config(win),
+      opts or {}
+    )
     vim.api.nvim_win_set_config(win, opts)
   end
 
