@@ -497,6 +497,7 @@ vim.api.nvim_create_autocmd({
   "BufEnter",
   "TermEnter",
   "LspAttach",
+  "ColorScheme",
 }, {
   group = vim.api.nvim_create_augroup(
     "heirline_update_cmds",
