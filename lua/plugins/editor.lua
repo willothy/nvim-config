@@ -250,7 +250,9 @@ return {
   {
     "willothy/marks.nvim",
     event = "User ExtraLazy",
-    config = true,
+    opts = {
+      refresh_interval = 1000,
+    },
   },
   {
     "echasnovski/mini.files",

@@ -1,40 +1,52 @@
-local function lazy(module, submodule)
-  local name = "willothy.modules"
+local function lazy(module, submodule, base)
+  local name = base or "willothy.modules"
   if submodule then
-    name = name .. "." .. submodule
+    if name == "" then
+      name = submodule
+    else
+      name = name .. "." .. submodule
+    end
   end
-  name = name .. "." .. module
+  if name == "" then
+    name = module
+  else
+    name = name .. "." .. module
+  end
 
-  local ready = false
   local o = {}
   local mt = {
-    __index = function(_, k)
-      if not ready then
-        o = require(name)
-        if o.setup then
-          o.setup()
-        end
-        ready = true
-      end
-      return rawget(o, k)
-    end,
     __module = name,
   }
+  function mt:__index(k)
+    o[k] = require(name)[k]
+    return rawget(o, k)
+  end
   return setmetatable(o, mt)
 end
 
 local function module(mod, base)
   local name = base or "willothy.modules"
   if mod then
-    name = name .. "." .. mod
+    if name == "" then
+      name = mod
+    else
+      name = name .. "." .. mod
+    end
   end
   local o = {}
   local mt = {
     __index = function(_, k)
       if k == "__load_all" then
         for submod_name, _ in pairs(o) do
-          local submod = require(name .. "." .. submod_name)
-          if type(submod) == "table" and submod.setup then
+          local submod_path = ""
+          if name == "" then
+            submod_path = submod_name
+          else
+            submod_path = name .. "." .. submod_name
+          end
+          local first = package.loaded[submod_path] == nil
+          local submod = require(submod_path)
+          if type(submod) == "table" and submod.setup and first then
             submod.setup()
           end
         end
@@ -59,6 +71,7 @@ willothy.icons = lazy("icons")
 willothy.keymap = lazy("keymap")
 willothy.player = lazy("player")
 willothy.term = lazy("terminals")
+willothy.marks = lazy("marks")
 
 willothy.utils = module("utils")
 willothy.utils.cursor = lazy("cursor", "utils")

@@ -35,6 +35,11 @@ require("lazy").setup({
       require("willothy.lazy")
     end,
   },
+  {
+    name = "willothy.marks",
+    dir = ".",
+    event = "VeryLazy",
+  },
 }, {
   defaults = {
     lazy = true,

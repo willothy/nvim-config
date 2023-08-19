@@ -105,6 +105,7 @@ require("mason-lspconfig").setup({
             "bufdelete.nvim",
             "mini.files",
             "harpoon",
+            "sqlite.lua",
           },
           runtime = true,
           types = true,
