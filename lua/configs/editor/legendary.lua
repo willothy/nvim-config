@@ -1,4 +1,3 @@
-require("telescope").load_extension("ui-select")
 require("legendary").setup({
   funcs = {},
   autocmds = {},

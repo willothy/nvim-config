@@ -20,6 +20,7 @@ register({
       end
 
       group.code_action_group()
+      -- vim.lsp.buf.code_action()
     end,
     "code actions",
   },

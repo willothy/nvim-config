@@ -169,7 +169,6 @@ return {
       require("configs.editor.telescope")
     end,
     dependencies = {
-      "nvim-telescope/telescope-ui-select.nvim",
       "nvim-telescope/telescope-file-browser.nvim",
       "molecule-man/telescope-menufacture",
       "crispgm/telescope-heading.nvim",

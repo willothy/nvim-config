@@ -54,8 +54,6 @@ function M.hijack_netrw()
 end
 
 function M.set_browser()
-  require("telescope").load_extension("ui-select")
-
   local options = vim
     .iter(M.browsers)
     :map(function(name)

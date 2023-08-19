@@ -1,6 +1,14 @@
 local anyline = false
 
 return {
+  -- STARTUP --
+  {
+    "echasnovski/mini.starter",
+    config = function()
+      require("configs.ui.mini-starter")
+    end,
+    event = "VeryLazy",
+  },
   -- LAYOUT / CORE UI --
   {
     "folke/edgy.nvim",
