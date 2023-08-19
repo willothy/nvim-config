@@ -1,4 +1,4 @@
-# nvim-config
+# nvim-configAA
 
 My personal Neovim config. Over 10000LOC (I have no life). I would
 not recommend using this - It's setup for me, I cannot guarantee that it will work for you, and I will

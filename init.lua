@@ -1,18 +1,14 @@
+vim.loader.enable()
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
-
-vim.loader.enable()
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  { import = "plugins.editor" },
-  { import = "plugins.lsp" },
-  { import = "plugins.status" },
-  { import = "plugins.ui" },
-  { import = "plugins.util" },
+  { import = "plugins" },
   {
     name = "willothy.init",
     dir = ".",
@@ -35,15 +31,6 @@ require("lazy").setup({
   defaults = {
     lazy = true,
     event = "VeryLazy",
-  },
-  ui = {
-    size = { width = 0.8, height = 0.8 },
-    wrap = false,
-    border = "rounded",
-  },
-  install = {
-    missing = true,
-    colorscheme = { "minimus" },
   },
   browser = "brave",
   diff = {

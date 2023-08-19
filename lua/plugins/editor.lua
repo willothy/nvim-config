@@ -177,8 +177,7 @@ return {
       "dhruvmanila/browser-bookmarks.nvim",
       "nvim-telescope/telescope-frecency.nvim",
     },
-    cmd = "Telescope",
-    -- event = "User ExtraLazy",
+    event = "User ExtraLazy",
   },
   {
     "nvim-telescope/telescope-fzf-native.nvim",

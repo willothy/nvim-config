@@ -9,26 +9,25 @@ require("flatten").setup({
     -- end,
   },
   pipe_path = function()
-    if vim.tbl_contains(vim.v.argv, "-l") then
-      return
-    end
-
     -- If running in a terminal inside Neovim:
-    local nvim = os.getenv("NVIM")
+    local nvim = vim.env.NVIM
     if nvim then
       return nvim
     end
 
     -- If running in a Wezterm terminal,
     -- all tabs/windows/os-windows in the same instance of wezterm will open in the first neovim instance
-    local wezterm = os.getenv("WEZTERM_UNIX_SOCKET")
+    local wezterm = vim.env.WEZTERM_UNIX_SOCKET
     if not wezterm then
       return
     end
 
     local addr = ("%s/%s"):format(
       vim.fn.stdpath("run"),
-      "wezterm.nvim-" .. wezterm:match("gui%-sock%-(%d+)")
+      "wezterm.nvim-"
+        .. wezterm:match("gui%-sock%-(%d+)")
+        .. "-"
+        .. vim.fn.getcwd(-1):gsub("/", "_")
     )
     if not vim.loop.fs_stat(addr) then
       vim.fn.serverstart(addr)
@@ -36,6 +35,9 @@ require("flatten").setup({
 
     return addr
   end,
+  one_per = {
+    kitty = false,
+  },
   callbacks = {
     should_block = function(argv)
       return vim.tbl_contains(argv, "-b")
