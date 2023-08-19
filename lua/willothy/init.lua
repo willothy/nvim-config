@@ -19,7 +19,6 @@ local function lazy(module, submodule)
     if o.setup and not ready then
       o.setup()
       ready = true
-      vim.print("test")
     end
     if submodule then
       willothy[submodule][module] = o
