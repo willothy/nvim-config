@@ -35,13 +35,7 @@ return {
   },
   {
     "folke/neodev.nvim",
-    ft = "lua",
-    config = function()
-      vim.defer_fn(function()
-        require("lspconfig")
-        vim.cmd.LspStart("lua_ls")
-      end, 1000)
-    end,
+    config = true,
   },
   {
     "smjonas/live-command.nvim",

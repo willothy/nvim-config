@@ -1,11 +1,7 @@
-local function lazy(module, submodule, base)
-  local name = base or "willothy.modules"
+local function lazy(module, submodule)
+  local name = "willothy.modules"
   if submodule then
-    if name == "" then
-      name = submodule
-    else
-      name = name .. "." .. submodule
-    end
+    name = name .. "." .. submodule
   end
   if name == "" then
     name = module
@@ -18,7 +14,12 @@ local function lazy(module, submodule, base)
     __module = name,
   }
   function mt:__index(k)
-    o[k] = require(name)[k]
+    o = require(name)
+    if submodule then
+      willothy[submodule][module] = o
+    else
+      willothy[module] = o
+    end
     return rawget(o, k)
   end
   return setmetatable(o, mt)
@@ -36,27 +37,29 @@ local function module(mod, base)
   local o = {}
   local mt = {
     __index = function(_, k)
+      local function load(submod_name)
+        local submod_path = ""
+        if name == "" then
+          submod_path = submod_name
+        else
+          submod_path = name .. "." .. submod_name
+        end
+        local first = package.loaded[submod_path] == nil
+        local submod = require(submod_path)
+        o[submod_name] = submod
+        if first and type(submod) == "table" and submod.setup then
+          submod.setup()
+        end
+        return submod
+      end
       if k == "__load_all" then
-        for submod_name, _ in pairs(o) do
-          local submod_path = ""
-          if name == "" then
-            submod_path = submod_name
-          else
-            submod_path = name .. "." .. submod_name
-          end
-          local first = package.loaded[submod_path] == nil
-          local submod = require(submod_path)
-          if type(submod) == "table" and submod.setup and first then
-            submod.setup()
+        return function()
+          for submod_name, _ in pairs(o) do
+            load(submod_name)
           end
         end
-        return function() end
       end
-      local submod = require(name .. "." .. k)
-      if type(submod) == "table" and submod.setup then
-        submod.setup()
-      end
-      return submod
+      return load(k)
     end,
     __module = name,
   }
