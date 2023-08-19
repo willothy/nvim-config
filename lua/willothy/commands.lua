@@ -56,6 +56,21 @@ local commands = {
     end,
     desc = "Add the cwd to vim's runtime path",
   },
+  ReloadOnSave = {
+    function(args)
+      local mod = args.args
+
+      local buf = vim.api.nvim_get_current_buf()
+      vim.api.nvim_create_autocmd("BufWritePost", {
+        buffer = buf,
+        callback = function()
+          package.loaded[mod] = nil
+          require(mod)
+        end,
+      })
+    end,
+    nargs = 1,
+  },
   Browse = {
     function(args)
       local target
