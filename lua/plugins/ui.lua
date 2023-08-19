@@ -10,7 +10,6 @@ return {
   },
   {
     "folke/noice.nvim",
-    cond = vim.g.started_by_firenvim == nil,
     dependencies = {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
@@ -39,6 +38,7 @@ return {
   },
   {
     "willothy/anyline.nvim",
+    -- dir = "~/projects/lua/anyline.nvim/",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     enabled = anyline,
     event = "VeryLazy",
@@ -95,10 +95,6 @@ return {
       vim.cmd.colorscheme("minimus")
     end,
     event = "UiEnter",
-  },
-  {
-    "rktjmp/shipwright.nvim",
-    cmd = "Shipwright",
   },
   {
     "folke/tokyonight.nvim",

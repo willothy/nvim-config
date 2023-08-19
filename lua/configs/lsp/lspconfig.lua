@@ -106,6 +106,8 @@ require("mason-lspconfig").setup({
             "mini.files",
             "harpoon",
             "sqlite.lua",
+            "resession.nvim",
+            "noice.nvim",
           },
           runtime = true,
           types = true,

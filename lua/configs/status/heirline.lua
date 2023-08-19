@@ -66,6 +66,14 @@ local Space = setmetatable({
   end,
 })
 
+-- selene: allow(unused_variable)
+local Icon = function(icon, hl)
+  return {
+    provider = icon,
+    hl = hl,
+  }
+end
+
 local Mode = {
   AB(Separator.Left),
   B({
@@ -436,6 +444,22 @@ local DAPMessages = {
   Space,
 }
 
+local SessionName = {
+  condition = function(self)
+    if package.loaded.resession and not self.m then
+      self.m = require("resession")
+    end
+    return self.m and self.m.get_current() or self.m.is_loading() or false
+  end,
+  provider = function(self)
+    local name = self.m.get_current()
+    if name and name:match("/") then
+      name = vim.fn.fnamemodify(name, ":~")
+    end
+    return name or require("noice.util.spinners").spin("dots9")
+  end,
+}
+
 local function Center(group)
   return {
     Align,
@@ -488,7 +512,11 @@ local StatusLine = {
     Harpoon,
   }),
   Center({
-    WorkDir,
+    {
+      fallthrough = false,
+      SessionName,
+      WorkDir,
+    },
   }),
   Right({
     DAPMessages,
