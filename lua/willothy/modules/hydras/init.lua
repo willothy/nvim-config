@@ -32,19 +32,6 @@ M.Hydra = function(hintfunc, config)
   config.config.on_exit = on_exit(config.config.on_exit)
   config.config.on_enter = on_enter(config.config.on_enter)
   local ready = false
-  this = setmetatable({}, {
-    __index = function(_, k)
-      if not ready then
-        ready = true
-        this = require("hydra")(config)
-        if k == "activate" then
-          this:activate()
-          return function() end
-        end
-      end
-      return this[k]
-    end,
-  })
   if config.body and config.body ~= "" then
     vim.keymap.set(config.mode, config.body, function()
       if this == nil then
@@ -66,10 +53,22 @@ M.Hydra = function(hintfunc, config)
         },
       }, {})
     end
+  else
+    this = setmetatable({}, {
+      __index = function(_, k)
+        if not ready then
+          ready = true
+          this = require("hydra")(config)
+          if k == "activate" then
+            this:activate()
+            return function() end
+          end
+        end
+        return this[k]
+      end,
+    })
   end
   return this
 end
-
-vim.api.nvim_set_hl(0, "HydraBorder", { link = "CurrentMode" })
 
 return M

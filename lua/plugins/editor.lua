@@ -11,18 +11,11 @@ return {
   },
   {
     "anuvyklack/hydra.nvim",
-    event = "User ExtraLazy",
   },
   {
     "willothy/hollywood.nvim",
     event = "LspAttach",
     -- dir = "~/projects/lua/hollywood.nvim",
-  },
-  {
-    "VidocqH/lsp-lens.nvim",
-    config = true,
-    event = "LspAttach",
-    enabled = false,
   },
   {
     "ThePrimeagen/refactoring.nvim",

@@ -66,7 +66,7 @@
   "mini.files": { "branch": "main", "commit": "dea80a8147aa4e3025c34d2e2aaa6f2aeb7b21dd" },
   "mini.indentscope": { "branch": "main", "commit": "f60e9b51a6214c73a170ffc5445ce91560981031" },
   "mini.misc": { "branch": "main", "commit": "fd0b0c3a218d0a9eda01a79c948e3e3948f70aae" },
-  "minimus": { "branch": "main", "commit": "7096f74f29c060969abac685efb0e3d945850510" },
+  "minimus": { "branch": "main", "commit": "4e6b22504b7ddd65e451bec9179a3dd102e56428" },
   "moveline.nvim": { "branch": "oxi", "commit": "440259cee48aaa5080fc284cfbabf186f560ea85" },
   "multicursors.nvim": { "branch": "main", "commit": "f0cbd221e5bc08449e589e7fe6809298524b75dd" },
   "murmur.lua": { "branch": "main", "commit": "85d3f1c3e98fa60b523abf40f4951d4ddb44fa54" },
