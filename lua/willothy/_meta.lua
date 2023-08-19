@@ -1,5 +1,7 @@
 ---@meta
 
+error("do not require meta file")
+
 willothy = {}
 willothy.fs = require("willothy.modules.fs")
 willothy.hl = require("willothy.modules.hl")

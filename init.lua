@@ -8,22 +8,17 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  { import = "plugins.cmp" },
-  { import = "plugins.dap" },
   { import = "plugins.editor" },
-  { import = "plugins.git" },
   { import = "plugins.lsp" },
-  { import = "plugins.navigation" },
   { import = "plugins.status" },
   { import = "plugins.ui" },
-  { import = "plugins.terminal" },
   { import = "plugins.util" },
-  { import = "plugins.windows" },
   {
     name = "willothy.init",
     dir = ".",
     lazy = false,
     config = function()
+      -- things that need to be setup right away
       require("willothy")
     end,
   },
@@ -32,13 +27,9 @@ require("lazy").setup({
     dir = ".",
     event = "VeryLazy",
     config = function()
+      -- lazy initialization
       require("willothy.lazy")
     end,
-  },
-  {
-    name = "willothy.marks",
-    dir = ".",
-    event = "VeryLazy",
   },
 }, {
   defaults = {
@@ -57,9 +48,6 @@ require("lazy").setup({
   browser = "brave",
   diff = {
     cmd = "diffview.nvim",
-  },
-  change_detection = {
-    notify = false,
   },
   performance = {
     cache = { enabled = true },

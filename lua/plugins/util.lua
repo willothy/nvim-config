@@ -33,7 +33,7 @@ return {
       api_key_cmd = "lpass show --password openai_key",
     },
   },
-  { "mbbill/undotree", event = "VeryLazy" },
+  { "mbbill/undotree", event = "User ExtraLazy" },
   { "famiu/bufdelete.nvim" },
   {
     "willothy/NeoComposer.nvim",
@@ -139,10 +139,6 @@ return {
   {
     "creativenull/dotfyle-metadata.nvim",
     cmd = { "DotfyleGenerate", "DotfyleOpen" },
-  },
-  {
-    "lewis6991/fileline.nvim",
-    lazy = false,
   },
   {
     "tzachar/highlight-undo.nvim",

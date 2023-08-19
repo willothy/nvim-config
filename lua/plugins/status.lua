@@ -1,4 +1,5 @@
 return {
+  -- STATUS --
   {
     "willothy/nvim-cokeline",
     dir = "~/projects/lua/cokeline/",

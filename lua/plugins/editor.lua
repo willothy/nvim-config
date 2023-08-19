@@ -1,8 +1,14 @@
+local spider = function(motion)
+  return {
+    motion,
+    function()
+      require("spider").motion(motion)
+    end,
+    desc = "which_key_ignore",
+    mode = { "n", "o", "x" },
+  }
+end
 return {
-  {
-    "zdcthomas/yop.nvim",
-    config = true,
-  },
   {
     "lukas-reineke/headlines.nvim",
     dependencies = "nvim-treesitter/nvim-treesitter",
@@ -72,7 +78,6 @@ return {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     cmd = "Trouble",
-    event = "DiagnosticChanged",
     config = function()
       require("configs.editor.trouble")
     end,
@@ -108,18 +113,6 @@ return {
     event = "User ExtraLazy",
     -- dir = "~/projects/rust/moveline.nvim/",
     build = "make build",
-  },
-  {
-    "nvim-neotest/neotest",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-      "rouge8/neotest-rust",
-    },
-    event = "LspAttach",
-    config = function()
-      require("configs.editor.neotest")
-    end,
   },
   {
     "jmbuhr/otter.nvim",
@@ -192,6 +185,32 @@ return {
     build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
   },
   {
+    "willothy/savior.nvim",
+    config = true,
+    event = "User ExtraLazy",
+  },
+  {
+    "gbprod/yanky.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("configs.editor.yanky")
+    end,
+  },
+  {
+    "willothy/marks.nvim",
+    event = "User ExtraLazy",
+    opts = {
+      refresh_interval = 1000,
+    },
+  },
+  {
+    "echasnovski/mini.files",
+    config = function()
+      require("configs.editor.mini-files")
+    end,
+  },
+  -- SESSIONS / PROJECTS --
+  {
     "stevearc/resession.nvim",
     dependencies = {
       "tiagovla/scope.nvim",
@@ -215,42 +234,116 @@ return {
     config = true,
     event = "User ExtraLazy",
   },
+  -- TERMINAL --
   {
-    "willothy/savior.nvim",
+    "akinsho/toggleterm.nvim",
+    config = function()
+      require("configs.terminal.toggleterm")
+    end,
+  },
+  {
+    "willothy/flatten.nvim",
+    cond = true,
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("configs.terminal.flatten")
+    end,
+  },
+  {
+    "willothy/wezterm.nvim",
     config = true,
-    event = "User ExtraLazy",
+    cmd = "WeztermSpawn",
   },
   {
-    "pynappo/tabnames.nvim",
-    enabled = false,
-    event = "User ExtraLazy",
+    "desdic/greyjoy.nvim",
+    dependencies = {
+      "stevearc/overseer.nvim",
+    },
+    cmd = "Greyjoy",
     config = function()
-      require("configs.projects.tabnames")
+      require("configs.terminal.greyjoy")
+    end,
+  },
+  -- NAVIGATION --
+  {
+    "folke/flash.nvim",
+    lazy = true,
+    config = function()
+      require("configs.navigation.flash")
     end,
   },
   {
-    "gbprod/yanky.nvim",
-    event = "VeryLazy",
+    "ThePrimeagen/harpoon",
+    config = true,
+  },
+  {
+    "cbochs/portal.nvim",
     config = function()
-      require("configs.editor.yanky")
+      require("configs.navigation.portal")
     end,
   },
   {
-    "willothy/marks.nvim",
-    event = "User ExtraLazy",
-    opts = {
-      refresh_interval = 1000,
+    "chrisgrieser/nvim-spider",
+    keys = {
+      spider("w"),
+      spider("b"),
+      spider("e"),
+      spider("ge"),
     },
   },
   {
-    "echasnovski/mini.files",
+    "toppair/reach.nvim",
+    config = true,
+    cmd = "ReachOpen",
+  },
+  {
+    "rhysd/accelerated-jk",
+    event = "User ExtraLazy",
+  },
+  {
+    "SUSTech-data/wildfire.nvim",
+    config = true,
+    keys = {
+      { "<CR>" },
+      { "<BS>" },
+    },
+  },
+  -- GIT --
+  {
+    "lewis6991/gitsigns.nvim",
+    event = "User ExtraLazy",
     config = function()
-      require("configs.editor.mini-files")
+      require("configs.git.gitsigns")
     end,
   },
-  -- {
-  --   "tomiis4/BufEx.nvim",
-  --   lazy = false,
-  --   config = true,
-  -- },
+  {
+    "sindrets/diffview.nvim",
+    cmd = "DiffViewOpen",
+    config = true,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+  },
+  {
+    "akinsho/git-conflict.nvim",
+    cmd = { "GitConflict", "GitConflictRefresh" },
+    config = function()
+      require("configs.git.git-conflict")
+    end,
+  },
+  {
+    "NeogitOrg/neogit",
+    cmd = "Neogit",
+    dependencies = "nvim-lua/plenary.nvim",
+    config = function()
+      require("configs.git.neogit")
+    end,
+  },
+  {
+    "linrongbin16/gitlinker.nvim",
+    config = function()
+      require("configs.git.gitlinker")
+    end,
+  },
 }
