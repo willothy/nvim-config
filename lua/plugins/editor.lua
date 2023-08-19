@@ -206,7 +206,8 @@ return {
     config = function()
       require("configs.projects.resession")
     end,
-    event = "User ExtraLazy",
+    -- event = "User ExtraLazy",
+    event = "UiEnter",
   },
   {
     "ahmedkhalf/project.nvim",

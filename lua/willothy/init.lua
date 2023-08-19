@@ -13,8 +13,14 @@ local function lazy(module, submodule)
   local mt = {
     __module = name,
   }
+  local ready = false
   function mt:__index(k)
     o = require(name)
+    if o.setup and not ready then
+      o.setup()
+      ready = true
+      vim.print("test")
+    end
     if submodule then
       willothy[submodule][module] = o
     else

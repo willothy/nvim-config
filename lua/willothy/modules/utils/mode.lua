@@ -41,7 +41,30 @@ function M.get_color(evt)
     hl = mode .. "Mode"
   end
 
-  return willothy.hl.hl(hl)
+  local function hex(rgb)
+    if type(rgb) == "string" then
+      return rgb
+    end
+    local bit = require("bit")
+    local r = bit.rshift(bit.band(rgb, 0xff0000), 16)
+    local g = bit.rshift(bit.band(rgb, 0x00ff00), 8)
+    local b = bit.band(rgb, 0x0000ff)
+
+    return ("#%02x%02x%02x"):format(r, g, b)
+  end
+
+  hl = vim.api.nvim_get_hl(0, { name = hl })
+  if hl.fg then
+    hl.fg = hex(hl.fg)
+  end
+  if hl.bg then
+    hl.bg = hex(hl.bg)
+  end
+  if hl.sp then
+    hl.sp = hex(hl.sp)
+  end
+  return hl
+  -- return willothy.hl.hl(hl)
 end
 
 function M.get_name()
@@ -53,23 +76,23 @@ function M.get_name()
   end
 end
 
-function M.setup()
-  local function update_mode(ev)
-    local hl = M.get_color(ev.file)
-    api.nvim_set_hl(0, "CursorLineNr", hl)
-  end
-  update_mode({})
-
-  local group = api.nvim_create_augroup("Modenr", { clear = true })
-  api.nvim_create_autocmd({ "ModeChanged" }, {
-    group = group,
-    callback = update_mode,
-  })
-  api.nvim_create_autocmd("User", {
-    pattern = { "HydraEnter", "HydraLeave" },
-    group = group,
-    callback = update_mode,
-  })
-end
+-- function M.setup()
+--   local function update_mode(ev)
+--     local hl = M.get_color(ev.file)
+--     api.nvim_set_hl(0, "CursorLineNr", hl)
+--   end
+--   update_mode({})
+--
+--   local group = api.nvim_create_augroup("Modenr", { clear = true })
+--   api.nvim_create_autocmd({ "ModeChanged" }, {
+--     group = group,
+--     callback = update_mode,
+--   })
+--   api.nvim_create_autocmd("User", {
+--     pattern = { "HydraEnter", "HydraLeave" },
+--     group = group,
+--     callback = update_mode,
+--   })
+-- end
 
 return M

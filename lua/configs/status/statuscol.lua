@@ -48,10 +48,11 @@ require("statuscol").setup({
       text = { builtin.lnumfunc },
       condition = {
         function(args)
-          return args.relnum == 0 and args.win == vim.api.nvim_get_current_win()
+          return args.relnum == 0
+            and args.win == vim.api.nvim_get_current_win()
         end,
       },
-      hl = "CursorLineNr",
+      hl = "CurrentMode",
       click = "v:lua.ScLa",
     },
     {

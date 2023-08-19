@@ -73,7 +73,7 @@ register({
   ["<F1>"] = bind("cokeline.mappings", "pick", "focus"):with_desc(
     "pick buffer"
   ),
-  ["<C-Enter>"] = bind("willothy.terminals", "toggle"):with_desc(
+  ["<C-Enter>"] = bind(willothy.term, "toggle"):with_desc(
     "terminal: toggle"
   ),
   ["<C-e>"] = bind("harpoon.ui", "toggle_quick_menu"):with_desc(

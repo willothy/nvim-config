@@ -3,7 +3,7 @@ local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 
 register({
   ["<S-CR>"] = {
-    bind("willothy.terminals", "toggle"),
+    bind(willothy.term, "toggle"),
     "terminal",
   },
   ["<S-Esc>"] = {

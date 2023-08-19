@@ -522,3 +522,15 @@ vim.api.nvim_create_autocmd({
   ),
   callback = update,
 })
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup(
+    "heirline_colorscheme_reset",
+    { clear = true }
+  ),
+  callback = function()
+    require("heirline").setup({
+      statusline = C(StatusLine),
+    })
+  end,
+})

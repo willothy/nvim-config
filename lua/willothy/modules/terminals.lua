@@ -55,7 +55,7 @@ end)()
 
 ---@return Terminal
 function M.with()
-  local term = require("willothy.terminals").main
+  local term = willothy.term.main
   if term:is_open() then
     if edgy then
       local win = require("edgy").get_win(term.window)
@@ -70,7 +70,7 @@ function M.with()
 end
 
 function M.with_float()
-  local term = require("willothy.terminals").float
+  local term = willothy.term.float
   if term:is_open() then
     if edgy then
       local win = edgy.get_win(term.window)
@@ -85,7 +85,7 @@ function M.with_float()
 end
 
 function M.toggle()
-  local term = require("willothy.terminals").main
+  local term = willothy.term.main
   if term:is_open() then
     if edgy then
       local win = edgy.get_win(term.window)

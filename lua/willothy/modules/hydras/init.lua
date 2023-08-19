@@ -70,6 +70,6 @@ M.Hydra = function(hintfunc, config)
   return this
 end
 
-vim.api.nvim_set_hl(0, "HydraBorder", { link = "CursorLineNr" })
+vim.api.nvim_set_hl(0, "HydraBorder", { link = "CurrentMode" })
 
 return M
