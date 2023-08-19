@@ -65,13 +65,7 @@ require("mini.animate").setup({
   close = { enable = false },
   resize = {
     enable = true,
-    -- timing = duration(300),
-    -- subresize = subresize(easing.ease_out),
-    -- timing = function(current, goal)
-    --   local duration = 300
-    --   local pct = current / goal
-    --   local time = duration * pct
-    --   return (time / goal)
-    -- end,
+    timing = duration(300),
+    subresize = subresize(easing.ease_out),
   },
 })
