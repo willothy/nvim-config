@@ -108,6 +108,7 @@ require("mason-lspconfig").setup({
             "sqlite.lua",
             "resession.nvim",
             "noice.nvim",
+            "sg.nvim",
           },
           runtime = true,
           types = true,

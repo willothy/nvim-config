@@ -1,19 +1,8 @@
-local spider = function(motion)
-  return {
-    motion,
-    function()
-      require("spider").motion(motion)
-    end,
-    desc = "which_key_ignore",
-    mode = { "n", "o", "x" },
-  }
-end
 return {
   {
     "lukas-reineke/headlines.nvim",
-    dependencies = "nvim-treesitter/nvim-treesitter",
     config = true,
-    ft = { "markdown", "help", "txt" },
+    ft = "markdown",
   },
   {
     "anuvyklack/hydra.nvim",
@@ -27,10 +16,6 @@ return {
   },
   {
     "smoka7/multicursors.nvim",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "anuvyklack/hydra.nvim",
-    },
     config = function()
       require("configs.editor.multicursor")
     end,
@@ -48,7 +33,7 @@ return {
     config = function()
       require("configs.editor.comment")
     end,
-    event = "VeryLazy",
+    event = "User ExtraLazy",
   },
   {
     "cshuaimin/ssr.nvim",
@@ -58,7 +43,6 @@ return {
   },
   {
     "folke/trouble.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
     cmd = "Trouble",
     config = function()
       require("configs.editor.trouble")
@@ -72,21 +56,10 @@ return {
   {
     "sourcegraph/sg.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
-    cmd = {
-      "SourcegraphLink",
-      "SourcegraphSearch",
-      "SourcegraphLogin",
-      "SourcegraphBuild",
-      "CodyExplain",
-      "CodyAsk",
-      "CodyChat",
-      "CodyDo",
-      "CodyToggle",
-      "CodyHistory",
-    },
     config = function()
       require("configs.lsp.sourcegraph")
     end,
+    event = "User ExtraLazy",
     build = "nvim -l build/init.lua",
   },
   {
@@ -158,7 +131,7 @@ return {
       "dhruvmanila/browser-bookmarks.nvim",
       "nvim-telescope/telescope-frecency.nvim",
     },
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "nvim-telescope/telescope-fzf-native.nvim",
@@ -198,7 +171,6 @@ return {
     config = function()
       require("configs.projects.resession")
     end,
-    -- event = "User ExtraLazy",
     event = "UiEnter",
   },
   {
@@ -212,7 +184,6 @@ return {
   {
     "tiagovla/scope.nvim",
     config = true,
-    event = "User ExtraLazy",
   },
   -- TERMINAL --
   {
@@ -233,7 +204,6 @@ return {
   {
     "willothy/wezterm.nvim",
     config = true,
-    cmd = "WeztermSpawn",
   },
   {
     "desdic/greyjoy.nvim",
@@ -248,10 +218,10 @@ return {
   -- NAVIGATION --
   {
     "folke/flash.nvim",
-    lazy = true,
     config = function()
       require("configs.navigation.flash")
     end,
+    event = "User ExtraLazy",
   },
   {
     "ThePrimeagen/harpoon",
@@ -262,15 +232,11 @@ return {
     config = function()
       require("configs.navigation.portal")
     end,
+    cmd = "Portal",
   },
   {
     "chrisgrieser/nvim-spider",
-    keys = {
-      spider("w"),
-      spider("b"),
-      spider("e"),
-      spider("ge"),
-    },
+    config = true,
   },
   {
     "toppair/reach.nvim",
@@ -285,14 +251,13 @@ return {
     "SUSTech-data/wildfire.nvim",
     config = true,
     keys = {
-      { "<CR>" },
-      { "<BS>" },
+      { "<CR>", desc = "wildfire: increase" },
+      { "<BS>", desc = "wildfire: decrease" },
     },
   },
   -- GIT --
   {
     "lewis6991/gitsigns.nvim",
-    event = "User ExtraLazy",
     config = function()
       require("configs.git.gitsigns")
     end,
@@ -301,9 +266,6 @@ return {
     "sindrets/diffview.nvim",
     cmd = "DiffViewOpen",
     config = true,
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
   },
   {
     "akinsho/git-conflict.nvim",
@@ -315,7 +277,6 @@ return {
   {
     "NeogitOrg/neogit",
     cmd = "Neogit",
-    dependencies = "nvim-lua/plenary.nvim",
     config = function()
       require("configs.git.neogit")
     end,
@@ -325,5 +286,10 @@ return {
     config = function()
       require("configs.git.gitlinker")
     end,
+  },
+  {
+    "echasnovski/mini.trailspace",
+    config = true,
+    event = "User ExtraLazy",
   },
 }

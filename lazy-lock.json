@@ -66,6 +66,7 @@
   "mini.indentscope": { "branch": "main", "commit": "f60e9b51a6214c73a170ffc5445ce91560981031" },
   "mini.misc": { "branch": "main", "commit": "fd0b0c3a218d0a9eda01a79c948e3e3948f70aae" },
   "mini.starter": { "branch": "main", "commit": "c7e027558477838eac7109d8576ff1f2d9804845" },
+  "mini.trailspace": { "branch": "main", "commit": "c41ab1035d184ff20c1aebd76639320c055afebe" },
   "minimus": { "branch": "main", "commit": "6d03cdf659d0db4a7fc566b10136fed049d3cfde" },
   "moveline.nvim": { "branch": "oxi", "commit": "440259cee48aaa5080fc284cfbabf186f560ea85" },
   "multicursors.nvim": { "branch": "main", "commit": "65dd5e4eb007cf5796e663ecfa2a2a27cba9d1b7" },

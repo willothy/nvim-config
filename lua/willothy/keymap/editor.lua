@@ -44,6 +44,13 @@ require("which-key").register({
 }, { mode = modes.non_editing })
 
 register({
+  w = bind("spider", "motion", "w"):with_desc("which_key_ignore"),
+  b = bind("spider", "motion", "b"):with_desc("which_key_ignore"),
+  e = bind("spider", "motion", "e"):with_desc("which_key_ignore"),
+  ge = bind("spider", "motion", "ge"):with_desc("which_key_ignore"),
+}, { "n", "o", "x" })
+
+register({
   ["<C-F>"] = {
     -- bind("ssr", "open"),
     bind("spectre", "toggle"),
@@ -73,9 +80,7 @@ register({
   ["<F1>"] = bind("cokeline.mappings", "pick", "focus"):with_desc(
     "pick buffer"
   ),
-  ["<C-Enter>"] = bind(willothy.term, "toggle"):with_desc(
-    "terminal: toggle"
-  ),
+  ["<C-Enter>"] = bind(willothy.term, "toggle"):with_desc("terminal: toggle"),
   ["<C-e>"] = bind("harpoon.ui", "toggle_quick_menu"):with_desc(
     "harpoon: toggle"
   ),
@@ -88,6 +93,8 @@ register({
   ["<Tab>"] = { "V>", "Indent line" },
   ["<S-Tab>"] = { "V<", "Unindent line" },
   M = bind("multicursors", "start"),
+  -- ["u"] = { desc = "undo" },
+  -- ["<C-r>"] = { desc = "redo" },
 }, modes.normal)
 
 register({
