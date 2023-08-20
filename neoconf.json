@@ -29,6 +29,9 @@
     "plugins": {
       "lua_ls": {
         "enabled": true
+      },
+      "lspconfig": {
+        "enabled": true
       }
     }
   },
@@ -38,7 +41,14 @@
         "workspace.checkThirdParty": false,
         "completion.callSnippet": "Disable",
         "diagnostics": {
-          "enable": false
+          "enable": true,
+          "unusedLocalExclude": [
+            "_*"
+          ],
+          "globals": [
+            "vim",
+            "willothy"
+          ]
         },
         "format": {
           "enable": false

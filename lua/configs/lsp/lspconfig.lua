@@ -28,6 +28,7 @@ local function mkcaps(extra)
     -- capabilities.offsetEncoding = "utf-8"
   end
 
+  ---@diagnostic disable-next-line: missing-fields
   capabilities.textDocument.semanticTokens = {
     augmentsSyntaxTokens = false,
   }
@@ -44,6 +45,18 @@ local capabilities = mkcaps(true)
 local lsp_attach = require("configs.lsp").lsp_attach
 
 require("neoconf").setup({})
+
+require("rust-tools").setup({
+  tools = {
+    inlay_hints = {
+      auto = false,
+    },
+  },
+  server = {
+    on_attach = lsp_attach,
+    root_dir = require("lspconfig.util").root_pattern(".git", "Cargo.toml"),
+  },
+})
 
 require("mason-lspconfig").setup({
   handlers = {
@@ -141,7 +154,7 @@ sign({
 
 vim.diagnostic.config({
   underline = true,
-  virtual_lines = true,
+  -- virtual_lines = true,
   signs = true,
   severity_sort = true,
   float = {
@@ -169,18 +182,19 @@ vim.diagnostic.config({
     focusable = false,
   },
   update_in_insert = true,
-  virtual_text = {
-    prefix = "",
-    format = function(diag)
-      local severity = "Info"
-      if diag.severity == 1 then
-        severity = "Error"
-      elseif diag.severity == 2 then
-        severity = "Warn"
-      elseif diag.severity == 3 then
-        severity = "Hint"
-      end
-      return string.format("%s %s", icons.diagnostics[severity], diag.message)
-    end,
-  },
+  -- virtual_text = {
+  --   prefix = "",
+  --   format = function(diag)
+  --     vim.print(diag)
+  --     local severity = "Info"
+  --     if diag.severity == 1 then
+  --       severity = "Error"
+  --     elseif diag.severity == 2 then
+  --       severity = "Warn"
+  --     elseif diag.severity == 3 then
+  --       severity = "Hint"
+  --     end
+  --     return icons.diagnostics[severity] -- string.format("%s %s", icons.diagnostics[severity], diag.message)
+  --   end,
+  -- },
 })

@@ -187,7 +187,6 @@ return {
   },
   {
     "willothy/incline.nvim",
-    -- dir = "~/projects/lua/incline.nvim/",
     event = "User ExtraLazy",
     config = function()
       require("configs.status.incline")
@@ -200,6 +199,10 @@ return {
       vim.cmd.colorscheme("minimus")
     end,
     event = "UiEnter",
+  },
+  {
+    "rktjmp/lush.nvim",
+    cmd = "Lushify",
   },
   {
     "folke/tokyonight.nvim",

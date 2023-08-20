@@ -53,10 +53,6 @@ return {
     -- "simrat39/rust-tools.nvim",
     "willothy/rust-tools.nvim",
     branch = "no-augment",
-    ft = "rust",
-    config = function()
-      require("configs.lsp.rust-tools")
-    end,
   },
   {
     "williamboman/mason.nvim",
