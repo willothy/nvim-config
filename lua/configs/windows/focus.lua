@@ -15,6 +15,7 @@ local ignore_filetypes = {
   NeogitLogView = true,
   NeogitPopup = true,
   NeogitCommitMessage = true,
+  OverseerList = true,
 }
 
 focus.setup({
@@ -26,8 +27,8 @@ focus.setup({
   autoresize = {},
 })
 
-vim.api.nvim_create_autocmd("BufWinEnter", {
+vim.api.nvim_create_autocmd("FileType", {
   callback = function()
-    vim.w.focus_disable = ignore_filetypes[vim.bo.buftype] or false
+    vim.w.focus_disable = ignore_filetypes[vim.bo.filetype]
   end,
 })

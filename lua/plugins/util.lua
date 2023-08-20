@@ -37,7 +37,6 @@ return {
   { "famiu/bufdelete.nvim" },
   {
     "willothy/NeoComposer.nvim",
-    dir = "~/projects/lua/NeoComposer.nvim/",
     requires = { "kkharji/sqlite.lua" },
     event = "User ExtraLazy",
     opts = {
