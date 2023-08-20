@@ -1,9 +1,9 @@
 # nvim-configAA
 
 My personal Neovim config. Over 10000LOC (I have no life). I would
-not recommend using this - It's setup for me, I cannot guarantee that it will work for you, and I will
-not fix issues that do not occur on my computers. However, feel free
-to copy paste snippets to add to your own config :)
+not recommend using this - It's setup for me, I cannot guarantee that it will
+work for you, and I will not fix issues that do not occur on my computers.
+However, feel free to copy paste snippets to add to your own config :)
 
 ## Bloated AND Blazingly Fast™
 
@@ -15,8 +15,8 @@ to copy paste snippets to add to your own config :)
 
 ## Directory Structure
 
-```
- init.lua                       # main entry - only lazy.nvim bootstrap
+```txt
+ init.lua                       # lazy.nvim bootstrap and
  lua
 ├───  configs                   # plugin configs
 ├───  plugins                   # plugin lazy specs
