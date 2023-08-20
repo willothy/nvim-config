@@ -77,11 +77,95 @@ function M.pick_close()
   end
 end
 
+function M.is_float(win)
+  return vim.api.nvim_win_get_config(win).zindex ~= nil
+end
+
+function M.is_focusable(win)
+  if M.is_float(win) then
+    return vim.api.nvim_win_get_config(win).focusable
+  end
+  return true
+end
+
+function M.iter()
+  return vim.iter(vim.api.nvim_list_wins())
+end
+
+function M.close(win)
+  vim.api.nvim_win_close(win, true)
+end
+
+function M.is_last(win)
+  local tabpage = vim.api.nvim_win_get_tabpage(win)
+  local layout = vim.api.nvim_tabpage_get_layout(tabpage, win)
+  return layout[1] == "leaf"
+end
+
+function M.close_floats()
+  M.iter():filter(M.is_float):each(M.close)
+end
+
+function M.close_all()
+  vim.api.nvim_tabpage_set_layout(
+    0,
+    { "leaf", vim.api.nvim_get_current_buf() }
+  )
+end
+
+function M.select_float()
+  local wins = M.iter()
+    :filter(M.is_float)
+    :filter(M.is_focusable)
+    :map(function(win)
+      local buf = vim.api.nvim_win_get_buf(win)
+      local ft = vim.bo[buf].filetype
+      local name = vim.api.nvim_buf_get_name(buf)
+      local exclude = {
+        notify = true,
+      }
+      if ft == "" or exclude[ft] then
+        return
+      end
+      return setmetatable({
+        win = win,
+        buf = buf,
+        ft = ft,
+        name = name,
+      }, {
+        __tostring = function(self)
+          return ("%s: %s"):format(
+            vim.fn.fnamemodify(
+              self.name ~= "" and self.name or "unnamed",
+              ":t"
+            ),
+            self.ft
+          )
+        end,
+      })
+    end)
+    :totable()
+
+  if #wins == 0 then
+    vim.notify("No floating windows", "info")
+    return
+  end
+
+  vim.ui.select(wins, {}, function(item)
+    if vim.api.nvim_win_is_valid(item.win) then
+      vim.api.nvim_set_current_win(item.win)
+    else
+      vim.notify("Window is no longer valid", "warn")
+    end
+  end)
+end
+
 function M.split_right()
   local opt = vim.o.splitright
   vim.o.splitright = true
   vim.cmd("vsplit")
   vim.o.splitright = opt
+  return vim.api.nvim_get_current_win()
 end
 
 function M.split_left()
@@ -89,6 +173,7 @@ function M.split_left()
   vim.o.splitright = false
   vim.cmd("vsplit")
   vim.o.splitright = opt
+  return vim.api.nvim_get_current_win()
 end
 
 function M.split_below()
@@ -96,6 +181,7 @@ function M.split_below()
   vim.o.splitbelow = true
   vim.cmd("split")
   vim.o.splitbelow = opt
+  return vim.api.nvim_get_current_win()
 end
 
 function M.split_above()
@@ -103,6 +189,22 @@ function M.split_above()
   vim.o.splitbelow = false
   vim.cmd("split")
   vim.o.splitbelow = opt
+  return vim.api.nvim_get_current_win()
+end
+
+function M.open(buf, config, enter)
+  config = vim.tbl_deep_extend("force", {
+    relative = "cursor",
+    row = 1,
+    col = 1,
+    width = 40,
+    height = 10,
+    style = "minimal",
+    border = "single",
+  }, config or {})
+  buf = buf or vim.api.nvim_create_buf(false, true)
+
+  return vim.api.nvim_open_win(buf, enter or false, config), buf
 end
 
 return M
