@@ -1,3 +1,8 @@
+require("indent_blankline").setup({
+  char = "▏",
+  show_current_context = false,
+})
+
 require("mini.indentscope").setup({
   symbol = "▏",
   options = {

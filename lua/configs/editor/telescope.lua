@@ -128,6 +128,7 @@ local extensions = {
   "ui-select",
   "smart_history",
   "file_browser",
+  -- "fzf_writer", -- currently broken
   "projects",
   "noice",
   "macros",

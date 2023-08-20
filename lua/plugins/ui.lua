@@ -46,6 +46,9 @@ return {
     end,
   },
   {
+    "lukas-reineke/indent-blankline.nvim",
+  },
+  {
     "willothy/anyline.nvim",
     -- dir = "~/projects/lua/anyline.nvim/",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
