@@ -17,7 +17,7 @@ vim.system(
 
     sg.setup({
       on_attach = require("configs.lsp").lsp_attach,
-      auth_strategies = { "environment-variables", "nvim" },
+      auth_strategy = { "environment-variables", "nvim" },
     })
     auth.set_nvim_auth({
       endpoint = "https://sourcegraph.com/",

@@ -7,31 +7,26 @@ local legendary = function(filter)
     require("legendary").find({ filters = { f[filter]() } })
   end
 end
+
+---@type CodyLayoutSplit
+local cody
+
 register({
   name = "view",
-  o = {
-    bind("telescope.builtin", "oldfiles"),
-    "oldfiles",
-  },
-  r = {
-    bind("telescope.builtin", "registers"),
-    "registers",
-  },
-  s = {
-    bind("telescope.builtin", "lsp_document_symbols"),
-    "document symbols",
-  },
-  q = {
-    bind("trouble", "open", "quickfix"),
-    "quickfix",
-  },
-  l = {
-    bind("trouble", "open", "loclist"),
-    "loclist",
-  },
-  d = {
-    bind("dapui", "toggle"),
-    "dap ui",
+  q = bind("trouble", "open", "quickfix"):with_desc("trouble: quickfix"),
+  l = bind("trouble", "open", "loclist"):with_desc("trouble: loclist"),
+  d = bind("dapui", "toggle"):with_desc("dap-ui"),
+  c = {
+    function()
+      if not cody then
+        local CodySplit = require("sg.components.layout.split")
+        cody = CodySplit:init({
+          name = "main",
+        })
+      end
+      cody:toggle()
+    end,
+    "cody chat",
   },
   u = { vim.cmd.UndotreeToggle, "undotree" },
   L = {
