@@ -8,7 +8,6 @@ null_ls.setup({
     builtins.formatting.prettier.with({
       filetypes = { "toml", "js", "css", "html", "json", "markdown" },
     }),
-    -- builtins.diagnostics.todo_comments,
     builtins.formatting.asmfmt,
     builtins.formatting.beautysh,
     builtins.formatting.clang_format.with({
@@ -16,9 +15,6 @@ null_ls.setup({
     }),
     null_ls.builtins.diagnostics.protolint,
     null_ls.builtins.formatting.protolint,
-    -- null_ls.builtins.diagnostics.buf,
-    -- null_ls.builtins.formatting.buf,
-    -- builtins.formatting.pyink,
     -- builtins.formatting.markdownlint,
     builtins.formatting.taplo,
     -- builtins.diagnostics.commitlint,
@@ -26,7 +22,6 @@ null_ls.setup({
     -- builtins.diagnostics.semgrep,
     -- builtins.diagnostics.shellcheck,
     builtins.diagnostics.zsh,
-    -- builtins.code_actions.cspell,
     builtins.code_actions.gitrebase,
     builtins.hover.dictionary,
     builtins.hover.printenv,
