@@ -30,16 +30,20 @@ require("lazy").setup({
 }, {
   defaults = {
     lazy = true,
-    event = "VeryLazy",
   },
   browser = "brave",
   diff = {
     cmd = "diffview.nvim",
   },
   performance = {
-    cache = { enabled = true },
+    cache = {
+      enabled = true,
+      disable_events = {},
+    },
     reset_packpath = true,
     rtp = {
+      reset = true,
+      paths = {},
       disabled_plugins = {
         "gzip",
         "matchit",
