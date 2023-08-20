@@ -58,6 +58,10 @@ t.setup({
   pickers = {},
   defaults = {
     theme = my_theme,
+    history = {
+      path = vim.fn.stdpath("data") .. "/databases/telescope_history.sqlite3",
+      limit = 200,
+    },
   },
   extensions = {
     ["ui-select"] = {
@@ -122,6 +126,7 @@ local extensions = {
   "menufacture",
   "fzf",
   "ui-select",
+  "smart_history",
   "file_browser",
   "projects",
   "noice",
@@ -136,18 +141,3 @@ local extensions = {
 }
 
 vim.iter(extensions):each(t.load_extension)
-
-vim.api.nvim_create_autocmd("BufWinLeave", {
-  callback = function(ev)
-    if vim.bo[ev.buf].filetype == "TelescopePrompt" then
-      vim.cmd("silent! stopinsert!")
-    end
-  end,
-})
-
-vim.api.nvim_create_autocmd("User", {
-  pattern = "TelescopePreviewerLoaded",
-  callback = function()
-    vim.wo.wrap = false
-  end,
-})

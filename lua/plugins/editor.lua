@@ -134,6 +134,7 @@ return {
       "dhruvmanila/browser-bookmarks.nvim",
       "nvim-telescope/telescope-frecency.nvim",
       "nvim-telescope/telescope-ui-select.nvim",
+      "nvim-telescope/telescope-smart-history.nvim",
     },
     event = "VeryLazy",
   },

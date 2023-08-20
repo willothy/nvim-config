@@ -1,5 +1,5 @@
 local group =
-    vim.api.nvim_create_augroup("willothy.autocmds", { clear = true })
+  vim.api.nvim_create_augroup("willothy.autocmds", { clear = true })
 
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
@@ -40,5 +40,13 @@ vim.api.nvim_create_autocmd({
   group = group,
   callback = function()
     vim.cmd("checktime")
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufWinLeave", {
+  callback = function(ev)
+    if vim.bo[ev.buf].filetype == "TelescopePrompt" then
+      vim.cmd("silent! stopinsert!")
+    end
   end,
 })
