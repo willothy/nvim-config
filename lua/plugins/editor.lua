@@ -19,24 +19,6 @@ return {
     "anuvyklack/hydra.nvim",
   },
   {
-    "willothy/hollywood.nvim",
-    event = "LspAttach",
-    -- dir = "~/projects/lua/hollywood.nvim",
-  },
-  {
-    "ThePrimeagen/refactoring.nvim",
-    config = true,
-    event = "LspAttach",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
-  },
-  {
-    "folke/neodev.nvim",
-    config = true,
-  },
-  {
     "smjonas/live-command.nvim",
     cmd = { "Norm", "Visual", "Reg" },
     config = function()
