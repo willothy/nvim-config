@@ -1,7 +1,6 @@
-local _table = table
-local table = {}
+local M = {}
 
-function table.show(t, column_order)
+function M.show(t, column_order)
   -- Adapted for Neovim from https://github.com/hishamhm/tabular
   local draw = {
     NW = "/",
@@ -49,7 +48,7 @@ function table.show(t, column_order)
   local show_as_columns
 
   local function output_line(out, line)
-    _table.insert(out, line)
+    table.insert(out, line)
     out.width = math.max(out.width or 0, strlen(line))
   end
 
@@ -64,13 +63,13 @@ function table.show(t, column_order)
 
     for k, v in pairs(tbl) do
       if not skip_array or type(k) ~= "number" then
-        _table.insert(tt, { k, v })
+        table.insert(tt, { k, v })
         keys[k] = tostring(k)
         width = math.max(width, strlen(keys[k]))
       end
     end
 
-    _table.sort(tt, function(a, b)
+    table.sort(tt, function(a, b)
       if type(a[1]) == "number" and type(b[1]) == "number" then
         return a[1] < b[1]
       else
@@ -148,26 +147,26 @@ function table.show(t, column_order)
       column_set = {}
       for name, _row in pairs(columns) do
         if not column_set[name] then
-          _table.insert(column_names, name)
+          table.insert(column_names, name)
           column_set[name] = true
         end
       end
-      _table.sort(column_names)
+      table.sort(column_names)
     end
 
     local function output_cell(line, cname, text, color)
       local w = columns[cname].width
       text = text or ""
       if color then
-        _table.insert(line, color)
+        table.insert(line, color)
       elseif bgcolor then
-        _table.insert(line, bgcolor)
+        table.insert(line, bgcolor)
       end
-      _table.insert(line, text .. (" "):rep(w - strlen(text)))
+      table.insert(line, text .. (" "):rep(w - strlen(text)))
       if color then
-        _table.insert(line, bgcolor)
+        table.insert(line, bgcolor)
       end
-      _table.insert(line, draw.V)
+      table.insert(line, draw.V)
     end
 
     local out = {}
@@ -176,19 +175,19 @@ function table.show(t, column_order)
     local border_bot = {}
     for i, cname in ipairs(column_names) do
       local w = columns[cname].width
-      _table.insert(border_top, draw.H:rep(w))
-      _table.insert(border_bot, draw.H:rep(w))
+      table.insert(border_top, draw.H:rep(w))
+      table.insert(border_bot, draw.H:rep(w))
       if i < #column_names then
-        _table.insert(border_top, draw.N)
-        _table.insert(border_bot, draw.S)
+        table.insert(border_top, draw.N)
+        table.insert(border_bot, draw.S)
       end
     end
-    _table.insert(border_top, 1, draw.NW)
-    _table.insert(border_bot, 1, draw.SW)
-    _table.insert(border_top, draw.NE)
-    _table.insert(border_bot, draw.SE)
+    table.insert(border_top, 1, draw.NW)
+    table.insert(border_bot, 1, draw.SW)
+    table.insert(border_top, draw.NE)
+    table.insert(border_bot, draw.SE)
 
-    output_line(out, _table.concat(border_top))
+    output_line(out, table.concat(border_top))
     if not skip_header then
       local line = { draw.V }
       local sep = { draw.V }
@@ -196,8 +195,8 @@ function table.show(t, column_order)
         output_cell(line, cname, cname)
         output_cell(sep, cname, draw.H:rep(strlen(cname)))
       end
-      output_line(out, _table.concat(line))
-      output_line(out, _table.concat(sep))
+      output_line(out, table.concat(line))
+      output_line(out, table.concat(sep))
     end
 
     for i = 1, #tbl do
@@ -207,10 +206,10 @@ function table.show(t, column_order)
           local row = columns[cname][i]
           output_cell(line, cname, row and row[h] or "", nil)
         end
-        output_line(out, _table.concat(line))
+        output_line(out, table.concat(line))
       end
     end
-    output_line(out, _table.concat(border_bot))
+    output_line(out, table.concat(border_bot))
 
     local mt = tbl
     for k, _v in pairs(mt) do
@@ -262,7 +261,7 @@ function table.show(t, column_order)
   end
 
   local ids = detect_cycles(t)
-  return _table.concat(show(t, nil, {}, ids, column_order), "\n")
+  return table.concat(show(t, nil, {}, ids, column_order), "\n")
 end
 
-return table
+return M

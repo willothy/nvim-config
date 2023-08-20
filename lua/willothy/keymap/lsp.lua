@@ -53,8 +53,12 @@ register({
     "implementations",
   },
   n = {
-    function() 
-      vim.cmd.IncRename(vim.fn.expand("<cword>"))
+    function()
+      vim.api.nvim_feedkeys(
+        ":IncRename " .. vim.fn.expand("<cword>"),
+        "n",
+        true
+      )
     end,
   },
 }, modes.non_editing, "<leader>c")
