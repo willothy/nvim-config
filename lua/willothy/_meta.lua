@@ -19,6 +19,7 @@ willothy.utils.tabpage = require("willothy.modules.utils.tabpage")
 willothy.utils.mode = require("willothy.modules.utils.mode")
 willothy.utils.plugins = require("willothy.modules.utils.plugins")
 willothy.utils.debug = require("willothy.modules.utils.debug")
+willothy.utils.table = require("willothy.modules.utils.table")
 
 -- These likely won't be used directly but are exposed for ease of use
 

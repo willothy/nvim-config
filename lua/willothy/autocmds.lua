@@ -21,6 +21,13 @@ vim.api.nvim_create_autocmd({
   end,
 })
 
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = group,
+  callback = function()
+    require("mini.trailspace").trim()
+  end,
+})
+
 vim.api.nvim_create_autocmd({
   "TermResponse",
 }, {

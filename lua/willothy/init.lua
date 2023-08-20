@@ -88,6 +88,7 @@ willothy.utils.tabpage = lazy("tabpage", "utils")
 willothy.utils.mode = lazy("mode", "utils")
 willothy.utils.plugins = lazy("plugins", "utils")
 willothy.utils.debug = lazy("debug", "utils")
+willothy.utils.table = lazy("table", "utils")
 
 -- These likely won't be used directly but are exposed for ease of use
 

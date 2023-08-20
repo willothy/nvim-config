@@ -38,7 +38,7 @@ return {
   {
     "cshuaimin/ssr.nvim",
     config = function()
-      require("configs.editor.ssr")
+      require("configs.editor.ssr")  
     end,
   },
   {
