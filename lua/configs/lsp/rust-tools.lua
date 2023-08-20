@@ -8,7 +8,6 @@ require("rust-tools").setup({
   },
   server = {
     on_attach = lsp.lsp_attach,
-    settings = lsp.lsp_settings["rust-analyzer"],
   },
 })
 vim.cmd.LspStart("rust_analyzer")

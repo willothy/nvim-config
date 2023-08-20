@@ -77,9 +77,9 @@ to copy paste snippets to add to your own config :)
      │       ├──  plugins.lua   # list and filter installed plugins
      │       ├──  tabpage.lua   # tabpage utilities
      │       ├──  window.lua    # window utilities
+     │       ├──  table.lua     # table utilities
      │       └──  templates.lua # filetype templates
      │
      ├──  lines        # (bad) ascii canvas library
-     ├──  lsp_settings # lspconfig settings
      └──  scratchpads  # place for me to mess around with random Lua stuff
 ```

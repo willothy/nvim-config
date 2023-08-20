@@ -6,7 +6,7 @@ require("noice").setup({
     },
   },
   presets = {
-    long_message_to_split = true,
+    long_message_to_split = false,
     inc_rename = true,
   },
   smart_move = {

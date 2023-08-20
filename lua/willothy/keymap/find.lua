@@ -25,15 +25,6 @@ register({
     telescope.undo,
     "undo history",
   },
-  o = { telescope.oldfiles, "oldfiles" },
-  r = {
-    telescope.registers,
-    "registers",
-  },
-  l = {
-    telescope.lsp_document_symbols,
-    "document symbols",
-  },
   -- t = {
   --   telescope
   -- },

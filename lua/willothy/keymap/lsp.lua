@@ -52,4 +52,9 @@ register({
     end,
     "implementations",
   },
+  n = {
+    function() 
+      vim.cmd.IncRename(vim.fn.expand("<cword>"))
+    end,
+  },
 }, modes.non_editing, "<leader>c")

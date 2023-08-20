@@ -110,24 +110,4 @@ function M.list_forks()
   willothy.fn.popup(forks, "installed plugin forks")
 end
 
-function M.get_enabled()
-  return {
-    "nvim-treesitter",
-    "nvim-lspconfig",
-    "which-key.nvim",
-    "flatten.nvim",
-    "wezterm.nvim",
-    "rust-tools.nvim",
-    "nui.nvim",
-    "bufdelete.nvim",
-    "mini.files",
-    "harpoon",
-    "sqlite.lua",
-    "resession.nvim",
-    "noice.nvim",
-    "sg.nvim",
-    "tabular",
-  }
-end
-
 return M

@@ -1,0 +1,145 @@
+{
+  "neodev": {
+    "library": {
+      "enabled": true,
+      "runtime": true,
+      "types": true,
+      "plugins": [
+        "nvim-lspconfig",
+        "mason-lspconfig",
+        "mason.nvim",
+        "nvim-treesitter",
+        "nvim-lspconfig",
+        "which-key.nvim",
+        "flatten.nvim",
+        "wezterm.nvim",
+        "rust-tools.nvim",
+        "nui.nvim",
+        "bufdelete.nvim",
+        "mini.files",
+        "harpoon",
+        "sqlite.lua",
+        "resession.nvim",
+        "noice.nvim",
+        "sg.nvim"
+      ]
+    }
+  },
+  "neoconf": {
+    "plugins": {
+      "lua_ls": {
+        "enabled": true
+      }
+    }
+  },
+  "lspconfig": {
+    "lua_ls": {
+      "Lua": {
+        "workspace.checkThirdParty": false,
+        "completion.callSnippet": "Disable",
+        "diagnostics": {
+          "enable": false
+        },
+        "format": {
+          "enable": false
+        },
+        "hint": {
+          "enable": true,
+          "setType": true,
+          "arrayIndex": "Disable",
+          "await": true,
+          "paramName": "All",
+          "paramType": true,
+          "semicolon": "SameLine"
+        }
+      }
+    },
+    "rust_analyzer": {
+      "imports": {
+        "granularity": {
+          "enforce": true,
+          "group": "crate"
+        },
+        "merge": {
+          "glob": true
+        },
+        "group": {
+          "enable": true
+        }
+      },
+      "diagnostics": {
+        "experimental": {
+          "enable": true
+        }
+      },
+      "inlayHints": {
+        "bindingModeHints": {
+          "enable": true
+        },
+        "closureCaptureHints": {
+          "enable": true
+        },
+        "closureReturnTypeHints": {
+          "enable": "always"
+        },
+        "discriminantHints": {
+          "enable": "always"
+        },
+        "lifetimeElisionHints": {
+          "useParameterNames": false,
+          "enable": "always"
+        },
+        "expressionAdjustmentHints": {
+          "enable": "always",
+          "hideOutsideUnsafe": false
+        }
+      },
+      "procMacro": {
+        "enable": true
+      },
+      "hover": {
+        "memoryLayout": {
+          "niches": true
+        },
+        "actions": {
+          "run": {
+            "enable": true
+          },
+          "documentation": {
+            "enable": true
+          },
+          "references": {
+            "enable": true
+          }
+        }
+      },
+      "lens": {
+        "enable": true,
+        "references": {
+          "method": {
+            "enable": true
+          },
+          "adt": {
+            "enable": true
+          },
+          "enumVariant": {
+            "enable": true
+          },
+          "trait": {
+            "enable": true
+          }
+        }
+      }
+    },
+    "asm-lsp": {},
+    "clangd": {
+      "single_file_support": false,
+      "semanticHighlighting": true
+    },
+    "bashls": {
+      "bashIde": {
+        "includeAllWorkspaceSymbols": true
+      }
+    }
+  }
+}

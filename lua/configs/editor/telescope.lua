@@ -121,6 +121,7 @@ t.setup({
 local extensions = {
   "menufacture",
   "fzf",
+  "ui-select",
   "file_browser",
   "projects",
   "noice",

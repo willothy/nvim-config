@@ -41,16 +41,9 @@ require("mason").setup()
 local lspconfig = require("lspconfig")
 local capabilities = mkcaps(true)
 
-local lsp_settings = require("configs.lsp").lsp_settings
 local lsp_attach = require("configs.lsp").lsp_attach
 
-lspconfig.zls.setup({
-  -- capabilities = capabilities,
-  on_attach = lsp_attach,
-  settings = lsp_settings.zls,
-  -- single_file_support = true,
-})
-vim.g.zig_fmt_autosave = false
+require("neoconf").setup({})
 
 require("mason-lspconfig").setup({
   handlers = {
@@ -58,7 +51,6 @@ require("mason-lspconfig").setup({
       lspconfig[server_name].setup({
         capabilities = capabilities,
         on_attach = lsp_attach,
-        settings = lsp_settings[server_name],
         root_dir = require("lspconfig.util").root_pattern(".git"),
       })
     end,
@@ -66,45 +58,29 @@ require("mason-lspconfig").setup({
       lspconfig.clangd.setup({
         capabilities = capabilities,
         on_attach = lsp_attach,
-        settings = lsp_settings.clangd,
         root_dir = require("lspconfig.util").root_pattern(".git"),
         filetypes = { "c", "cpp", "h", "hpp" },
       })
     end,
-    -- bufls = function()
-    --   lspconfig.bufls.setup({
-    --     capabilities = capabilities,
-    --     on_attach = lsp_attach,
-    --     settings = lsp_settings.bufls,
-    --     root_dir = require("lspconfig.util").root_pattern(".git"),
-    --   })
-    -- end,
     taplo = function()
       lspconfig.taplo.setup({
-        -- capabilities = capabilities,
+        capabilities = capabilities,
         on_attach = lsp_attach,
-        settings = lsp_settings.taplo,
         root_dir = require("lspconfig.util").root_pattern(
           ".git",
+          "Cargo.toml",
           "~/.config/*"
         ),
       })
     end,
     lua_ls = function()
       require("neodev").setup({
-        library = {
-          enabled = true,
-          plugins = willothy.utils.plugins.get_enabled(),
-          runtime = true,
-          types = true,
-        },
-        lspconfig = false,
+        lspconfig = true,
         pathStrict = true,
       })
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
         on_attach = lsp_attach,
-        settings = lsp_settings.lua_ls,
         root_dir = require("lspconfig.util").root_pattern(".git"),
         before_init = require("neodev.lsp").before_init,
         single_file_support = false,
@@ -112,7 +88,6 @@ require("mason-lspconfig").setup({
     end,
     bashls = function()
       require("lspconfig").bashls.setup({
-        settings = {},
         capabilities = mkcaps(false),
         attach = lsp_attach,
         filetypes = { "zsh", "sh", "bash" },
