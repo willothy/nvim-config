@@ -8,8 +8,7 @@ However, feel free to copy paste snippets to add to your own config :)
 ## Bloated AND Blazingly Fast™
 
 - Over 150 plugins
-- Under 15ms startup on my desktop
-- 20-40ms startup time on my laptop
+- Under 15ms startup on both my desktop and laptop
 - Lazy load EVERYTHING. Only a few plugins load before UiEnter.
 - I've spent a stupid amount of time optimizing
 
@@ -32,7 +31,7 @@ However, feel free to copy paste snippets to add to your own config :)
      ├──  commands.lua
      ├──  settings.lua
      │
-     ├──  keymap
+     ├──  keymap                
      │   ├──  buffer.lua        # <leader>b buffer related
      │   ├──  cycle.lua         # next/prev mappings with []
      │   ├──  editor.lua        # misc editor mappings (needs cleanup)
