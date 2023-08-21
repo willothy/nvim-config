@@ -12,21 +12,34 @@ require("cybu").setup({
 local au = vim.api.nvim_create_augroup("configs.ui.cybu", { clear = true })
 
 local last
+
 vim.api.nvim_create_autocmd("BufLeave", {
   group = au,
   callback = function(ev)
     if not vim.bo[ev.buf].buflisted then
       return
     end
-    last = vim.api.nvim_get_current_win()
+    last = {
+      win = vim.api.nvim_get_current_win(),
+      buf = ev.buf,
+    }
   end,
 })
 vim.api.nvim_create_autocmd("BufWinEnter", {
   group = au,
-  callback = function()
-    if last == vim.api.nvim_get_current_win() then
-      require("cybu").autocmd()
+  callback = function(ev)
+    if last == nil then
+      return
     end
+    if
+      last.win ~= vim.api.nvim_get_current_win()
+      or not vim.bo[ev.buf].buflisted
+      or vim.api.nvim_buf_get_name(ev.buf) == ""
+    then
+      last = nil
+      return
+    end
+    require("cybu").autocmd()
     last = nil
   end,
 })

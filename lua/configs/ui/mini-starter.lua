@@ -22,16 +22,20 @@ local items = {
   -- starter.sections.sessions(9, true),
 }
 
-local stats = require("lazy").stats()
-
 starter.setup({
   evaluate_single = true,
   autoopen = false,
   items = items,
 
-  header = "Startup in " .. string.format("%.2f", stats.startuptime) .. "ms",
+  header = function()
+    local stats = require("lazy").stats()
+    return "Startup in " .. string.format("%.2f", stats.startuptime) .. "ms"
+  end,
 
-  footer = " Loaded " .. stats.loaded .. " / " .. stats.count,
+  footer = function()
+    local stats = require("lazy").stats()
+    return " Loaded " .. stats.loaded .. " / " .. stats.count
+  end,
 
   content_hooks = {
     starter.gen_hook.adding_bullet(),
@@ -47,16 +51,17 @@ local function is_something_shown()
     return true
   end
 
-  -- - Several buffers are listed (like session with placeholder buffers). That
-  --   means unlisted buffers (like from `nvim-tree`) don't affect decision.
-  local listed_buffers = vim.tbl_filter(function(buf_id)
-    return vim.fn.buflisted(buf_id) == 1
-  end, vim.api.nvim_list_bufs())
-  if #listed_buffers > 1 then
+  if
+    vim
+      .iter(vim.api.nvim_list_bufs())
+      :filter(function(buf_id)
+        return vim.bo[buf_id].buflisted
+      end)
+      :next()
+  then
     return true
   end
 
-  -- - There are files in arguments (like `nvim foo.txt` with new file).
   if vim.fn.argc() > 0 then
     return true
   end
@@ -64,18 +69,12 @@ local function is_something_shown()
   return false
 end
 
-if
-  -- vim
-  --   .iter(vim.api.nvim_list_bufs())
-  --   :filter(function(b)
-  --     return vim.api.nvim_buf_is_loaded(b)
-  --       and vim.bo.filetype ~= ""
-  --       and vim.bo[b].buftype == ""
-  --       and vim.bo[b].buflisted == true
-  --       and vim.api.nvim_buf_get_name(b) ~= ""
-  --   end)
-  --   :next() == nil
-  not is_something_shown()
-then
+if not is_something_shown() then
   require("mini.starter").open()
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "LazyLoad",
+    callback = function()
+      require("mini.starter").refresh()
+    end,
+  })
 end
