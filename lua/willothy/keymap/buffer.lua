@@ -6,7 +6,24 @@ register({
   name = "buffer",
   r = {
     function()
-      require("reach").buffers()
+      require("reach").buffers({
+        show_current = true,
+        filter = function(buf)
+          return true
+        end,
+        auto_exclude_handles = {
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+        },
+      })
     end,
     "reach: buffers",
   },

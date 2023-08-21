@@ -14,6 +14,7 @@ register({
         cleanup = group.cleanup
       end
 
+      ---@diagnostic disable-next-line: duplicate-set-field
       group.cleanup = function()
         cleanup()
         vim.api.nvim_set_current_win(curwin)
@@ -21,6 +22,7 @@ register({
 
       group.code_action_group()
       -- vim.lsp.buf.code_action()
+      -- require("hollywood").code_actions()
     end,
     "code actions",
   },

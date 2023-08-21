@@ -118,7 +118,7 @@ function Scrollbar:update()
     self:show()
   end
 
-  local zindex = vim.api.nvim_win_get_config(self.winnr).zindex or 50
+  local zindex = vim.api.nvim_win_get_config(self.winnr).zindex or 1
 
   local function win_apply_config(win, opts)
     opts = vim.tbl_deep_extend(

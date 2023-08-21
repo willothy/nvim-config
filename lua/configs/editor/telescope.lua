@@ -37,22 +37,26 @@ local function create_and_add_to_harpoon(prompt_bufnr)
   end
 end
 
-local my_theme = require("telescope.themes").get_ivy({
+---@class Theme
+local Theme = {}
+Theme.__index = Theme
+
+---@return Theme
+function Theme:with(opts)
+  local theme = vim.tbl_extend("force", self, opts)
+  return setmetatable(theme, Theme)
+end
+
+local my_theme = Theme:with({
   layout_strategy = "flex",
-  prompt_title = "",
-  prompt_prefix = "",
-  preview_title = "",
   borderchars = {
     preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
     prompt = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
     results = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
   },
 })
-local t = require("telescope")
 
-local function with(o, theme)
-  return vim.tbl_deep_extend("keep", o, theme)
-end
+local t = require("telescope")
 
 t.setup({
   pickers = {},
@@ -80,23 +84,30 @@ t.setup({
         },
       },
     },
-    undo = with({
-      use_delta = true,
-      side_by_side = vim.o.columns > side_by_side_min,
-      entry_format = "$STAT, $TIME",
-      layout_strategy = "bottom_pane",
-      sorting_strategy = "ascending",
-      mappings = {
-        i = {
-          ["<cr>"] = require("telescope-undo.actions").yank_additions,
-          ["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
-          ["<C-cr>"] = require("telescope-undo.actions").restore,
+    undo = Theme
+      :with({
+        use_delta = true,
+        side_by_side = vim.o.columns > side_by_side_min,
+        entry_format = "$STAT, $TIME",
+        -- layout_strategy = "bottom_pane",
+        sorting_strategy = "ascending",
+        mappings = {
+          i = {
+            ["<cr>"] = require("telescope-undo.actions").yank_additions,
+            ["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
+            ["<C-cr>"] = require("telescope-undo.actions").restore,
+          },
         },
-      },
-    }, my_theme),
-    macros = {
-      theme = "ivy",
-    },
+        results_title = "Undo History",
+        prompt_title = "Search",
+        preview_title = "Edit Diff",
+      })
+      :with(my_theme),
+    macros = Theme:with({
+      theme = "dropdown",
+      results_title = "Macros",
+      prompt_title = "Find Macros",
+    }):with(my_theme),
     heading = {
       treesitter = true,
     },
@@ -111,14 +122,24 @@ t.setup({
       selected_browser = "brave",
       url_open_command = "xdg-open",
     },
-    frecency = with({
-      ignore_patterns = { "*.git/*", "*/tmp/*", "/home/willothy/.dotfiles/*" },
-      show_scores = true,
+    frecency = Theme:with({
+      ignore_patterns = {
+        "*.git/*",
+        "*/tmp/*",
+        "/home/willothy/.dotfiles/*",
+      },
+      show_scores = false,
+      -- filepath_formatter = function()
+      --   return "e"
+      -- end,
       workspaces = {
         ["dotfiles"] = "/home/willothy/.config/",
         ["projects"] = "/home/willothy/projects/",
       },
-    }, my_theme),
+      prompt_title = "Find Files",
+      preview_title = "Preview",
+      results_title = "Files",
+    }):with(my_theme),
   },
 })
 

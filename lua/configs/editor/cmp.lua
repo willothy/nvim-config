@@ -87,7 +87,8 @@ local opts = {
     { name = "luasnip", priority = 2, max_item_count = 5, group_index = 1 },
     { name = "buffer", priority = 3, max_item_count = 5, group_index = 2 },
     {
-      name = "async_path",
+      -- name = "async_path",
+      name = "path",
       priority = 3,
       max_item_count = 5,
       group_index = 2,
@@ -104,9 +105,9 @@ local opts = {
 
 cmp.setup(opts)
 
-local ts_utils = require("nvim-treesitter.ts_utils")
-local pairs_cmp = require("nvim-autopairs.completion.cmp")
 local pairs = require("nvim-autopairs")
+local pairs_cmp = require("nvim-autopairs.completion.cmp")
+local ts_utils = require("nvim-treesitter.ts_utils")
 local ts_node_func_parens_disabled = {
   -- don't create autopairs for
   -- `use crate::<function>`
@@ -131,8 +132,7 @@ pairs_cmp.filetypes["*"]["("].handler = function(
   commit_character
 )
   local node = ts_utils.get_node_at_cursor()
-  local node_type = node:type()
-  if ts_node_func_parens_disabled[node_type] then
+  if node and ts_node_func_parens_disabled[node:type()] then
     if item.data then
       item.data.funcParensDisabled = true
     else
@@ -146,8 +146,8 @@ cmp.event:on("confirm_done", pairs_cmp.on_confirm_done())
 
 cmp.setup.cmdline(":", {
   sources = cmp.config.sources({
+    { name = "path", group_index = 1 },
     { name = "cmdline", group_index = 1 },
-    -- { name = "async_path", group_index = 1 },
     { name = "cmdline_history", group_index = 2 },
     { name = "copilot", group_index = 2 },
   }),
@@ -164,14 +164,14 @@ cmp.setup.cmdline(":", {
 
 cmp.setup.filetype("harpoon", {
   sources = cmp.config.sources({
-    { name = "async_path" },
+    { name = "path" },
   }),
 })
 
 cmp.setup.filetype("gitcommit", {
   sources = {
     { name = "commit" },
-    { name = "async_path" },
+    { name = "path" },
   },
 })
 

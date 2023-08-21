@@ -5,6 +5,13 @@ return {
     -- dir = "~/projects/lua/hollywood.nvim",
   },
   {
+    "aznhe21/actions-preview.nvim",
+    config = function()
+      require("configs.lsp.actions-preview")
+    end,
+    event = "LspAttach",
+  },
+  {
     "ThePrimeagen/refactoring.nvim",
     config = true,
     event = "LspAttach",
@@ -126,7 +133,8 @@ return {
     "hrsh7th/nvim-cmp",
     dependencies = {
       "hrsh7th/cmp-buffer",
-      "FelipeLema/cmp-async-path",
+      -- "FelipeLema/cmp-async-path",
+      "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lsp-document-symbol",

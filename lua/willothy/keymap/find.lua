@@ -6,7 +6,7 @@ local telescope = willothy.fn.telescope
 register({
   name = "find",
   f = {
-    telescope.find_files,
+    telescope.frecency,
     "files",
   },
   s = {

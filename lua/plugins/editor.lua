@@ -4,7 +4,9 @@ return {
   },
   {
     "lukas-reineke/headlines.nvim",
-    config = true,
+    config = function()
+      require("configs.editor.headlines")
+    end,
     ft = "markdown",
   },
   {
@@ -69,7 +71,6 @@ return {
     "willothy/moveline.nvim",
     branch = "oxi",
     event = "User ExtraLazy",
-    -- dir = "~/projects/rust/moveline.nvim/",
     build = "make build",
   },
   {
@@ -103,8 +104,6 @@ return {
   {
     "willothy/which-key.nvim",
     branch = "helix",
-    -- branch = "custom-views",
-    -- dir = "~/projects/lua/which-key.nvim/",
     config = function()
       require("configs.editor.which-key")
     end,
@@ -122,7 +121,6 @@ return {
   },
   {
     "nvim-telescope/telescope.nvim",
-    -- dir = "~/projects/lua/telescope.nvim/",
     config = function()
       require("configs.editor.telescope")
     end,
@@ -297,5 +295,11 @@ return {
     "echasnovski/mini.trailspace",
     config = true,
     event = "User ExtraLazy",
+  },
+  {
+    "gennaro-tedesco/nvim-peekup",
+    event = "VeryLazy",
+    config = function()
+    end
   },
 }

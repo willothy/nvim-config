@@ -228,4 +228,11 @@ return {
     config = true,
     cmd = "Octo",
   },
+  {
+    "subnut/nvim-ghost.nvim",
+    event = "User ExtraLazy",
+    -- build = ":GhostInstall",
+    -- lazy = false,
+    -- cmd = "GhostInstall",
+  },
 }

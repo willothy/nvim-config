@@ -1,4 +1,4 @@
-# nvim-configAA
+# nvim-config
 
 My personal Neovim config. Over 10000LOC (I have no life). I would
 not recommend using this - It's setup for me, I cannot guarantee that it will
@@ -31,7 +31,7 @@ However, feel free to copy paste snippets to add to your own config :)
      ├──  commands.lua
      ├──  settings.lua
      │
-     ├──  keymap                
+     ├──  keymap
      │   ├──  buffer.lua        # <leader>b buffer related
      │   ├──  cycle.lua         # next/prev mappings with []
      │   ├──  editor.lua        # misc editor mappings (needs cleanup)

@@ -50,7 +50,6 @@ return {
   },
   {
     "willothy/anyline.nvim",
-    -- dir = "~/projects/lua/anyline.nvim/",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     enabled = anyline,
     event = "VeryLazy",
@@ -118,7 +117,6 @@ return {
   },
   {
     "willothy/nvim-window-picker",
-    -- dir = "~/projects/lua/nvim-window-picker/",
     config = function()
       require("configs.windows.window-picker")
     end,
@@ -144,7 +142,6 @@ return {
   },
   {
     "willothy/winborder.nvim",
-    -- dir = "~/projects/lua/winborder.nvim/",
     config = true,
     enabled = false,
     event = "VeryLazy",

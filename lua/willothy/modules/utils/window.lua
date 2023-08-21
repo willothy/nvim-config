@@ -43,12 +43,21 @@ function M.pick_swap()
 
   local buf = vim.api.nvim_win_get_buf(win)
   local curbuf = vim.api.nvim_get_current_buf()
-  if buf == curbuf or win == curwin then
+  if win == curwin then
     return
   end
-
-  vim.api.nvim_win_set_buf(win, curbuf)
-  vim.api.nvim_win_set_buf(curwin, buf)
+  local cur_view = vim.api.nvim_win_call(curwin, vim.fn.winsaveview)
+  local tgt_view = vim.api.nvim_win_call(win, vim.fn.winsaveview)
+  if buf ~= curbuf then
+    vim.api.nvim_win_set_buf(win, curbuf)
+    vim.api.nvim_win_set_buf(curwin, buf)
+  end
+  vim.api.nvim_win_call(curwin, function()
+    vim.fn.winrestview(tgt_view)
+  end)
+  vim.api.nvim_win_call(win, function()
+    vim.fn.winrestview(cur_view)
+  end)
 end
 
 function M.pick_close()
