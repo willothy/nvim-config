@@ -10,10 +10,6 @@ vim.defer_fn(function()
   require("willothy.autocmds")
 
   vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" })
-
-  -- When lazy-loading this many plugins, auto-install can be janky.
-  -- Therefore, I disable lazy's builtin auto-install and run it here.
-  require("lazy.core.loader").install_missing()
 end, 150)
 
 -- Inform vim how to enable undercurl in wezterm

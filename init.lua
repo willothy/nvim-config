@@ -32,7 +32,7 @@ require("lazy").setup({
     lazy = true,
   },
   install = {
-    missing = false,
+    missing = true,
     colorscheme = { "minimus" },
   },
   browser = "brave",
