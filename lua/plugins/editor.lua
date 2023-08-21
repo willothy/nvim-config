@@ -14,7 +14,7 @@ return {
   },
   {
     "smjonas/live-command.nvim",
-    cmd = { "Norm", "Visual", "Reg" },
+    event = "User ExtraLazy",
     config = function()
       require("configs.editor.live_cmd")
     end,
@@ -24,14 +24,7 @@ return {
     config = function()
       require("configs.editor.multicursor")
     end,
-    cmd = {
-      "MCstart",
-      "MCvisual",
-      "MCclear",
-      "MCpattern",
-      "MCvisualPattern",
-      "MCunderCursor",
-    },
+    event = "User ExtraLazy",
   },
   {
     "numToStr/Comment.nvim",
@@ -55,7 +48,7 @@ return {
   },
   {
     "nvim-pack/nvim-spectre",
-    cmd = "Spectre",
+    event = "User ExtraLazy",
     config = true,
   },
   {
@@ -114,7 +107,7 @@ return {
     dependencies = {
       "kkharji/sqlite.lua",
     },
-    cmd = "Legendary",
+    event = "User ExtraLazy",
     config = function()
       require("configs.editor.legendary")
     end,
@@ -222,16 +215,7 @@ return {
   {
     "stevearc/overseer.nvim",
     config = true,
-    cmd = {
-      "OverseerRun",
-      "OverseerInfo",
-      "OverseerBuild",
-      "OverseerOpen",
-      "OverseerClose",
-      "OverseerToggle",
-      "OverseerTaskAction",
-      "OverseerQuickAction",
-    },
+    event = "User ExtraLazy",
   },
   -- NAVIGATION --
   {
@@ -250,7 +234,6 @@ return {
     config = function()
       require("configs.navigation.portal")
     end,
-    cmd = "Portal",
   },
   {
     "chrisgrieser/nvim-spider",
@@ -259,7 +242,6 @@ return {
   {
     "toppair/reach.nvim",
     config = true,
-    cmd = "ReachOpen",
   },
   {
     "rhysd/accelerated-jk",
@@ -267,11 +249,8 @@ return {
   },
   {
     "SUSTech-data/wildfire.nvim",
+    event = "User ExtraLazy",
     config = true,
-    keys = {
-      { "<CR>", desc = "wildfire: increase" },
-      { "<BS>", desc = "wildfire: decrease" },
-    },
   },
   -- GIT --
   {
@@ -283,18 +262,19 @@ return {
   {
     "sindrets/diffview.nvim",
     cmd = "DiffViewOpen",
+    event = "User ExtraLazy",
     config = true,
   },
   {
     "akinsho/git-conflict.nvim",
-    cmd = { "GitConflict", "GitConflictRefresh" },
+    event = "User ExtraLazy",
     config = function()
       require("configs.git.git-conflict")
     end,
   },
   {
     "NeogitOrg/neogit",
-    cmd = "Neogit",
+    event = "User ExtraLazy",
     config = function()
       require("configs.git.neogit")
     end,

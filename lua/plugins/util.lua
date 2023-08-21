@@ -16,19 +16,14 @@ return {
   },
   {
     "lambdalisue/suda.vim",
-    cmd = { "SudaRead", "SudaWrite" },
+    event = "User ExtraLazy",
   },
   {
     "jackMort/ChatGPT.nvim",
     dependencies = {
       "MunifTanjim/nui.nvim",
     },
-    cmd = {
-      "ChatGPT",
-      "ChatGPTActAs",
-      "ChatGPTEditWithInstructions",
-      "ChatGPTRun",
-    },
+    event = "User ExtraLazy",
     opts = {
       api_key_cmd = "lpass show --password openai_key",
     },
@@ -50,19 +45,11 @@ return {
     opts = {
       auto_cmd = true,
     },
-    cmd = "GuessIndent",
     event = "User ExtraLazy",
   },
   {
     "Dhanus3133/LeetBuddy.nvim",
-    cmd = {
-      "LBQuestions",
-      "LBQuestion",
-      "LBReset",
-      "LBTest",
-      "LBSubmit",
-      "LBChangeLanguage",
-    },
+    event = "User ExtraLazy",
     config = true,
   },
   {
@@ -83,7 +70,7 @@ return {
   },
   {
     "jbyuki/venn.nvim",
-    cmd = { "VBox" },
+    cmd = "VBox",
   },
   {
     "gbprod/substitute.nvim",
@@ -99,22 +86,20 @@ return {
   },
   {
     "folke/todo-comments.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
     config = true,
     event = "User ExtraLazy",
   },
   {
     "m-demare/attempt.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       require("configs.editor.attempt")
     end,
-    cmd = "Attempt",
+    event = "User ExtraLazy",
   },
   {
     "rawnly/gist.nvim",
-    cmd = { "GistCreate", "GistCreateFromFile", "GistsList" },
     config = true,
+    event = "User ExtraLazy",
   },
   {
     "Saecki/crates.nvim",
@@ -132,12 +117,7 @@ return {
   {
     "tomiis4/Hypersonic.nvim",
     event = "CmdlineEnter",
-    cmd = "Hypersonic",
     config = true,
-  },
-  {
-    "creativenull/dotfyle-metadata.nvim",
-    cmd = { "DotfyleGenerate", "DotfyleOpen" },
   },
   {
     "tzachar/highlight-undo.nvim",
@@ -145,34 +125,14 @@ return {
     event = "User ExtraLazy",
   },
   {
-    "stevearc/oil.nvim",
-    opts = {
-      default_file_explorer = false,
-    },
-    cmd = "Oil",
-  },
-  {
     "ziontee113/color-picker.nvim",
     config = true,
-    cmd = {
-      "PickColor",
-      "PickColorInsert",
-    },
+    event = "User ExtraLazy",
   },
   {
     "krady21/compiler-explorer.nvim",
     config = true,
-    cmd = {
-      "CECompile",
-      "CECompileLive",
-      "CEFormat",
-      "CEAddLibrary",
-      "CELoadExample",
-      "CEOpenWebsite",
-      "CEDeleteCache",
-      "CEShowTooltip",
-      "CEGotoLabel",
-    },
+    event = "User ExtraLazy",
   },
   -- {
   --   "willothy/piemenu.nvim",
@@ -217,11 +177,6 @@ return {
     "jokajak/keyseer.nvim",
     config = true,
     cmd = "KeySeer",
-  },
-  {
-    "echasnovski/mini.colors",
-    config = true,
-    cmd = "Colorscheme",
   },
   {
     "pwntester/octo.nvim",

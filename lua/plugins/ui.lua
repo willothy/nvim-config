@@ -68,7 +68,6 @@ return {
   {
     "sidebar-nvim/sidebar.nvim",
     event = "User ExtraLazy",
-    cmd = "SidebarNvimOpen",
     opts = function()
       return require("configs.ui.sidebars").sidebar
     end,
@@ -79,12 +78,6 @@ return {
     opts = function()
       return require("configs.ui.sidebars").neotree
     end,
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons",
-      "MunifTanjim/nui.nvim",
-      "mrbjarksen/neo-tree-diagnostics.nvim",
-    },
   },
   {
     "stevearc/aerial.nvim",

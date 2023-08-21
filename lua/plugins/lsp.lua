@@ -112,7 +112,7 @@ return {
     config = function()
       require("configs.lsp.glance")
     end,
-    cmd = "Glance",
+    event = "LspAttach",
   },
   {
     "dgagn/diagflow.nvim",
@@ -120,13 +120,6 @@ return {
       require("configs.lsp.diagflow")
     end,
     event = "LspAttach",
-  },
-  {
-    "nvim-lua/lsp-status.nvim",
-    event = "LspAttach",
-    config = function()
-      require("lsp-status").config({})
-    end,
   },
   -- COMPLETION --
   {
