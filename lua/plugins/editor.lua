@@ -219,6 +219,20 @@ return {
       require("configs.terminal.greyjoy")
     end,
   },
+  {
+    "stevearc/overseer.nvim",
+    config = true,
+    cmd = {
+      "OverseerRun",
+      "OverseerInfo",
+      "OverseerBuild",
+      "OverseerOpen",
+      "OverseerClose",
+      "OverseerToggle",
+      "OverseerTaskAction",
+      "OverseerQuickAction",
+    },
+  },
   -- NAVIGATION --
   {
     "folke/flash.nvim",
@@ -295,11 +309,5 @@ return {
     "echasnovski/mini.trailspace",
     config = true,
     event = "User ExtraLazy",
-  },
-  {
-    "gennaro-tedesco/nvim-peekup",
-    event = "VeryLazy",
-    config = function()
-    end
   },
 }

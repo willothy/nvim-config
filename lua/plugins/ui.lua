@@ -99,6 +99,13 @@ return {
       require("configs.ui.icons")
     end,
   },
+  {
+    "ghillb/cybu.nvim",
+    config = function()
+      require("configs.ui.cybu")
+    end,
+    event = "User ExtraLazy",
+  },
   -- WINDOWS --
   {
     "nvim-focus/focus.nvim",
@@ -109,7 +116,6 @@ return {
   },
   {
     "echasnovski/mini.animate",
-    -- enabled = false,
     config = function()
       require("configs.windows.mini-animate")
     end,
