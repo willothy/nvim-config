@@ -528,8 +528,36 @@ local StatusLine = {
   }),
 }
 
+---@diagnostic disable-next-line: unused-local
+-- selene: allow(unused_variable)
+local StatusColumn = {
+  {
+    provider = function()
+      return "%1.s"
+    end,
+    update = {
+      "User",
+      pattern = { "UpdateHeirlineComponents" },
+    },
+  },
+  {
+    provider = function()
+      return "%=%3.{v:relnum?v:relnum:v:lnum}"
+    end,
+    hl = function(self)
+      if vim.v.relnum == 0 and tostring(self.winnr) == vim.g.actual_curwin then
+        return "CurrentMode"
+      else
+        return "LineNr"
+      end
+    end,
+  },
+  Space,
+}
+
 require("heirline").setup({
   statusline = C(StatusLine),
+  -- statuscolumn = StatusColumn,
 })
 
 local update = function()

@@ -11,7 +11,12 @@ require("cybu").setup({
 
 local au = vim.api.nvim_create_augroup("configs.ui.cybu", { clear = true })
 
+local enabled = true
 local last
+
+vim.api.nvim_create_user_command("CybuToggle", function()
+  enabled = not enabled
+end, {})
 
 vim.api.nvim_create_autocmd("BufLeave", {
   group = au,
@@ -33,13 +38,15 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
     end
     if
       last.win ~= vim.api.nvim_get_current_win()
-      or not vim.bo[ev.buf].buflisted
       or vim.api.nvim_buf_get_name(ev.buf) == ""
+      or not vim.bo[ev.buf].buflisted
     then
       last = nil
       return
     end
-    require("cybu").autocmd()
+    if enabled then
+      require("cybu").autocmd()
+    end
     last = nil
   end,
 })

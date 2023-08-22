@@ -158,7 +158,8 @@ return {
     event = "UiEnter",
   },
   {
-    "rebelot/heirline.nvim",
+    "willothy/heirline.nvim",
+    dir = "~/projects/lua/heirline.nvim/",
     config = function()
       require("configs.status.heirline")
     end,
