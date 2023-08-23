@@ -15,7 +15,7 @@ However, feel free to copy paste snippets to add to your own config :)
 ## Directory Structure
 
 ```txt
- init.lua                       # lazy.nvim bootstrap and
+ init.lua                       # lazy.nvim bootstrap
  lua
 ├───  configs                   # plugin configs
 ├───  plugins                   # plugin lazy specs
