@@ -634,13 +634,13 @@ local StatusLine = {
   }),
 }
 
-local StatusColumn = {
-  SignColumn,
-  NumberColumn,
-  Space,
-  FoldColumn,
-  Space,
-}
+-- local StatusColumn = {
+--   SignColumn,
+--   NumberColumn,
+--   Space,
+--   FoldColumn,
+--   Space,
+-- }
 
 require("heirline").setup({
   statusline = StatusLine,

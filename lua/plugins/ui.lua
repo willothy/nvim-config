@@ -46,6 +46,7 @@ return {
     end,
   },
   {
+    enabled = not anyline,
     "lukas-reineke/indent-blankline.nvim",
   },
   {
@@ -159,7 +160,6 @@ return {
   },
   {
     "willothy/heirline.nvim",
-    dir = "~/projects/lua/heirline.nvim/",
     config = function()
       require("configs.status.heirline")
     end,
