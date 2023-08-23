@@ -18,16 +18,6 @@ return {
     "lambdalisue/suda.vim",
     event = "User ExtraLazy",
   },
-  {
-    "jackMort/ChatGPT.nvim",
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-    },
-    event = "User ExtraLazy",
-    opts = {
-      api_key_cmd = "lpass show --password openai_key",
-    },
-  },
   { "mbbill/undotree", event = "User ExtraLazy" },
   { "famiu/bufdelete.nvim" },
   {

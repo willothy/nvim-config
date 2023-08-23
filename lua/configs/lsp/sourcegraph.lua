@@ -21,7 +21,7 @@ vim.system(
     })
     sg.setup({
       on_attach = require("configs.lsp").lsp_attach,
-      auth_strategy = { "environment-variables", "nvim" },
+      auth_strategy = { "nvim", "environment-variables" },
     })
   end)
 )

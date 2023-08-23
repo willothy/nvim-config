@@ -177,6 +177,7 @@ return {
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },
+    -- enabled = false,
     event = "UiEnter",
     config = function()
       require("configs.status.statuscol")

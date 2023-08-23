@@ -4,14 +4,6 @@ local icons = willothy.icons
 local conditions = require("heirline.conditions")
 local get_hex = willothy.hl.get
 
--- selene: allow(unused_variable)
-local A = function(self)
-  self.hl = function()
-    return willothy.utils.mode.get_color()
-  end
-  return self
-end
-
 local AB = function(self)
   local o = vim.deepcopy(self)
   o.hl = function()
@@ -460,16 +452,130 @@ local SessionName = {
   end,
 }
 
+local SignColumn = {
+  provider = "%2.2s",
+}
+
+local NumberColumn = {
+  provider = "%=%{v:relnum?v:relnum:v:lnum}",
+  hl = function(self)
+    if
+      vim.v.relnum == 0
+      and self.winnr
+        == vim.api.nvim_win_get_number(tonumber(vim.g.actual_curwin) or 0)
+    then
+      return "CurrentMode"
+    else
+      return "LineNr"
+    end
+  end,
+}
+
+local ffi = require("ffi")
+
+-- Get direct fold information from Neovim
+ffi.cdef([[
+	typedef struct {} Error;
+	typedef struct {} win_T;
+	typedef struct {
+		int start;  // line number where deepest fold starts
+		int level;  // fold level, when zero other fields are N/A
+		int llevel; // lowest level that starts in v:lnum
+		int lines;  // number of lines from v:lnum to end of closed fold
+	} foldinfo_T;
+	foldinfo_T fold_info(win_T* wp, int lnum);
+	win_T *find_window_by_handle(int Window, Error *err);
+	int compute_foldcolumn(win_T *wp, int col);
+]])
+
+local FoldColumn = {
+  fallthrough = false,
+  init = function(self)
+    local wp = ffi.C.find_window_by_handle(0, ffi.new("Error")) -- get window handler
+    self.width = ffi.C.compute_foldcolumn(wp, 0) -- get foldcolumn width
+    -- get fold info of current line
+    self.foldinfo = self.width > 0 and ffi.C.fold_info(wp, vim.v.lnum)
+      or { start = 0, level = 0, llevel = 0, lines = 0 }
+    self.closed = self.foldinfo.lines > 0
+  end,
+  static = {
+    foldopen = icons.fold.open,
+    foldclosed = icons.fold.closed,
+    foldsep = " ",
+  },
+  {
+    provider = function(self)
+      return self.foldopen .. " "
+    end,
+    condition = function(self)
+      local first_level = self.foldinfo.level
+        - self.width
+        - (self.closed and 1 or 0)
+        + 1
+      if first_level < 1 then
+        first_level = 1
+      end
+      return self.foldinfo.start == vim.v.lnum
+        and first_level + 1 > self.foldinfo.llevel
+    end,
+    on_click = {
+      callback = function()
+        vim.print("close click")
+        local mouse = vim.fn.getmousepos()
+        local curwin = vim.api.nvim_get_current_win()
+        local cursor = vim.api.nvim_win_get_cursor(curwin)
+        vim.api.nvim_set_current_win(mouse.winid)
+        vim.api.nvim_win_set_cursor(mouse.winid, { mouse.line, 0 })
+
+        vim.cmd("normal! zc")
+
+        vim.api.nvim_set_current_win(curwin)
+        vim.api.nvim_win_set_cursor(curwin, cursor)
+      end,
+      name = "__heirline_fold_close_click",
+    },
+  },
+  {
+    provider = function(self)
+      return self.foldclosed .. " "
+    end,
+    condition = function(self)
+      return self.foldinfo.lines > 0
+    end,
+    on_click = {
+      callback = function()
+        vim.print("open click")
+        local mouse = vim.fn.getmousepos()
+        local curwin = vim.api.nvim_get_current_win()
+        local cursor = vim.api.nvim_win_get_cursor(curwin)
+        vim.api.nvim_set_current_win(mouse.winid)
+        vim.api.nvim_win_set_cursor(mouse.winid, { mouse.line, 0 })
+
+        vim.cmd("normal! zo")
+
+        vim.api.nvim_set_current_win(curwin)
+        vim.api.nvim_win_set_cursor(curwin, cursor)
+      end,
+      name = "__heirline_fold_open_click",
+    },
+  },
+  {
+    provider = function(self)
+      return self.foldsep .. " "
+    end,
+  },
+}
+
 local function Center(group)
-  return {
+  return C({
     Align,
     group,
     Align,
-  }
+  })
 end
 
 local function Right(group)
-  return {
+  return C({
     {
       provider = function()
         return "%0"
@@ -483,11 +589,11 @@ local function Right(group)
     {
       provider = "%)",
     },
-  }
+  })
 end
 
 local Left = function(group)
-  return {
+  return C({
     {
       provider = function()
         return "%-"
@@ -501,7 +607,7 @@ local Left = function(group)
     {
       provider = "%)",
     },
-  }
+  })
 end
 
 local StatusLine = {
@@ -528,35 +634,16 @@ local StatusLine = {
   }),
 }
 
----@diagnostic disable-next-line: unused-local
--- selene: allow(unused_variable)
 local StatusColumn = {
-  {
-    provider = function()
-      return "%1.s"
-    end,
-    update = {
-      "User",
-      pattern = { "UpdateHeirlineComponents" },
-    },
-  },
-  {
-    provider = function()
-      return "%=%3.{v:relnum?v:relnum:v:lnum}"
-    end,
-    hl = function(self)
-      if vim.v.relnum == 0 and tostring(self.winnr) == vim.g.actual_curwin then
-        return "CurrentMode"
-      else
-        return "LineNr"
-      end
-    end,
-  },
+  SignColumn,
+  NumberColumn,
+  Space,
+  FoldColumn,
   Space,
 }
 
 require("heirline").setup({
-  statusline = C(StatusLine),
+  statusline = StatusLine,
   -- statuscolumn = StatusColumn,
 })
 

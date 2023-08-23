@@ -6,6 +6,7 @@ o.shell = "zsh"
 o.shortmess = "filnxoOCFIs"
 o.virtualedit = "block"
 o.showtabline = 2
+o.signcolumn = "yes"
 
 o.swapfile = true
 o.backup = false
