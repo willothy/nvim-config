@@ -18,7 +18,7 @@ function M.hijack_netrw()
   local netrw_bufname
 
   pcall(vim.api.nvim_clear_autocmds, { group = "FileExplorer" })
-  vim.api.nvim_create_autocmd("BufEnter", {
+  vim.api.nvim_create_autocmd("BufNew", {
     group = vim.api.nvim_create_augroup(
       "willothy.file-browsers",
       { clear = true }
@@ -43,10 +43,15 @@ function M.hijack_netrw()
           netrw_bufname = bufname
         end
 
-        -- ensure no buffers remain with the directory name
-        vim.api.nvim_buf_set_option(0, "bufhidden", "wipe")
+        local bufnr = vim.api.nvim_get_current_buf()
+        vim.api.nvim_set_option_value("bufhidden", "wipe", {
+          buf = bufnr,
+        })
 
         M.browse(vim.fn.expand("%:p:h"))
+
+        -- ensure no buffers remain with the directory name
+        require("bufdelete").bufwipeout(bufnr)
       end)
     end,
     desc = "telescope-file-browser.nvim replacement for netrw",
@@ -67,12 +72,14 @@ function M.set_browser()
   end)
 end
 
----@param target string | fun():string
+---@param target string | string[] | nil | fun():string
 function M.browse(target, browser)
   if target == nil then
     target = vim.fn.getcwd()
   elseif type(target) == "function" then
     target = target()
+  elseif type(target) == "table" then
+    target = table.concat(target, "/")
   end
   local browse
   if browser then

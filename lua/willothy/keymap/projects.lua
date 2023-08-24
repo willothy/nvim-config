@@ -1,6 +1,5 @@
 local keymap = willothy.keymap
--- selene: allow(unused_variable)
-local bind, register, modes = keymap.bind, keymap.register, keymap.modes
+local register, modes = keymap.register, keymap.modes
 
 register({
   name = "projects",
@@ -12,7 +11,7 @@ register({
   },
   v = {
     function()
-      willothy.fs.browse()
+      willothy.fs.browse(vim.fn.getcwd(-1))
     end,
     "current directory",
   },

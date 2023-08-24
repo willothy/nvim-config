@@ -50,9 +50,12 @@ end
 local my_theme = Theme:with({
   layout_strategy = "flex",
   borderchars = {
-    preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-    prompt = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-    results = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+    -- preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+    -- prompt = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+    -- results = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+    preview = { " ", " ", " ", " ", " ", " ", " ", " " },
+    prompt = { " ", " ", " ", " ", " ", " ", " ", " " },
+    results = { " ", " ", " ", " ", " ", " ", " ", " " },
   },
 })
 
@@ -60,13 +63,12 @@ local t = require("telescope")
 
 t.setup({
   pickers = {},
-  defaults = {
-    theme = my_theme,
+  defaults = my_theme:with({
     history = {
       path = vim.fn.stdpath("data") .. "/databases/telescope_history.sqlite3",
       limit = 200,
     },
-  },
+  }),
   extensions = {
     ["ui-select"] = {
       require("telescope.themes").get_cursor({}),
@@ -83,31 +85,41 @@ t.setup({
           ["<C-a>"] = add_to_harpoon,
         },
       },
+      layout_config = {
+        width = vim.o.columns,
+      },
+      preview_title = false,
+      results_title = false,
+      prompt_path = true,
+      display_stat = { date = false, size = false },
+      borderchars = {
+        preview = { " ", " ", " ", " ", " ", " ", " ", " " },
+        prompt = { " ", " ", " ", " ", " ", " ", " ", " " },
+        results = { " ", " ", " ", " ", " ", " ", " ", " " },
+      },
     },
-    undo = Theme
-      :with({
-        use_delta = true,
-        side_by_side = vim.o.columns > side_by_side_min,
-        entry_format = "$STAT, $TIME",
-        -- layout_strategy = "bottom_pane",
-        sorting_strategy = "ascending",
-        mappings = {
-          i = {
-            ["<cr>"] = require("telescope-undo.actions").yank_additions,
-            ["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
-            ["<C-cr>"] = require("telescope-undo.actions").restore,
-          },
+    undo = my_theme:with({
+      use_delta = true,
+      side_by_side = vim.o.columns > side_by_side_min,
+      entry_format = "$STAT, $TIME",
+      -- layout_strategy = "bottom_pane",
+      sorting_strategy = "ascending",
+      mappings = {
+        i = {
+          ["<cr>"] = require("telescope-undo.actions").yank_additions,
+          ["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
+          ["<C-cr>"] = require("telescope-undo.actions").restore,
         },
-        results_title = "Undo History",
-        prompt_title = "Search",
-        preview_title = "Edit Diff",
-      })
-      :with(my_theme),
-    macros = Theme:with({
+      },
+      results_title = "Undo History",
+      prompt_title = "Search",
+      preview_title = "Edit Diff",
+    }),
+    macros = my_theme:with({
       theme = "dropdown",
       results_title = "Macros",
       prompt_title = "Find Macros",
-    }):with(my_theme),
+    }),
     heading = {
       treesitter = true,
     },
@@ -122,7 +134,7 @@ t.setup({
       selected_browser = "brave",
       url_open_command = "xdg-open",
     },
-    frecency = Theme:with({
+    frecency = my_theme:with({
       ignore_patterns = {
         "*.git/*",
         "*/tmp/*",
@@ -139,7 +151,7 @@ t.setup({
       prompt_title = "Find Files",
       preview_title = "Preview",
       results_title = "Files",
-    }):with(my_theme),
+    }),
   },
 })
 

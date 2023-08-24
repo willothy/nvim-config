@@ -23,10 +23,25 @@ local opts = {
   },
   window = {
     documentation = cmp.config.window.bordered(),
-    completion = cmp.config.window.bordered(),
+    completion = {
+      scrollbar = true,
+      winhighlight = "Normal:Pmenu,CursorLine:PmenuSel,Search:None",
+      side_padding = 0,
+    },
   },
   view = {
     entries = { name = "custom", selection_order = "near_cursor" },
+  },
+  formatting = {
+    fields = { "kind", "abbr", "menu" },
+    ---@param vim_item cmp.SelectOption
+    format = function(_, vim_item)
+      local kind = vim_item.kind
+      local icon = (icons.kinds[kind] or ""):gsub("%s+", "")
+      vim_item.kind = " " .. icon
+      vim_item.menu = kind
+      return vim_item
+    end,
   },
   mapping = {
     ["<M-k>"] = cmp.mapping(
@@ -94,13 +109,6 @@ local opts = {
       group_index = 2,
     },
   }),
-  formatting = {
-    format = function(_entry, vim_item)
-      vim_item.kind =
-        string.format("%s%s", icons.kinds[vim_item.kind] or "", vim_item.kind)
-      return vim_item
-    end,
-  },
 }
 
 cmp.setup(opts)

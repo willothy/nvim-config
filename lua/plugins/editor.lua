@@ -227,7 +227,9 @@ return {
   },
   {
     "ThePrimeagen/harpoon",
-    config = true,
+    config = function()
+      require("configs.navigation.harpoon")
+    end,
   },
   {
     "cbochs/portal.nvim",

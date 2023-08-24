@@ -42,8 +42,8 @@ Icons.kinds = {
 
 Icons.diagnostics = {
   errors = "󰞏", --
-  warnings = "", -- "",--
-  hints = "", --"󰮔",
+  warnings = "", -- "",--
+  hints = "󱐌", --"󰮔", -- 󱐌
   info = "",
 }
 Icons.diagnostics.Error = Icons.diagnostics.errors
