@@ -1,14 +1,20 @@
+---@diagnostic disable: missing-fields
 local cmp = require("cmp")
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  local str = vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]
+  local curr_char = str:sub(col, col)
+  local next_char = str:sub(col + 1, col + 1)
+  -- local starting_spaces = #(str:match("^%s+") or "")
   return col ~= 0
-    and vim.api
-        .nvim_buf_get_lines(0, line - 1, line, true)[1]
-        :sub(col, col)
-        :match("%s")
-      == nil
+    and curr_char:match("%s") == nil
+    and next_char ~= '"'
+    and next_char ~= "'"
+    and next_char ~= "}"
+    and next_char ~= ")"
+    and next_char ~= "]"
 end
 
 local luasnip = require("luasnip")
@@ -82,7 +88,7 @@ local opts = {
       end
     end, { "i", "c" }),
     -- ["<CR>"] = cmp.mapping(function(fallback) fallback() end, { "i", "c" }),
-    ["<Tab>"] = cmp.mapping(function(fallback)
+    ["<Tab>"] = cmp.mapping(function(_fallback)
       local suggestion = require("copilot.suggestion")
       if suggestion.is_visible() then
         suggestion.accept()
@@ -93,7 +99,8 @@ local opts = {
       elseif has_words_before() then
         cmp.complete()
       else
-        fallback()
+        require("tabout").tabout()
+        -- _fallback()
       end
     end, { "i", "c" }),
   },

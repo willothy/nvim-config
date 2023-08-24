@@ -254,6 +254,22 @@ return {
     event = "User ExtraLazy",
     config = true,
   },
+  {
+    "abecodes/tabout.nvim",
+    dependencies = {
+      "hrsh7th/nvim-cmp",
+    },
+    event = { "InsertEnter", "CmdlineEnter" },
+    opts = {
+      tabkey = "",
+      backwards_tabkey = "",
+      act_as_tab = true,
+      ignore_beginning = false,
+      act_as_shift_tab = false,
+      default_tab = "",
+      default_shift_tab = "",
+    },
+  },
   -- GIT --
   {
     "lewis6991/gitsigns.nvim",

@@ -20,7 +20,6 @@ for _, v in ipairs(disable) do
   )
 end
 
-require("willothy.keymap.window")
 require("willothy.keymap.terminal")
 require("willothy.keymap.cycle")
 require("willothy.keymap.view")
@@ -31,3 +30,4 @@ require("willothy.keymap.projects")
 require("willothy.keymap.lsp")
 require("willothy.keymap.jump")
 require("willothy.keymap.editor")
+require("willothy.keymap.window")
