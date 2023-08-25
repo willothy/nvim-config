@@ -8,6 +8,7 @@ return {
       require("configs.ui.mini-starter")
     end,
     event = "VeryLazy",
+    enabled = false,
   },
   -- LAYOUT / CORE UI --
   {

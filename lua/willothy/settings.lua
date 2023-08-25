@@ -10,7 +10,6 @@ o.shortmess = "filnxoOCFIs"
 o.virtualedit = "block"
 o.showtabline = 2
 o.signcolumn = "yes"
-o.winbar = " "
 
 o.swapfile = true
 o.backup = false
