@@ -2,11 +2,15 @@ local o = vim.o
 local opt = vim.opt
 local icons = willothy.icons
 
+o.cmdheight = 0
+o.scrolloff = 16
+
 o.shell = "zsh"
 o.shortmess = "filnxoOCFIs"
 o.virtualedit = "block"
 o.showtabline = 2
 o.signcolumn = "yes"
+o.winbar = " "
 
 o.swapfile = true
 o.backup = false
@@ -18,9 +22,6 @@ o.cursorline = false
 
 o.termguicolors = true
 o.modeline = false
-
-o.scrolloff = 16
-o.cmdheight = 0
 
 vim.o.timeout = true
 vim.o.timeoutlen = 250
@@ -36,23 +37,6 @@ o.foldcolumn = "1"
 o.foldlevel = 99
 o.foldenable = true
 o.foldlevelstart = 99
-
-opt.fillchars = {
-  horiz = "─",
-  horizup = "┴",
-  horizdown = "┬",
-  vert = "│",
-  vertleft = "┤",
-  vertright = "├",
-  verthoriz = "┼",
-  fold = "⠀",
-  eob = " ",
-  diff = "┃",
-  msgsep = " ",
-  foldsep = " ",
-  foldclose = icons.fold.closed,
-  foldopen = icons.fold.open,
-}
 
 opt.splitkeep = "screen"
 
@@ -70,3 +54,20 @@ o.wrap = false
 o.numberwidth = 1
 o.number = true
 o.relativenumber = true
+
+vim.opt.fillchars = {
+  horiz = "─",
+  horizup = "┴",
+  horizdown = "┬",
+  vert = "│",
+  vertleft = "┤",
+  vertright = "├",
+  verthoriz = "┼",
+  fold = "⠀",
+  eob = " ",
+  diff = "┃",
+  msgsep = " ",
+  foldsep = " ",
+  foldclose = icons.fold.closed,
+  foldopen = icons.fold.open,
+}

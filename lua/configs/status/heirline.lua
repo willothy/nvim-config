@@ -441,7 +441,7 @@ local SessionName = {
     if package.loaded.resession and not self.m then
       self.m = require("resession")
     end
-    return self.m and self.m.get_current() or self.m.is_loading() or false
+    return self.m and (self.m.get_current() or self.m.is_loading()) or false
   end,
   provider = function(self)
     local name = self.m.get_current()

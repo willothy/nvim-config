@@ -38,6 +38,7 @@ Icons.kinds = {
   Folder = " ",
   Operator = " ",
   TypeParameter = " ",
+  Copilot = " ",
 }
 
 Icons.diagnostics = {

@@ -134,6 +134,7 @@ return {
       "dmitmel/cmp-cmdline-history",
       "saadparwaiz1/cmp_luasnip",
       "rcarriga/cmp-dap",
+      "zbirenbaum/copilot-cmp",
 
       -- Snippets
       "L3MON4D3/LuaSnip",

@@ -94,6 +94,14 @@ require("statuscol").setup({
   },
 })
 
+local stc = vim.o.statuscolumn
+vim.iter(vim.api.nvim_list_wins()):each(function(win)
+  local buf = vim.api.nvim_win_get_buf(win)
+  if vim.bo[buf].buftype == "" then
+    vim.wo[win].statuscolumn = stc
+  end
+end)
+
 local filetypes = {
   harpoon = true,
 }

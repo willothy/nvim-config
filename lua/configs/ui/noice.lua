@@ -6,7 +6,7 @@ require("noice").setup({
     },
   },
   presets = {
-    long_message_to_split = false,
+    long_message_to_split = true,
     inc_rename = true,
   },
   smart_move = {
@@ -64,9 +64,6 @@ require("noice").setup({
         winhighlight = { Normal = "Normal", FloatBorder = "FloatBorder" },
       },
     },
-  },
-  select = {
-    enabled = true,
   },
   lsp = {
     --override markdown rendering so that **cmp** and other plugins use **Treesitter**

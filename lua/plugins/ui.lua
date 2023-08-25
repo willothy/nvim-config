@@ -23,7 +23,7 @@ return {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
     },
-    event = "VeryLazy",
+    event = "UiEnter",
     config = function()
       require("configs.ui.noice")
     end,
@@ -129,12 +129,12 @@ return {
     end,
     event = "User ExtraLazy",
   },
-  {
-    "kwkarlwang/bufresize.nvim",
-    config = function()
-      require("configs.windows.bufresize")
-    end,
-  },
+  -- {
+  --   "kwkarlwang/bufresize.nvim",
+  --   config = function()
+  --     require("configs.windows.bufresize")
+  --   end,
+  -- },
   {
     "tummetott/winshift.nvim",
     -- branch = "not_triggering_optionset_event",

@@ -21,11 +21,31 @@ local luasnip = require("luasnip")
 
 local icons = willothy.icons
 
+local format = {
+  fields = { "kind", "abbr", "menu" },
+  format = function(_, vim_item)
+    local kind = vim_item.kind
+    local icon = (icons.kinds[kind] or ""):gsub("%s+", "")
+    vim_item.kind = " " .. icon
+    vim_item.menu = kind
+    local text = vim_item.abbr
+    local max = math.floor(math.max(vim.o.columns / 5, 50))
+    if vim.fn.strcharlen(text) > max then
+      vim_item.abbr = vim.fn.strcharpart(text, 0, max - 1)
+        .. icons.misc.ellipse
+    end
+    return vim_item
+  end,
+}
+
 local opts = {
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
     end,
+  },
+  experimental = {
+    ghost_text = true,
   },
   window = {
     documentation = cmp.config.window.bordered(),
@@ -33,22 +53,26 @@ local opts = {
       scrollbar = true,
       winhighlight = "Normal:Pmenu,CursorLine:PmenuSel,Search:None",
       side_padding = 0,
+      max_width = 30,
     },
   },
   view = {
     entries = { name = "custom", selection_order = "near_cursor" },
   },
-  formatting = {
-    fields = { "kind", "abbr", "menu" },
-    ---@param vim_item cmp.SelectOption
-    format = function(_, vim_item)
-      local kind = vim_item.kind
-      local icon = (icons.kinds[kind] or ""):gsub("%s+", "")
-      vim_item.kind = " " .. icon
-      vim_item.menu = kind
-      return vim_item
-    end,
-  },
+  formatting = format,
+  sources = cmp.config.sources({
+    { name = "nvim_lsp", max_item_count = 10, group_index = 1 },
+    { name = "copilot", max_item_count = 2, group_index = 2 },
+    { name = "luasnip", max_item_count = 5, group_index = 1 },
+    { name = "buffer", max_item_count = 5, group_index = 2 },
+    {
+      -- name = "async_path",
+      name = "path",
+      priority = 3,
+      max_item_count = 5,
+      group_index = 2,
+    },
+  }),
   mapping = {
     ["<M-k>"] = cmp.mapping(
       cmp.mapping.select_prev_item(cmp_select),
@@ -68,10 +92,9 @@ local opts = {
     ),
     ["<C-PageUp>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
     ["<C-PageDown>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-    ["<C-Space>"] = cmp.mapping({
-      i = require("copilot.suggestion").next,
-      c = cmp.complete,
-    }),
+    ["<C-Space>"] = cmp.mapping(function()
+      cmp.complete()
+    end),
     ["<C-e>"] = cmp.mapping(function()
       local suggestion = require("copilot.suggestion")
       if cmp.visible() then
@@ -89,10 +112,11 @@ local opts = {
     end, { "i", "c" }),
     -- ["<CR>"] = cmp.mapping(function(fallback) fallback() end, { "i", "c" }),
     ["<Tab>"] = cmp.mapping(function(_fallback)
-      local suggestion = require("copilot.suggestion")
-      if suggestion.is_visible() then
-        suggestion.accept()
-      elseif cmp.visible() then
+      -- local suggestion = require("copilot.suggestion")
+      -- if suggestion.is_visible() then
+      --   suggestion.accept()
+      -- else
+      if cmp.visible() then
         cmp.confirm({ select = true })
         -- elseif luasnip.expand_or_jumpable() then
         -- 	luasnip.expand_or_jump()
@@ -104,20 +128,9 @@ local opts = {
       end
     end, { "i", "c" }),
   },
-  sources = cmp.config.sources({
-    { name = "nvim_lsp", priority = 1, max_item_count = 10, group_index = 1 },
-    { name = "luasnip", priority = 2, max_item_count = 5, group_index = 1 },
-    { name = "buffer", priority = 3, max_item_count = 5, group_index = 2 },
-    {
-      -- name = "async_path",
-      name = "path",
-      priority = 3,
-      max_item_count = 5,
-      group_index = 2,
-    },
-  }),
 }
 
+require("copilot_cmp").setup()
 cmp.setup(opts)
 
 local pairs = require("nvim-autopairs")
@@ -163,8 +176,8 @@ cmp.setup.cmdline(":", {
   sources = cmp.config.sources({
     { name = "path", group_index = 1 },
     { name = "cmdline", group_index = 1 },
+    { name = "copilot", group_index = 1 },
     { name = "cmdline_history", group_index = 2 },
-    { name = "copilot", group_index = 2 },
   }),
   enabled = function()
     -- Set of disable commands
@@ -175,12 +188,14 @@ cmp.setup.cmdline(":", {
     local cmd = vim.fn.getcmdline():match("%S+")
     return (not disabled[cmd]) or cmp.close()
   end,
+  formatting = format,
 })
 
 cmp.setup.filetype("harpoon", {
   sources = cmp.config.sources({
     { name = "path" },
   }),
+  formatting = format,
 })
 
 cmp.setup.filetype("gitcommit", {
@@ -188,6 +203,7 @@ cmp.setup.filetype("gitcommit", {
     { name = "commit" },
     { name = "path" },
   },
+  formatting = format,
 })
 
 cmp.setup.cmdline({ "/", "?" }, {
@@ -195,10 +211,12 @@ cmp.setup.cmdline({ "/", "?" }, {
     { name = "nvim_lsp_document_symbol" },
     { name = "buffer" },
   }),
+  formatting = format,
 })
 
 require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
   sources = {
     { name = "dap" },
   },
+  formatting = format,
 })
