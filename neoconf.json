@@ -22,7 +22,8 @@
         "resession.nvim",
         "noice.nvim",
         "sg.nvim",
-        "nvim-cmp"
+        "nvim-cmp",
+        "nvim-cokeline"
       ]
     }
   },

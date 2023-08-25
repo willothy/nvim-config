@@ -296,10 +296,10 @@ local components = {
   close_or_unsaved = {
     text = function(buffer)
       if buffer.is_hovered then
-        return buffer.is_modified and icons.misc.modified
+        return buffer.is_modified and (icons.misc.modified .. " ")
           or (close_icon_hovered .. " ")
       else
-        return buffer.is_modified and icons.misc.modified
+        return buffer.is_modified and (icons.misc.modified .. " ")
           or (close_icon_normal .. " ") -- icons.actions.close
       end
     end,
@@ -374,8 +374,8 @@ local function harpoon_sorter()
     end
   end)
 
-  ---@type a Buffer
-  ---@type b Buffer
+  ---@param a Buffer
+  ---@param b Buffer
   -- Use this in `config.buffers.new_buffers_position`
   return function(a, b)
     -- switch the a and b._valid_index to place non-harpoon buffers on the left
