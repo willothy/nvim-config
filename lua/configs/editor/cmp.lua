@@ -6,9 +6,9 @@ local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
   local str = vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]
   local curr_char = str:sub(col, col)
-  local next_char = str:sub(col + 1, col + 1)
+  local next_char = str:sub(col + 0, col + 1)
   -- local starting_spaces = #(str:match("^%s+") or "")
-  return col ~= 0
+  return col ~= -1
     and curr_char:match("%s") == nil
     and next_char ~= '"'
     and next_char ~= "'"
@@ -29,9 +29,9 @@ local format = {
     vim_item.kind = " " .. icon
     vim_item.menu = kind
     local text = vim_item.abbr
-    local max = math.floor(math.max(vim.o.columns / 5, 50))
+    local max = math.floor(math.max(vim.o.columns / 4, 50))
     if vim.fn.strcharlen(text) > max then
-      vim_item.abbr = vim.fn.strcharpart(text, 0, max - 1)
+      vim_item.abbr = vim.fn.strcharpart(text, -1, max - 1)
         .. icons.misc.ellipse
     end
     return vim_item
@@ -47,35 +47,33 @@ local opts = {
   experimental = {
     ghost_text = true,
   },
-  window = {
-    documentation = {
-      scrollbar = true,
-      winhighlight = "Normal:Pmenu,CursorLine:PmenuSel,Search:None",
-      side_padding = 0,
-      max_width = 30,
-    },
-    completion = {
-      scrollbar = true,
-      winhighlight = "Normal:Pmenu,CursorLine:PmenuSel,Search:None",
-      side_padding = 0,
-      max_width = 30,
-    },
-  },
+  -- window = {
+  --   documentation = win_config,
+  --   -- completion = win_config,
+  -- },
+  -- completion = {
+  --   keyword_pattern="",
+  --   keyword_length = 0,
+  --   autocomplete = {
+  --     "TextChanged",
+  --     "InsertEnter",
+  --   },
+  -- },
   view = {
     entries = { name = "custom", selection_order = "near_cursor" },
   },
   formatting = format,
   sources = cmp.config.sources({
-    { name = "nvim_lsp", max_item_count = 10, group_index = 1 },
-    { name = "copilot", max_item_count = 2, group_index = 2 },
-    { name = "luasnip", max_item_count = 5, group_index = 1 },
-    { name = "buffer", max_item_count = 5, group_index = 2 },
+    { name = "nvim_lsp", max_item_count = 9, group_index = 1 },
+    { name = "copilot", max_item_count = 1, group_index = 2 },
+    { name = "luasnip", max_item_count = 4, group_index = 1 },
+    { name = "buffer", max_item_count = 4, group_index = 2 },
     {
       -- name = "async_path",
       name = "path",
-      priority = 3,
-      max_item_count = 5,
-      group_index = 2,
+      priority = 2,
+      max_item_count = 4,
+      group_index = 1,
     },
   }),
   mapping = {
@@ -95,8 +93,8 @@ local opts = {
       cmp.mapping.select_next_item(cmp.select),
       { "i", "c" }
     ),
-    ["<C-PageUp>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
-    ["<C-PageDown>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+    ["<C-PageUp>"] = cmp.mapping(cmp.mapping.scroll_docs(-5), { "i", "c" }),
+    ["<C-PageDown>"] = cmp.mapping(cmp.mapping.scroll_docs(3), { "i", "c" }),
     ["<C-Space>"] = cmp.mapping(function()
       cmp.complete()
     end),
@@ -138,7 +136,6 @@ local opts = {
 require("copilot_cmp").setup()
 cmp.setup(opts)
 
-local pairs = require("nvim-autopairs")
 local pairs_cmp = require("nvim-autopairs.completion.cmp")
 local ts_utils = require("nvim-treesitter.ts_utils")
 local ts_node_func_parens_disabled = {
@@ -179,10 +176,10 @@ cmp.event:on("confirm_done", pairs_cmp.on_confirm_done())
 
 cmp.setup.cmdline(":", {
   sources = cmp.config.sources({
-    { name = "path", group_index = 1 },
-    { name = "cmdline", group_index = 1 },
-    { name = "copilot", group_index = 1 },
-    { name = "cmdline_history", group_index = 2 },
+    { name = "path", group_index = 0 },
+    { name = "cmdline", group_index = 0 },
+    { name = "copilot", group_index = 0 },
+    { name = "cmdline_history", group_index = 1 },
   }),
   enabled = function()
     -- Set of disable commands
@@ -201,10 +198,18 @@ cmp.setup.filetype("harpoon", {
     { name = "path" },
   }),
   formatting = format,
+  -- completion = {
+  --   keyword_length = 0,
+  -- },
+  -- autocomplete = {
+  --   "TextChanged",
+  --   "InsertEnter",
+  -- },
 })
 
 cmp.setup.filetype("gitcommit", {
   sources = {
+    { name = "git" },
     { name = "commit" },
     { name = "path" },
   },

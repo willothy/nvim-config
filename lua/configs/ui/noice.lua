@@ -30,7 +30,7 @@ require("noice").setup({
       filter_options = {},
       win_options = {
         winhighlight = {
-          Normal = "Normal",
+          Normal = "NormalFloat",
           FloatBorder = "FloatBorder",
         },
         cursorline = false,
@@ -89,6 +89,13 @@ require("noice").setup({
     hover = {
       enabled = true,
     },
+    -- documentation = {
+    --   opts = {
+    --     win_options = {
+    --       concealcursor = "n",
+    --     },
+    --   },
+    -- },
   },
   cmdline = {
     view = "cmdline_popup",
@@ -110,9 +117,6 @@ require("noice").setup({
   popupmenu = {
     enabled = true,
     backend = "nui",
-    win_options = {
-      winbar = "bruh",
-    },
   },
   messages = {
     enabled = true, -- enables the Noice messages UI
