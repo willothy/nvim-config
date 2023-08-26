@@ -1,6 +1,10 @@
+require("tree-sitter-just").setup({})
+
+---@diagnostic disable-next-line: redundant-parameter
 require("nvim-treesitter").setup({
   -- A list of parser names, or "all"
   ensure_installed = {
+    "conf",
     "help",
     "javascript",
     "typescript",
@@ -11,6 +15,7 @@ require("nvim-treesitter").setup({
     "bash",
     "markdown",
     "markdown_inline",
+    "just",
   },
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
@@ -20,7 +25,7 @@ require("nvim-treesitter").setup({
   highlight = {
     -- `false` will disable the whole extension
     enable = true,
-    disable = {},
+    -- disable = {},
     -- list of language that will be disabled
     -- additional_vim_regex_highlighting = true,
     additional_vim_regex_highlighting = false,
@@ -60,4 +65,12 @@ require("nvim-treesitter").setup({
       },
     },
   },
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  callback = function()
+    if vim.treesitter.language.get_lang(vim.bo.filetype) then
+      vim.treesitter.start()
+    end
+  end,
 })
