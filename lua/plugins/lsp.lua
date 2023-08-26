@@ -15,10 +15,6 @@ return {
     "ThePrimeagen/refactoring.nvim",
     config = true,
     event = "LspAttach",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
   },
   {
     "folke/neodev.nvim",
@@ -27,8 +23,6 @@ return {
   {
     "nvim-neotest/neotest",
     dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
       "rouge8/neotest-rust",
     },
     event = "LspAttach",
@@ -53,7 +47,6 @@ return {
   {
     "lukas-reineke/lsp-format.nvim",
     config = true,
-    lazy = true,
     event = "LSPAttach",
   },
   {
@@ -64,12 +57,9 @@ return {
   {
     "williamboman/mason.nvim",
     event = "VeryLazy",
-    opts = {
-      PATH = "prepend",
-    },
+    config = true,
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
-      "jay-babu/mason-null-ls.nvim",
     },
   },
   {
@@ -93,19 +83,10 @@ return {
   },
   {
     "jose-elias-alvarez/null-ls.nvim",
-    lazy = true,
     event = "VeryLazy",
     config = function()
       require("configs.lsp.null-ls")
     end,
-  },
-  {
-    "kosayoda/nvim-lightbulb",
-    enabled = false,
-    config = function()
-      require("configs.lsp.lightbulb")
-    end,
-    event = "LspAttach",
   },
   {
     "dnlhc/glance.nvim",
@@ -119,7 +100,7 @@ return {
     config = function()
       require("configs.lsp.diagflow")
     end,
-    event = "LspAttach",
+    event = "User ExtraLazy",
   },
   -- COMPLETION --
   {
@@ -154,14 +135,15 @@ return {
   {
     "windwp/nvim-ts-autotag",
     config = true,
-    ft = {
-      "html",
-      "javascript",
-      "javascriptreact",
-      "typescriptreact",
-      "svelte",
-      "vue",
-    },
+    event = "User ExtraLazy",
+    -- ft = {
+    --   "html",
+    --   "javascript",
+    --   "javascriptreact",
+    --   "typescriptreact",
+    --   "svelte",
+    --   "vue",
+    -- },
   },
   {
     "zbirenbaum/copilot.lua",
@@ -173,7 +155,6 @@ return {
   {
     "kylechui/nvim-surround",
     event = "VeryLazy",
-    config = true,
   },
   -- DAP --
   {

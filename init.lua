@@ -42,7 +42,7 @@ require("lazy").setup({
   performance = {
     cache = {
       enabled = true,
-      disable_events = {},
+      disable_events = { "User ExtraLazy" },
     },
     reset_packpath = true,
     rtp = {
