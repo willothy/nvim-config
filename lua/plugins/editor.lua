@@ -84,7 +84,6 @@ return {
       "nvim-treesitter/nvim-treesitter-textobjects",
       "IndianBoy42/tree-sitter-just",
       "chrisgrieser/nvim-various-textobjs",
-      "stevearc/resession.nvim",
     },
     event = "VeryLazy",
     config = function()
