@@ -170,8 +170,8 @@ return {
     config = true,
     event = "CmdlineEnter",
   },
-  -- {
-  --   "subnut/nvim-ghost.nvim",
-  --   event = "User ExtraLazy",
-  -- },
+  {
+    "subnut/nvim-ghost.nvim",
+    event = "User ExtraLazy",
+  },
 }
