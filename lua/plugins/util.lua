@@ -2,11 +2,11 @@ return {
   {
     "ellisonleao/glow.nvim",
     config = true,
-    cmd = "Glow",
+    event = "CmdlineEnter",
   },
   {
     "rafcamlet/nvim-luapad",
-    cmd = "Luapad",
+    event = "CmdlineEnter",
     config = true,
   },
   {
@@ -63,7 +63,7 @@ return {
   },
   {
     "jbyuki/venn.nvim",
-    cmd = "VBox",
+    event = "CmdlineEnter",
   },
   {
     "gbprod/substitute.nvim",
@@ -75,7 +75,7 @@ return {
   {
     "tamton-aquib/keys.nvim",
     config = true,
-    cmd = "KeysToggle",
+    event = "CmdlineEnter",
   },
   {
     "folke/todo-comments.nvim",
@@ -97,13 +97,7 @@ return {
   {
     "Saecki/crates.nvim",
     config = function()
-      require("crates").setup({
-        null_ls = {
-          enabled = true,
-          name = "crates.nvim",
-        },
-      })
-      require("cmp").setup.buffer({ sources = { { name = "crates" } } })
+      require("configs.editor.crates")
     end,
     event = "BufRead Cargo.toml",
   },
@@ -169,12 +163,12 @@ return {
   {
     "jokajak/keyseer.nvim",
     config = true,
-    cmd = "KeySeer",
+    event = "CmdlineEnter",
   },
   {
     "pwntester/octo.nvim",
     config = true,
-    cmd = "Octo",
+    event = "CmdlineEnter",
   },
   -- {
   --   "subnut/nvim-ghost.nvim",

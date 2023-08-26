@@ -41,7 +41,6 @@ return {
   },
   {
     "folke/trouble.nvim",
-    cmd = "Trouble",
     config = function()
       require("configs.editor.trouble")
     end,
@@ -207,7 +206,7 @@ return {
     dependencies = {
       "stevearc/overseer.nvim",
     },
-    cmd = "Greyjoy",
+    event = "User ExtraLazy",
     config = function()
       require("configs.terminal.greyjoy")
     end,
@@ -279,7 +278,6 @@ return {
   },
   {
     "sindrets/diffview.nvim",
-    cmd = "DiffViewOpen",
     event = "User ExtraLazy",
     config = true,
   },

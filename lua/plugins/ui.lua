@@ -76,7 +76,10 @@ return {
   },
   {
     "nvim-neo-tree/neo-tree.nvim",
-    cmd = "Neotree",
+    dependencies = {
+      "mrbjarksen/neo-tree-diagnostics.nvim",
+    },
+    event = "CmdlineEnter",
     opts = function()
       return require("configs.ui.sidebars").neotree
     end,
@@ -86,7 +89,7 @@ return {
     opts = function()
       return require("configs.ui.sidebars").aerial
     end,
-    cmd = "AerialToggle",
+    event = "CmdlineEnter",
   },
   {
     "nvim-tree/nvim-web-devicons",
@@ -140,7 +143,7 @@ return {
     "tummetott/winshift.nvim",
     -- branch = "not_triggering_optionset_event",
     config = true,
-    cmd = "WinShift",
+    event = "CmdlineEnter",
   },
   {
     "willothy/winborder.nvim",
@@ -202,7 +205,7 @@ return {
   },
   {
     "rktjmp/lush.nvim",
-    cmd = "Lushify",
+    event = "CmdlineEnter",
   },
   {
     "folke/tokyonight.nvim",
