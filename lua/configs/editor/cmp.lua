@@ -48,7 +48,12 @@ local opts = {
     ghost_text = true,
   },
   window = {
-    documentation = cmp.config.window.bordered(),
+    documentation = {
+      scrollbar = true,
+      winhighlight = "Normal:Pmenu,CursorLine:PmenuSel,Search:None",
+      side_padding = 0,
+      max_width = 30,
+    },
     completion = {
       scrollbar = true,
       winhighlight = "Normal:Pmenu,CursorLine:PmenuSel,Search:None",
