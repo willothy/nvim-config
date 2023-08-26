@@ -1,4 +1,4 @@
-local anyline = false
+local anyline = true
 
 return {
   -- STARTUP --
