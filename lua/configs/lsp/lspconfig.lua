@@ -47,9 +47,39 @@ local lsp_attach = require("configs.lsp").lsp_attach
 require("neoconf").setup({})
 
 require("rust-tools").setup({
+  executor = {
+    execute_command = function(command, args, cwd)
+      willothy.term.main:change_dir(cwd)
+      willothy.term.main:send({ command, unpack(args) }, false)
+
+      vim.api.nvim_buf_call(willothy.term.main.bufnr, function()
+        vim.api.nvim_feedkeys("<CR>", "n", true)
+      end)
+    end,
+  },
   tools = {
     inlay_hints = {
       auto = false,
+    },
+    hover_actions = {
+      border = {
+        -- { "▄", "NormalFloatInv" }, -- top left
+        -- { "▄", "NormalFloatInv" }, -- top
+        -- { "▄", "NormalFloatInv" }, -- top right
+        -- { " ", "NormalFloatInv" }, -- right
+        -- { "▀", "NormalFloatInv" }, -- bottom right
+        -- { "▀", "NormalFloatInv" }, -- bottom
+        -- { "▀", "NormalFloatInv" }, -- bottom left
+        -- { " ", "NormalFloatInv" }, -- left
+        { " ", "NormalFloat" }, -- top left
+        { " ", "NormalFloat" }, -- top
+        { " ", "NormalFloat" }, -- top right
+        { " ", "NormalFloat" }, -- right
+        { " ", "NormalFloat" }, -- bottom right
+        { " ", "NormalFloat" }, -- bottom
+        { " ", "NormalFloat" }, -- bottom left
+        { " ", "NormalFloat" }, -- left
+      },
     },
   },
   server = {

@@ -85,16 +85,10 @@ local opts = {
       cmp.mapping.select_next_item(cmp_select),
       { "i", "c" }
     ),
-    ["<M-Up>"] = cmp.mapping(
-      cmp.mapping.select_prev_item(cmp.select),
-      { "i", "c" }
-    ),
-    ["<M-Down>"] = cmp.mapping(
-      cmp.mapping.select_next_item(cmp.select),
-      { "i", "c" }
-    ),
+    ["<M-Up>"] = cmp.mapping(cmp.mapping.select_prev_item(cmp.select)),
+    ["<M-Down>"] = cmp.mapping(cmp.mapping.select_next_item(cmp.select)),
     ["<C-PageUp>"] = cmp.mapping(cmp.mapping.scroll_docs(-5), { "i", "c" }),
-    ["<C-PageDown>"] = cmp.mapping(cmp.mapping.scroll_docs(3), { "i", "c" }),
+    ["<C-PageDown>"] = cmp.mapping(cmp.mapping.scroll_docs(5), { "i", "c" }),
     ["<C-Space>"] = cmp.mapping(function()
       cmp.complete()
     end),

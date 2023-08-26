@@ -23,7 +23,8 @@
         "noice.nvim",
         "sg.nvim",
         "nvim-cmp",
-        "nvim-cokeline"
+        "nvim-cokeline",
+        "toggleterm.nvim"
       ]
     }
   },

@@ -42,7 +42,7 @@ require("noice").setup({
     },
     hover = {
       border = {
-        style = "rounded",
+        style = "none",
         padding = { 0, 0 },
       },
     },
