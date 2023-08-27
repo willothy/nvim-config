@@ -65,7 +65,7 @@ require("mini.animate").setup({
   close = { enable = false },
   resize = {
     enable = true,
-    timing = duration(300),
+    timing = duration(150),
     subresize = subresize(easing.ease_out),
   },
 })

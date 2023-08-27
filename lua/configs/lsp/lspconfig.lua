@@ -49,12 +49,12 @@ require("neoconf").setup({})
 require("rust-tools").setup({
   executor = {
     execute_command = function(command, args, cwd)
-      willothy.term.main:change_dir(cwd)
-      willothy.term.main:send({ command, unpack(args) }, false)
-
-      vim.api.nvim_buf_call(willothy.term.main.bufnr, function()
-        vim.api.nvim_feedkeys("<CR>", "n", true)
-      end)
+      require("overseer.task")
+        .new({
+          cmd = { command, unpack(args) },
+          cwd = cwd,
+        })
+        :start()
     end,
   },
   tools = {

@@ -2,6 +2,7 @@ local M = {}
 
 local Terminal = require("toggleterm.terminal").Terminal
 
+-- require("toggleterm.constants").FILETYPE = "terminal"
 require("toggleterm.constants").FILETYPE = "terminal"
 
 M.float = Terminal:new({
@@ -11,12 +12,15 @@ M.float = Terminal:new({
   hidden = false,
   direction = "float",
   float_opts = {
-    border = "rounded",
+    border = "none",
   },
   close_on_exit = true,
   start_in_insert = true,
   on_open = function()
-    vim.api.nvim_exec_autocmds("User", { pattern = "UpdateHeirlineComponents" })
+    vim.api.nvim_exec_autocmds(
+      "User",
+      { pattern = "UpdateHeirlineComponents" }
+    )
     vim.defer_fn(vim.cmd.startinsert, 40)
   end,
 })
@@ -33,7 +37,10 @@ M.main = Terminal:new({
     Normal = { link = "Normal" },
   },
   on_open = function()
-    vim.api.nvim_exec_autocmds("User", { pattern = "UpdateHeirlineComponents" })
+    vim.api.nvim_exec_autocmds(
+      "User",
+      { pattern = "UpdateHeirlineComponents" }
+    )
     vim.defer_fn(vim.cmd.startinsert, 40)
   end,
 })

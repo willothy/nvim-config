@@ -33,9 +33,9 @@ function Scrollbar:mount()
   self.autocmd_id = vim.api.nvim_create_autocmd(
     { "WinScrolled", "CursorMoved" },
     {
-      callback = function()
+      callback = willothy.fn.throttle(function()
         self:update()
-      end,
+      end, 10),
     }
   )
   self:update()

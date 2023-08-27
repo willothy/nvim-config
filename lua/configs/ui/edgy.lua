@@ -48,6 +48,11 @@ require("edgy").setup({
   },
   left = {
     {
+      ft = "OverseerList",
+      title = "Overseer",
+      size = { width = 0.3 },
+    },
+    {
       ft = "SidebarNvim",
       title = "Sidebar",
     },
@@ -77,13 +82,6 @@ require("edgy").setup({
       ft = "neo-tree",
       filter = function(buf)
         return vim.b[buf].neo_tree_source == "diagnostics"
-      end,
-    },
-    {
-      title = "Netman",
-      ft = "neo-tree",
-      filter = function(buf)
-        return vim.b[buf].neo_tree_source == "netman.ui.neo-tree"
       end,
     },
     {

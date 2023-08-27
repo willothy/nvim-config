@@ -5,7 +5,6 @@
       "runtime": true,
       "types": true,
       "plugins": [
-        "nvim-lspconfig",
         "mason-lspconfig",
         "mason.nvim",
         "nvim-treesitter",
@@ -24,7 +23,8 @@
         "sg.nvim",
         "nvim-cmp",
         "nvim-cokeline",
-        "toggleterm.nvim"
+        "toggleterm.nvim",
+        "overseer.nvim"
       ]
     }
   },
