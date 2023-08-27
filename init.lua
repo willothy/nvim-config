@@ -3,29 +3,26 @@ vim.loader.enable()
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local lazy_path = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local conf_path = vim.fn.stdpath("config")
 
-vim.opt.rtp:prepend(lazypath)
+vim.opt.rtp:prepend(lazy_path)
 
 require("lazy").setup({
   { import = "plugins" },
   {
-    name = "willothy.init",
-    dir = ".",
+    name = "willothy",
+    main = "willothy",
+    dir = conf_path,
     lazy = false,
-    config = function()
-      -- things that need to be setup right away
-      require("willothy")
-    end,
+    config = true,
   },
   {
     name = "willothy.lazy",
-    dir = ".",
+    main = "willothy.lazy",
+    dir = conf_path,
     event = "VeryLazy",
-    config = function()
-      -- lazy initialization
-      require("willothy.lazy")
-    end,
+    config = true,
   },
 }, {
   defaults = {

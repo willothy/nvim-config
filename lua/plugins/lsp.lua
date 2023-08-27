@@ -55,6 +55,11 @@ return {
     branch = "no-augment",
   },
   {
+    "p00f/clangd_extensions.nvim",
+    config = true,
+    event = "LspAttach",
+  },
+  {
     "williamboman/mason.nvim",
     event = "VeryLazy",
     config = true,
@@ -118,7 +123,7 @@ return {
       "zbirenbaum/copilot-cmp",
       "petertriho/cmp-git",
 
-      -- Snippets
+      -- Snippetsrequire\("cmp
       "L3MON4D3/LuaSnip",
     },
     event = { "InsertEnter", "CmdLineEnter" },

@@ -39,6 +39,7 @@ Icons.kinds = {
   Operator = " ",
   TypeParameter = " ",
   Copilot = " ",
+  Cody = " ",
 }
 
 Icons.diagnostics = {

@@ -109,4 +109,8 @@ willothy.module = module
 
 require("willothy.settings")
 
-willothy.fs.hijack_netrw()
+return {
+  setup = function()
+    willothy.fs.hijack_netrw()
+  end,
+}

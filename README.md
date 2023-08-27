@@ -1,9 +1,9 @@
 # nvim-config
 
-My personal Neovim config. Over 10000LOC (I have no life). I would
-not recommend using this - It's setup for me, I cannot guarantee that it will
-work for you, and I will not fix issues that do not occur on my computers.
-However, feel free to copy paste snippets to add to your own config :)
+My personal Neovim config. I would not recommend using this - It's setup for me, 
+I cannot guarantee that it will work for you, and I will not fix issues that 
+do not occur on my computers. However, feel free to copy paste snippets 
+to add to your own config :)
 
 ## Bloated AND Blazingly Fast™
 

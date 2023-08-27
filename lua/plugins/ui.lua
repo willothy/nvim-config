@@ -175,7 +175,7 @@ return {
     config = function()
       require("configs.status.dropbar")
     end,
-    event = "VeryLazy",
+    event = "UiEnter",
   },
   {
     "luukvbaal/statuscol.nvim",

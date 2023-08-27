@@ -8,7 +8,6 @@ local legendary = function(filter)
   end
 end
 
----@type CodyLayoutSplit
 local cody
 
 local telescope = willothy.fn.telescope
@@ -31,7 +30,7 @@ register({
     function()
       if not cody then
         local CodySplit = require("sg.components.layout.split")
-        cody = CodySplit:init({
+        cody = CodySplit.init({
           name = "main",
         })
       end

@@ -1,11 +1,9 @@
+---@diagnostic disable: missing-fields
 require("tree-sitter-just").setup({})
 
----@diagnostic disable-next-line: redundant-parameter
-require("nvim-treesitter").setup({
+require("nvim-treesitter.configs").setup({
   -- A list of parser names, or "all"
   ensure_installed = {
-    "conf",
-    "help",
     "javascript",
     "typescript",
     "c",
@@ -15,7 +13,13 @@ require("nvim-treesitter").setup({
     "bash",
     "markdown",
     "markdown_inline",
+    "gitcommit",
+    "gitignore",
+    "git_rebase",
+    "git_config",
     "just",
+    "jsonc",
+    "json",
   },
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
@@ -38,16 +42,14 @@ require("nvim-treesitter").setup({
       enable = true,
       -- lookahead = true,
       keymaps = {
-        -- ["is"] = { query = "@statement.inner", query_group = "locals" },
-        -- ["as"] = { query = "@statement.outer", query_group = "locals" },
-        -- ["is"] = { query = "@scope.inner", query_group = "locals" },
-        -- ["as"] = { query = "@scope.outer", query_group = "locals" },
-        -- ["ic"] = { query = "@class.inner", query_group = "locals" },
-        -- ["ac"] = { query = "@class.outer", query_group = "locals" },
+        ["is"] = "@statement.inner",
+        ["as"] = "@statement.outer",
+        ["ic"] = "@class.inner",
+        ["ac"] = "@class.outer",
         ["if"] = "@function.inner",
         ["af"] = "@function.outer",
-        -- ["ip"] = { query = "@property.inner", query_group = "locals" },
-        -- ["ap"] = { query = "@property.outer", query_group = "locals" },
+        ["ae"] = "@field.outer",
+        ["ie"] = "@field.inner",
       },
       selection_modes = {
         ["@parameter.outer"] = "V",
@@ -56,7 +58,7 @@ require("nvim-treesitter").setup({
       },
     },
     swap = {
-      enable = true,
+      enable = false,
       swap_next = {
         ["<leader>s"] = "@parameter.inner",
       },
@@ -65,12 +67,4 @@ require("nvim-treesitter").setup({
       },
     },
   },
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  callback = function()
-    if vim.treesitter.language.get_lang(vim.bo.filetype) then
-      vim.treesitter.start()
-    end
-  end,
 })

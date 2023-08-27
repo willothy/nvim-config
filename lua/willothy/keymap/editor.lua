@@ -21,8 +21,9 @@ local objects = {
   p = "paragraph",
   a = { name = "around" },
   i = { name = "inside" },
-  s = "sentence",
+  s = "statement",
   f = "function",
+  e = "expression",
 }
 
 require("which-key").register({

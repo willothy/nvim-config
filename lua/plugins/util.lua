@@ -1,3 +1,4 @@
+vim.g.nvim_ghost_autostart = 0
 return {
   {
     "ellisonleao/glow.nvim",
@@ -173,5 +174,18 @@ return {
   {
     "subnut/nvim-ghost.nvim",
     event = "User ExtraLazy",
+  },
+  {
+    "utilyre/sentiment.nvim",
+    event = "VeryLazy",
+    opts = {
+      delay = 30,
+      pairs = {
+        { "(", ")" },
+        { "{", "}" },
+        { "[", "]" },
+        { "<", ">" },
+      },
+    },
   },
 }
