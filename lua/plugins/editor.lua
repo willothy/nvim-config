@@ -1,23 +1,19 @@
 return {
-  {
-    "folke/neoconf.nvim",
-  },
+  "folke/neoconf.nvim",
+  "anuvyklack/hydra.nvim",
   {
     "lukas-reineke/headlines.nvim",
     config = function()
       require("configs.editor.headlines")
     end,
-    ft = "markdown",
-  },
-  {
-    "anuvyklack/hydra.nvim",
+    event = "User ExtraLazy",
   },
   {
     "smjonas/live-command.nvim",
-    event = "User ExtraLazy",
     config = function()
       require("configs.editor.live_cmd")
     end,
+    event = "User ExtraLazy",
   },
   {
     "smoka7/multicursors.nvim",
@@ -47,7 +43,6 @@ return {
   },
   {
     "nvim-pack/nvim-spectre",
-    event = "User ExtraLazy",
     config = true,
   },
   {
@@ -72,7 +67,7 @@ return {
       "neovim/nvim-lspconfig",
       "nvim-treesitter/nvim-treesitter",
     },
-    ft = { "markdown", "txt" },
+    event = "User ExtraLazy",
     config = function()
       require("configs.editor.otter")
     end,
@@ -162,7 +157,6 @@ return {
   -- SESSIONS / PROJECTS --
   {
     "stevearc/resession.nvim",
-    dir = "~/projects/lua/resession.nvim/",
     dependencies = {
       "tiagovla/scope.nvim",
     },
@@ -247,10 +241,6 @@ return {
     config = true,
   },
   {
-    "rhysd/accelerated-jk",
-    event = "User ExtraLazy",
-  },
-  {
     "SUSTech-data/wildfire.nvim",
     event = "User ExtraLazy",
     config = true,
@@ -260,7 +250,7 @@ return {
     dependencies = {
       "hrsh7th/nvim-cmp",
     },
-    event = { "InsertEnter", "CmdlineEnter" },
+    event = "User ExtraLazy",
     opts = {
       tabkey = "",
       backwards_tabkey = "",

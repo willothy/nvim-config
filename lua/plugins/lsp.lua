@@ -1,4 +1,3 @@
-
 return {
   {
     "willothy/hollywood.nvim",
@@ -48,7 +47,6 @@ return {
   {
     "lukas-reineke/lsp-format.nvim",
     config = true,
-    event = "LSPAttach",
   },
   {
     -- "simrat39/rust-tools.nvim",
@@ -62,7 +60,7 @@ return {
   },
   {
     "williamboman/mason.nvim",
-    event = "VeryLazy",
+    event = "User ExtraLazy",
     config = true,
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
@@ -70,11 +68,10 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    lazy = true,
-    event = "User ExtraLazy",
     config = function()
       require("configs.lsp.lspconfig")
     end,
+    event = "VeryLazy",
   },
   {
     "kevinhwang91/nvim-ufo",
@@ -85,21 +82,19 @@ return {
     config = function()
       require("configs.lsp.ufo")
     end,
-    event = "User ExtraLazy",
   },
   {
     "jose-elias-alvarez/null-ls.nvim",
-    event = "VeryLazy",
     config = function()
       require("configs.lsp.null-ls")
     end,
+    event = "User ExtraLazy",
   },
   {
     "dnlhc/glance.nvim",
     config = function()
       require("configs.lsp.glance")
     end,
-    event = "LspAttach",
   },
   {
     "dgagn/diagflow.nvim",
@@ -127,14 +122,13 @@ return {
       -- Snippetsrequire\("cmp
       "L3MON4D3/LuaSnip",
     },
-    event = { "InsertEnter", "CmdLineEnter" },
+    event = "User ExtraLazy",
     config = function()
       require("configs.editor.cmp")
     end,
   },
   {
     "windwp/nvim-autopairs",
-    event = "VeryLazy",
     config = function()
       require("configs.editor.autopairs")
     end,
@@ -143,18 +137,10 @@ return {
     "windwp/nvim-ts-autotag",
     config = true,
     event = "User ExtraLazy",
-    -- ft = {
-    --   "html",
-    --   "javascript",
-    --   "javascriptreact",
-    --   "typescriptreact",
-    --   "svelte",
-    --   "vue",
-    -- },
   },
   {
     "zbirenbaum/copilot.lua",
-    event = { "InsertEnter", "CmdLineEnter", "VeryLazy" },
+    event = "User ExtraLazy",
     config = function()
       require("configs.editor.copilot")
     end,
@@ -167,17 +153,12 @@ return {
   -- DAP --
   {
     "mfussenegger/nvim-dap",
+    dependencies = {
+      "theHamsta/nvim-dap-virtual-text",
+    },
     config = function()
       require("configs.debugging.dap")
-      require("nvim-dap-virtual-text")
     end,
-    -- event = "LspAttach",
-  },
-  {
-    "theHamsta/nvim-dap-virtual-text",
-    opts = {
-      clear_on_continue = true,
-    },
   },
   {
     "rcarriga/nvim-dap-ui",

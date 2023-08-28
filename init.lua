@@ -31,7 +31,7 @@ require("lazy").setup({
   },
   install = {
     missing = true,
-    colorscheme = { "minimus", "tokyonight" },
+    colorscheme = { "minimus" },
   },
   browser = "brave",
   diff = {
@@ -40,7 +40,6 @@ require("lazy").setup({
   performance = {
     cache = {
       enabled = true,
-      disable_events = { "User ExtraLazy" },
     },
     reset_packpath = true,
     rtp = {
