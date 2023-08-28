@@ -24,7 +24,6 @@ return {
   { "famiu/bufdelete.nvim" },
   {
     "willothy/NeoComposer.nvim",
-    requires = { "kkharji/sqlite.lua" },
     event = "User ExtraLazy",
     opts = {
       colors = {
@@ -36,9 +35,6 @@ return {
     "nmac427/guess-indent.nvim",
     opts = {
       auto_cmd = true,
-      filetype_exclude = {
-        "TelescopePrompt",
-      },
     },
     event = "User ExtraLazy",
   },
@@ -51,9 +47,6 @@ return {
     "EtiamNullam/deferred-clipboard.nvim",
     config = true,
     event = "User ExtraLazy",
-  },
-  {
-    "kkharji/sqlite.lua",
   },
   {
     "nacro90/numb.nvim",

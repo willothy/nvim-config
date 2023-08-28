@@ -1,6 +1,8 @@
 return {
   "folke/neoconf.nvim",
   "anuvyklack/hydra.nvim",
+  "kkharji/sqlite.lua",
+  "nvim-lua/plenary.nvim",
   {
     "lukas-reineke/headlines.nvim",
     config = function()
@@ -47,7 +49,6 @@ return {
   },
   {
     "sourcegraph/sg.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       require("configs.lsp.sourcegraph")
     end,
@@ -99,9 +100,6 @@ return {
   },
   {
     "mrjones2014/legendary.nvim",
-    dependencies = {
-      "kkharji/sqlite.lua",
-    },
     event = "User ExtraLazy",
     config = function()
       require("configs.editor.legendary")
