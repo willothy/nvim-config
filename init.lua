@@ -15,6 +15,7 @@ require("lazy").setup({
     main = "willothy",
     dir = conf_path,
     lazy = false,
+    priority = 100000,
     config = true,
   },
   {
@@ -30,7 +31,7 @@ require("lazy").setup({
   },
   install = {
     missing = true,
-    colorscheme = { "minimus" },
+    colorscheme = { "minimus", "tokyonight" },
   },
   browser = "brave",
   diff = {

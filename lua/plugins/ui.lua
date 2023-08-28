@@ -133,12 +133,12 @@ return {
     end,
     event = "User ExtraLazy",
   },
-  -- {
-  --   "kwkarlwang/bufresize.nvim",
-  --   config = function()
-  --     require("configs.windows.bufresize")
-  --   end,
-  -- },
+  {
+    "kwkarlwang/bufresize.nvim",
+    config = function()
+      require("configs.windows.bufresize")
+    end,
+  },
   {
     "tummetott/winshift.nvim",
     -- branch = "not_triggering_optionset_event",
@@ -164,7 +164,7 @@ return {
     event = "UiEnter",
   },
   {
-    "willothy/heirline.nvim",
+    "rebelot/heirline.nvim",
     config = function()
       require("configs.status.heirline")
     end,
@@ -182,7 +182,6 @@ return {
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },
-    -- enabled = false,
     event = "UiEnter",
     config = function()
       require("configs.status.statuscol")
@@ -199,7 +198,7 @@ return {
   {
     "willothy/minimus",
     config = function()
-      vim.cmd.colorscheme("minimus")
+      vim.api.nvim_exec2("colorscheme minimus", {})
     end,
     event = "UiEnter",
   },

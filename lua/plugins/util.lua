@@ -1,4 +1,5 @@
 vim.g.nvim_ghost_autostart = 0
+
 return {
   {
     "ellisonleao/glow.nvim",

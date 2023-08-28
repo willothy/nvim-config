@@ -1,3 +1,4 @@
+
 return {
   {
     "willothy/hollywood.nvim",

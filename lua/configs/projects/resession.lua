@@ -12,10 +12,11 @@ resession.setup({
     notify = false,
   },
   tab_buf_filter = function(tabpage, bufnr)
-    return vim.startswith(
-      vim.api.nvim_buf_get_name(bufnr),
-      vim.fn.getcwd(-1, vim.api.nvim_tabpage_get_number(tabpage))
-    )
+    local cwd = vim.fn.getcwd(-1, vim.api.nvim_tabpage_get_number(tabpage))
+    if not cwd then
+      return true
+    end
+    return vim.startswith(vim.api.nvim_buf_get_name(bufnr), cwd)
   end,
   buf_filter = function(bufnr)
     local filetype = vim.bo[bufnr].filetype
@@ -40,6 +41,29 @@ resession.setup({
   end,
 })
 
+local lazy_open = false
+resession.add_hook("pre_load", function()
+  local view = require("lazy.view")
+  if view.view then
+    lazy_open = true
+    if view.view:buf_valid() then
+      vim.api.nvim_buf_delete(view.view.buf, { force = true })
+    end
+    view.view:close({ wipe = true })
+  else
+    lazy_open = false
+  end
+end)
+
+resession.add_hook(
+  "post_load",
+  vim.schedule_wrap(function()
+    if lazy_open then
+      require("lazy.view").show()
+    end
+  end)
+)
+
 if
   -- Only load the session if nvim was started with no args
   vim.fn.argc(-1) == 0
@@ -50,7 +74,6 @@ if
   -- Don't load if manually disabled
   and not vim.g.nosession
 then
-  -- Save these to a different directory, so our manual sessions don't get polluted
   resession.load(
     vim.fn.getcwd(),
     { dir = "dirsession", silence_errors = true, reset = true }
