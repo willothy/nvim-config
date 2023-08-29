@@ -33,14 +33,14 @@ require("which-key").register({
 
 require("which-key").register({
   g = {
-    name = "goto",
+    name = "go",
     ["?"] = bind("which-key", "show"):with_desc("which-key"),
     c = { name = "comment" },
     b = { name = "which_key_ignore" },
     g = "first line",
     x = "open hovered",
     r = bind("glance", "open", "references"):with_desc("lsp: references"),
-    d = bind("glance", "open", "definitions"):with_desc("lsp:definitions"),
+    d = bind("glance", "open", "definitions"):with_desc("lsp: definitions"),
   },
 }, { mode = modes.non_editing })
 
@@ -91,14 +91,6 @@ register({
 }, modes.non_editing + modes.insert)
 
 register({
-  ["<Tab>"] = { "V>", "Indent line" },
-  ["<S-Tab>"] = { "V<", "Unindent line" },
-  M = bind("multicursors", "start"),
-  -- ["u"] = { desc = "undo" },
-  -- ["<C-r>"] = { desc = "redo" },
-}, modes.normal)
-
-register({
   name = "marks",
   d = bind("marks", "delete"):with_desc("delete mark"),
   m = bind("reach", "marks"),
@@ -118,12 +110,34 @@ register({
 }, modes.normal)
 
 register({
+  ["<Tab>"] = bind("stay-in-place", "shift_right_line"):with_desc(
+    "indent: increase"
+  ),
+  ["<S-Tab>"] = bind("stay-in-place", "shift_left_line"):with_desc(
+    "indent: decrease"
+  ),
+  M = bind("multicursors", "start"),
+  u = "edit: undo",
+  ["<C-r>"] = "edit: redo",
+  ["<"] = "indent: decrease",
+  [">"] = "indent: increase",
+  ["="] = "indent: auto",
+}, modes.normal)
+
+register({
   ["<M-k>"] = { bind("moveline", "block_up"), "move: up" },
   ["<M-j>"] = { bind("moveline", "block_down"), "move: down" },
-  ["<Tab>"] = { ">gv", "indent: increase" },
-  ["<S-Tab>"] = { "<gv", "indent: decrease" },
+  ["<Tab>"] = bind("stay-in-place", "shift_right_visual"):with_desc(
+    "indent: increase"
+  ),
+  ["<S-Tab>"] = bind("stay-in-place", "shift_left_visual"):with_desc(
+    "indent: decrease"
+  ),
   ["<C-c>"] = { '"+y', "copy selection" },
   ["M"] = { ":MCvisual<CR>", "multicursor mode" },
+  ["<"] = "indent: decrease",
+  [">"] = "indent: increase",
+  ["="] = "indent: auto",
 }, modes.visual)
 
 local function fmt(name, is_after)

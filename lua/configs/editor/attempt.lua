@@ -1,6 +1,6 @@
 local template = function(lang)
   return function()
-    return require("willothy.templates")[lang]
+    return willothy.utils.templates[lang]
   end
 end
 require("attempt").setup({

@@ -6,4 +6,4 @@ vim.keymap.set("n", "<C-h>", function()
   if not pcall(fh.toggle) then
     fh.toggle("options")
   end
-end)
+end, { desc = "help: toggle float" })

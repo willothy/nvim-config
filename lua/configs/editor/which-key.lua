@@ -137,6 +137,7 @@ require("which-key").setup({
     y = "yank",
     d = "delete",
     c = "change",
+    ["="] = "indent",
   },
   motions = {
     count = true,
@@ -147,10 +148,23 @@ require("which-key").setup({
     ["<tab>"] = "TAB",
   },
   window = {
-    position = "botleft",
-    border = "single",
-    winblend = 20,
-    padding = { 1, 2, 1, -1 },
+    -- position = "botleft",
+    -- border = "single",
+    -- winblend = 10,
+    -- padding = { 1, 2, 1, -1 },
+  },
+  triggers_nowait = {
+    "C",
+    -- marks
+    "`",
+    "'",
+    "g`",
+    "g'",
+    -- registers
+    '"',
+    "<c-r>",
+    -- spelling
+    "z=",
   },
   layout = {
     height = { min = 4, max = 25 }, -- min and max height of the columns

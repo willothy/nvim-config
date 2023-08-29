@@ -1,13 +1,18 @@
 require("Comment").setup({
   toggler = { -- Normal Mode
-    line = "gbc",
-    block = "gbb",
+    line = "gcc",
+    block = "gcb",
   },
   opleader = { -- Visual mode
-    block = "gbc",
-    line = "gcc",
+    block = "gC",
+    line = "gc",
   },
   extra = {
     eol = "gc$",
   },
 })
+
+-- vim.keymap.set("n", "C", function()
+--   --[[   require("which-key").show(":qgC", { mode = "n" }) ]]
+--   require("which-key").show_command("gc")
+-- end, {})

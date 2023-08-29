@@ -32,23 +32,26 @@ function M.register(tree, modes, prefix)
           M.group(modes, lhs:gsub(key .. "$", ""), node, true)
           return
         end
-        rhs = node[1]
-        if not rhs then
-          vim.print(node)
-          return
-        end
-        if type(rhs) == "table" then
-          local prev = rhs
-          rhs = function(...)
-            prev(...)
+        rhs = type(node) == "table" and node[1]
+        if rhs then
+          if type(rhs) == "table" then
+            local prev = rhs
+            rhs = function(...)
+              prev(...)
+            end
+          end
+          opts = {
+            desc = node.desc or node[2] or "which_key_ignore",
+            silent = node.silent,
+            expr = node.expr,
+            noremap = node.noremap,
+          }
+        else
+          if type(node) == "string" then
+            rhs = lhs
+            opts = { desc = node }
           end
         end
-        opts = {
-          desc = node.desc or node[2] or "which_key_ignore",
-          silent = node.silent,
-          expr = node.expr,
-          noremap = node.noremap,
-        }
       end
       vim.keymap.set(modes, lhs, rhs, opts)
     else

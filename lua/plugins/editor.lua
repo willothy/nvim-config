@@ -92,7 +92,8 @@ return {
   },
   {
     "willothy/which-key.nvim",
-    branch = "helix",
+    -- branch = "helix",
+    branch = "description-sort",
     config = function()
       require("configs.editor.which-key")
     end,

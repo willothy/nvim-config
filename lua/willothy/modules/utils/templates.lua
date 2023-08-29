@@ -7,6 +7,7 @@ def main():
 if __name__ == "__main__":          
     main()
 ]]
+M.python = M.py
 
 M.lua = [[
 local M = {}

@@ -50,7 +50,7 @@ require("edgy").setup({
     {
       ft = "OverseerList",
       title = "Overseer",
-      size = { width = 0.3 },
+      size = { width = get_size },
     },
     {
       ft = "SidebarNvim",

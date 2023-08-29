@@ -182,4 +182,14 @@ return {
       },
     },
   },
+  {
+    "mong8se/actually.nvim",
+    config = true,
+    event = "User ExtraLazy",
+  },
+  {
+    "gbprod/stay-in-place.nvim",
+    config = true,
+    event = "User ExtraLazy",
+  },
 }
