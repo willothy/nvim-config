@@ -13,7 +13,6 @@ vim.opt.rtp:prepend(lazy_path)
 vim.api.nvim_create_user_command(
   "E",
   vim.schedule_wrap(function(o)
-    vim.print(o.fargs)
     for i, file in vim.iter(o.fargs):enumerate() do
       local buf = vim.fn.bufadd(file)
       if buf then
