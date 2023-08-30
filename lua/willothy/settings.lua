@@ -4,6 +4,7 @@ local icons = willothy.icons
 
 o.cmdheight = 0
 o.scrolloff = 16
+o.clipboard = "unnamedplus"
 
 o.shell = "zsh"
 o.shortmess = "filnxoOCFIs"

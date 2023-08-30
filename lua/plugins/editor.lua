@@ -254,7 +254,7 @@ return {
       tabkey = "",
       backwards_tabkey = "",
       act_as_tab = true,
-      ignore_beginning = false,
+      ignore_beginning = true,
       act_as_shift_tab = false,
       default_tab = "",
       default_shift_tab = "",
@@ -295,6 +295,10 @@ return {
   {
     "echasnovski/mini.trailspace",
     config = true,
+    event = "User ExtraLazy",
+  },
+  {
+    "willothy/view-tween.nvim",
     event = "User ExtraLazy",
   },
 }

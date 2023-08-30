@@ -158,6 +158,7 @@ t.setup({
 local extensions = {
   "menufacture",
   "fzf",
+  "neoclip",
   "ui-select",
   "smart_history",
   "file_browser",

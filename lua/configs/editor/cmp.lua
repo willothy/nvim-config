@@ -4,6 +4,9 @@ local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  if col == 0 then
+    return false
+  end
   local str = vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]
   local curr_char = str:sub(col, col)
   local next_char = str:sub(col + 0, col + 1)

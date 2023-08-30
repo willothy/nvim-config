@@ -49,6 +49,14 @@ return {
     event = "User ExtraLazy",
   },
   {
+    "AckslD/nvim-neoclip.lua",
+    opts = {
+      enable_persistent_history = true,
+      continuous_sync = true,
+    },
+    event = "User ExtraLazy",
+  },
+  {
     "nacro90/numb.nvim",
     config = true,
     event = "User ExtraLazy",
