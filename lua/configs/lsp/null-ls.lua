@@ -8,6 +8,7 @@ null_ls.setup({
     builtins.formatting.prettier.with({
       filetypes = { "toml", "js", "css", "html", "json", "markdown" },
     }),
+    builtins.formatting.rustfmt,
     builtins.formatting.asmfmt,
     builtins.formatting.beautysh,
     builtins.formatting.clang_format.with({
