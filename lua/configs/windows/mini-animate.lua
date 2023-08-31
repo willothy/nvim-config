@@ -58,9 +58,28 @@ local function duration(ms)
   end
 end
 
-require("mini.animate").setup({
-  open = { enable = false },
-  close = { enable = false },
+local anim = require("mini.animate")
+anim.setup({
+  open = {
+    enable = false,
+    winconfig = anim.gen_winconfig.wipe({ direction = "from_edge" }),
+    winblend = anim.gen_winblend.linear({ from = 100, to = 0 }),
+    timing = anim.gen_timing.quartic({
+      easing = "in",
+      duration = 500,
+      unit = "total",
+    }),
+  },
+  close = {
+    enable = true,
+    winconfig = anim.gen_winconfig.wipe(),
+    winblend = anim.gen_winblend.linear({ from = 40, to = 100 }),
+    timing = anim.gen_timing.quartic({
+      easing = "out",
+      duration = 400,
+      unit = "total",
+    }),
+  },
   cursor = { enable = false },
   scroll = {
     enable = true,
