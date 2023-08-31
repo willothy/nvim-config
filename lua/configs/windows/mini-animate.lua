@@ -35,7 +35,7 @@ local subresize = function(easing)
   end
 end
 
----@alias ease_fn fun(from: integer, to: integer, coef: number)
+---@alias ease_fn fun(from: integer, to: integer, coef: number): integer
 
 ---@type table<string, ease_fn>
 local easing = {}
@@ -59,13 +59,15 @@ local function duration(ms)
 end
 
 require("mini.animate").setup({
-  scroll = { enable = false },
-  cursor = { enable = false },
   open = { enable = false },
   close = { enable = false },
+  cursor = { enable = false },
+  scroll = {
+    enable = true,
+  },
   resize = {
     enable = true,
-    timing = duration(150),
+    timing = duration(200),
     subresize = subresize(easing.ease_out),
   },
 })

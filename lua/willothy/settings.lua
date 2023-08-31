@@ -1,5 +1,4 @@
 local o = vim.o
-local opt = vim.opt
 local icons = willothy.icons
 
 o.cmdheight = 0
@@ -38,7 +37,8 @@ o.foldlevel = 99
 o.foldenable = true
 o.foldlevelstart = 99
 
-opt.splitkeep = "screen"
+o.splitkeep = "cursor"
+o.mousescroll = "ver:1,hor:6"
 
 o.laststatus = 3
 

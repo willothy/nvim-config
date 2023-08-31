@@ -13,7 +13,10 @@ return {
   },
   {
     "Aasim-A/scrollEOF.nvim",
-    config = true,
+    opts = {
+      disabled_filetypes = { "terminal" },
+      disabled_modes = { "t" },
+    },
     event = "User ExtraLazy",
   },
   {
@@ -186,7 +189,6 @@ return {
         { "(", ")" },
         { "{", "}" },
         { "[", "]" },
-        { "<", ">" },
       },
     },
   },

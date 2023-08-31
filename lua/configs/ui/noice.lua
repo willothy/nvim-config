@@ -1,3 +1,14 @@
+local border_style = {
+  left = { " ", "NoiceCmdlinePopupBorder" },
+  right = { " ", "NoiceCmdlinePopupBorder" },
+  top = { "▀", "NoiceCmdlinePopupBorder" },
+  top_left = { "▀", "NoiceCmdlinePopupBorder" },
+  top_right = { "▀", "NoiceCmdlinePopupBorder" },
+  bottom = { "▄", "NoiceCmdlinePopupBorder" },
+  bottom_left = { "▄", "NoiceCmdlinePopupBorder" },
+  bottom_right = { "▄", "NoiceCmdlinePopupBorder" },
+}
+
 require("noice").setup({
   status = {
     progress = {
@@ -24,14 +35,14 @@ require("noice").setup({
         col = "50%",
       },
       border = {
-        style = "single",
+        style = border_style,
         padding = { 0, 0 },
       },
-      filter_options = {},
       win_options = {
+        -- winblend = 100,
         winhighlight = {
           Normal = "NormalFloat",
-          FloatBorder = "FloatBorder",
+          FloatBorder = "NormalBorder",
         },
         cursorline = false,
       },
@@ -61,7 +72,10 @@ require("noice").setup({
         padding = { 0, 1 },
       },
       win_options = {
-        winhighlight = { Normal = "Normal", FloatBorder = "FloatBorder" },
+        winhighlight = {
+          Normal = "NormalFloat",
+          FloatBorder = "NormalFloatInv",
+        },
       },
     },
   },
@@ -89,13 +103,6 @@ require("noice").setup({
     hover = {
       enabled = true,
     },
-    -- documentation = {
-    --   opts = {
-    --     win_options = {
-    --       concealcursor = "n",
-    --     },
-    --   },
-    -- },
   },
   cmdline = {
     view = "cmdline_popup",

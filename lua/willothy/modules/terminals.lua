@@ -32,6 +32,8 @@ M.main = Terminal:new({
   close_on_exit = true,
   direction = "horizontal",
   start_in_insert = true,
+  auto_scroll = true,
+  persist_size = false,
   shade_terminals = false,
   highlights = {
     Normal = { link = "Normal" },

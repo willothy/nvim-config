@@ -88,6 +88,19 @@ require("rust-tools").setup({
   },
 })
 
+require("neodev").setup({
+  lspconfig = true,
+  pathStrict = true,
+})
+lspconfig.lua_ls.setup({
+  capabilities = capabilities,
+  on_attach = lsp_attach,
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+  before_init = require("neodev.lsp").before_init,
+  single_file_support = true,
+  filetypes = { "lua" },
+})
+
 require("mason-lspconfig").setup({
   handlers = {
     function(server_name)
@@ -116,19 +129,7 @@ require("mason-lspconfig").setup({
         ),
       })
     end,
-    lua_ls = function()
-      require("neodev").setup({
-        lspconfig = true,
-        pathStrict = true,
-      })
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities,
-        on_attach = lsp_attach,
-        root_dir = require("lspconfig.util").root_pattern(".git"),
-        before_init = require("neodev.lsp").before_init,
-        single_file_support = false,
-      })
-    end,
+    lua_ls = function() end,
     bashls = function()
       require("lspconfig").bashls.setup({
         capabilities = mkcaps(false),
@@ -143,7 +144,7 @@ require("mason-lspconfig").setup({
 local sign = function(opts)
   vim.fn.sign_define(opts.name, {
     texthl = opts.hl or opts.name,
-    text = opts.text,
+    icon = opts.text,
   })
 end
 

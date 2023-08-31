@@ -33,9 +33,9 @@ function Scrollbar:mount()
   self.autocmd_id = vim.api.nvim_create_autocmd(
     { "WinScrolled", "CursorMoved" },
     {
-      callback = willothy.fn.throttle(function()
+      callback = function()
         self:update()
-      end, 10),
+      end,
     }
   )
   self:update()
@@ -52,7 +52,7 @@ end
 function Scrollbar:show()
   if not self.visible then
     self.visible = true
-    self.thumb = self:_open_win({ normal = self.opts.hl_group.thumb }, true)
+    self.thumb = self:_open_win({ normal = self.opts.hl_group.thumb })
   end
   self:update()
 end
@@ -157,13 +157,13 @@ function Scrollbar:_open_win(opts)
       row = 0,
       col = 0,
       style = "minimal",
-      noautocmd = true,
+      noautocmd = false,
     }),
   }
-  vim.api.nvim_win_set_option(
-    ret.winnr,
+  vim.api.nvim_set_option_value(
     "winhighlight",
-    "Normal:" .. opts.normal
+    "Normal:" .. opts.normal,
+    { win = ret.winnr }
   )
   return ret
 end
