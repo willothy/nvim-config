@@ -58,14 +58,6 @@ local Space = setmetatable({
   end,
 })
 
--- selene: allow(unused_variable)
-local Icon = function(icon, hl)
-  return {
-    provider = icon,
-    hl = hl,
-  }
-end
-
 local Mode = {
   AB(Separator.Left),
   B({
@@ -452,10 +444,14 @@ local SessionName = {
   end,
 }
 
+---@diagnostic disable-next-line: unused-local
+-- selene: allow(unused_variable)
 local SignColumn = {
   provider = "%2.2s",
 }
 
+---@diagnostic disable-next-line: unused-local
+-- selene: allow(unused_variable)
 local NumberColumn = {
   provider = "%=%{v:relnum?v:relnum:v:lnum}",
   hl = function(self)
@@ -488,6 +484,8 @@ ffi.cdef([[
 	int compute_foldcolumn(win_T *wp, int col);
 ]])
 
+---@diagnostic disable-next-line: unused-local
+-- selene: allow(unused_variable)
 local FoldColumn = {
   fallthrough = false,
   init = function(self)
@@ -522,6 +520,9 @@ local FoldColumn = {
       callback = function()
         vim.print("close click")
         local mouse = vim.fn.getmousepos()
+        if not mouse then
+          return
+        end
         local curwin = vim.api.nvim_get_current_win()
         local cursor = vim.api.nvim_win_get_cursor(curwin)
         vim.api.nvim_set_current_win(mouse.winid)
@@ -546,6 +547,9 @@ local FoldColumn = {
       callback = function()
         vim.print("open click")
         local mouse = vim.fn.getmousepos()
+        if not mouse then
+          return
+        end
         local curwin = vim.api.nvim_get_current_win()
         local cursor = vim.api.nvim_win_get_cursor(curwin)
         vim.api.nvim_set_current_win(mouse.winid)
@@ -647,33 +651,19 @@ require("heirline").setup({
   -- statuscolumn = StatusColumn,
 })
 
-local update = function()
-  vim.api.nvim_exec_autocmds("User", { pattern = "UpdateHeirlineComponents" })
-end
-
-vim.api.nvim_create_autocmd({
+willothy.event.on({
   "DirChanged",
   "ModeChanged",
   "BufEnter",
   "TermEnter",
   "LspAttach",
   "ColorScheme",
-}, {
-  group = vim.api.nvim_create_augroup(
-    "heirline_update_cmds",
-    { clear = true }
-  ),
-  callback = update,
-})
+}, function()
+  willothy.event.emit("UpdateHeirlineComponents")
+end)
 
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup(
-    "heirline_colorscheme_reset",
-    { clear = true }
-  ),
-  callback = function()
-    require("heirline").setup({
-      statusline = C(StatusLine),
-    })
-  end,
-})
+willothy.event.on("ColorScheme", function()
+  require("heirline").setup({
+    statusline = C(StatusLine),
+  })
+end)

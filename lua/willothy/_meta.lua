@@ -11,6 +11,7 @@ willothy.keymap = require("willothy.modules.keymap")
 willothy.player = require("willothy.modules.player")
 willothy.term = require("willothy.modules.terminals")
 willothy.marks = require("willothy.modules.marks")
+willothy.event = require("willothy.modules.event")
 
 willothy.utils = {}
 willothy.utils.cursor = require("willothy.modules.utils.cursor")

@@ -1,12 +1,12 @@
-local function lazy(module, submodule)
+local function lazy(submodule, module)
   local name = "willothy.modules"
-  if submodule then
-    name = name .. "." .. submodule
+  if module then
+    name = name .. "." .. module
   end
   if name == "" then
-    name = module
+    name = submodule
   else
-    name = name .. "." .. module
+    name = name .. "." .. submodule
   end
 
   local o = {}
@@ -20,10 +20,10 @@ local function lazy(module, submodule)
       o.setup()
       ready = true
     end
-    if submodule then
-      willothy[submodule][module] = o
+    if module then
+      willothy[module][submodule] = o
     else
-      willothy[module] = o
+      willothy[submodule] = o
     end
     return rawget(o, k)
   end
@@ -80,6 +80,7 @@ willothy.keymap = lazy("keymap")
 willothy.player = lazy("player")
 willothy.term = lazy("terminals")
 willothy.marks = lazy("marks")
+willothy.event = lazy("event")
 
 willothy.utils = module("utils")
 willothy.utils.cursor = lazy("cursor", "utils")
