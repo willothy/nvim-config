@@ -66,12 +66,15 @@ local opts = {
     entries = { name = "custom", selection_order = "near_cursor" },
   },
   sorting = {
+    priority_weight = 10,
     comparators = {
-      cmp.config.compare.offset,
+      cmp.config.compare.scopes,
       cmp.config.compare.exact,
-      cmp.config.compare.recently_used,
-      require("clangd_extensions.cmp_scores"),
       cmp.config.compare.kind,
+      cmp.config.compare.recently_used,
+      cmp.config.compare.offset,
+      cmp.config.compare.locality,
+      require("clangd_extensions.cmp_scores"),
       cmp.config.compare.sort_text,
       cmp.config.compare.length,
       cmp.config.compare.order,
@@ -79,17 +82,12 @@ local opts = {
   },
   formatting = format,
   sources = cmp.config.sources({
-    { name = "nvim_lsp", max_item_count = 9 },
-    { name = "copilot", max_item_count = 1 },
+    { name = "nvim_lsp" },
+    { name = "copilot", max_item_count = 2 },
     { name = "luasnip", max_item_count = 4 },
     { name = "buffer", max_item_count = 4 },
-    {
-      -- name = "async_path",
-      name = "path",
-      priority = 2,
-      max_item_count = 4,
-      group_index = 1,
-    },
+    { name = "path", max_item_count = 4 },
+    { name = "cody" },
   }),
   mapping = {
     ["<M-k>"] = cmp.mapping(
