@@ -77,7 +77,7 @@
   "neo-tree.nvim": { "branch": "v2.x", "commit": "80dc74d081823649809f78370fa5b204aa9a853a" },
   "neoconf.nvim": { "branch": "main", "commit": "1075bd7f23d244f14d691c261b14c38209abf02d" },
   "neodev.nvim": { "branch": "main", "commit": "183f5a7357397260b631d6cccceccc3621b50f78" },
-  "neogit": { "branch": "master", "commit": "16a28cdf5476a7c1900a9cbb559c7fce7efcf77d" },
+  "neogit": { "branch": "fix_garbage_printing", "commit": "3b27ff4a7ec890860dfab997d06e4e9bfc62bf06" },
   "neotest": { "branch": "master", "commit": "bec7be0f13ee19c85561943fc5f7b8daa4f4d465" },
   "neotest-rust": { "branch": "main", "commit": "95161da0fbe0570395a938927b654931a82caecb" },
   "noice.nvim": { "branch": "main", "commit": "74c2902146b080035beb19944baf6f014a954720" },

@@ -280,7 +280,9 @@ return {
     end,
   },
   {
-    "NeogitOrg/neogit",
+    -- "NeogitOrg/neogit",
+    "cristiansofronie/neogit", -- neogit/neogit#803
+    branch = "fix_garbage_printing",
     event = "User ExtraLazy",
     config = function()
       require("configs.git.neogit")
