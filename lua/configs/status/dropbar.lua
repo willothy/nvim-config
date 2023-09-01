@@ -16,7 +16,7 @@ local opts = {
       local filetype = vim.bo[buf].filetype
       local disabled = {
         "Trouble",
-        "terminal",
+        -- "terminal",
         "qf",
         "noice",
         "dapui_scopes",
@@ -26,8 +26,10 @@ local opts = {
         "dapui_console",
         "dap-repl",
       }
-      return vim.bo[buf].buflisted == true
-        and vim.bo[buf].buftype == ""
+      return (
+        vim.bo[buf].buflisted == true or vim.bo[buf].buftype == "terminal"
+      )
+        and (vim.bo[buf].buftype == "" or vim.bo[buf].buftype == "terminal")
         and vim.api.nvim_buf_get_name(buf) ~= ""
         and not disabled[filetype]
     end,
@@ -49,6 +51,36 @@ local opts = {
       left = 0,
       right = 1,
     },
+    sources = function(buf, _)
+      local sources = require("dropbar.sources")
+      local utils = require("dropbar.utils")
+      if vim.bo[buf].ft == "markdown" then
+        return {
+          sources.path,
+          utils.source.fallback({
+            sources.treesitter,
+            sources.markdown,
+            sources.lsp,
+          }),
+        }
+      end
+      if vim.bo[buf].ft == "terminal" then
+        return {
+          setmetatable({}, {
+            __index = function(_, k)
+              return require("willothy.modules.ui.dropbar").terminal[k]
+            end,
+          }),
+        }
+      end
+      return {
+        sources.path,
+        utils.source.fallback({
+          sources.lsp,
+          sources.treesitter,
+        }),
+      }
+    end,
   },
   menu = {
     keymaps = {

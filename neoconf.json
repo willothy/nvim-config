@@ -25,7 +25,8 @@
         "nvim-cmp",
         "nvim-cokeline",
         "toggleterm.nvim",
-        "overseer.nvim"
+        "overseer.nvim",
+        "dropbar.nvim"
       ]
     }
   },

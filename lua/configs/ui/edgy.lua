@@ -139,9 +139,11 @@ require("edgy").setup({
       ft = "terminal",
       title = "Terminal",
       open = function()
-        vim.cmd.terminal()
-        -- willothy.term.main:open()
+        willothy.term.main:open()
       end,
+      wo = {
+        winbar = "%{%v:lua.dropbar.get_dropbar_str()%}",
+      },
       filter = function(_buf, win)
         return not vim.api.nvim_win_get_config(win).zindex
       end,
