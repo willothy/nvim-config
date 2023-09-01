@@ -16,7 +16,7 @@ local function lazy(submodule, module)
   local ready = false
   function mt:__index(k)
     o = require(name)
-    if o.setup and not ready then
+    if rawget(o, "setup") and not ready then
       o.setup()
       ready = true
     end
@@ -52,7 +52,7 @@ local function module(mod, base)
         local first = package.loaded[submod_path] == nil
         local submod = require(submod_path)
         o[submod_name] = submod
-        if first and type(submod) == "table" and submod.setup then
+        if first and type(submod) == "table" and rawget(submod, "setup") then
           submod.setup()
         end
         return submod

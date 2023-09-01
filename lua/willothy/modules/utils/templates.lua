@@ -4,7 +4,7 @@ M.py = [[
 def main():
     print("hello world")
 
-if __name__ == "__main__":          
+if __name__ == "__main__":
     main()
 ]]
 M.python = M.py
@@ -52,4 +52,8 @@ M.html = [[
 </html>
 ]]
 
-return M
+return setmetatable(M, {
+  __index = function()
+    return ""
+  end,
+})
