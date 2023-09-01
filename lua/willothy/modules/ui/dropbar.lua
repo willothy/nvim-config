@@ -1,13 +1,9 @@
-local M = {}
-
-local dropbar_symbol_t = require("dropbar.bar").dropbar_symbol_t
-local dropbar_menu_t = require("dropbar.menu").dropbar_menu_t
-local dropbar_menu_entry_t = require("dropbar.menu").dropbar_menu_entry_t
-
-M.terminal = {}
+local dropbar_symbol_t
+local dropbar_menu_t
+local dropbar_menu_entry_t
 
 ---@return fun(term: Terminal): dropbar_menu_entry_t
-function M.terminal._menu_entry_builder(sym)
+local function menu_entry_builder(sym)
   return function(term)
     return dropbar_menu_entry_t:new({
       components = {
@@ -32,12 +28,24 @@ end
 
 ---@param sym dropbar_symbol_t
 ---@return dropbar_menu_entry_t[]
-function M.terminal._get_menu_entries(sym)
+local function get_menu_entries(sym)
   return vim
     .iter(require("toggleterm.terminal").get_all(true))
-    :map(M.terminal._menu_entry_builder(sym))
+    :map(menu_entry_builder(sym))
     :totable()
 end
+
+local init = false
+local function setup()
+  dropbar_symbol_t = require("dropbar.bar").dropbar_symbol_t
+  dropbar_menu_t = require("dropbar.menu").dropbar_menu_t
+  dropbar_menu_entry_t = require("dropbar.menu").dropbar_menu_entry_t
+  init = true
+end
+
+local M = {}
+
+M.terminal = {}
 
 function M.terminal.get_symbols()
   local toggleterm = require("toggleterm.terminal")
@@ -52,7 +60,7 @@ function M.terminal.get_symbols()
       name_hl = "Keyword",
       on_click = function(self)
         self.menu = dropbar_menu_t:new({
-          entries = M.terminal._get_menu_entries(self),
+          entries = get_menu_entries(self),
           prev_win = self.bar.win or vim.api.nvim_get_current_win(),
         })
         self.menu:toggle()
@@ -61,4 +69,11 @@ function M.terminal.get_symbols()
   }
 end
 
-return M
+return setmetatable({}, {
+  __index = function(_, k)
+    if not init then
+      setup()
+    end
+    return rawget(M, k)
+  end,
+})
