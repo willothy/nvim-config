@@ -159,6 +159,51 @@ local commands = {
     end,
     desc = "Select a browser",
   },
+  ImportGraph = {
+    function(args)
+      local graph = require("importgraph").render("lua", {
+        collector = {
+          working_dir = "./lua",
+          path_filter = function(path)
+            return not path:match("/after")
+              and not path:match("/configs")
+              and not path:match("/plugins")
+          end,
+        },
+      })
+      local path = args.args
+      if path == nil or path == "" then
+        path = vim.fn.stdpath("config") .. "/importgraph.dot"
+      end
+      vim.loop.fs_open(path, "w", 777, function(err, fd)
+        if err or not fd then
+          return
+        end
+        vim.loop.fs_write(fd, graph, nil, function(w_err, bytes)
+          if w_err then
+            vim.notify(
+              "[ImportGraph] Error writing to file: " .. w_err,
+              "error"
+            )
+          end
+          local ok, ename, emsg = vim.loop.fs_close(fd)
+          if not ok then
+            vim.notify(
+              "[ImportGraph] Error closing file: " .. ename .. ": " .. emsg,
+              "error"
+            )
+          else
+            vim.notify(
+              "[ImportGraph] Wrote " .. bytes .. " bytes to " .. path,
+              "info"
+            )
+          end
+        end)
+      end)
+    end,
+    desc = "Draw the import graph",
+    nargs = "?",
+  },
 }
 
 vim.iter(commands):each(function(name, cmd)

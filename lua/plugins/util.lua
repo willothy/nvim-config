@@ -1,6 +1,8 @@
 vim.g.nvim_ghost_autostart = 0
 
 return {
+  "willothy/futures.nvim",
+  "notomo/importgraph.nvim",
   {
     "ellisonleao/glow.nvim",
     config = true,
@@ -63,9 +65,6 @@ return {
     "nacro90/numb.nvim",
     config = true,
     event = "User ExtraLazy",
-  },
-  {
-    "willothy/futures.nvim",
   },
   {
     "jbyuki/venn.nvim",
