@@ -61,6 +61,7 @@ resession.add_hook(
     if lazy_open then
       require("lazy.view").show()
     end
+    willothy.event.emit("ResessionPostLoad")
   end)
 )
 

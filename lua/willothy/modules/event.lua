@@ -292,7 +292,9 @@ function M.on(event, callback, opts)
     )
   end)
 
-  vim.api.nvim_create_autocmd(autocmds, opts)
+  if #autocmds > 0 then
+    vim.api.nvim_create_autocmd(autocmds, opts)
+  end
 
   ---@diagnostic disable-next-line: return-type-mismatch
   return opts.group

@@ -2,15 +2,15 @@ local icons = willothy.icons
 local dropbar = require("dropbar")
 
 local enable = function(buf, win)
-  if
-    require("cokeline.sidebar").get_win("left") == win
-    or require("cokeline.sidebar").get_win("right") == win
-  then
-    return false
-  end
-  if vim.wo[win].diff then
-    return false
-  end
+  -- if
+  --   require("cokeline.sidebar").get_win("left") == win
+  --   or require("cokeline.sidebar").get_win("right") == win
+  -- then
+  --   return false
+  -- end
+  -- if vim.wo[win].diff then
+  --   return false
+  -- end
   local filetype = vim.bo[buf].filetype
   local disabled = {
     "Trouble",
@@ -99,4 +99,17 @@ dropbar.setup({
   },
 })
 
-vim.o.winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"
+willothy.event.on("ResessionPostLoad", function()
+  local utils = require("dropbar.utils")
+  vim
+    .iter(vim.api.nvim_list_wins())
+    :map(function(win)
+      return vim.api.nvim_win_get_buf(win), win
+    end)
+    :filter(enable)
+    :each(function(_, win)
+      vim.wo[win].winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"
+    end)
+  utils.bar.exec("update", {}, {})
+end)
+willothy.event.emit("ResessionPostLoad")
