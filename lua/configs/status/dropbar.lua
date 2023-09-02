@@ -30,62 +30,38 @@ local enable = function(buf, win)
     and not disabled[filetype]
 end
 
-local sources = function(buf, _)
-  local builtin = require("dropbar.sources")
-  local utils = require("dropbar.utils")
-  if vim.bo[buf].ft == "markdown" then
-    return {
-      builtin.path,
-      utils.source.fallback({
-        builtin.treesitter,
-        builtin.markdown,
-        builtin.lsp,
-      }),
-    }
-  end
-  if vim.bo[buf].ft == "terminal" then
-    return {
-      setmetatable({}, {
-        __index = function(_, k)
-          return require("willothy.modules.ui.dropbar").terminal[k]
-        end,
-      }),
-    }
-  end
-  return {
-    builtin.path,
-    utils.source.fallback({
-      builtin.lsp,
-      builtin.treesitter,
-    }),
-  }
-end
-
 local fuzzy_find = function()
-  local api = require("dropbar.api")
-  local m = api.get_current_dropbar_menu()
-  if m then
-    m:fuzzy_find_open({
-      win_configs = {
-        border = "none",
-      },
-      prompt = "%#GitSignsAdd#   ",
-    })
+  local menu = require("dropbar.utils").menu.get_current()
+  if not menu then
+    return
   end
+  menu:fuzzy_find_open()
 end
 
 local close = function()
-  local api = require("dropbar.api")
-  local m = api.get_current_dropbar_menu()
-  if not m then
+  local menu = require("dropbar.utils").menu.get_current()
+  if not menu then
     return
   end
-  m:close()
+  menu:close()
 end
 
 dropbar.setup({
   general = {
     enable = enable,
+  },
+  sources = {
+    terminal = {
+      name = function(buf)
+        local name = vim.api.nvim_buf_get_name(buf)
+        local term = select(2, require("toggleterm.terminal").identify(name))
+        if term then
+          return " " .. (term.display_name or term.name)
+        else
+          return " " .. name
+        end
+      end,
+    },
   },
   icons = {
     kinds = {
@@ -104,23 +80,24 @@ dropbar.setup({
       left = 0,
       right = 1,
     },
-    sources = sources,
   },
   menu = {
     keymaps = {
-      f = fuzzy_find,
-      i = fuzzy_find,
       q = close,
       ["<Esc>"] = close,
     },
   },
+  fzf = {
+    prompt = "%#GitSignsAdd#  ",
+    keymaps = {
+      ["<C-j>"] = function()
+        require("dropbar.api").fuzzy_find_navigate("down")
+      end,
+      ["<C-k>"] = function()
+        require("dropbar.api").fuzzy_find_navigate("up")
+      end,
+    },
+  },
 })
 
-local function attach(win)
-  local buf = vim.api.nvim_win_get_buf(win)
-  if require("dropbar.configs").eval(enable, buf, win) then
-    vim.wo[win].winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"
-  end
-end
-
-vim.iter(vim.api.nvim_list_wins()):each(attach)
+vim.o.winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"

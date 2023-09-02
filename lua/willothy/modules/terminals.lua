@@ -33,11 +33,35 @@ M.main = Terminal:new({
   direction = "horizontal",
   start_in_insert = true,
   auto_scroll = true,
-  persist_size = false,
+  persist_size = true,
   shade_terminals = false,
   highlights = {
     Normal = { link = "Normal" },
   },
+  on_create = function(term)
+    vim.b[term.bufnr].minianimate_disable = true
+    local win
+    vim.api.nvim_create_autocmd({ "BufEnter", "TermLeave" }, {
+      buffer = term.bufnr,
+      callback = function()
+        win = vim.api.nvim_get_current_win()
+      end,
+    })
+    vim.api.nvim_create_autocmd("BufLeave", {
+      buffer = term.bufnr,
+      callback = function()
+        if win then
+          vim.api.nvim_win_call(win, function()
+            vim.fn.winrestview({
+              topline = vim.api.nvim_buf_line_count(term.bufnr)
+                - vim.api.nvim_win_get_height(win),
+            })
+          end)
+          win = nil
+        end
+      end,
+    })
+  end,
   on_open = function()
     vim.api.nvim_exec_autocmds(
       "User",

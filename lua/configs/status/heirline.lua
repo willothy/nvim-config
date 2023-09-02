@@ -201,6 +201,10 @@ local Devicon = {
   end,
   static = {
     fetch = function(self)
+      -- if self.ft == vim.bo.filetype then
+      --   return
+      -- end
+      -- self.icon = nil
       local filename = vim.fn.expand("%")
       local extension = vim.fn.fnamemodify(filename, ":e")
       local devicons = require("nvim-web-devicons")
@@ -215,7 +219,10 @@ local Devicon = {
   },
   update = {
     "User",
-    pattern = { "ExtraLazy", "UpdateHeirlineComponents" },
+    pattern = {
+      "ExtraLazy",
+      "UpdateHeirlineComponents",
+    },
     callback = function(self)
       self:fetch()
     end,
@@ -655,6 +662,9 @@ willothy.event.on({
   "DirChanged",
   "ModeChanged",
   "BufEnter",
+  "WinEnter",
+  "TermLeave",
+  "BufEnter", 
   "TermEnter",
   "LspAttach",
   "ColorScheme",

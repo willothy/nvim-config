@@ -4,7 +4,7 @@ local builtins = null_ls.builtins
 null_ls.setup({
   sources = {
     builtins.formatting.stylua,
-    builtins.diagnostics.selene,
+    -- builtins.diagnostics.selene,
     builtins.formatting.prettier.with({
       filetypes = { "toml", "js", "css", "html", "json", "markdown" },
     }),

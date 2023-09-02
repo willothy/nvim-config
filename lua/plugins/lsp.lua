@@ -51,7 +51,7 @@ return {
   {
     -- "simrat39/rust-tools.nvim",
     "willothy/rust-tools.nvim",
-    branch = "no-augment",
+    branch = "master",
   },
   {
     "p00f/clangd_extensions.nvim",

@@ -1,5 +1,12 @@
 local M = {}
 
+local _id = 0
+local function next_id()
+  local id = _id
+  _id = _id + 1
+  return id
+end
+
 --- Autocmd events
 M.autocmd = {
   --- after adding a buffer to the buffer list
@@ -251,19 +258,44 @@ M.autocmd = {
 ---@param event string | string[]
 ---@param callback fun(args: table)
 ---@param opts EventOpts?
+---@return integer augroup
 function M.on(event, callback, opts)
   opts = opts or {}
-
-  local pattern = opts.pattern
-
-  if not M.autocmd[event] then
-    pattern = event
-    event = "User"
+  if type(event) == "string" then
+    event = { event }
   end
-  opts.pattern = pattern
-  opts.callback = callback
 
-  return vim.api.nvim_create_autocmd(event, opts)
+  local usercmds = {}
+  local autocmds = vim
+    .iter(event)
+    :map(function(evt)
+      if M.autocmd[evt] then
+        return evt
+      else
+        table.insert(usercmds, event)
+      end
+    end)
+    :totable()
+
+  opts.callback = callback
+  opts.group = opts.group
+    or vim.api.nvim_create_augroup(tostring(next_id()), { clear = true })
+
+  vim.iter(usercmds):each(function(evt)
+    vim.api.nvim_create_autocmd(
+      "User",
+      vim.tbl_deep_extend("keep", {
+        pattern = evt,
+        callback = callback,
+        group = opts.group,
+      }, opts)
+    )
+  end)
+
+  vim.api.nvim_create_autocmd(autocmds, opts)
+
+  ---@diagnostic disable-next-line: return-type-mismatch
+  return opts.group
 end
 
 ---@class EmitOpts

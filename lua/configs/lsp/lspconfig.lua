@@ -209,7 +209,16 @@ vim.diagnostic.config({
       end,
     }),
     source = "always",
-    border = "rounded",
+    border = {
+      { "▀", "NoiceCmdlinePopupBorder" }, -- top left
+      { "▀", "NoiceCmdlinePopupBorder" }, -- top
+      { "▀", "NoiceCmdlinePopupBorder" }, -- top right
+      { " ", "NoiceCmdlinePopupBorder" }, -- right
+      { "▄", "NoiceCmdlinePopupBorder" }, -- bottom right
+      { "▄", "NoiceCmdlinePopupBorder" }, -- bottom
+      { "▄", "NoiceCmdlinePopupBorder" }, -- bottom left
+      { " ", "NoiceCmdlinePopupBorder" }, -- left
+    },
     focusable = false,
   },
   update_in_insert = true,
