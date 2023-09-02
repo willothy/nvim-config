@@ -52,7 +52,7 @@ return {
     config = function()
       require("configs.lsp.sourcegraph")
     end,
-    event = "User ExtraLazy",
+    event = "BufReadPost",
     build = "nvim -l build/init.lua",
   },
   {
@@ -122,7 +122,6 @@ return {
       "nvim-telescope/telescope-smart-history.nvim",
       -- "nvim-telescope/telescope-fzf-writer.nvim", -- cool but currently broken
     },
-    event = "VeryLazy",
   },
   {
     "nvim-telescope/telescope-fzf-native.nvim",
@@ -135,7 +134,7 @@ return {
   },
   {
     "gbprod/yanky.nvim",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     config = function()
       require("configs.editor.yanky")
     end,
@@ -201,7 +200,8 @@ return {
     dependencies = {
       "stevearc/overseer.nvim",
     },
-    event = "User ExtraLazy",
+    -- event = "User ExtraLazy",
+    cmd = "Greyjoy",
     config = function()
       require("configs.terminal.greyjoy")
     end,
@@ -249,7 +249,6 @@ return {
     dependencies = {
       "hrsh7th/nvim-cmp",
     },
-    event = "User ExtraLazy",
     opts = {
       tabkey = "",
       backwards_tabkey = "",
@@ -280,10 +279,10 @@ return {
     end,
   },
   {
-    -- "NeogitOrg/neogit",
-    "cristiansofronie/neogit", -- neogit/neogit#803
-    branch = "fix_garbage_printing",
-    event = "User ExtraLazy",
+    "NeogitOrg/neogit",
+    -- "cristiansofronie/neogit", -- neogit/neogit#803
+    -- branch = "fix_garbage_printing",
+    cmd = "Neogit",
     config = function()
       require("configs.git.neogit")
     end,

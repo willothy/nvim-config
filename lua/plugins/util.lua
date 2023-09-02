@@ -42,7 +42,9 @@ return {
   },
   {
     "EtiamNullam/deferred-clipboard.nvim",
-    config = true,
+    opts = {
+      fallback = "unnamedplus",
+    },
     event = "User ExtraLazy",
   },
   {
