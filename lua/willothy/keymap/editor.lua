@@ -39,8 +39,14 @@ require("which-key").register({
     b = { name = "which_key_ignore" },
     g = "first line",
     x = "open hovered",
-    r = bind("glance", "open", "references"):with_desc("lsp: references"),
-    d = bind("glance", "open", "definitions"):with_desc("lsp: definitions"),
+    r = {
+      vim.lsp.buf.references,
+      "lsp: references",
+    },
+    d = {
+      vim.lsp.buf.definition,
+      "lsp: definitions",
+    },
   },
 }, { mode = modes.non_editing })
 

@@ -141,6 +141,16 @@ require("mason-lspconfig").setup({
   },
 })
 
+-- vim.lsp.buf.references
+---@diagnostic disable-next-line: duplicate-set-field
+vim.lsp.handlers["textDocument/references"] = function()
+  require("trouble").open("lsp_references")
+end
+
+vim.lsp.handlers["textDocument/definition"] = function()
+  require("trouble").open("lsp_definitions")
+end
+
 local sign = function(opts)
   vim.fn.sign_define(opts.name, {
     texthl = opts.hl or opts.name,

@@ -27,15 +27,11 @@ register({
     "code actions",
   },
   r = {
-    function()
-      require("glance").open("references")
-    end,
+    vim.lsp.buf.references,
     "references",
   },
   d = {
-    function()
-      require("glance").open("definitions")
-    end,
+    vim.lsp.buf.definition,
     "definitions",
   },
   D = {

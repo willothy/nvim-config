@@ -51,6 +51,7 @@ return {
   {
     -- "simrat39/rust-tools.nvim",
     "willothy/rust-tools.nvim",
+    dir = "~/projects/lua/rust-tools.nvim/",
     branch = "master",
   },
   {

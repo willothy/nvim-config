@@ -14,7 +14,6 @@ local enable = function(buf, win)
   local filetype = vim.bo[buf].filetype
   local disabled = {
     "Trouble",
-    -- "terminal",
     "qf",
     "noice",
     "dapui_scopes",
