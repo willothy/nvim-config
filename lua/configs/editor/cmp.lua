@@ -87,7 +87,6 @@ local opts = {
     { name = "luasnip", max_item_count = 4 },
     { name = "buffer", max_item_count = 4 },
     { name = "path", max_item_count = 4 },
-    { name = "cody" },
   }),
   mapping = {
     ["<M-k>"] = cmp.mapping(

@@ -171,7 +171,10 @@ return {
     event = "UiEnter",
   },
   {
-    "Bekaboo/dropbar.nvim",
+    -- "Bekaboo/dropbar.nvim",
+    "willothy/dropbar.nvim",
+    dir = "~/projects/lua/dropbar.nvim/",
+    branch = "feat-fuzzy-finding",
     config = function()
       require("configs.status.dropbar")
     end,
