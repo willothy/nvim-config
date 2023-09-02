@@ -14,14 +14,6 @@ return {
     config = true,
   },
   {
-    "Aasim-A/scrollEOF.nvim",
-    opts = {
-      disabled_filetypes = { "terminal" },
-      disabled_modes = { "t" },
-    },
-    event = "User ExtraLazy",
-  },
-  {
     "lambdalisue/suda.vim",
     event = "User ExtraLazy",
   },

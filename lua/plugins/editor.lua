@@ -299,8 +299,4 @@ return {
     config = true,
     event = "User ExtraLazy",
   },
-  {
-    "willothy/view-tween.nvim",
-    event = "User ExtraLazy",
-  },
 }
