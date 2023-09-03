@@ -1,5 +1,6 @@
 local icons = willothy.icons
 local dropbar = require("dropbar")
+local utils = require("dropbar.utils")
 
 local enable = function(buf, win)
   -- if
@@ -24,7 +25,7 @@ local enable = function(buf, win)
     "dap-repl",
   }
   if vim.bo[buf].buftype == "terminal" then
-    return 
+    return
     -- return true
   end
   return vim.bo[buf].buflisted == true
@@ -110,6 +111,36 @@ dropbar.setup({
     },
   },
 })
+
+local last_hovered_dropbar
+---Update dropbar hover highlights given the mouse position
+---@param mouse table
+---@return nil
+-- function utils.bar.update_hover_hl(mouse)
+--   ---@type dropbar_t
+--   local dropbar = utils.bar.get({ win = mouse.winid })
+--   if not dropbar or mouse.winrow ~= 1 or mouse.line ~= 0 then
+--     if last_hovered_dropbar then
+--       last_hovered_dropbar:update_hover_hl()
+--       last_hovered_dropbar = nil
+--     end
+--     return
+--   end
+--   if last_hovered_dropbar and last_hovered_dropbar ~= dropbar then
+--     last_hovered_dropbar:update_hover_hl()
+--   end
+--   if vim.bo[dropbar.buf].buftype == "terminal" then
+--     mouse.wincol = mouse.wincol - 3
+--   else
+--     mouse.wincol = mouse.wincol - 1
+--   end
+--   if dropbar:get_component_at(mouse.wincol - 1, false) then
+--     dropbar:update_hover_hl(math.max(0, mouse.wincol - 1))
+--   else
+--     dropbar:update_hover_hl()
+--   end
+--   last_hovered_dropbar = dropbar
+-- end
 
 willothy.event.on("ResessionPostLoad", function()
   local utils = require("dropbar.utils")

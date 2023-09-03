@@ -42,8 +42,16 @@ local bottom = View.new({
   size = { height = get_size },
 })
 
+function _G.__edgy_term_title()
+  local buf = vim.api.nvim_get_current_buf()
+  local win = vim.api.nvim_get_current_win()
+  local bar = _G.dropbar.bars[buf][win]
+  bar.padding.left = 3
+  return _G.dropbar.get_dropbar_str():gsub(" %s+", "")
+end
+
 local terminal = bottom:extend({
-  title = "%{%v:lua.dropbar.get_dropbar_str()%}",
+  title = "%{%v:lua.__edgy_term_title()%}",
   open = function()
     willothy.term.main:open()
   end,
