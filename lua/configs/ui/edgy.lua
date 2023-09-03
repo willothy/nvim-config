@@ -256,6 +256,10 @@ require("edgy").setup({
   exit_when_last = true,
   close_when_all_hidden = true,
 
+  wo = {
+    winhighlight = "",
+  },
+
   keys = {
     -- ["q"] = false,
     ["Q"] = false,

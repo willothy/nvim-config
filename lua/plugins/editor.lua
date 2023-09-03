@@ -211,29 +211,9 @@ return {
     dependencies = {
       "akinsho/toggleterm.nvim",
     },
-    opts = {
-      strategy = {
-        "toggleterm",
-        use_shell = false,
-        direction = "horizontal",
-        open_on_start = false,
-        close_on_exit = true,
-        on_create = function(term)
-          vim.bo[term.bufnr].filetype = "terminal"
-          -- vim.api.nvim_create_autocmd("BufEnter", {
-          --   buffer = term.bufnr,
-          --   callback = function()
-          --     local win = require("edgy.commands").get_win(
-          --       vim.api.nvim_get_current_win()
-          --     )
-          --     if win then
-          --       win.view:update({})
-          --     end
-          --   end,
-          -- })
-        end,
-      },
-    },
+    config = function()
+      require("configs.editor.overseer")
+    end,
     event = "User ExtraLazy",
   },
   -- NAVIGATION --
