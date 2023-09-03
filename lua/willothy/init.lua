@@ -95,6 +95,7 @@ willothy.utils.table = lazy("table", "utils")
 
 willothy.ui = module("ui")
 willothy.ui.scrollbar = lazy("scrollbar", "ui")
+willothy.ui.scrolleof = lazy("scrolleof", "ui")
 
 willothy.hydras = module("hydras")
 willothy.hydras.git = lazy("git", "hydras")

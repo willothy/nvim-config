@@ -32,7 +32,7 @@ M.main = Terminal:new({
   close_on_exit = true,
   direction = "horizontal",
   start_in_insert = true,
-  auto_scroll = true,
+  auto_scroll = false,
   persist_size = true,
   shade_terminals = false,
   highlights = {
@@ -47,27 +47,29 @@ M.main = Terminal:new({
         win = vim.api.nvim_get_current_win()
       end,
     })
+    local reset_view = function()
+      if win and vim.api.nvim_win_is_valid(win) then
+        vim.api.nvim_win_call(win, function()
+          vim.fn.winrestview({
+            topline = vim.api.nvim_buf_line_count(term.bufnr)
+              - vim.api.nvim_win_get_height(win),
+          })
+        end)
+      end
+    end
+    vim.api.nvim_create_autocmd("WinScrolled", {
+      buffer = term.bufnr,
+      callback = function()
+        reset_view()
+      end,
+    })
     vim.api.nvim_create_autocmd("BufLeave", {
       buffer = term.bufnr,
       callback = function()
-        if win then
-          vim.api.nvim_win_call(win, function()
-            vim.fn.winrestview({
-              topline = vim.api.nvim_buf_line_count(term.bufnr)
-                - vim.api.nvim_win_get_height(win),
-            })
-          end)
-          win = nil
-        end
+        reset_view()
+        vim.schedule(reset_view)
       end,
     })
-  end,
-  on_open = function()
-    vim.api.nvim_exec_autocmds(
-      "User",
-      { pattern = "UpdateHeirlineComponents" }
-    )
-    vim.defer_fn(vim.cmd.startinsert, 40)
   end,
 })
 
