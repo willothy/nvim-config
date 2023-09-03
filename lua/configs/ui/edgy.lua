@@ -9,6 +9,11 @@ local function get_size()
   return round(vim.o.lines / 3.5)
 end
 
+function __winbar()
+  local win = vim.api.nvim_get_current_win()
+  return _G.edgy_winbar(win) .. " " .. _G.dropbar.get_dropbar_str()
+end
+
 require("edgy").setup({
   right = {
     {
@@ -137,12 +142,16 @@ require("edgy").setup({
     },
     {
       ft = "terminal",
-      title = "Terminal",
+      title = "%{%v:lua.dropbar.get_dropbar_str()%}",
+      -- title = "",
       open = function()
         willothy.term.main:open()
       end,
       wo = {
-        winbar = "%{%v:lua.dropbar.get_dropbar_str()%}",
+        winbar = true,
+        -- winbar = "%{%v:lua.__winbar()%}",
+        -- winbar = "%{%v:lua.edgy_winbar(%{%v:lua.vim.api.nvim_get_current_win()%})%} %7.7(%{%v:lua.dropbar.get_dropbar_str()%}%)",
+        -- winbar = "%{%v:lua.vim.api.nvim_get_current_win()%}",
       },
       filter = function(_buf, win)
         return not vim.api.nvim_win_get_config(win).zindex

@@ -12,7 +12,9 @@ return {
   },
   -- LAYOUT / CORE UI --
   {
-    "folke/edgy.nvim",
+    -- "folke/edgy.nvim",
+    "willothy/edgy.nvim",
+    -- dir = "~/projects/lua/edgy.nvim/",
     event = "VeryLazy",
     config = function()
       require("configs.ui.edgy")

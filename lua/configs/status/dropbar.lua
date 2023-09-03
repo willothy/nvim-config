@@ -23,8 +23,11 @@ local enable = function(buf, win)
     "dapui_console",
     "dap-repl",
   }
-  return (vim.bo[buf].buflisted == true or vim.bo[buf].buftype == "terminal")
-    and (vim.bo[buf].buftype == "" or vim.bo[buf].buftype == "terminal")
+  if vim.bo[buf].buftype == "terminal" then
+    return false 
+  end
+  return vim.bo[buf].buflisted == true
+    and vim.bo[buf].buftype == ""
     and vim.api.nvim_buf_get_name(buf) ~= ""
     and not disabled[filetype]
 end
