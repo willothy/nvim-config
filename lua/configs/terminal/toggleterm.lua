@@ -1,5 +1,6 @@
 require("toggleterm").setup({
   start_in_insert = true,
+  close_on_exit = true,
   winbar = {
     enabled = false,
     name_formatter = function(term)

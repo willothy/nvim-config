@@ -9,10 +9,53 @@ local function get_size()
   return round(vim.o.lines / 3.5)
 end
 
-function __winbar()
-  local win = vim.api.nvim_get_current_win()
-  return _G.edgy_winbar(win) .. " " .. _G.dropbar.get_dropbar_str()
+---@class Willothy.EdgyView
+local View = {}
+View.__index = View
+
+---@param props table
+function View.new(props)
+  return setmetatable(props, View)
 end
+
+---@param props table
+function View:extend(props)
+  return setmetatable(vim.tbl_deep_extend("keep", props, self), View)
+end
+
+---@param ft string
+function View:filetype(ft)
+  return self:extend({ ft = ft })
+end
+
+---@param title string
+function View:title(title)
+  return self:extend({ title = title })
+end
+
+---@param open string | fun()
+function View:open(open)
+  return self:extend({ open = open })
+end
+
+local bottom = View.new({
+  size = { height = get_size },
+})
+
+local terminal = bottom:extend({
+  title = "%{%v:lua.dropbar.get_dropbar_str()%}",
+  open = function()
+    willothy.term.main:open()
+  end,
+  wo = {
+    number = false,
+    relativenumber = false,
+  },
+  filter = function(buf, win)
+    return vim.bo[buf].buftype == "terminal"
+      and vim.api.nvim_win_get_config(win).zindex == nil
+  end,
+})
 
 require("edgy").setup({
   right = {
@@ -140,24 +183,25 @@ require("edgy").setup({
       wo = { winbar = false, statuscolumn = "" },
       size = { height = get_size },
     },
-    {
-      ft = "terminal",
-      title = "%{%v:lua.dropbar.get_dropbar_str()%}",
-      -- title = "",
-      open = function()
-        willothy.term.main:open()
-      end,
-      wo = {
-        winbar = true,
-        -- winbar = "%{%v:lua.__winbar()%}",
-        -- winbar = "%{%v:lua.edgy_winbar(%{%v:lua.vim.api.nvim_get_current_win()%})%} %7.7(%{%v:lua.dropbar.get_dropbar_str()%}%)",
-        -- winbar = "%{%v:lua.vim.api.nvim_get_current_win()%}",
-      },
-      filter = function(_buf, win)
-        return not vim.api.nvim_win_get_config(win).zindex
-      end,
-      size = { height = get_size },
-    },
+    terminal:filetype("terminal"),
+    terminal:filetype("toggleterm"),
+    -- {
+    --   ft = "terminal",
+    --   title = "%{%v:lua.dropbar.get_dropbar_str()%}",
+    --   open = function()
+    --     willothy.term.main:open()
+    --   end,
+    --   wo = {
+    --     winbar = true,
+    --     number = false,
+    --     relativenumber = false,
+    --   },
+    --   filter = function(buf, win)
+    --     return vim.bo[buf].buftype == "terminal"
+    --       and vim.api.nvim_win_get_config(win).zindex == nil
+    --   end,
+    --   size = { height = get_size },
+    -- },
     {
       ft = "Trouble",
       title = "Diagnostics",
