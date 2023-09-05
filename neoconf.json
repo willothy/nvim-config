@@ -6,6 +6,7 @@
       "types": true,
       "plugins": [
         "lazy.nvim",
+        "edgy.nvim",
         // "mason-lspconfig",
         // "mason.nvim",
         "nvim-treesitter",

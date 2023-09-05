@@ -457,7 +457,6 @@ require("cokeline").setup({
             return string.format(
               " %s ",
               vim.fn.fnamemodify(vim.fn.getcwd(-1, tab.index), ":t")
-                or tab.index
             )
           end,
           fg = "TabLine",

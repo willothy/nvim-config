@@ -10,7 +10,7 @@ local function get_size()
 end
 
 ---@class Willothy.EdgyView
-local View = {}
+local View = setmetatable({}, { __index = require("edgy.view") })
 View.__index = View
 
 ---@param props table
@@ -20,26 +20,37 @@ end
 
 ---@param props table
 function View:extend(props)
-  return setmetatable(vim.tbl_deep_extend("keep", props, self), View)
+  return setmetatable(props, { __index = self })
+  -- return setmetatable(vim.tbl_deep_extend("keep", props, self), View)
+end
+
+function View:branch()
+  return self:extend({})
 end
 
 ---@param ft string
-function View:filetype(ft)
-  return self:extend({ ft = ft })
+function View:with_ft(ft)
+  self.ft = ft
+  return self
 end
 
 ---@param title string
-function View:title(title)
-  return self:extend({ title = title })
+function View:with_title(title)
+  self.title = title
+  return self
 end
 
 ---@param open string | fun()
-function View:open(open)
-  return self:extend({ open = open })
+function View:with_open(open)
+  self.open = open
+  return self
 end
 
 local bottom = View.new({
   size = { height = get_size },
+  filter = function(_buf, win)
+    return vim.api.nvim_win_get_config(win).zindex == nil
+  end,
 })
 
 function _G.__edgy_term_title()
@@ -65,7 +76,7 @@ local terminal = bottom:extend({
   end,
 })
 
-require("edgy").setup({
+local opts = {
   right = {
     {
       ft = "NeogitStatus",
@@ -179,73 +190,23 @@ require("edgy").setup({
     },
   },
   bottom = {
-    {
+    bottom:extend({
       ft = "dapui_console",
       title = "Debug Console",
       wo = { winbar = " Debug Console" },
-      size = { height = get_size },
-    },
-    {
+    }),
+    bottom:extend({
       ft = "dap-repl",
       title = "Debug REPL",
       wo = { winbar = false, statuscolumn = "" },
-      size = { height = get_size },
-    },
-    terminal:filetype("terminal"),
-    terminal:filetype("toggleterm"),
-    -- {
-    --   ft = "terminal",
-    --   title = "%{%v:lua.dropbar.get_dropbar_str()%}",
-    --   open = function()
-    --     willothy.term.main:open()
-    --   end,
-    --   wo = {
-    --     winbar = true,
-    --     number = false,
-    --     relativenumber = false,
-    --   },
-    --   filter = function(buf, win)
-    --     return vim.bo[buf].buftype == "terminal"
-    --       and vim.api.nvim_win_get_config(win).zindex == nil
-    --   end,
-    --   size = { height = get_size },
-    -- },
-    {
-      ft = "Trouble",
-      title = "Diagnostics",
-      open = function()
-        require("trouble").open()
-      end,
-      size = { height = get_size },
-    },
-    {
-      ft = "noice",
-      filter = function(_buf, win)
-        return not vim.api.nvim_win_get_config(win).zindex
-      end,
-      size = { height = get_size },
-    },
-    {
-      ft = "qf",
-      title = "QuickFix",
-      size = { height = get_size },
-    },
-    {
-      ft = "spectre_panel",
-      title = "Spectre",
-      wo = {
-        number = false,
-        relativenumber = false,
-        signcolumn = "no",
-      },
-      filter = function(_, win)
-        if vim.api.nvim_win_get_config(win).zindex == nil then
-          vim.api.nvim_win_set_cursor(win, { 1, 0 })
-          return true
-        end
-      end,
-      size = { height = get_size },
-    },
+    }),
+    terminal:branch():with_ft("terminal"),
+    terminal:branch():with_ft("toggleterm"),
+    terminal:branch():with_ft(vim.o.shell),
+    bottom:branch():with_ft("Trouble"):with_title("Diagnostics"),
+    bottom:branch():with_ft("noice"),
+    bottom:branch():with_ft("qf"):with_title("QuickFix"),
+    bottom:branch():with_ft("spectre_pabel"):with_title("Spectre"),
   },
 
   options = {
@@ -277,4 +238,19 @@ require("edgy").setup({
       vim.g.minianimate_disable = false
     end,
   },
-})
+}
+
+local V = require("edgy.view")
+---@param opts Edgy.View.Opts
+---@diagnostic disable-next-line: duplicate-set-field
+function V.new(opts, edgebar)
+  local mt = getmetatable(opts)
+  local self = mt and opts or setmetatable(opts, V)
+  self.edgebar = edgebar
+  self.wins = {}
+  self.title = self.title or self.ft:sub(1, 1):upper() .. self.ft:sub(2)
+  self.size = self.size or {}
+  self.opening = false
+  return self
+end
+require("edgy").setup(opts)
