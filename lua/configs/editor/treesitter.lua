@@ -31,6 +31,8 @@ require("nvim-treesitter.configs").setup({
     enable = true,
     disable = {
       "lua", -- lua treesitter highlight is buggy
+      "css",
+      "scss",
     },
     -- list of language that will be disabled
     -- additional_vim_regex_highlighting = true,

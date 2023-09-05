@@ -1,13 +1,28 @@
 local M = {}
 
 function M.pick_focus()
-  local win = require("window-picker").pick_or_create({
+  local win = require("window-picker").pick_window({
     filter_rules = {
       bo = {
         buftype = {},
       },
-      include_current_win = false,
+      include_current_win = true,
     },
+  })
+  if not win then
+    return
+  end
+  vim.api.nvim_set_current_win(win)
+end
+
+function M.pick_create()
+  local win = require("window-picker").pick_window({
+    filter_rules = {
+      bo = {
+        buftype = {},
+      },
+    },
+    or_create = true,
   })
   if not win then
     return
