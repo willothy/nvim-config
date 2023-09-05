@@ -99,13 +99,6 @@ return {
       require("configs.ui.icons")
     end,
   },
-  {
-    "ghillb/cybu.nvim",
-    config = function()
-      require("configs.ui.cybu")
-    end,
-    event = "User ExtraLazy",
-  },
   -- WINDOWS --
   {
     "willothy/focus.nvim",

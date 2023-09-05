@@ -242,7 +242,9 @@ return {
   },
   {
     "toppair/reach.nvim",
-    config = true,
+    config = function()
+      require("configs.editor.reach")
+    end,
   },
   {
     "SUSTech-data/wildfire.nvim",
