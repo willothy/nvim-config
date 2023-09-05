@@ -9,7 +9,7 @@ local function get_size()
   return round(vim.o.lines / 3.5)
 end
 
----@class Willothy.EdgyView
+---@type table
 local View = setmetatable({}, { __index = require("edgy.view") })
 View.__index = View
 
@@ -21,29 +21,6 @@ end
 ---@param props table
 function View:extend(props)
   return setmetatable(props, { __index = self })
-  -- return setmetatable(vim.tbl_deep_extend("keep", props, self), View)
-end
-
-function View:branch()
-  return self:extend({})
-end
-
----@param ft string
-function View:with_ft(ft)
-  self.ft = ft
-  return self
-end
-
----@param title string
-function View:with_title(title)
-  self.title = title
-  return self
-end
-
----@param open string | fun()
-function View:with_open(open)
-  self.open = open
-  return self
 end
 
 local bottom = View.new({
@@ -74,6 +51,10 @@ local terminal = bottom:extend({
     return vim.bo[buf].buftype == "terminal"
       and vim.api.nvim_win_get_config(win).zindex == nil
   end,
+})
+
+local trouble = bottom:extend({
+  ft = "Trouble",
 })
 
 local opts = {
@@ -168,22 +149,18 @@ local opts = {
       open = "Neotree buffers",
     },
     {
-      title = "Watches",
       ft = "dapui_watches",
-      wo = { winbar = " Watching" },
+      wo = { winbar = " Watches" },
     },
     {
-      title = "Stacks",
       ft = "dapui_stacks",
       wo = { winbar = " Stacks" },
     },
     {
-      title = "Breakpoints",
       ft = "dapui_breakpoints",
       wo = { winbar = " Breakpoints" },
     },
     {
-      title = "Scopes",
       ft = "dapui_scopes",
       wo = { winbar = " Scopes" },
       size = { height = get_size },
@@ -200,13 +177,49 @@ local opts = {
       title = "Debug REPL",
       wo = { winbar = false, statuscolumn = "" },
     }),
-    terminal:branch():with_ft("terminal"),
-    terminal:branch():with_ft("toggleterm"),
-    terminal:branch():with_ft(vim.o.shell),
-    bottom:branch():with_ft("Trouble"):with_title("Diagnostics"),
-    bottom:branch():with_ft("noice"),
-    bottom:branch():with_ft("qf"):with_title("QuickFix"),
-    bottom:branch():with_ft("spectre_pabel"):with_title("Spectre"),
+    terminal:extend({ ft = "terminal" }),
+    terminal:extend({ ft = "toggleterm" }),
+    terminal:extend({ ft = vim.o.shell }),
+    bottom:extend({ ft = "noice" }),
+    bottom:extend({ ft = "qf", title = "QuickFix" }),
+    bottom:extend({ ft = "spectre_pabel", title = "Spectre" }),
+    trouble:extend({
+      title = "Diagnostics",
+      filter = function(buf)
+        return vim.b[buf].trouble_mode == "document_diagnostics"
+          or vim.b[buf].trouble_mode == "workspace_diagnostics"
+      end,
+    }),
+    trouble:extend({
+      title = "References",
+      filter = function(buf)
+        return vim.b[buf].trouble_mode == "lsp_references"
+      end,
+    }),
+    trouble:extend({
+      title = "Definitions",
+      filter = function(buf)
+        return vim.b[buf].trouble_mode == "lsp_definitions"
+      end,
+    }),
+    trouble:extend({
+      title = "Type Definitions",
+      filter = function(buf)
+        return vim.b[buf].trouble_mode == "lsp_type_definitions"
+      end,
+    }),
+    trouble:extend({
+      title = "QuickFix",
+      filter = function(buf)
+        return vim.b[buf].trouble_mode == "quickfix"
+      end,
+    }),
+    trouble:extend({
+      title = "LocList",
+      filter = function(buf)
+        return vim.b[buf].trouble_mode == "loclist"
+      end,
+    }),
   },
 
   options = {
