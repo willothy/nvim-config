@@ -491,7 +491,7 @@ require("cokeline").setup({
     end)(),
   },
   sidebar = {
-    filetype = { "SidebarNvim", "neo-tree", "edgy", "aerial" },
+    filetype = { "SidebarNvim", "neo-tree", "edgy", "aerial", "OverseerList" },
     components = {
       {
         text = separators.left,

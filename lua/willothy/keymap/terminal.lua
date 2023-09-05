@@ -27,7 +27,7 @@ register({
         completion = "shellcmd",
       }, function(v)
         if v and type(v) == "string" then
-          willothy.term.with():send(v)
+          willothy.term.send(v)
         end
       end)
     end,

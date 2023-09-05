@@ -31,7 +31,7 @@ M.main = Terminal:new({
   hidden = false,
   close_on_exit = true,
   direction = "horizontal",
-  start_in_insert = true,
+  start_in_insert = false,
   auto_scroll = false,
   persist_size = true,
   shade_terminals = false,
@@ -39,37 +39,17 @@ M.main = Terminal:new({
     Normal = { link = "Normal" },
   },
   on_create = function(term)
-    vim.b[term.bufnr].minianimate_disable = true
-    local win
-    vim.api.nvim_create_autocmd({ "BufEnter", "TermLeave" }, {
+    -- fix for weird terminal scrolling
+    vim.api.nvim_exec_autocmds("BufEnter", {
       buffer = term.bufnr,
-      callback = function()
-        win = vim.api.nvim_get_current_win()
-      end,
     })
-    local reset_view = function()
-      if win and vim.api.nvim_win_is_valid(win) then
-        vim.api.nvim_win_call(win, function()
-          vim.fn.winrestview({
-            topline = vim.api.nvim_buf_line_count(term.bufnr)
-              - vim.api.nvim_win_get_height(win),
-          })
-        end)
-      end
-    end
-    vim.api.nvim_create_autocmd("WinScrolled", {
-      buffer = term.bufnr,
-      callback = function()
-        reset_view()
-      end,
-    })
-    vim.api.nvim_create_autocmd("BufLeave", {
-      buffer = term.bufnr,
-      callback = function()
-        reset_view()
-        vim.schedule(reset_view)
-      end,
-    })
+    ---auto re-enter terminal insert mode
+    -- vim.api.nvim_create_autocmd("BufEnter", {
+    --   buffer = term.bufnr,
+    --   callback = function(ev)
+    --     term:set_mode("i")
+    --   end,
+    -- })
   end,
 })
 
@@ -145,9 +125,6 @@ function M.toggle()
   if term:is_open() then
     if edgy then
       local win = edgy.get_win(term.window)
-      if vim.api.nvim_get_mode().mode == "t" then
-        vim.cmd("stopinsert!")
-      end
       vim.schedule(function()
         if win and win.visible then
           win:close()

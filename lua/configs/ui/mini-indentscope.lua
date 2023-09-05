@@ -1,5 +1,13 @@
-require("indent_blankline").setup({
-  char = "▏",
+require("ibl").setup({
+  indent = {
+    highlight = "IndentScope",
+    char = "▏",
+  },
+  whitespace = {
+    highlight = "IndentScope",
+    enabled = false,
+  },
+  scope = { enabled = false },
   show_current_context = false,
 })
 

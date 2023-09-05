@@ -57,6 +57,13 @@ local opts = {
       })
     end,
   },
+  form = {
+    border = "solid",
+    win_opts = {
+      winblend = 0,
+      winhl = "FloatBorder:NormalFloat",
+    },
+  },
 }
 
 require("overseer").setup(opts)

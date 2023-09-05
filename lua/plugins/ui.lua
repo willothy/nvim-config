@@ -14,7 +14,7 @@ return {
   {
     -- "folke/edgy.nvim",
     "willothy/edgy.nvim",
-    -- dir = "~/projects/lua/edgy.nvim/",
+    dir = "~/projects/lua/edgy.nvim/",
     event = "VeryLazy",
     config = function()
       require("configs.ui.edgy")
@@ -51,6 +51,7 @@ return {
   {
     enabled = not anyline,
     "lukas-reineke/indent-blankline.nvim",
+    branch = "v3",
   },
   {
     "willothy/anyline.nvim",
