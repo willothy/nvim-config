@@ -104,6 +104,27 @@ function M.with()
   return term
 end
 
+function M.send(cmd)
+  if not M.main:is_open() then
+    M.main:spawn()
+  else
+    if type(cmd) == "string" then
+      local last_chars = cmd:sub(-2)
+      if last_chars ~= "\r\n" then
+        cmd = cmd .. "\r\n"
+      end
+    elseif type(cmd) == "table" then
+      local last_chars = cmd[#cmd]:sub(-2)
+      if last_chars ~= "\r\n" then
+        cmd[#cmd] = cmd[#cmd] .. "\r\n"
+      end
+    else
+      return
+    end
+  end
+  M.main:send(cmd)
+end
+
 function M.with_float()
   local term = willothy.term.float
   if term:is_open() then
