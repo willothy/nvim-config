@@ -18,18 +18,28 @@ local objects = {
   [")"] = "block (",
   b = "block ( )",
   P = "paragraph",
-  p = "paragraph",
   a = { name = "around" },
   i = { name = "inside" },
   s = "statement",
-  f = "function",
+  F = "function",
+  p = "paragraph",
+  f = {
+    function()
+      require("nvim-treesitter.textobjects.select").select_textobject(
+        "@field",
+        "field",
+        "v"
+      )
+    end,
+    "field",
+  },
   e = "expression",
 }
 
 require("which-key").register({
   i = objects,
   a = objects,
-}, { mode = "o" })
+}, { mode = { "o", "v" } })
 
 require("which-key").register({
   g = {

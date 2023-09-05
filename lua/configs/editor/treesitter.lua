@@ -4,6 +4,7 @@ require("tree-sitter-just").setup({})
 require("nvim-treesitter.configs").setup({
   -- A list of parser names, or "all"
   ensure_installed = {
+    "query",
     "javascript",
     "typescript",
     "c",
@@ -50,13 +51,11 @@ require("nvim-treesitter.configs").setup({
         ["as"] = "@statement.outer",
         ["ic"] = "@class.inner",
         ["ac"] = "@class.outer",
-        ["if"] = "@function.inner",
-        ["af"] = "@function.outer",
-        ["ae"] = "@field.outer",
-        ["ie"] = "@field.inner",
+        ["iF"] = "@function.inner",
+        ["aF"] = "@function.outer",
       },
       selection_modes = {
-        ["@parameter.outer"] = "V",
+        ["@parameter.outer"] = "v",
         -- ["@function.outer"] = "V",
         ["@class.outer"] = "<c-v>",
       },
@@ -72,3 +71,4 @@ require("nvim-treesitter.configs").setup({
     },
   },
 })
+-- require("treesitter.textobjects").setup()

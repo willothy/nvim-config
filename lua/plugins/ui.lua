@@ -14,7 +14,7 @@ return {
   {
     -- "folke/edgy.nvim",
     "willothy/edgy.nvim",
-    dir = "~/projects/lua/edgy.nvim/",
+    -- dir = "~/projects/lua/edgy.nvim/",
     event = "VeryLazy",
     config = function()
       require("configs.ui.edgy")
