@@ -175,8 +175,7 @@ return {
   {
     -- "Bekaboo/dropbar.nvim",
     "willothy/dropbar.nvim",
-    dir = "~/projects/lua/dropbar.nvim/",
-    branch = "master",
+    branch = "feat-fuzzy-finding",
     config = function()
       require("configs.status.dropbar")
     end,
