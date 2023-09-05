@@ -48,12 +48,13 @@ return {
     config = true,
   },
   {
-    "sourcegraph/sg.nvim",
+    -- "sourcegraph/sg.nvim",
+    "willothy/sg.nvim",
     config = function()
       require("configs.lsp.sourcegraph")
     end,
     event = "BufReadPost",
-    build = "nvim -l build/init.lua",
+    -- build = "nvim -l build/init.lua",
   },
   {
     "willothy/moveline.nvim",
