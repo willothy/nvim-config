@@ -71,6 +71,13 @@ local opts = {
       winhl = "FloatBorder:NormalFloat",
     },
   },
+  task_win = {
+    border = "solid",
+    win_opts = {
+      winblend = 0,
+      winhl = "FloatBorder:NormalFloat",
+    },
+  },
 }
 
 require("overseer").setup(opts)
