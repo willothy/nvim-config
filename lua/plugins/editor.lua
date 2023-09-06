@@ -257,7 +257,8 @@ return {
     event = "User ExtraLazy",
   },
   {
-    "ThePrimeagen/harpoon",
+    -- "ThePrimeagen/harpoon",
+    "willothy/harpoon", -- harpoon fork with toggleterm integration
     config = function()
       require("configs.navigation.harpoon")
     end,

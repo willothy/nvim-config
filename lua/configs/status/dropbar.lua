@@ -68,7 +68,13 @@ dropbar.setup({
         local name = vim.api.nvim_buf_get_name(buf)
         local term = select(2, require("toggleterm.terminal").identify(name))
         if term then
-          return " " .. (term.display_name or term.cmd)
+          return " "
+            .. (
+              term.display_name
+              or term.cmd
+              or term.name
+              or vim.api.nvim_buf_get_name(term.bufnr)
+            )
         else
           return " " .. name
         end

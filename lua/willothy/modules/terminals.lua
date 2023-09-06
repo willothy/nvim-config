@@ -40,9 +40,9 @@ M.main = Terminal:new({
   },
   on_create = function(term)
     -- fix for weird terminal scrolling
-    vim.api.nvim_exec_autocmds("BufEnter", {
-      buffer = term.bufnr,
-    })
+    -- vim.api.nvim_exec_autocmds("BufEnter", {
+    --   buffer = term.bufnr,
+    -- })
     ---auto re-enter terminal insert mode
     -- vim.api.nvim_create_autocmd("BufEnter", {
     --   buffer = term.bufnr,
