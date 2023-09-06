@@ -64,9 +64,11 @@ dropbar.setup({
   sources = {
     terminal = {
       name = function(buf)
-        local term = require("toggleterm.terminal").find(function(term)
-          return term.bufnr == buf
-        end)
+        local term = vim
+          .iter(require("toggleterm.terminal").get_all(true))
+          :find(function(term)
+            return term.bufnr == buf
+          end)
         if term then
           return " "
             .. (

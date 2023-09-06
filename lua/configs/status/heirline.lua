@@ -50,6 +50,7 @@ local function make_cwd(path)
 
   local rel = vim.fn.fnamemodify(cwd, ":~")
   local short = vim.fn.pathshorten(rel, 3)
+  ---@cast short string
   transformed[cwd] = short
   return short
 end
@@ -592,6 +593,8 @@ local FoldColumn = {
   },
 }
 
+local Truncate = { provider = "%<" }
+
 local function Center(group)
   return C({
     Align,
@@ -626,14 +629,12 @@ local Left = function(group)
       provider = function()
         local len = vim.fn.strcharlen(make_cwd())
         local size = math.floor(vim.o.columns / 2) - math.floor(len / 2)
-        return "%-"
-          .. size - 1
-          .. "."
-          .. size --
-          .. "("
+        return "%-" .. size - 1 .. "("
+        -- return "%1("
       end,
     },
     group,
+    Truncate,
     {
       provider = "%)",
     },
@@ -695,4 +696,7 @@ willothy.event.on("ColorScheme", function()
   require("heirline").setup({
     statusline = C(StatusLine),
   })
+end)
+vim.schedule(function()
+  willothy.event.emit("UpdateHeirlineComponents")
 end)

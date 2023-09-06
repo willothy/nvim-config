@@ -166,7 +166,7 @@ return {
   },
   {
     "gbprod/yanky.nvim",
-    -- event = "VeryLazy",
+    event = "User ExtraLazy",
     config = function()
       require("configs.editor.yanky")
     end,
@@ -209,9 +209,9 @@ return {
   },
   -- TERMINAL --
   {
-    "willothy/toggleterm.nvim",
+    -- "willothy/toggleterm.nvim",
     -- dir = "~/projects/lua/toggleterm.nvim/",
-    -- "akinsho/toggleterm.nvim",
+    "akinsho/toggleterm.nvim",
     config = function()
       require("configs.terminal.toggleterm")
     end,

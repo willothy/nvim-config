@@ -102,8 +102,7 @@ return {
   },
   -- WINDOWS --
   {
-    "willothy/focus.nvim",
-    branch = "resizer-fix-2",
+    "nvim-focus/focus.nvim",
     config = function()
       require("configs.windows.focus")
     end,
