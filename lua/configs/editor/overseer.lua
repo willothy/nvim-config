@@ -46,7 +46,7 @@ local opts = {
             vim.api.nvim_create_autocmd("WinEnter", {
               once = true,
               callback = vim.schedule_wrap(function()
-                if vim.api.nvim_win_is_valid(win) then
+                if win and vim.api.nvim_win_is_valid(win) then
                   vim.api.nvim_set_current_win(win)
                   win = nil
                 end

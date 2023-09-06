@@ -35,6 +35,25 @@ local C = function(self)
   return o
 end
 
+local transformed = {}
+---@param path string?
+---@return string
+local function make_cwd(path)
+  local cwd = path or vim.fn.getcwd(-1)
+  if not cwd then
+    return ""
+  end
+
+  if transformed[cwd] then
+    return transformed[cwd]
+  end
+
+  local rel = vim.fn.fnamemodify(cwd, ":~")
+  local short = vim.fn.pathshorten(rel, 3)
+  transformed[cwd] = short
+  return short
+end
+
 local Separator = {
   Left = {
     provider = icons.blocks.left[4],
@@ -287,10 +306,9 @@ local Harpoon = {
         self.nfiles = harpoon.get_length()
         harpoon.on("changed", function()
           self.nfiles = harpoon.get_length()
+          willothy.event.emit("UpdateHeirlineComponents")
         end)
         self._init = true
-      else
-        return true
       end
     end,
   },
@@ -403,21 +421,18 @@ local Git = (
 
 local WorkDir = (
   C({
-    provider = function(self)
-      return self.cwd or ""
+    provider = function()
+      return make_cwd()
     end,
     on_click = {
-      callback = function(self)
-        willothy.fs.browse(self.cwd)
+      callback = function()
+        willothy.fs.browse(vim.fn.getcwd(-1))
       end,
       name = "__heirline_workdir_click",
     },
     update = {
       "User",
       pattern = "UpdateHeirlineComponents",
-      callback = function(self)
-        self.cwd = vim.fn.fnamemodify(vim.fn.getcwd(-1), ":~")
-      end,
     },
   })
 )
@@ -447,7 +462,7 @@ local SessionName = {
     if name and name:match("/") then
       name = vim.fn.fnamemodify(name, ":~")
     end
-    return name or require("noice.util.spinners").spin("dots9")
+    return make_cwd(name) or require("noice.util.spinners").spin("dots9")
   end,
 }
 
@@ -589,10 +604,12 @@ local function Right(group)
   return C({
     {
       provider = function()
-        return "%0"
-          .. math.floor(vim.o.columns / 2) - 10
+        local len = vim.fn.strcharlen(make_cwd())
+        local size = math.floor(vim.o.columns / 2) - math.floor(len / 2)
+        return "%"
+          .. size - 1
           .. "."
-          .. math.floor(vim.o.columns / 2) - 10
+          .. size --
           .. "("
       end,
     },
@@ -607,10 +624,12 @@ local Left = function(group)
   return C({
     {
       provider = function()
+        local len = vim.fn.strcharlen(make_cwd())
+        local size = math.floor(vim.o.columns / 2) - math.floor(len / 2)
         return "%-"
-          .. math.floor(vim.o.columns / 2) - 10
+          .. size - 1
           .. "."
-          .. math.floor(vim.o.columns / 2) - 10
+          .. size --
           .. "("
       end,
     },
@@ -664,7 +683,7 @@ willothy.event.on({
   "BufEnter",
   "WinEnter",
   "TermLeave",
-  "BufEnter", 
+  "BufEnter",
   "TermEnter",
   "LspAttach",
   "ColorScheme",

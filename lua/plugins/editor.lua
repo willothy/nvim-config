@@ -209,7 +209,9 @@ return {
   },
   -- TERMINAL --
   {
-    "akinsho/toggleterm.nvim",
+    "willothy/toggleterm.nvim",
+    dir = "~/projects/lua/toggleterm.nvim/",
+    -- "akinsho/toggleterm.nvim",
     config = function()
       require("configs.terminal.toggleterm")
     end,
@@ -240,9 +242,6 @@ return {
   },
   {
     "stevearc/overseer.nvim",
-    dependencies = {
-      "akinsho/toggleterm.nvim",
-    },
     config = function()
       require("configs.editor.overseer")
     end,

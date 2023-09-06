@@ -25,8 +25,7 @@ local enable = function(buf, win)
     "dap-repl",
   }
   if vim.bo[buf].buftype == "terminal" then
-    return
-    -- return true
+    return vim.api.nvim_win_get_config(win).zindex ~= nil
   end
   return vim.bo[buf].buflisted == true
     and vim.bo[buf].buftype == ""
@@ -65,8 +64,9 @@ dropbar.setup({
   sources = {
     terminal = {
       name = function(buf)
-        local name = vim.api.nvim_buf_get_name(buf)
-        local term = select(2, require("toggleterm.terminal").identify(name))
+        local term = require("toggleterm.terminal").find(function(term)
+          return term.bufnr == buf
+        end)
         if term then
           return " "
             .. (
@@ -76,7 +76,7 @@ dropbar.setup({
               or vim.api.nvim_buf_get_name(term.bufnr)
             )
         else
-          return " " .. name
+          return " " .. vim.api.nvim_buf_get_name(buf)
         end
       end,
     },
