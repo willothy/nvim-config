@@ -210,7 +210,7 @@ return {
   -- TERMINAL --
   {
     "willothy/toggleterm.nvim",
-    dir = "~/projects/lua/toggleterm.nvim/",
+    -- dir = "~/projects/lua/toggleterm.nvim/",
     -- "akinsho/toggleterm.nvim",
     config = function()
       require("configs.terminal.toggleterm")

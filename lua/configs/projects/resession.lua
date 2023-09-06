@@ -5,6 +5,12 @@ resession.setup({
     scope = {
       enable_in_tab = true,
     },
+    overseer = {
+      enable_in_tab = true,
+    },
+    aerial = {
+      enable_in_tab = true,
+    },
   },
   autosave = {
     enabled = true,

@@ -50,12 +50,28 @@ M.lua = Terminal:new({
 })
 
 function M.job(cmd)
-  local t = Terminal:new({
+  local args = {}
+  if type(cmd) == "table" then
+    args = cmd
+    cmd = table.remove(cmd, 1)
+  end
+  local overseer = require("overseer")
+  ---@type overseer.Task
+  local task = overseer.new_task({
     cmd = cmd,
-    close_on_exit = false,
+    args = args,
+    name = cmd,
   })
-  t:spawn()
-  return t
+  task:subscribe(
+    "on_complete",
+    vim.schedule_wrap(function()
+      if not overseer.window.is_open() then
+        overseer.open({ enter = false, direction = "left" })
+      end
+    end)
+  )
+  task:start()
+  return task
 end
 
 function M.toggle()

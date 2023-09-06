@@ -236,3 +236,9 @@ require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
   },
   formatting = format,
 })
+
+require("cmp").setup.filetype("OverseerForm", {
+  sources = {
+    { name = "overseer" },
+  },
+})
