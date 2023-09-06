@@ -57,6 +57,18 @@ require("noice").setup({
         padding = { 0, 0 },
       },
     },
+    popup = {
+      border = {
+        style = border_style,
+        padding = { 0, 0 },
+      },
+      win_options = {
+        winhighlight = {
+          Normal = "NormalFloat",
+          FloatBorder = "NormalFloatInv",
+        },
+      },
+    },
     popupmenu = {
       relative = "editor",
       position = {
@@ -68,8 +80,8 @@ require("noice").setup({
         height = 10,
       },
       border = {
-        style = "rounded",
-        padding = { 0, 1 },
+        style = border_style,
+        padding = { 0, 0 },
       },
       win_options = {
         winhighlight = {
