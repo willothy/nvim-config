@@ -8,6 +8,6 @@ require("gitsigns").setup({
     topdelete = { text = bar },
     changedelete = { text = bar },
   },
-  trouble = false,
+  trouble = true,
   signcolumn = true,
 })

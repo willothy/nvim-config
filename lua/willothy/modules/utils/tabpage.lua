@@ -1,10 +1,7 @@
 local M = {}
 
 function M.switch_by_step(dir)
-  local step = vim.v.count
-  if step == 0 then
-    step = 1
-  end
+  local step = vim.v.count1
   step = step * dir
 
   local current_tab = vim.api.nvim_get_current_tabpage()

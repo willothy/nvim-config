@@ -5,10 +5,7 @@ register({
   name = "previous",
   b = {
     function()
-      require("cokeline.mappings").by_step(
-        "focus",
-        -(vim.v.count >= 1 and vim.v.count or 1)
-      )
+      require("cokeline.mappings").by_step("focus", -vim.v.count1)
     end,
     "buffer",
   },
@@ -24,10 +21,7 @@ register({
   name = "next",
   b = {
     function()
-      require("cokeline.mappings").by_step(
-        "focus",
-        (vim.v.count >= 1 and vim.v.count or 1)
-      )
+      require("cokeline.mappings").by_step("focus", vim.v.count1)
     end,
     "buffer",
   },

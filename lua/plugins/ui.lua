@@ -72,7 +72,7 @@ return {
   -- SIDEBARS --
   {
     "sidebar-nvim/sidebar.nvim",
-    event = "User ExtraLazy",
+    cmd = { "SidebarNvimOpen", "SidebarNvimToggle" },
     opts = function()
       return require("configs.ui.sidebars").sidebar
     end,
@@ -82,7 +82,7 @@ return {
     dependencies = {
       "mrbjarksen/neo-tree-diagnostics.nvim",
     },
-    event = "CmdlineEnter",
+    cmd = "Neotree",
     opts = function()
       return require("configs.ui.sidebars").neotree
     end,
@@ -200,11 +200,6 @@ return {
     end,
     event = "UiEnter",
   },
-  {
-    "rktjmp/lush.nvim",
-    event = "CmdlineEnter",
-  },
-  {
-    "folke/tokyonight.nvim",
-  },
+  "rktjmp/lush.nvim",
+  "folke/tokyonight.nvim",
 }

@@ -30,6 +30,10 @@ local bottom = View.new({
   end,
 })
 
+local sidebar = View.new({
+  size = { width = get_size },
+})
+
 function _G.__edgy_term_title()
   local buf = vim.api.nvim_get_current_buf()
   local win = vim.api.nvim_get_current_win()
@@ -57,116 +61,124 @@ local trouble = bottom:extend({
   ft = "Trouble",
 })
 
+local neogit = View.new({
+  size = {
+    width = function()
+      if vim.o.columns > 120 then
+        return math.floor(vim.o.columns * 0.35)
+      else
+        return math.floor(vim.o.columns * 0.6)
+      end
+    end,
+  },
+})
+
 local opts = {
   right = {
-    {
+    neogit:extend({
       ft = "NeogitStatus",
       title = "Neogit",
-      size = { width = 0.3 },
       open = "Neogit",
-    },
-    {
+    }),
+    neogit:extend({
       ft = "NeogitPopup",
       title = "Neogit",
-      size = { width = 0.3 },
-    },
-    {
+    }),
+    neogit:extend({
       ft = "NeogitCommitMessage",
       title = "Commit message",
-      size = { width = 0.3 },
-    },
-    {
+    }),
+    neogit:extend({
       ft = "NeogitLogView",
       title = "Neogit log",
-      size = { width = 0.3 },
-    },
-    {
+    }),
+    neogit:extend({
       ft = "NeogitReflogView",
       title = "Neogit log",
-      size = { width = 0.3 },
-    },
-    {
-      ft = "help",
-      filter = function(buf, win)
-        return vim.bo[buf].buftype == "help"
-          and vim.api.nvim_win_get_config(win).zindex == nil
-      end,
-      size = { width = 0.3 },
-    },
+    }),
   },
   left = {
-    {
+    sidebar:extend({
       ft = "OverseerList",
       title = "Overseer",
-      size = { width = get_size },
-    },
-    {
+    }),
+    sidebar:extend({
       ft = "SidebarNvim",
       title = "Sidebar",
-    },
-    {
+    }),
+    sidebar:extend({
       ft = "gh",
       title = "Gists",
-    },
-    {
+    }),
+    sidebar:extend({
       ft = "aerial",
       title = "Document Symbols",
       open = function()
         require("aerial").open()
       end,
-    },
-    { title = "Neotest Summary", ft = "neotest-summary" },
-    {
+    }),
+    sidebar:extend({
+      title = "Neotest Summary",
+      ft = "neotest-summary",
+    }),
+    sidebar:extend({
       title = "Files",
       ft = "neo-tree",
       filter = function(buf)
         return vim.b[buf].neo_tree_source == "filesystem"
       end,
       open = "Neotree",
-      size = { height = 0.5 },
-    },
-    {
+    }),
+    sidebar:extend({
       title = "Diagnostics",
       ft = "neo-tree",
       filter = function(buf)
         return vim.b[buf].neo_tree_source == "diagnostics"
       end,
-    },
-    {
+    }),
+    sidebar:extend({
       title = "Git",
       ft = "neo-tree",
       filter = function(buf)
         return vim.b[buf].neo_tree_source == "git_status"
       end,
       open = "Neotree git_status",
-    },
-    {
+    }),
+    sidebar:extend({
       title = "Buffers",
       ft = "neo-tree",
       filter = function(buf)
         return vim.b[buf].neo_tree_source == "buffers"
       end,
       open = "Neotree buffers",
-    },
-    {
+    }),
+    sidebar:extend({
       ft = "dapui_watches",
       wo = { winbar = " Watches" },
-    },
-    {
+    }),
+    sidebar:extend({
       ft = "dapui_stacks",
       wo = { winbar = " Stacks" },
-    },
-    {
+    }),
+    sidebar:extend({
       ft = "dapui_breakpoints",
       wo = { winbar = " Breakpoints" },
-    },
-    {
+    }),
+    sidebar:extend({
       ft = "dapui_scopes",
       wo = { winbar = " Scopes" },
       size = { height = get_size },
-    },
+    }),
   },
   bottom = {
+    {
+      ft = "help",
+      filter = function(buf, win)
+        return vim.bo[buf].buftype == "help"
+          and vim.api.nvim_win_get_config(win).zindex == nil
+      end,
+      size = { height = 0.4 },
+    },
     bottom:extend({
       ft = "dapui_console",
       title = "Debug Console",
@@ -182,7 +194,7 @@ local opts = {
     terminal:extend({ ft = vim.o.shell }),
     bottom:extend({ ft = "noice" }),
     bottom:extend({ ft = "qf", title = "QuickFix" }),
-    bottom:extend({ ft = "spectre_pabel", title = "Spectre" }),
+    bottom:extend({ ft = "spectre_panel", title = "Spectre" }),
     trouble:extend({
       title = "Diagnostics",
       filter = function(buf)
