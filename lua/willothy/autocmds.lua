@@ -38,6 +38,15 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  group = group,
+  callback = function(ev)
+    if vim.bo[ev.buf].buftype ~= "" then
+      vim.api.nvim_buf_call(ev.buf, require("mini.trailspace").unhighlight)
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd({
   "TermResponse",
 }, {
