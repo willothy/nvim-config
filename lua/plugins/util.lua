@@ -2,23 +2,26 @@ vim.g.nvim_ghost_autostart = 0
 
 return {
   "willothy/futures.nvim",
-  "notomo/importgraph.nvim",
+  "famiu/bufdelete.nvim",
   {
     "ellisonleao/glow.nvim",
     config = true,
-    event = "CmdlineEnter",
+    cmd = "Glow",
   },
   {
     "rafcamlet/nvim-luapad",
-    event = "CmdlineEnter",
     config = true,
+    cmd = "Luapad",
   },
   {
     "lambdalisue/suda.vim",
     event = "User ExtraLazy",
+    cmd = { "SudaWrite", "SudaRead" },
   },
-  { "mbbill/undotree", event = "User ExtraLazy" },
-  { "famiu/bufdelete.nvim" },
+  {
+    "mbbill/undotree",
+    cmd = { "UndotreeFocus", "UndotreeShow", "UndotreeToggle", "UndotreeHide" },
+  },
   {
     "willothy/NeoComposer.nvim",
     event = "User ExtraLazy",
@@ -37,8 +40,18 @@ return {
   },
   {
     "Dhanus3133/LeetBuddy.nvim",
-    event = "User ExtraLazy",
     config = true,
+    cmd = {
+      "LBCheckCookies",
+      "LBClose",
+      "LBSubmit",
+      "LBTest",
+      "LBSplit",
+      "LBReset",
+      "LBQuestion",
+      "LBQuestions",
+      "LBChangeLanguage",
+    },
   },
   {
     "EtiamNullam/deferred-clipboard.nvim",
@@ -58,11 +71,10 @@ return {
   {
     "nacro90/numb.nvim",
     config = true,
-    event = "User ExtraLazy",
+    event = "CmdlineEnter",
   },
   {
     "jbyuki/venn.nvim",
-    event = "CmdlineEnter",
   },
   {
     "gbprod/substitute.nvim",
@@ -74,7 +86,7 @@ return {
   {
     "tamton-aquib/keys.nvim",
     config = true,
-    event = "CmdlineEnter",
+    cmd = "KeysToggle",
   },
   {
     "folke/todo-comments.nvim",
@@ -86,12 +98,12 @@ return {
     config = function()
       require("configs.editor.attempt")
     end,
-    event = "User ExtraLazy",
+    cmd = "Attempt",
   },
   {
     "rawnly/gist.nvim",
     config = true,
-    event = "User ExtraLazy",
+    cmd = { "GistCreate", "GistCreateFromFile", "GistsList" },
   },
   {
     "Saecki/crates.nvim",
@@ -113,47 +125,27 @@ return {
   {
     "ziontee113/color-picker.nvim",
     config = true,
-    event = "User ExtraLazy",
+    cmd = { "PickColor", "PickColorInsert" },
   },
   {
     "krady21/compiler-explorer.nvim",
     config = true,
-    event = "User ExtraLazy",
+    cmd = {
+      "CEAddLibrary",
+      "CECompile",
+      "CECompileLive",
+      "CEDeleteCache",
+      "CEFormat",
+      "CELoadExample",
+      "CEOpenWebsite",
+    },
   },
-  -- {
-  --   "willothy/piemenu.nvim",
-  --   enabled = false,
-  --   config = function()
-  --     require("configs.editor.piemenu")
-  --   end,
-  --   keys = {
-  --     {
-  --       "<RightMouse>",
-  --       function()
-  --         local mouse = vim.fn.getmousepos()
-  --         local win = vim.api.nvim_get_current_win()
-  --         local view = vim.fn.winsaveview()
-  --
-  --         require("piemenu").start("main", {
-  --           position = {
-  --             mouse.screenrow,
-  --             mouse.screencol,
-  --           },
-  --         })
-  --         vim.api.nvim_win_call(win, function()
-  --           vim.fn.winrestview(view)
-  --         end)
-  --       end,
-  --       mode = { "n", "v" },
-  --     },
-  --   },
-  -- },
   {
     "Tyler-Barham/floating-help.nvim",
     config = function()
       require("configs.editor.floating-help")
     end,
-    event = "CmdlineEnter",
+    cmd = "FloatingHelp",
   },
   {
     "echasnovski/mini.misc",
@@ -162,17 +154,17 @@ return {
   {
     "jokajak/keyseer.nvim",
     config = true,
-    event = "CmdlineEnter",
+    cmd = "Keyseer",
   },
   {
     "pwntester/octo.nvim",
     config = true,
-    event = "CmdlineEnter",
+    cmd = "Octo",
   },
-  {
-    "subnut/nvim-ghost.nvim",
-    event = "User ExtraLazy",
-  },
+  -- {
+  --   "subnut/nvim-ghost.nvim",
+  --   event = "User ExtraLazy",
+  -- },
   {
     "utilyre/sentiment.nvim",
     event = "VeryLazy",
@@ -193,6 +185,6 @@ return {
   {
     "gbprod/stay-in-place.nvim",
     config = true,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
 }

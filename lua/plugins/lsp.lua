@@ -96,6 +96,7 @@ return {
     config = function()
       require("configs.lsp.glance")
     end,
+    cmd = "Glance",
   },
   {
     "dgagn/diagflow.nvim",
@@ -123,7 +124,7 @@ return {
       -- Snippetsrequire\("cmp
       "L3MON4D3/LuaSnip",
     },
-    event = "User ExtraLazy",
+    event = { "CmdlineEnter", "InsertEnter" },
     config = function()
       require("configs.editor.cmp")
     end,
@@ -141,7 +142,7 @@ return {
   },
   {
     "zbirenbaum/copilot.lua",
-    event = "User ExtraLazy",
+    event = "InsertEnter",
     config = function()
       require("configs.editor.copilot")
     end,
@@ -149,7 +150,7 @@ return {
   {
     "kylechui/nvim-surround",
     config = true,
-    event = "VeryLazy",
+    event = "InsertEnter",
   },
   -- DAP --
   {

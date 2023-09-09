@@ -8,21 +8,28 @@ return {
     config = function()
       require("configs.editor.headlines")
     end,
-    event = "User ExtraLazy",
+    ft = { "markdown", "help" },
   },
   {
     "smjonas/live-command.nvim",
     config = function()
       require("configs.editor.live_cmd")
     end,
-    event = "User ExtraLazy",
+    cmd = { "Norm", "Reg", "Visual" },
   },
   {
     "smoka7/multicursors.nvim",
     config = function()
       require("configs.editor.multicursor")
     end,
-    event = "User ExtraLazy",
+    cmd = {
+      "MCvisualPattern",
+      "MCpattern",
+      "MCstart",
+      "MCvisual",
+      "MCunderCursor",
+      "MCclear",
+    },
   },
   {
     "numToStr/Comment.nvim",
@@ -48,14 +55,12 @@ return {
     config = true,
   },
   {
-    -- "sourcegraph/sg.nvim",
-    "willothy/sg.nvim",
-    enabled = false,
+    "sourcegraph/sg.nvim",
     config = function()
       require("configs.lsp.sourcegraph")
     end,
-    event = "BufReadPost",
-    -- build = "nvim -l build/init.lua",
+    event = "User ExtraLazy",
+    build = "nvim -l build/init.lua",
   },
   {
     "willothy/moveline.nvim",
@@ -70,7 +75,7 @@ return {
       "neovim/nvim-lspconfig",
       "nvim-treesitter/nvim-treesitter",
     },
-    event = "User ExtraLazy",
+    ft = "markdown",
     config = function()
       require("configs.editor.otter")
     end,
@@ -101,40 +106,9 @@ return {
     end,
     event = "VeryLazy",
   },
-  -- {
-  --   "echasnovski/mini.clue",
-  --   event = "User ExtraLazy",
-  --   config = function()
-  --     local clue = require("mini.clue")
-  --
-  --     clue.setup({
-  --       window = {
-  --         delay = 0,
-  --       },
-  --       triggers = {
-  --         { mode = "n", keys = "v" },
-  --         { mode = "n", keys = "'" },
-  --         { mode = "n", keys = '"' },
-  --         { mode = "n", keys = "g" },
-  --         { mode = "n", keys = "<C-w>" },
-  --         { mode = "n", keys = "<leader>" },
-  --         { mode = "n", keys = "z" },
-  --       },
-  --       clues = {
-  --         -- Enhance this by adding descriptions for <Leader> mapping groups
-  --         clue.gen_clues.builtin_completion(),
-  --         clue.gen_clues.g(),
-  --         clue.gen_clues.marks(),
-  --         clue.gen_clues.registers(),
-  --         clue.gen_clues.windows(),
-  --         clue.gen_clues.z(),
-  --       },
-  --     })
-  --   end,
-  -- },
   {
     "mrjones2014/legendary.nvim",
-    event = "User ExtraLazy",
+    cmd = "Legendary",
     config = function()
       require("configs.editor.legendary")
     end,
@@ -211,9 +185,15 @@ return {
   -- TERMINAL --
   {
     "willothy/toggleterm.nvim",
-    -- dir = "~/projects/lua/toggleterm.nvim/",
-    -- event = "User ExtraLazy",
     -- "akinsho/toggleterm.nvim",
+    cmd = {
+      "ToggleTerm",
+      "ToggleTermSendVisualLines",
+      "ToggleTermToggleAll",
+      "ToggleTermSetName",
+      "ToggleTermSendVisualSelection",
+      "ToggleTermSendCurrentLine",
+    },
     config = function()
       require("configs.terminal.toggleterm")
     end,
@@ -247,7 +227,21 @@ return {
     config = function()
       require("configs.editor.overseer")
     end,
-    event = "User ExtraLazy",
+    cmd = {
+      "OverseerLoadBundle",
+      "OverseerSaveBundle",
+      "OverseerToggle",
+      "OverseerClose",
+      "OverseerOpen",
+      "OverseerRunCmd",
+      "OverseerClearCache",
+      "OverseerTaskAction",
+      "OverseerQuickAction",
+      "OverseerBuild",
+      "OverseerInfo",
+      "OverseerRun",
+      "OverseerDeleteBundle",
+    },
   },
   -- NAVIGATION --
   {
@@ -269,6 +263,7 @@ return {
     config = function()
       require("configs.navigation.portal")
     end,
+    cmd = "Portal",
   },
   {
     "chrisgrieser/nvim-spider",
@@ -279,6 +274,7 @@ return {
     config = function()
       require("configs.editor.reach")
     end,
+    cmd = "ReachOpen",
   },
   {
     "SUSTech-data/wildfire.nvim",
@@ -309,15 +305,33 @@ return {
   },
   {
     "sindrets/diffview.nvim",
-    event = "User ExtraLazy",
     config = true,
+    cmd = {
+      "DiffviewClose",
+      "DiffviewFocusFiles",
+      "DiffviewLog",
+      "DiffviewRefresh",
+      "DiffviewToggleFiles",
+      "DiffviewFileHistory",
+      "DiffviewOpen",
+    },
   },
   {
     "akinsho/git-conflict.nvim",
-    event = "User ExtraLazy",
     config = function()
       require("configs.git.git-conflict")
     end,
+    cmd = {
+      "GitConflictPrevConflict",
+      "GitConflictNextConflict",
+      "GitConflictChooseNone",
+      "GitConflictChooseBase",
+      "GitConflictChooseTheirs",
+      "GitConflictChooseOurs",
+      "GitConflictListQf",
+      "GitConflictRefresh",
+      "GitConflictChooseBoth",
+    },
   },
   {
     "NeogitOrg/neogit",

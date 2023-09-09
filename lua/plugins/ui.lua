@@ -72,7 +72,14 @@ return {
   -- SIDEBARS --
   {
     "sidebar-nvim/sidebar.nvim",
-    cmd = { "SidebarNvimOpen", "SidebarNvimToggle" },
+    cmd = {
+      "SidebarNvimOpen",
+      "SidebarNvimResize",
+      "SidebarNvimUpdate",
+      "SidebarNvimClose",
+      "SidebarNvimToggle",
+      "SidebarNvimFocus",
+    },
     opts = function()
       return require("configs.ui.sidebars").sidebar
     end,
@@ -92,7 +99,21 @@ return {
     opts = function()
       return require("configs.ui.sidebars").aerial
     end,
-    event = "CmdlineEnter",
+    cmd = {
+      "AerialNavClose",
+      "AerialNavOpen",
+      "AerialNavToggle",
+      "AerialInfo",
+      "AerialGo",
+      "AerialPrev",
+      "AerialNext",
+      "AerialCloseAll",
+      "AerialClose",
+      "AerialOpenAll",
+      "AerialOpen",
+      "AerialToggle",
+    },
+    -- event = "CmdlineEnter",
   },
   {
     "nvim-tree/nvim-web-devicons",
@@ -138,7 +159,7 @@ return {
     "tummetott/winshift.nvim",
     -- branch = "not_triggering_optionset_event",
     config = true,
-    event = "CmdlineEnter",
+    cmd = "WinShift",
   },
   {
     "willothy/winborder.nvim",
@@ -169,7 +190,6 @@ return {
   {
     -- "Bekaboo/dropbar.nvim",
     "willothy/dropbar.nvim",
-    -- branch = "feat-fuzzy-finding",
     -- dir = "~/projects/lua/dropbar.nvim/",
     config = function()
       require("configs.status.dropbar")

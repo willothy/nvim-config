@@ -12,16 +12,14 @@ vim.system(
       return
     end
 
-    local sg = require("sg")
-    local auth = require("sg.auth")
-
-    auth.set_nvim_auth({
-      endpoint = "https://sourcegraph.com/",
-      token = trim(out),
-    })
-    sg.setup({
+    require("sg").setup({
       on_attach = require("configs.lsp").lsp_attach,
       auth_strategy = { "nvim", "environment-variables" },
+      download_binaries = false,
+    })
+    require("sg.auth").set_nvim_auth({
+      endpoint = "https://sourcegraph.com/",
+      token = trim(out),
     })
   end)
 )
