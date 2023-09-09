@@ -78,6 +78,10 @@ register({
       willothy.utils.window.pick_focus,
       "pick: focus",
     },
+    c = {
+      willothy.utils.window.pick_create,
+      "pick: create",
+    },
     x = {
       willothy.utils.window.pick_swap,
       "pick: swap",

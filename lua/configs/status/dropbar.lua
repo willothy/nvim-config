@@ -102,6 +102,7 @@ dropbar.setup({
     },
   },
   menu = {
+    scrolloff = 5,
     keymaps = {
       q = close,
       ["<Esc>"] = close,

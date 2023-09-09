@@ -138,6 +138,7 @@ return {
   },
   {
     "willothy/nvim-window-picker",
+    -- event = "User ExtraLazy",
     config = function()
       require("configs.windows.window-picker")
     end,

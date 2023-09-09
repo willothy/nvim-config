@@ -213,9 +213,6 @@ return {
   },
   {
     "desdic/greyjoy.nvim",
-    dependencies = {
-      "stevearc/overseer.nvim",
-    },
     -- event = "User ExtraLazy",
     cmd = "Greyjoy",
     config = function()
@@ -227,21 +224,7 @@ return {
     config = function()
       require("configs.editor.overseer")
     end,
-    cmd = {
-      "OverseerLoadBundle",
-      "OverseerSaveBundle",
-      "OverseerToggle",
-      "OverseerClose",
-      "OverseerOpen",
-      "OverseerRunCmd",
-      "OverseerClearCache",
-      "OverseerTaskAction",
-      "OverseerQuickAction",
-      "OverseerBuild",
-      "OverseerInfo",
-      "OverseerRun",
-      "OverseerDeleteBundle",
-    },
+    event = "User ExtraLazy",
   },
   -- NAVIGATION --
   {

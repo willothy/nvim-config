@@ -101,7 +101,7 @@
   "nvim-ts-autotag": { "branch": "main", "commit": "6be1192965df35f94b8ea6d323354f7dc7a557e4" },
   "nvim-various-textobjs": { "branch": "main", "commit": "2dd94f93b6c538fd21ea64e0ebccc60b9ed27598" },
   "nvim-web-devicons": { "branch": "master", "commit": "ecdeb4e2a4af34fc873bbfbf1f4c4e447e632255" },
-  "nvim-window-picker": { "branch": "main", "commit": "aab47d2221216be6bb8a87a6d9814d13a0de283d" },
+  "nvim-window-picker": { "branch": "main", "commit": "30e58ba8627463ba928d8719ed5be947a70784cb" },
   "octo.nvim": { "branch": "master", "commit": "d1e52f9b3c755fcebb93d635821663a2c0f53281" },
   "one-small-step-for-vimkind": { "branch": "main", "commit": "edbb34ee779049f2071dc7becff0bbf51c865906" },
   "otter.nvim": { "branch": "main", "commit": "849259c0458a13a1018e7a04e5d30d84e23c2333" },

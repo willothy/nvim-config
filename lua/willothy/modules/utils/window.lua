@@ -6,7 +6,7 @@ function M.pick_focus()
       bo = {
         buftype = {},
       },
-      include_current_win = true,
+      include_current_win = false,
     },
   })
   if not win then
@@ -21,6 +21,8 @@ function M.pick_create()
       bo = {
         buftype = {},
       },
+      include_current_win = true,
+      autoselect_one = true,
     },
     or_create = true,
   })
@@ -229,88 +231,6 @@ function M.open(buf, config, enter)
   buf = buf or vim.api.nvim_create_buf(false, true)
 
   return vim.api.nvim_open_win(buf, enter or false, config), buf
-end
-
-function M.picker()
-  local letters = vim.iter(vim.split("abcdefghijklmnopqrstuvwxyz", ""))
-  local wins
-  local maps
-
-  local mapfunc = function(win, letter)
-    return function()
-      if wins then
-        vim.iter(wins):each(function(w)
-          vim.api.nvim_win_close(w.win, true)
-          vim.keymap.del("n", w.letter)
-        end)
-      end
-      if maps then
-        vim.iter(maps):each(function(m)
-          pcall(vim.keymap.set, "n", m[1], m[2], m[3])
-        end)
-      end
-      vim.api.nvim_set_current_win(win)
-      return win
-    end
-  end
-
-  wins = vim
-    .iter(vim.api.nvim_tabpage_list_wins(0))
-    :filter(function(win)
-      if vim.api.nvim_win_get_config(win).zindex ~= nil then
-        return false
-      end
-      local buf = vim.api.nvim_win_get_buf(win)
-      return vim.bo[buf].buflisted
-    end)
-    :map(function(win)
-      local config = vim.api.nvim_win_get_config(win)
-      local letter = letters:next()
-      local buf = vim.api.nvim_create_buf(false, true)
-
-      vim.api.nvim_buf_set_lines(buf, 0, -1, true, {
-        string.rep(" ", 5),
-        string.rep(" ", 5),
-        string.format("  %s  ", letter),
-        string.rep(" ", 5),
-        string.rep(" ", 5),
-      })
-
-      if not maps then
-        maps = {}
-      end
-      vim.list_extend(
-        maps,
-        vim
-          .iter(vim.api.nvim_get_keymap("n"))
-          :filter(function(m)
-            vim.print(m)
-            return m.lhs == letter
-          end)
-          :map(function(m)
-            return { m.lhs, m.rhs, m }
-          end)
-          :fold(maps, function(acc, m)
-            table.insert(acc, m)
-            return acc
-          end)
-      )
-      vim.keymap.set("n", letter, mapfunc(win, letter), {})
-
-      return {
-        win = vim.api.nvim_open_win(buf, false, {
-          style = "minimal",
-          relative = "win",
-          win = win,
-          row = 0, --math.floor(vim.api.nvim_win_get_width(win) / 2),
-          col = 0, --math.floor(vim.api.nvim_win_get_height(win) / 2),
-          width = 5,
-          height = 5,
-        }),
-        letter = letter,
-      }
-    end)
-    :totable()
 end
 
 return M
