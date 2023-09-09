@@ -50,6 +50,7 @@ return {
   {
     -- "sourcegraph/sg.nvim",
     "willothy/sg.nvim",
+    enabled = false,
     config = function()
       require("configs.lsp.sourcegraph")
     end,
@@ -209,9 +210,10 @@ return {
   },
   -- TERMINAL --
   {
-    -- "willothy/toggleterm.nvim",
+    "willothy/toggleterm.nvim",
     -- dir = "~/projects/lua/toggleterm.nvim/",
-    "akinsho/toggleterm.nvim",
+    -- event = "User ExtraLazy",
+    -- "akinsho/toggleterm.nvim",
     config = function()
       require("configs.terminal.toggleterm")
     end,

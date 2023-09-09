@@ -25,7 +25,7 @@ local function mkcaps(extra)
       properties = { "documentation", "detail", "additionalTextEdits" },
     }
 
-    -- capabilities.offsetEncoding = "utf-8"
+    capabilities.offsetEncoding = "utf-8"
   end
 
   ---@diagnostic disable-next-line: missing-fields

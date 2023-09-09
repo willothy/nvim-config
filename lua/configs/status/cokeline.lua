@@ -3,7 +3,7 @@ local ns = vim.api.nvim_create_namespace("cokeline_diagnostics")
 
 local p = require("minimus").hex
 local mappings = require("cokeline.mappings")
-local get_hex = require("cokeline.utils").get_hex
+local get_hex = require("cokeline.hlgroups").get_hl_attr
 
 local separators = {
   left = icons.blocks.left[4],
@@ -394,7 +394,7 @@ local function harpoon_sorter()
   end
 end
 
-require("cokeline").setup({
+local opts = {
   show_if_buffers_are_at_least = 1,
   buffers = {
     focus_on_delete = "next",
@@ -428,6 +428,13 @@ require("cokeline").setup({
     components.space,
     components.sep.right,
     components.padding,
+    -- {
+    --   text = function()
+    --     _G.i = (_G.i or 0) + 1
+    --     vim.print(_G.i)
+    --     return ""
+    --   end,
+    -- },
   },
   rhs = {
     components.run,
@@ -508,4 +515,7 @@ require("cokeline").setup({
       components.sidebar_open,
     },
   },
-})
+}
+
+require("cokeline").setup(opts)
+-- require("cokeline").setup()

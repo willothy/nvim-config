@@ -2,6 +2,8 @@ local M = {}
 
 local Terminal = require("toggleterm.terminal").Terminal
 
+require("configs.terminal.toggleterm")
+
 -- require("toggleterm.constants").FILETYPE = "terminal"
 require("toggleterm.constants").FILETYPE = "terminal"
 

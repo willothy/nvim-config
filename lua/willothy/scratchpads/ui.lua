@@ -7,8 +7,8 @@ local function col(...)
 end
 
 ---@param buf number|string?
-local function win(buf)
-  return { "leaf", buf }
+local function win(buf, focused)
+  return { "leaf", buf, focused = focused or nil }
 end
 
 local layouts = setmetatable({}, {
@@ -54,12 +54,13 @@ layouts.tile_left = row(
     win()
   ),
   -- C
-  win()
+  win(nil, true)
 )
 
 -- assign buffers in depth-first order to empty leaves, create a scratch buffer for any remaining empty windows,
 -- and create the layout.
-local function set_layout(name, bufs)
+local function set_layout(name, bufs, tabpage)
+  tabpage = tabpage or 0
   if not bufs then
     bufs = vim.iter(vim.api.nvim_list_bufs()):filter(function(buf)
       return vim.api.nvim_buf_get_option(buf, "buflisted")
@@ -85,10 +86,26 @@ local function set_layout(name, bufs)
   end
 
   local tree = process(layouts[name])
-  vim.api.nvim_tabpage_set_layout(0, tree)
+  vim.api.nvim_tabpage_set_layout(tabpage, tree)
 end
 
-set_layout("tile_right", {
-  "init.lua",
-  "README.md",
-})
+local buf = vim.api.nvim_create_buf(false, false)
+local layout = {
+  "row",
+  {
+    {
+      "col",
+      {
+        { "leaf", buf, focused = true },
+        { "leaf", buf },
+      },
+    },
+    { "leaf", buf },
+  },
+}
+vim.api.nvim_tabpage_set_layout(0, layout)
+
+-- set_layout("tile_left", {
+--   vim.fn.stdpath("config") .. "/init.lua",
+--   vim.fn.stdpath("config") .. "/README.md",
+-- }, othertab)
