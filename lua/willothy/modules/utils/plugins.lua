@@ -110,9 +110,50 @@ function M.list_forks()
   willothy.fn.popup(forks, "installed plugin forks")
 end
 
+function M.star_repo(owner, repo)
+  vim.system({
+    "gh",
+    "api",
+    "-X",
+    "PUT",
+    "/user/starred/" .. owner .. "/" .. repo,
+  }, {}, function(obj)
+    local code, err = obj.code, obj.stderr
+    if code == 0 then
+      vim.notify("Starred " .. owner .. "/" .. repo)
+    else
+      vim.notify(
+        "Failed to star  " .. owner .. "/" .. repo .. ": " .. err,
+        "error"
+      )
+    end
+  end)
+end
+
+function M.unstar_repo(owner, repo)
+  vim.system({
+    "gh",
+    "api",
+    "-X",
+    "DELETE",
+    "/user/starred/" .. owner .. "/" .. repo,
+  }, {}, function(obj)
+    local code, out, err = obj.code, obj.stdout, obj.stderr
+    if code == 0 then
+      vim.notify("Unstarred " .. owner .. "/" .. repo)
+    else
+      vim.notify(
+        "Failed to unstar  " .. owner .. "/" .. repo .. ": " .. err,
+        "error"
+      )
+    end
+  end)
+end
+
 ---View and/or bulk unstar github repos using a floating window and the gh cli
 ---@param count integer?
 function M.starred_repos(count)
+  local buffer = ""
   vim.system(
     {
       "gh",
@@ -121,10 +162,12 @@ function M.starred_repos(count)
       "GET",
       "/user/starred",
       "-F",
-      "per_page=" .. (count or 100),
+      "per_page=" .. (count or 1000),
       "--paginate",
     },
-    { text = true },
+    {
+      text = true,
+    },
     vim.schedule_wrap(function(obj)
       local code, out, err = obj.code, obj.stdout, obj.stderr
       if code ~= 0 then
@@ -194,24 +237,22 @@ function M.starred_repos(count)
         end)
       end
       vim.keymap.set("n", "<CR>", function()
-        for _, repo in pairs(to_unstar) do
-          vim.system({
-            "gh",
-            "api",
-            "-X",
-            "DELETE",
-            "/user/starred/" .. repo.owner.login .. "/" .. repo.name,
-          }, {
-            on_exit = function(obj)
-              local code, out, err = obj.code, obj.stdout, obj.stderr
-              if code ~= 0 then
-                vim.notify(err, "error")
-                return
-              end
-            end,
-          })
-        end
-        vim.api.nvim_win_close(win, true)
+        local list = vim
+          .iter(pairs(to_unstar))
+          :map(function(line, repo)
+            M.unstar_repo(repo.owner.login, repo.name)
+            return line
+          end)
+          :totable()
+        table.sort(list)
+        to_unstar = {}
+        vim.bo[buf].modifiable = true
+        vim.iter(list):rev():each(function(line)
+          table.remove(repos, line)
+          vim.api.nvim_buf_set_lines(buf, line - 1, line, false, {})
+        end)
+        vim.bo[buf].modifiable = false
+        -- vim.api.nvim_win_close(win, true)
       end, { buffer = buf, desc = "unstar selected" })
       vim.keymap.set("n", "dd", function()
         local line = vim.api.nvim_win_get_cursor(win)[1]

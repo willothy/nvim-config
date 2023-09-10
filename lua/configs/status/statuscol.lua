@@ -106,16 +106,16 @@ local filetypes = {
   harpoon = true,
 }
 
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("stc", { clear = true }),
-  callback = function()
-    local win = vim.api.nvim_get_current_win()
-    local buf = vim.api.nvim_win_get_buf(win)
-    if
-      filetypes[vim.bo[buf].filetype]
-      and (vim.wo[win].number or vim.wo[win].relativenumber)
-    then
-      vim.wo[win].statuscolumn = "%!v:lua.StatusCol()"
-    end
-  end,
-})
+-- vim.api.nvim_create_autocmd("FileType", {
+--   group = vim.api.nvim_create_augroup("stc", { clear = true }),
+--   callback = function()
+--     local win = vim.api.nvim_get_current_win()
+--     local buf = vim.api.nvim_win_get_buf(win)
+--     if
+--       filetypes[vim.bo[buf].filetype]
+--       and (vim.wo[win].number or vim.wo[win].relativenumber)
+--     then
+--       vim.wo[win].statuscolumn = "%!v:lua.StatusCol()"
+--     end
+--   end,
+-- })

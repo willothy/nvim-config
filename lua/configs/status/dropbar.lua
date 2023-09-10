@@ -24,8 +24,8 @@ local enable = function(buf, win)
     "dapui_console",
     "dap-repl",
   }
-  if vim.bo[buf].buftype == "terminal" then
-    return vim.api.nvim_win_get_config(win).zindex ~= nil
+  if vim.api.nvim_win_get_config(win).zindex ~= nil then
+    return vim.bo[buf].buftype == "terminal"
   end
   return vim.bo[buf].buflisted == true
     and vim.bo[buf].buftype == ""
