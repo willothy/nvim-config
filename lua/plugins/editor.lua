@@ -75,7 +75,7 @@ return {
       "neovim/nvim-lspconfig",
       "nvim-treesitter/nvim-treesitter",
     },
-    ft = "markdown",
+    ft = { "markdown", "help" },
     config = function()
       require("configs.editor.otter")
     end,
