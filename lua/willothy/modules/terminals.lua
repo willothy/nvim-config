@@ -40,6 +40,12 @@ M.main = Terminal:new({
   },
 })
 
+M.xplr = Terminal:new({
+  display_name = "xplr",
+  cmd = "xplr",
+  direction = "float",
+})
+
 M.py = Terminal:new({
   display_name = "python",
   cmd = "python3",
@@ -47,6 +53,7 @@ M.py = Terminal:new({
 })
 
 M.lua = Terminal:new({
+  display_name = "lua",
   cmd = "lua",
   hidden = true,
 })
