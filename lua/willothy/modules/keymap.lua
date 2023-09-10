@@ -2,10 +2,11 @@ local M = {}
 
 function M.find(mode, lhs)
   local map = vim.api.nvim_get_keymap(mode)
+  vim.list_extend(map, vim.api.nvim_buf_get_keymap(0, mode))
   local raw = vim.api.nvim_replace_termcodes(lhs, true, false, false)
 
   for _, m in ipairs(map) do
-    if m.lhs == lhs or m.lhsraw == raw then
+    if m.lhs == lhs or m.lhsraw == raw or m.lhsraw == lhs then
       return m
     end
   end

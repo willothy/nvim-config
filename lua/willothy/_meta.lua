@@ -16,6 +16,7 @@ willothy.event = require("willothy.modules.event")
 willothy.utils = {}
 willothy.utils.cursor = require("willothy.modules.utils.cursor")
 willothy.utils.window = require("willothy.modules.utils.window")
+willothy.utils.buf = require("willothy.modules.utils.buf")
 willothy.utils.tabpage = require("willothy.modules.utils.tabpage")
 willothy.utils.mode = require("willothy.modules.utils.mode")
 willothy.utils.plugins = require("willothy.modules.utils.plugins")
