@@ -675,7 +675,7 @@ local StatusLine = {
 
 require("heirline").setup({
   statusline = StatusLine,
-  statuscolumn = {}
+  -- statuscolumn = {}
   -- statuscolumn = StatusColumn,
 })
 

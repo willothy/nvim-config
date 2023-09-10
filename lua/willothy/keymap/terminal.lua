@@ -10,13 +10,19 @@ register({
   name = "terminal",
   t = {
     function()
-      willothy.term.toggle()
+      willothy.term.main:toggle()
     end,
     "terminal: toggle",
   },
   f = {
     function()
-      willothy.term.toggle_float()
+      willothy.term.float:toggle()
+    end,
+    "terminal: float toggle",
+  },
+  x = {
+    function()
+      willothy.term.xplr:toggle()
     end,
     "terminal: float toggle",
   },

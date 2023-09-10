@@ -285,6 +285,7 @@ return {
     config = function()
       require("configs.git.gitsigns")
     end,
+    event = "VeryLazy",
   },
   {
     "sindrets/diffview.nvim",

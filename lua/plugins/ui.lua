@@ -191,7 +191,7 @@ return {
   {
     -- "Bekaboo/dropbar.nvim",
     "willothy/dropbar.nvim",
-    dir = "~/projects/lua/dropbar.nvim/",
+    -- dir = "~/projects/lua/dropbar.nvim/",
     config = function()
       require("configs.status.dropbar")
     end,
