@@ -82,7 +82,7 @@ anim.setup({
   },
   cursor = { enable = false },
   scroll = {
-    enable = true,
+    enable = false,
   },
   resize = {
     enable = true,

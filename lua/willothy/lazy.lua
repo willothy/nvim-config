@@ -10,6 +10,12 @@ return {
     require("willothy.commands")
     require("willothy.autocmds")
 
+    ---@diagnostic disable-next-line: duplicate-set-field
+    vim.ui.select = function(...)
+      require("telescope").load_extension("ui-select")
+      vim.ui.select(...)
+    end
+
     vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" })
 
     -- Inform vim how to enable undercurl in wezterm

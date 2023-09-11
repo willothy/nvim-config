@@ -189,12 +189,42 @@ local opts = {
       title = "Debug REPL",
       wo = { winbar = false, statuscolumn = "" },
     }),
-    terminal:extend({ ft = "terminal" }),
-    terminal:extend({ ft = "toggleterm" }),
-    terminal:extend({ ft = vim.o.shell }),
-    bottom:extend({ ft = "noice" }),
-    bottom:extend({ ft = "qf", title = "QuickFix" }),
-    bottom:extend({ ft = "spectre_panel", title = "Spectre" }),
+    terminal:extend({
+      ft = "terminal",
+      wo = {
+        winhighlight = "Normal:Normal",
+      },
+    }),
+    terminal:extend({
+      ft = "ToggleTerm",
+      wo = {
+        winhighlight = "Normal:Normal",
+      },
+    }),
+    terminal:extend({
+      ft = vim.o.shell,
+      wo = {
+        winhighlight = "Normal:Normal",
+      },
+    }),
+    bottom:extend({
+      ft = "noice",
+    }),
+    bottom:extend({
+      ft = "qf",
+      title = "QuickFix",
+      wo = {
+        winhighlight = "Normal:Normal",
+      },
+    }),
+    bottom:extend({
+      ft = "spectre_panel",
+      title = "Spectre",
+      wo = {
+        number = false,
+        relativenumber = false,
+      },
+    }),
     trouble:extend({
       title = "Diagnostics",
       filter = function(buf)
@@ -266,11 +296,11 @@ local opts = {
 }
 
 local V = require("edgy.view")
----@param opts Edgy.View.Opts
+---@param view Edgy.View.Opts
 ---@diagnostic disable-next-line: duplicate-set-field
-function V.new(opts, edgebar)
-  local mt = getmetatable(opts)
-  local self = mt and opts or setmetatable(opts, V)
+function V.new(view, edgebar)
+  local mt = getmetatable(view)
+  local self = mt and view or setmetatable(view, V)
   self.edgebar = edgebar
   self.wins = {}
   self.title = self.title or self.ft:sub(1, 1):upper() .. self.ft:sub(2)

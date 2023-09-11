@@ -2,14 +2,6 @@ local keymap = willothy.keymap
 local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 
 register({
-  ["<S-CR>"] = {
-    bind(willothy.term, "toggle"),
-    "terminal",
-  },
-  ["<S-Esc>"] = {
-    bind("trouble", "toggle", "document_diagnostics"),
-    "diagnostics",
-  },
   ["<C-Up>"] = bind("smart-splits", "move_cursor_up"),
   ["<C-Down>"] = { bind("smart-splits", "move_cursor_down") },
   ["<C-Left>"] = { bind("smart-splits", "move_cursor_left") },

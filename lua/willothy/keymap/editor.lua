@@ -73,6 +73,10 @@ register({
     bind("spectre", "toggle"),
     "search/replace",
   },
+  ["<S-Esc>"] = {
+    bind("trouble", "toggle", "document_diagnostics"),
+    "diagnostics",
+  },
   v = {
     name = "visual",
   },
@@ -97,7 +101,6 @@ register({
   ["<F1>"] = bind("cokeline.mappings", "pick", "focus"):with_desc(
     "pick buffer"
   ),
-  ["<C-Enter>"] = bind(willothy.term, "toggle"):with_desc("terminal: toggle"),
   ["<C-e>"] = bind("harpoon.ui", "toggle_quick_menu"):with_desc(
     "harpoon: toggle"
   ),
@@ -216,5 +219,9 @@ register({
       require("flash").toggle()
     end,
     "flash: toggle flash search",
+  },
+  ["<C-f>"] = {
+    function() end,
+    "which_key_ignore",
   },
 }, modes.command)

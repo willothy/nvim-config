@@ -7,6 +7,14 @@ register({
 }, modes.terminal)
 
 register({
+  ["<C-Enter>"] = bind(willothy.term, "toggle"):with_desc("terminal: toggle"),
+  ["<S-Enter>"] = {
+    bind(willothy.term, "toggle"),
+    "terminal",
+  },
+}, modes.non_editing + modes.terminal)
+
+register({
   name = "terminal",
   t = {
     function()

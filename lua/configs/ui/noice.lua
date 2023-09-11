@@ -24,6 +24,11 @@ require("noice").setup({
     enabled = true,
   },
   views = {
+    split = {
+      win_options = {
+        winhighlight = "Normal:Normal",
+      },
+    },
     mini = {
       win_options = {
         winblend = 0,
