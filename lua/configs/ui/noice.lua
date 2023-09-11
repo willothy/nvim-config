@@ -104,7 +104,7 @@ require("noice").setup({
       ["cmp.entry.get_documentation"] = true,
     },
     progress = {
-      enabled = false,
+      enabled = true,
       view = "mini",
     },
     signature = {
@@ -174,3 +174,46 @@ require("noice").setup({
     },
   },
 })
+
+local noice_progress = require("noice.lsp.progress")
+-- hack to allow progress to accept custom client names
+
+---@diagnostic disable-next-line: duplicate-set-field
+function noice_progress.progress(_, msg, info)
+  local id = info.client_id .. "." .. msg.token
+
+  local message = noice_progress._progress[id]
+  if not message then
+    local client = vim.lsp.get_client_by_id(info.client_id)
+    -- should not happen, but it does for some reason
+    if not client then
+      return
+    end
+    message = require("noice.message")("lsp", "progress")
+    message.opts.progress = {
+      client_id = info.client_id,
+      ---@type string
+      client = info.client
+        or (
+          client and client.name
+          or ("lsp-" .. (info.client_id or info.client or "progress"))
+        ),
+    }
+    noice_progress._progress[id] = message
+  end
+
+  message.opts.progress =
+    vim.tbl_deep_extend("force", message.opts.progress, msg.value)
+  message.opts.progress.id = id
+
+  if msg.value.kind == "end" then
+    if message.opts.progress.percentage then
+      message.opts.progress.percentage = 100
+    end
+    vim.defer_fn(function()
+      noice_progress.close(id)
+    end, 100)
+  end
+
+  noice_progress.update()
+end
