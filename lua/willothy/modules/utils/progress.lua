@@ -112,37 +112,4 @@ function M.create(config)
   return handle
 end
 
-local p = M.create({
-  title = "Compiling",
-  client = "cargo",
-})
-p:begin()
-vim.system(
-  {
-    "cargo",
-    "build",
-  },
-  {
-    cwd = "/home/willothy/projects/rust/sesh/",
-    text = true,
-    stderr = vim.schedule_wrap(function(_, data)
-      data = data or ""
-      data = data:gsub("^%s+", ""):gsub("%s+$", "")
-      data = vim.split(data, "\n")[1]
-      if data:sub(1, #"Compiling") == "Compiling" then
-        local crate, version = data:match("Compiling ([^ ]+) v([^ ]+)")
-        p:report({
-          message = string.format("%s %s", crate, version),
-          -- percentage = tonumber(ln) / tonumber(lr) * 100,
-        })
-      end
-    end),
-  },
-  vim.schedule_wrap(function(obj)
-    p:finish({
-      title = "Finished",
-    })
-  end)
-)
-
 return M

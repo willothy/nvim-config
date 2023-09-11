@@ -188,7 +188,7 @@ register({
     "<Plug>(YankyCycleBackward)",
     fmt("yanky: cycle"),
   },
-}, modes.non_editing)
+}, { "n", "x", "v", "o" })
 
 register({
   s = {

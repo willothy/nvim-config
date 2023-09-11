@@ -89,4 +89,38 @@ function M.toggle_float()
   M.float:toggle()
 end
 
+function M.cargo_build()
+  local p = willothy.utils.progress.create({
+    title = "Compiling",
+    client = "cargo",
+  })
+  p:begin()
+  vim.system(
+    {
+      "cargo",
+      "build",
+    },
+    {
+      cwd = "/home/willothy/projects/rust/sesh/",
+      text = true,
+      stderr = vim.schedule_wrap(function(_, data)
+        data = data or ""
+        data = data:gsub("^%s+", ""):gsub("%s+$", "")
+        data = vim.split(data, "\n")[1]
+        if data:sub(1, #"Compiling") == "Compiling" then
+          local crate, version = data:match("Compiling ([^ ]+) v([^ ]+)")
+          p:report({
+            message = string.format("%s %s", crate, version),
+          })
+        end
+      end),
+    },
+    vim.schedule_wrap(function(obj)
+      p:finish({
+        title = "Finished",
+      })
+    end)
+  )
+end
+
 return M
