@@ -630,14 +630,15 @@ local Left = function(group)
         local len = vim.fn.strcharlen(make_cwd())
         local size = math.floor(vim.o.columns / 2) - math.floor(len / 2)
         return "%-" .. size - 1 .. "("
+        -- return "%-1("
         -- return "%1("
       end,
     },
     group,
-    Truncate,
     {
       provider = "%)",
     },
+    Truncate,
   })
 end
 
