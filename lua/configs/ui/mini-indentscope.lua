@@ -13,7 +13,13 @@ require("ibl").setup({
 
 require("mini.indentscope").setup({
   draw = {
+    delay = 40,
     priority = 20,
+    animation = require("mini.indentscope").gen_animation.linear({
+      easing = "in",
+      duration = 40,
+      unit = "step",
+    }),
   },
   symbol = "▏",
   options = {
