@@ -15,7 +15,8 @@ local mode_names = {
   ["R"] = "Replace",
   ["c"] = "Command",
   ["t"] = "Terminal",
-  ["nt"] = "TerminalNormal",
+  -- ["nt"] = "TerminalNormal",
+  ["nt"] = "Normal",
 }
 
 function M.get_color(evt)

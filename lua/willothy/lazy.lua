@@ -6,9 +6,9 @@ return {
     -- setup ui
     willothy.ui.__load_all()
 
-    require("willothy.keymap")
     require("willothy.commands")
     require("willothy.autocmds")
+    require("willothy.keymap")
 
     ---@diagnostic disable-next-line: duplicate-set-field
     vim.ui.select = function(...)

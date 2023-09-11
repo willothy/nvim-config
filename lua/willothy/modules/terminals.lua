@@ -15,7 +15,7 @@ local Terminal = BaseTerminal:new({
   persist_size = true,
   shade_terminals = false,
   highlights = {
-    Normal = { link = "NormalFloat" },
+    Normal = { link = "Normal" },
     FloatBorder = { link = "NormalFloat" },
   },
   float_opts = {

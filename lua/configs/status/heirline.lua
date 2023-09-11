@@ -350,10 +350,29 @@ local Git = (
       "User",
       pattern = { "ExtraLazy", "UpdateHeirlineComponents" },
       callback = function(self)
-        self:fetch()
+        if
+          vim.iter(require("edgy.editor").list_wins().main):find(function(win)
+            return win == vim.api.nvim_get_current_win()
+          end)
+        then
+          self.buf = vim.api.nvim_get_current_buf()
+          self:fetch()
+        end
       end,
     },
-    condition = conditions.is_git_repo,
+    condition = function(self)
+      -- if vim.bo.buftype == "terminal" then
+      --   return false
+      -- end
+      return (
+        self.buf
+        and (
+          vim.b[self.buf].gitsigns_head or vim.b[self.buf].gitsigns_status_dict
+        )
+      )
+        or vim.b.gitsigns_head
+        or vim.b.gitsigns_status_dict
+    end,
     static = {
       fetch = function(self)
         self.status_dict = vim.b.gitsigns_status_dict
@@ -593,6 +612,56 @@ local FoldColumn = {
   },
 }
 
+local Overseer = {
+  condition = function(self)
+    return package.loaded["overseer"] ~= nil
+  end,
+  init = function(self)
+    self.overseer = require("overseer")
+    self.tasks = self.overseer.task_list
+    self.STATUS = self.overseer.constants.STATUS
+  end,
+  static = {
+    symbols = {
+      ["FAILURE"] = "  ",
+      ["CANCELED"] = "  ",
+      ["SUCCESS"] = "  ",
+      ["RUNNING"] = " 省",
+    },
+    colors = {
+      ["FAILURE"] = "OverseerFAILURE",
+      ["CANCELED"] = "OverseerCANCELED",
+      ["SUCCESS"] = "OverseerSUCCESS",
+      ["RUNNING"] = "OverseerRUNNING",
+    },
+  },
+  {
+    condition = function(self)
+      return #self.tasks.list_tasks() > 0
+    end,
+    {
+      provider = function(self)
+        local tasks_by_status = self.overseer.util.tbl_group_by(
+          self.tasks.list_tasks({ unique = true }),
+          "status"
+        )
+
+        for _, status in ipairs(self.STATUS.values) do
+          local status_tasks = tasks_by_status[status]
+          if self.symbols[status] and status_tasks then
+            self.color = self.colors[status]
+            return self.symbols[status]
+          end
+        end
+      end,
+      hl = function(self)
+        local hl = vim.api.nvim_get_hl(0, { name = self.color, link = false })
+        return { fg = hl and willothy.hl.hex(hl.fg) or "gray" }
+      end,
+    },
+  },
+}
+
 local Truncate = { provider = "%<" }
 
 local function Center(group)
@@ -648,6 +717,7 @@ local StatusLine = {
     Space,
     Git,
     Harpoon,
+    Overseer,
   }),
   Center({
     {

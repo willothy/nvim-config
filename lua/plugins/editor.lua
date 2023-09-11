@@ -98,13 +98,14 @@ return {
     config = true,
   },
   {
+    -- "folke/which-key.nvim",
     "willothy/which-key.nvim",
-    -- branch = "helix",
-    branch = "description-sort",
+    -- branch = "description-sort",
+    -- dir = "~/projects/lua/which-key.nvim/",
     config = function()
       require("configs.editor.which-key")
     end,
-    event = "VeryLazy",
+    event = "User ExtraLazy",
   },
   {
     "mrjones2014/legendary.nvim",

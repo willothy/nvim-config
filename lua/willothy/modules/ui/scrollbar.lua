@@ -157,7 +157,7 @@ function Scrollbar:_open_win(opts)
       row = 0,
       col = 0,
       style = "minimal",
-      noautocmd = false,
+      noautocmd = true,
     }),
   }
   vim.api.nvim_set_option_value(
