@@ -1,14 +1,14 @@
 ---Returns an iterator over words in a string
 ---@param str string
----@param offset integer
----@return fun():string, integer
+---@param offset integer?
+---@return fun():string?, integer?
 local function words(str, offset)
   offset = offset or 1
   return function()
     local start = str:find("%w+", offset)
     local word = str:match("%w+", start)
     if start == nil or word == nil then
-      return nil
+      return
     end
     offset = start + #word
     return word, start
@@ -46,7 +46,7 @@ local function Location(label, pos, first)
 end
 
 ---@class Locations
----@field ns Namespace
+---@field ns integer
 ---@field list Location[]
 ---Singleton that keeps track of F/f/T/t eyeliner-like jump locs
 local Locations = {}
@@ -56,7 +56,7 @@ local Locations = {}
 ---@field hl string[] Highlight groups for primary and secondary matches
 ---@field range integer Number of lines to search
 
----@param opts FlashLocConfig
+---@param opts FlashLocConfig?
 function Locations:setup(opts)
   Locations.ns = vim.api.nvim_create_namespace("flash_locations")
   Locations = setmetatable({}, { __index = self })
@@ -92,8 +92,8 @@ function Locations:fetch_line(line, start, backward, chars, range_back)
     or vim.iter(words(line, start[2] + 2))
   )
   for word, pos in line_words do
-    local label ---@type integer
-    local partial ---@type integer
+    local label
+    local partial
     for cnr, char in vim.iter(string.gmatch(word, ".")):enumerate() do
       if chars[char] then
         chars[char] = (chars[char] or 0) + 1
@@ -131,7 +131,10 @@ function Locations:render()
       loc.pos[2] - 1,
       {
         virt_text = {
-          { loc.label, loc.first and config.hl.primary or config.hl.secondary },
+          {
+            loc.label,
+            loc.first and config.hl.primary or config.hl.secondary,
+          },
         },
         virt_text_pos = "overlay",
         priority = 6000,
@@ -160,7 +163,7 @@ function Locations:fetch(back, cursor)
     lines = vim.api.nvim_buf_get_lines(
       0,
       cursor[1] - 1,
-      math.min(cursor[1] + Locations.config.range, vim.fn.line("$")),
+      math.min(cursor[1] + Locations.config.range, vim.fn.line("$") or 1),
       false
     )
   end
@@ -179,10 +182,10 @@ function Locations:fetch(back, cursor)
   end
 end
 
-local flash = require("flash")
+local Char = require("flash.plugins.char")
 local Repeat = require("flash.repeat")
 local Util = require("flash.util")
-local Char = require("flash.plugins.char")
+local flash = require("flash")
 
 -- Override the setup function of the Char plugin
 local c = Char.setup
@@ -272,9 +275,8 @@ Char.setup = function(...)
       (Char.state and key == Util.ESC and vim.fn.mode() == "n") or Char._active
     then
       Char._active = false
-      -- Char.state:hide()
       Locations:clear()
-      return nil
+      return
     end
   end)
 end
@@ -284,9 +286,13 @@ flash.setup({
     char = {
       enabled = true,
       jump_labels = true,
+      labels = "abegimnopquvwz",
       config = function(opts)
         opts.autohide = vim.fn.mode(true):find("no") and vim.v.operator == "y"
       end,
+    },
+    treesitter = {
+      labels = "abegimnopquvwz",
     },
   },
 })
