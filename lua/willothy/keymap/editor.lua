@@ -20,8 +20,8 @@ local objects = {
   P = "paragraph",
   a = { name = "around" },
   i = { name = "inside" },
-  s = "statement",
-  F = "function",
+  -- s = "statement",
+  -- F = "function",
   p = "paragraph",
   f = {
     function()

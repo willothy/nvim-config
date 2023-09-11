@@ -45,14 +45,14 @@ require("nvim-treesitter.configs").setup({
   textobjects = {
     select = {
       enable = true,
-      -- lookahead = true,
+      lookahead = true,
       keymaps = {
-        ["is"] = "@statement.inner",
-        ["as"] = "@statement.outer",
-        ["ic"] = "@class.inner",
-        ["ac"] = "@class.outer",
-        ["iF"] = "@function.inner",
-        ["aF"] = "@function.outer",
+        ["is"] = { query = "@statement.inner", desc = "statement" },
+        ["as"] = { query = "@statement.outer", desc = "statement" },
+        ["ic"] = { query = "@class.inner", desc = "class" },
+        ["ac"] = { query = "@class.outer", desc = "class" },
+        ["iF"] = { query = "@function.inner", desc = "function" },
+        ["aF"] = { query = "@function.outer", desc = "function" },
       },
       selection_modes = {
         ["@parameter.outer"] = "v",
@@ -61,12 +61,27 @@ require("nvim-treesitter.configs").setup({
       },
     },
     swap = {
-      enable = false,
+      enable = true,
       swap_next = {
-        ["<leader>s"] = "@parameter.inner",
+        -- ["]z"] = { query = "@scope", desc = "swap" },
+        -- ["]z"] = {
+        --   query = "@field.outer",
+        --   desc = "Select language scope",
+        -- },
       },
       swap_previous = {
-        ["<leader>S"] = "@parameter.inner",
+        -- ["[z"] = { query = "(field) @field", desc = "swap" },
+      },
+    },
+    move = {
+      enable = true,
+      goto_next_start = {
+        ["]f"] = { query = "@function.outer", desc = "function" },
+        ["]c"] = { query = "@call.outer", desc = "call" },
+      },
+      goto_previous_start = {
+        ["[f"] = { query = "@function.outer", desc = "function" },
+        ["[c"] = { query = "@call.outer", desc = "call" },
       },
     },
   },
