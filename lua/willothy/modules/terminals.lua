@@ -1,20 +1,19 @@
 local M = {}
 
-local Terminal = require("toggleterm.terminal").Terminal
+local BaseTerminal = require("toggleterm.terminal").Terminal
 
 require("configs.terminal.toggleterm")
 
 -- require("toggleterm.constants").FILETYPE = "terminal"
 require("toggleterm.constants").FILETYPE = "terminal"
 
-M.float = Terminal:new({
-  display_name = "floating",
+local Terminal = BaseTerminal:new({
   cmd = "zsh",
   hidden = false,
-  direction = "float",
   close_on_exit = true,
   start_in_insert = false,
   persist_size = true,
+  shade_terminals = false,
   highlights = {
     Normal = { link = "NormalFloat" },
     FloatBorder = { link = "NormalFloat" },
@@ -22,40 +21,39 @@ M.float = Terminal:new({
   float_opts = {
     border = "solid",
   },
-})
-
-M.main = Terminal:new({
-  display_name = "main",
-  cmd = "zsh",
-  hidden = false,
-  direction = "horizontal",
-  close_on_exit = true,
-  start_in_insert = false,
   auto_scroll = false,
-  persist_size = true,
-  shade_terminals = false,
-  highlights = {
-    Normal = { link = "Normal" },
-    FloatBorder = { link = "NormalFloat" },
-  },
 })
 
-M.xplr = Terminal:new({
+function Terminal:extend(opts)
+  opts = opts or {}
+  self.__index = self
+  return setmetatable(opts, self)
+end
+
+M.float = Terminal:extend({
+  display_name = "floating",
+  direction = "float",
+})
+
+M.main = Terminal:extend({
+  display_name = "main",
+  direction = "horizontal",
+})
+
+M.xplr = Terminal:extend({
   display_name = "xplr",
   cmd = "xplr",
   direction = "float",
 })
 
-M.py = Terminal:new({
+M.py = Terminal:extend({
   display_name = "python",
   cmd = "python3",
-  hidden = true,
 })
 
-M.lua = Terminal:new({
+M.lua = Terminal:extend({
   display_name = "lua",
   cmd = "lua",
-  hidden = true,
 })
 
 function M.job(cmd)

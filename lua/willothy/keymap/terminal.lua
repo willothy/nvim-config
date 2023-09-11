@@ -12,19 +12,19 @@ register({
     function()
       willothy.term.main:toggle()
     end,
-    "terminal: toggle",
+    "main",
   },
   f = {
     function()
       willothy.term.float:toggle()
     end,
-    "terminal: float toggle",
+    "float",
   },
   x = {
     function()
       willothy.term.xplr:toggle()
     end,
-    "terminal: float toggle",
+    "xplr",
   },
   s = {
     function()
@@ -37,7 +37,7 @@ register({
         end
       end)
     end,
-    "terminal: send",
+    "send",
   },
   r = {
     name = "repl",
