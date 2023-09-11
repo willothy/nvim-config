@@ -182,6 +182,7 @@ cmp.event:on("confirm_done", pairs_cmp.on_confirm_done())
 
 cmp.setup.cmdline(":", {
   sources = cmp.config.sources({
+    { name = "nvim_lsp", group_index = 0 },
     { name = "path", group_index = 0 },
     { name = "cmdline", group_index = 0 },
     { name = "copilot", group_index = 0 },

@@ -64,23 +64,18 @@ dropbar.setup({
   sources = {
     terminal = {
       name = function(buf)
-        local term = vim
-          .iter(require("toggleterm.terminal").get_all(true))
-          :find(function(term)
-            return term.bufnr == buf
-          end)
+        local term = require("toggleterm.terminal").find(function(term)
+          return term.bufnr == buf
+        end)
+        local name
         if term then
-          return " "
-            .. (
-              term.display_name
-              or term.cmd
-              or term.name
-              or vim.api.nvim_buf_get_name(term.bufnr)
-            )
+          name = term.display_name or term.cmd or term.name
         else
-          return " " .. vim.api.nvim_buf_get_name(buf)
+          name = vim.api.nvim_buf_get_name(buf)
         end
+        return " " .. name
       end,
+      name_hl = "Normal",
     },
   },
   icons = {

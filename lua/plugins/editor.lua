@@ -184,16 +184,8 @@ return {
   },
   -- TERMINAL --
   {
-    "willothy/toggleterm.nvim",
-    -- "akinsho/toggleterm.nvim",
-    cmd = {
-      "ToggleTerm",
-      "ToggleTermSendVisualLines",
-      "ToggleTermToggleAll",
-      "ToggleTermSetName",
-      "ToggleTermSendVisualSelection",
-      "ToggleTermSendCurrentLine",
-    },
+    "akinsho/toggleterm.nvim",
+    cmd = "ToggleTerm",
     config = function()
       require("configs.terminal.toggleterm")
     end,

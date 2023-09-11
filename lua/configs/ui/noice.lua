@@ -58,7 +58,7 @@ require("noice").setup({
     },
     hover = {
       border = {
-        style = "none",
+        style = border_style,
         padding = { 0, 0 },
       },
     },
@@ -81,7 +81,7 @@ require("noice").setup({
         col = "50%",
       },
       size = {
-        width = 80,
+        width = 79,
         height = 10,
       },
       border = {
@@ -119,6 +119,10 @@ require("noice").setup({
     },
     hover = {
       enabled = true,
+      border = {
+        style = border_style,
+        padding = { 0, 0 },
+      },
     },
   },
   cmdline = {
