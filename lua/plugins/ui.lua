@@ -49,12 +49,6 @@ return {
     end,
   },
   {
-    -- "nvimdev/indentmini.nvim",
-    "willothy/indentmini.nvim",
-    dir = "~/projects/lua/indentmini",
-    enabled = not anyline,
-  },
-  {
     enabled = not anyline,
     "lukas-reineke/indent-blankline.nvim",
     branch = "v3",

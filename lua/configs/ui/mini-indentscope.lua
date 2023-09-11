@@ -1,24 +1,19 @@
--- require("ibl").setup({
---   indent = {
---     highlight = "IndentScope",
---     char = "▏",
---   },
---   whitespace = {
---     highlight = "IndentScope",
---     enabled = false,
---   },
---   scope = { enabled = false },
---   show_current_context = false,
--- })
-
-require("indentmini").setup({
-  char = "▏",
+require("ibl").setup({
+  indent = {
+    highlight = "IndentScope",
+    char = "▏",
+  },
+  whitespace = {
+    highlight = "IndentScope",
+    enabled = false,
+  },
+  scope = { enabled = false },
+  show_current_context = false,
 })
-vim.cmd.highlight("default link IndentLine IndentScope")
 
 require("mini.indentscope").setup({
   draw = {
-    priority = 20000,
+    priority = 20,
   },
   symbol = "▏",
   options = {
