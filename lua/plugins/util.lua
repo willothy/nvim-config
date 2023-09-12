@@ -3,24 +3,24 @@ vim.g.nvim_ghost_autostart = 0
 return {
   "willothy/futures.nvim",
   "famiu/bufdelete.nvim",
+  "jbyuki/venn.nvim",
   {
     "ellisonleao/glow.nvim",
     config = true,
-    cmd = "Glow",
+    event = "CmdlineEnter",
   },
   {
     "rafcamlet/nvim-luapad",
     config = true,
-    cmd = "Luapad",
+    event = "CmdlineEnter",
   },
   {
     "lambdalisue/suda.vim",
-    event = "User ExtraLazy",
-    cmd = { "SudaWrite", "SudaRead" },
+    event = "CmdlineEnter",
   },
   {
     "mbbill/undotree",
-    cmd = { "UndotreeFocus", "UndotreeShow", "UndotreeToggle", "UndotreeHide" },
+    event = "CmdlineEnter",
   },
   {
     "willothy/NeoComposer.nvim",
@@ -41,17 +41,7 @@ return {
   {
     "Dhanus3133/LeetBuddy.nvim",
     config = true,
-    cmd = {
-      "LBCheckCookies",
-      "LBClose",
-      "LBSubmit",
-      "LBTest",
-      "LBSplit",
-      "LBReset",
-      "LBQuestion",
-      "LBQuestions",
-      "LBChangeLanguage",
-    },
+    event = "CmdlineEnter",
   },
   {
     "EtiamNullam/deferred-clipboard.nvim",
@@ -72,9 +62,6 @@ return {
     "nacro90/numb.nvim",
     config = true,
     event = "CmdlineEnter",
-  },
-  {
-    "jbyuki/venn.nvim",
   },
   {
     "gbprod/substitute.nvim",
@@ -125,27 +112,19 @@ return {
   {
     "ziontee113/color-picker.nvim",
     config = true,
-    cmd = { "PickColor", "PickColorInsert" },
+    event = "CmdlineEnter",
   },
   {
     "krady21/compiler-explorer.nvim",
     config = true,
-    cmd = {
-      "CEAddLibrary",
-      "CECompile",
-      "CECompileLive",
-      "CEDeleteCache",
-      "CEFormat",
-      "CELoadExample",
-      "CEOpenWebsite",
-    },
+    event = "CmdlineEnter",
   },
   {
     "Tyler-Barham/floating-help.nvim",
     config = function()
       require("configs.editor.floating-help")
     end,
-    cmd = "FloatingHelp",
+    event = "CmdlineEnter",
   },
   {
     "echasnovski/mini.misc",
@@ -154,12 +133,12 @@ return {
   {
     "jokajak/keyseer.nvim",
     config = true,
-    cmd = "Keyseer",
+    event = "CmdlineEnter",
   },
   {
     "pwntester/octo.nvim",
     config = true,
-    cmd = "Octo",
+    event = "CmdlineEnter",
   },
   -- {
   --   "subnut/nvim-ghost.nvim",

@@ -119,6 +119,7 @@ return {
     config = function()
       require("configs.editor.telescope")
     end,
+    event = "User ExtraLazy",
     dependencies = {
       "nvim-telescope/telescope-file-browser.nvim",
       "molecule-man/telescope-menufacture",
@@ -186,7 +187,7 @@ return {
   -- TERMINAL --
   {
     "akinsho/toggleterm.nvim",
-    cmd = "ToggleTerm",
+    -- cmd = "ToggleTerm",
     config = function()
       require("configs.terminal.toggleterm")
     end,
@@ -206,8 +207,8 @@ return {
   },
   {
     "desdic/greyjoy.nvim",
-    -- event = "User ExtraLazy",
-    cmd = "Greyjoy",
+    event = "User ExtraLazy",
+    -- cmd = "Greyjoy",
     config = function()
       require("configs.terminal.greyjoy")
     end,
@@ -240,7 +241,7 @@ return {
     config = function()
       require("configs.navigation.portal")
     end,
-    cmd = "Portal",
+    -- cmd = "Portal",
   },
   {
     "chrisgrieser/nvim-spider",
@@ -251,7 +252,7 @@ return {
     config = function()
       require("configs.editor.reach")
     end,
-    cmd = "ReachOpen",
+    -- cmd = "ReachOpen",
   },
   {
     "SUSTech-data/wildfire.nvim",
@@ -284,32 +285,14 @@ return {
   {
     "sindrets/diffview.nvim",
     config = true,
-    cmd = {
-      "DiffviewClose",
-      "DiffviewFocusFiles",
-      "DiffviewLog",
-      "DiffviewRefresh",
-      "DiffviewToggleFiles",
-      "DiffviewFileHistory",
-      "DiffviewOpen",
-    },
+    cmd = "DiffviewOpen",
   },
   {
     "akinsho/git-conflict.nvim",
     config = function()
       require("configs.git.git-conflict")
     end,
-    cmd = {
-      "GitConflictPrevConflict",
-      "GitConflictNextConflict",
-      "GitConflictChooseNone",
-      "GitConflictChooseBase",
-      "GitConflictChooseTheirs",
-      "GitConflictChooseOurs",
-      "GitConflictListQf",
-      "GitConflictRefresh",
-      "GitConflictChooseBoth",
-    },
+    event = "User ExtraLazy",
   },
   {
     "NeogitOrg/neogit",

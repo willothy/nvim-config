@@ -105,7 +105,6 @@
   "octo.nvim": { "branch": "master", "commit": "d1e52f9b3c755fcebb93d635821663a2c0f53281" },
   "one-small-step-for-vimkind": { "branch": "main", "commit": "edbb34ee779049f2071dc7becff0bbf51c865906" },
   "otter.nvim": { "branch": "main", "commit": "849259c0458a13a1018e7a04e5d30d84e23c2333" },
-  "overseer.nvim": { "branch": "master", "commit": "ed67e917b9dbb431b435d7380f0c4c94e767b229" },
   "plenary.nvim": { "branch": "master", "commit": "0232372b906f275f76ac42029eba25eaf95e76b9" },
   "portal.nvim": { "branch": "main", "commit": "a108a87639a43f5386dd70bdf512de3806a71f7d" },
   "project_nvim": { "branch": "main", "commit": "8c6bad7d22eef1b71144b401c9f74ed01526a4fb" },

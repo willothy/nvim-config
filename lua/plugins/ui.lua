@@ -72,14 +72,7 @@ return {
   -- SIDEBARS --
   {
     "sidebar-nvim/sidebar.nvim",
-    cmd = {
-      "SidebarNvimOpen",
-      "SidebarNvimResize",
-      "SidebarNvimUpdate",
-      "SidebarNvimClose",
-      "SidebarNvimToggle",
-      "SidebarNvimFocus",
-    },
+    event = "CmdlineEnter",
     opts = function()
       return require("configs.ui.sidebars").sidebar
     end,
@@ -89,7 +82,7 @@ return {
     dependencies = {
       "mrbjarksen/neo-tree-diagnostics.nvim",
     },
-    cmd = "Neotree",
+    event = "CmdlineEnter",
     opts = function()
       return require("configs.ui.sidebars").neotree
     end,
@@ -99,21 +92,7 @@ return {
     opts = function()
       return require("configs.ui.sidebars").aerial
     end,
-    cmd = {
-      "AerialNavClose",
-      "AerialNavOpen",
-      "AerialNavToggle",
-      "AerialInfo",
-      "AerialGo",
-      "AerialPrev",
-      "AerialNext",
-      "AerialCloseAll",
-      "AerialClose",
-      "AerialOpenAll",
-      "AerialOpen",
-      "AerialToggle",
-    },
-    -- event = "CmdlineEnter",
+    event = "CmdlineEnter",
   },
   {
     "nvim-tree/nvim-web-devicons",
@@ -160,7 +139,7 @@ return {
     "tummetott/winshift.nvim",
     -- branch = "not_triggering_optionset_event",
     config = true,
-    cmd = "WinShift",
+    event = "CmdlineEnter",
   },
   {
     "willothy/winborder.nvim",
