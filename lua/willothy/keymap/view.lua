@@ -17,7 +17,6 @@ register({
   q = bind("trouble", "open", "quickfix"):with_desc("trouble: quickfix"),
   l = bind("trouble", "open", "loclist"):with_desc("trouble: loclist"),
   d = bind("dapui", "toggle"):with_desc("dap-ui"),
-  t = bind("overseer", "toggle"):with_desc("overseer: tasks"),
   T = {
     function()
       require("overseer").run_template({

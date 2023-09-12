@@ -28,6 +28,13 @@ local opts = {
       winhl = "FloatBorder:NormalFloat",
     },
   },
+  help_win = {
+    border = "solid",
+    win_opts = {
+      winblend = 0,
+      winhl = "FloatBorder:NormalFloat",
+    },
+  },
   task_list = {
     direction = "left",
   },
@@ -46,16 +53,32 @@ vim.api.nvim_create_user_command("OverseerFloatLast", function()
   end
 end, {})
 
+local setup = false
+local win
 vim.api.nvim_create_user_command("OverseerFloat", function(args)
+  if not setup then
+    overseer.config.setup(opts)
+    setup = true
+  end
   local width, height, offset = 30, 30, 3
   local buf = require("overseer.task_list").get_or_create_bufnr()
-  local win = willothy.utils.window.open(buf, {
+  vim.bo[buf].filetype = "OverseerList"
+  if win and vim.api.nvim_win_is_valid(win) then
+    -- if vim.api.nvim_win_get_buf(win) ~= buf then
+    --   vim.api.nvim_win_set_buf(win, buf)
+    -- end
+    vim.api.nvim_win_close(win, true)
+    win = nil
+    return
+  end
+  win = willothy.utils.window.open(buf, {
     relative = "editor",
     width = width,
     height = height,
     row = 2,
     col = vim.o.columns - width - offset,
     border = "solid",
+    noautocmd = true,
   }, true)
   vim.wo[win].winhl = vim
     .iter({
@@ -74,21 +97,40 @@ vim.api.nvim_create_user_command("OverseerFloat", function(args)
     end, "+")
 
   vim.keymap.set("n", "q", function()
-    if win and vim.api.nvim_win_is_valid(win) then
-      vim.api.nvim_win_close(win, true)
-    end
+    vim.api.nvim_win_close(vim.api.nvim_get_current_win(), true)
   end, { buffer = buf })
+  local group = vim.api.nvim_create_augroup("OverseerFloat", { clear = true })
   vim.api.nvim_create_autocmd("VimResized", {
-    group = vim.api.nvim_create_augroup("OverseerFloat", { clear = true }),
+    group = group,
+    buffer = buf,
     callback = function()
-      local config = vim.api.nvim_win_get_config(win)
-      config.row = 2
-      config.col = vim.o.columns - width - offset
-      vim.api.nvim_win_set_config(win, config)
+      if win and vim.api.nvim_win_is_valid(win) then
+        local config = vim.api.nvim_win_get_config(win)
+        config.row = 2
+        config.col = vim.o.columns - width - offset
+        vim.api.nvim_win_set_config(win, config)
+      end
+    end,
+  })
+  vim.api.nvim_create_autocmd("BufWinLeave", {
+    buffer = buf,
+    group = group,
+    callback = function()
+      vim.schedule(function()
+        if
+          win
+          and vim.api.nvim_win_is_valid(win)
+          and vim.api.nvim_buf_is_valid(buf)
+        then
+          vim.api.nvim_win_set_buf(win, buf)
+          win = nil
+        end
+      end)
     end,
   })
   if args.bang then
     vim.api.nvim_create_autocmd("BufLeave", {
+      group = group,
       buffer = buf,
       callback = function()
         if win and vim.api.nvim_win_is_valid(win) then
@@ -97,7 +139,6 @@ vim.api.nvim_create_user_command("OverseerFloat", function(args)
       end,
     })
   end
-  vim.print(args)
   if #args.fargs > 0 then
     overseer
       .new_task({

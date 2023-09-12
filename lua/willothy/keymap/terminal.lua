@@ -47,6 +47,10 @@ register({
     end,
     "send",
   },
+  o = {
+    "<cmd>OverseerFloat<cr>",
+    "overseer",
+  },
   r = {
     name = "repl",
     p = {
