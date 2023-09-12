@@ -4,7 +4,7 @@ local hint = [[
   ^ ^        Options
   ^
   _v_ %{ve} virtual edit
-  _i_ %{list} invisible characters  
+  _i_ %{list} invisible characters
   _s_ %{spell} spell
   _w_ %{wrap} wrap
   _c_ %{cul} cursor line
@@ -32,23 +32,14 @@ return Hydra({
     {
       "n",
       function()
-        if vim.o.number == true then
-          vim.o.number = false
-        else
-          vim.o.number = true
-        end
+        vim.o.number = not vim.o.number
       end,
       { desc = "number" },
     },
     {
       "r",
       function()
-        if vim.o.relativenumber == true then
-          vim.o.relativenumber = false
-        else
-          vim.o.number = true
-          vim.o.relativenumber = true
-        end
+        vim.o.relativenumber = not vim.o.relativenumber
       end,
       { desc = "relativenumber" },
     },
@@ -66,24 +57,16 @@ return Hydra({
     {
       "i",
       function()
-        if vim.o.list == true then
-          vim.o.list = false
-        else
-          vim.o.list = true
-        end
+        vim.o.list = not vim.o.list
       end,
       { desc = "show invisible" },
     },
     {
       "s",
       function()
-        if vim.o.spell == true then
-          vim.o.spell = false
-        else
-          vim.o.spell = true
-        end
+        vim.o.spell = not vim.o.spell
       end,
-      { exit = true, desc = "spell" },
+      { desc = "spell" },
     },
     {
       "w",
@@ -113,11 +96,7 @@ return Hydra({
     {
       "c",
       function()
-        if vim.o.cursorline == true then
-          vim.o.cursorline = false
-        else
-          vim.o.cursorline = true
-        end
+        vim.o.cursorline = not vim.o.cursorline
       end,
       { desc = "cursor line" },
     },
