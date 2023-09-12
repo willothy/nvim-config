@@ -226,11 +226,24 @@ function M.open(buf, config, enter)
     width = 40,
     height = 10,
     style = "minimal",
-    border = "single",
+    border = "solid",
   }, config or {})
   buf = buf or vim.api.nvim_create_buf(false, true)
 
   return vim.api.nvim_open_win(buf, enter or false, config), buf
 end
+
+M.border = {}
+
+M.border.solid = {
+  { " ", "NoiceCmdlinePopupBorder" },
+  { " ", "NoiceCmdlinePopupBorder" },
+  { "▀", "NoiceCmdlinePopupBorder" },
+  { "▀", "NoiceCmdlinePopupBorder" },
+  { "▀", "NoiceCmdlinePopupBorder" },
+  { "▄", "NoiceCmdlinePopupBorder" },
+  { "▄", "NoiceCmdlinePopupBorder" },
+  { "▄", "NoiceCmdlinePopupBorder" },
+}
 
 return M

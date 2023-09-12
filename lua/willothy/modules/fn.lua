@@ -103,6 +103,25 @@ function M.debounce(fn, delay)
   end
 end
 
-
+local _id = 1
+local function next_id()
+  local id = _id
+  _id = _id + 1
+  return id
+end
+function M.make_clickable(fn, text)
+  if not _G.__willothy_handlers then
+    _G.__willothy_handlers = {}
+    setmetatable(_G.__willothy_handlers, {
+      __call = function(self, id)
+        return self[id]
+      end,
+    })
+  end
+  local id = next_id()
+  _G.__willothy_handlers[tostring(id)] = fn
+  local handler = "v:lua.__willothy_handlers'" .. id .. "'"
+  return ("%%%s@%s@%s%%X"):format(id, handler, text)
+end
 
 return M

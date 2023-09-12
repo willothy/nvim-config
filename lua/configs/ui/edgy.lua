@@ -101,6 +101,9 @@ local opts = {
     sidebar:extend({
       ft = "OverseerList",
       title = "Overseer",
+      filter = function(_buf, win)
+        return vim.api.nvim_win_get_config(win).zindex == nil
+      end,
     }),
     sidebar:extend({
       ft = "SidebarNvim",
