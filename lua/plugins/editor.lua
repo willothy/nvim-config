@@ -22,14 +22,6 @@ return {
     config = function()
       require("configs.editor.multicursor")
     end,
-    cmd = {
-      "MCvisualPattern",
-      "MCpattern",
-      "MCstart",
-      "MCvisual",
-      "MCunderCursor",
-      "MCclear",
-    },
   },
   {
     "numToStr/Comment.nvim",

@@ -36,11 +36,11 @@ require("which-key").setup({
     border = "none",
     winblend = 0,
     margin = { 0, 0, 1, 0 },
-    padding = { 1, 2, 1, 1 },
+    padding = { 0, 2, 1, 2 },
     zindex = 1000,
   },
   layout = {
-    height = { min = 4, max = 15 }, -- min and max height of the columns
+    height = { min = 4, max = 20 }, -- min and max height of the columns
     width = { min = 20, max = 50 }, -- min and max width of the columns
     spacing = 3, -- spacing between columns
     align = "left", -- align columns left, center or right
