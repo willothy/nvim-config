@@ -6,6 +6,7 @@ willothy = {}
 willothy.fs = require("willothy.modules.fs")
 willothy.hl = require("willothy.modules.hl")
 willothy.fn = require("willothy.modules.fn")
+willothy.rx = require("willothy.modules.rx")
 willothy.icons = require("willothy.modules.icons")
 willothy.keymap = require("willothy.modules.keymap")
 willothy.player = require("willothy.modules.player")

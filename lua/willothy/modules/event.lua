@@ -300,6 +300,23 @@ function M.on(event, callback, opts)
   return opts.group
 end
 
+local on_key_ns
+local on_key_callbacks = {}
+function M.on_key(pseudokey, callback)
+  if on_key_ns == nil then
+    on_key_ns = vim.on_key(function(key)
+      if on_key_callbacks[key] then
+        vim.iter(on_key_callbacks[key]):each(function(cb)
+          cb(pseudokey)
+        end)
+      end
+    end)
+  end
+  local key = vim.keycode(pseudokey)
+  on_key_callbacks[key] = on_key_callbacks[key] or {}
+  table.insert(on_key_callbacks[key], callback)
+end
+
 ---@class EmitOpts
 ---@field pattern string|string[]?
 ---@field data any?
