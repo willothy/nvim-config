@@ -20,7 +20,7 @@ local commands = {
         local buf, win = vim.lsp.util.open_floating_preview(result, "", {
           focus = true,
           focusable = true,
-          border = "rounded",
+          border = "solid",
           wrap = true,
           width = math.min(
             60,
@@ -28,6 +28,7 @@ local commands = {
             math.max(max_length(result), 10)
           ),
         })
+        vim.wo[win].winhl = "FloatBorder:NormalFloat"
         vim.api.nvim_set_current_win(win)
         vim.keymap.set("n", "q", function()
           if vim.api.nvim_win_is_valid(win) then

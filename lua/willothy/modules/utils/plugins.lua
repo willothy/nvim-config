@@ -150,6 +150,37 @@ function M.unstar_repo(owner, repo)
   end)
 end
 
+function M.count_stars()
+  vim.system({
+    "gh",
+    "api",
+    "-X",
+    "GET",
+    "/users/willothy/repos",
+    "--paginate",
+    "--jq",
+    ".[].stargazers_count",
+  }, { text = true }, function(data)
+    if data.code ~= 0 then
+      vim.notify("Could not get github stars: " .. data.stderr, "error")
+      return
+    end
+    vim.system({
+      "awk",
+      "{ sum += $1 }; END { print sum }",
+    }, {
+      text = true,
+      stdin = data.stdout,
+    }, function(obj)
+      if obj.code ~= 0 then
+        vim.notify("Could not get github stars: " .. obj.stderr, "error")
+        return
+      end
+      willothy.fn.popup(obj.stdout, "stars")
+    end)
+  end)
+end
+
 ---View and/or bulk unstar github repos using a floating window and the gh cli
 ---@param count integer?
 function M.starred_repos(count)
