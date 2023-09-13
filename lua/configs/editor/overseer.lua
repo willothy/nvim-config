@@ -36,13 +36,15 @@ local opts = {
     },
   },
   task_list = {
-    direction = "left",
+    direction = "right",
   },
 }
 
 local overseer = require("overseer")
 
 overseer.setup(opts)
+-- vim.print(select(2, debug.getupvalue(overseer.setup, 4)))
+-- overseer.config.setup(opts)
 
 vim.api.nvim_create_user_command("OverseerFloatLast", function()
   local tasks = overseer.list_tasks({ recent_first = true })
@@ -53,20 +55,13 @@ vim.api.nvim_create_user_command("OverseerFloatLast", function()
   end
 end, {})
 
-local setup = false
 local win
 vim.api.nvim_create_user_command("OverseerFloat", function(args)
-  if not setup then
-    overseer.config.setup(opts)
-    setup = true
-  end
+  overseer.list_tasks()
   local width, height, offset = 30, 30, 3
   local buf = require("overseer.task_list").get_or_create_bufnr()
   vim.bo[buf].filetype = "OverseerList"
   if win and vim.api.nvim_win_is_valid(win) then
-    -- if vim.api.nvim_win_get_buf(win) ~= buf then
-    --   vim.api.nvim_win_set_buf(win, buf)
-    -- end
     vim.api.nvim_win_close(win, true)
     win = nil
     return
@@ -94,7 +89,7 @@ vim.api.nvim_create_user_command("OverseerFloat", function(args)
       require("overseer").run_template({
         name = "shell",
       })
-    end, "+")
+    end, "󰒐")
 
   vim.keymap.set("n", "q", function()
     vim.api.nvim_win_close(vim.api.nvim_get_current_win(), true)

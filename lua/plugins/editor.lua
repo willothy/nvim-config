@@ -215,7 +215,6 @@ return {
   },
   {
     "stevearc/overseer.nvim",
-    dir = "~/projects/lua/overseer.nvim/",
     config = function()
       require("configs.editor.overseer")
     end,
