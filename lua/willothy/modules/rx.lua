@@ -206,8 +206,13 @@ function M.create_effect(callback)
   return rt:create_effect(callback)
 end
 
+---@param fn fun(rt: Runtime)
 function M.with_runtime(fn)
   fn(rt)
 end
+
+M.Runtime = Runtime
+M.Signal = Signal
+M.Set = Set
 
 return M
