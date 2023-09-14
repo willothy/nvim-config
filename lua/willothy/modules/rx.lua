@@ -36,9 +36,13 @@ function Set:values()
 end
 
 ---@class Runtime
----@field signal_values any[]
+---@field signal_values WeakTable
 ---@field signal_subscribers table<SignalId, Set>
+---@field signal_id_free_list SignalId[]
+---@field effects fun()[]
 ---@field running_effect EffectId?
+---@field effect_dependencies table<EffectId, Set>
+---@field effect_id_free_list EffectId[]
 local Runtime
 
 ---@generic T
@@ -47,20 +51,55 @@ local Runtime
 ---@field id SignalId
 local Signal
 
-Runtime = {
-  signal_values = {},
-  running_effect = nil,
-  signal_subscribers = {},
-  effects = {},
-}
+---@class WeakTable
+local WeakTable = {}
+WeakTable.__mode = "v"
+WeakTable.__index = WeakTable
+
+function WeakTable:new()
+  return setmetatable({}, self)
+end
+
+function WeakTable:len()
+  local len = 0
+  for _ in pairs(self) do
+    len = len + 1
+  end
+  return len
+end
+
+function WeakTable:has(key)
+  return rawget(self, key) ~= nil
+end
+
+function WeakTable:insert(key, value)
+  rawset(self, key, value)
+end
+
+function WeakTable:remove(key)
+  rawset(self, key, nil)
+end
+
+function WeakTable:get(key)
+  return rawget(self, key)
+end
+
+function WeakTable:push(value)
+  rawset(self, self:len() + 1, value)
+end
+
+Runtime = {}
 Runtime.__index = Runtime
 
 function Runtime:new()
   return setmetatable({
-    signal_values = {},
-    running_effect = nil,
+    signal_values = WeakTable:new(),
     signal_subscribers = {},
+    signal_id_free_list = {},
+    running_effect = nil,
     effects = {},
+    effect_dependencies = {},
+    effect_id_free_list = {},
   }, self)
 end
 
@@ -68,17 +107,32 @@ end
 ---@param init T
 ---@return Signal
 function Runtime:create_signal(init)
-  table.insert(self.signal_values, init)
-  local id = #self.signal_values
+  if type(init) == "function" then
+    init = init()
+  end
+  local id = table.remove(self.signal_id_free_list) or self.signal_values:len()
+  self.signal_values:insert(id, init)
   self.signal_subscribers[id] = self.signal_subscribers[id] or Set:new()
   return Signal:new(id, self)
 end
 
 ---@param callback fun()
+---@return EffectId
 function Runtime:create_effect(callback)
-  local id = #self.effects + 1
+  local id = table.remove(self.effect_id_free_list) or (#self.effects + 1)
   self.effects[id] = callback
+  self.effect_dependencies[id] = Set:new()
   self:run_effect(id)
+  return id
+end
+
+function Runtime:remove_effect(id)
+  self.effects[id] = nil
+  self.effect_dependencies[id]:values():each(function(signal_id)
+    self.signal_subscribers[signal_id]:remove(id)
+  end)
+  self.effect_dependencies[id] = nil
+  table.insert(self.effect_id_free_list, id)
 end
 
 function Runtime:run_effect(id)
@@ -97,13 +151,27 @@ Signal.__index = Signal
 ---@param rt Runtime
 ---@return Signal<T>
 function Signal:new(id, rt)
-  return setmetatable({ id = id, rt = rt }, self)
+  local proxy = newproxy(true)
+  getmetatable(proxy).__gc = function()
+    rt.signal_subscribers[id]:values():each(function(sub)
+      rt.effect_dependencies[sub]:remove(id)
+    end)
+    rt.signal_subscribers[id] = nil
+    rt.signal_values[id] = nil
+    table.insert(rt.signal_id_free_list, id)
+  end
+  return setmetatable({
+    id = id,
+    rt = rt,
+    _proxy = proxy,
+  }, self)
 end
 
 function Signal:get()
   local value = self.rt.signal_values[self.id]
   if self.rt.running_effect then
     self.rt.signal_subscribers[self.id]:insert(self.rt.running_effect)
+    self.rt.effect_dependencies[self.rt.running_effect]:insert(self.id)
   end
   return value
 end
@@ -135,20 +203,11 @@ function M.create_signal(init)
 end
 
 function M.create_effect(callback)
-  rt:create_effect(callback)
+  return rt:create_effect(callback)
 end
 
 function M.with_runtime(fn)
   fn(rt)
-end
-
-M.named_signals = {}
-
-function M.create_named_signal(name, init)
-  if not M.named_signals[name] then
-    M.named_signals[name] = M.create_signal(init)
-  end
-  return M.named_signals[name]
 end
 
 return M
