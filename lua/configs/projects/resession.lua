@@ -83,7 +83,7 @@ if
 then
   resession.load(
     vim.fn.getcwd(),
-    { dir = "dirsession", silence_errors = true, reset = true }
+    { dir = "dirsession", silence_errors = true, reset = false }
   )
 end
 vim.api.nvim_create_autocmd("VimLeavePre", {
