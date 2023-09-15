@@ -674,40 +674,46 @@ end
 
 local function Right(group)
   return C({
-    {
-      provider = function()
-        local len = vim.fn.strcharlen(make_cwd())
-        local size = math.floor(vim.o.columns / 2) - math.floor(len / 2)
-        return "%"
-          .. size - 1
-          .. "."
-          .. size --
-          .. "("
-      end,
-    },
+    -- {
+    --   provider = function()
+    --     local len = vim.fn.strcharlen(make_cwd())
+    --     local size = math.floor(vim.o.columns / 2) - math.floor(len / 2)
+    --     return "%"
+    --       .. size - 1
+    --       .. "."
+    --       .. size --
+    --       .. "("
+    --   end,
+    -- },
+    -- {
+    --   provider = "%(",
+    -- },
     group,
-    {
-      provider = "%)",
-    },
+    -- {
+    --   provider = "%)",
+    -- },
   })
 end
 
 local Left = function(group)
   return C({
-    {
-      provider = function()
-        local len = vim.fn.strcharlen(make_cwd())
-        local size = math.floor(vim.o.columns / 2) - math.floor(len / 2)
-        return "%-" .. size - 1 .. "("
-        -- return "%-1("
-        -- return "%1("
-      end,
-    },
+    -- {
+    --   provider = function()
+    --     local len = vim.fn.strcharlen(make_cwd())
+    --     local size = math.floor(vim.o.columns / 2) - math.floor(len / 2)
+    --     return "%-" .. size - 1 .. "("
+    --     -- return "%-1("
+    --     -- return "%1("
+    --   end,
+    -- },
+    -- {
+    --   provider = "%-(",
+    -- },
     group,
-    {
-      provider = "%)",
-    },
-    Truncate,
+    -- {
+    --   provider = "%)",
+    -- },
+    -- Truncate,
   })
 end
 
@@ -722,8 +728,8 @@ local StatusLine = {
   Center({
     {
       fallthrough = false,
-      SessionName,
-      WorkDir,
+      -- SessionName,
+      -- WorkDir,
     },
   }),
   Right({
