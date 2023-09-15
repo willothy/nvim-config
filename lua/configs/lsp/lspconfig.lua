@@ -155,6 +155,7 @@ local sign = function(opts)
   vim.fn.sign_define(opts.name, {
     texthl = opts.hl or opts.name,
     icon = opts.text,
+    text = opts.text,
   })
 end
 
@@ -233,18 +234,18 @@ vim.diagnostic.config({
   },
   update_in_insert = true,
   -- virtual_text = {
-  --   prefix = "",
-  --   format = function(diag)
-  --     vim.print(diag)
-  --     local severity = "Info"
-  --     if diag.severity == 1 then
-  --       severity = "Error"
-  --     elseif diag.severity == 2 then
-  --       severity = "Warn"
-  --     elseif diag.severity == 3 then
-  --       severity = "Hint"
-  --     end
-  --     return icons.diagnostics[severity] -- string.format("%s %s", icons.diagnostics[severity], diag.message)
-  --   end,
+  -- virt_text_pos = "right_align",
+  -- prefix = "",
+  -- format = function(diag)
+  --   local severity = "Info"
+  --   if diag.severity == 1 then
+  --     severity = "Error"
+  --   elseif diag.severity == 2 then
+  --     severity = "Warn"
+  --   elseif diag.severity == 3 then
+  --     severity = "Hint"
+  --   end
+  --   return icons.diagnostics[severity] -- string.format("%s %s", icons.diagnostics[severity], diag.message)
+  -- end,
   -- },
 })

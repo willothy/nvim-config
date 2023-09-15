@@ -4,7 +4,7 @@ local icons = willothy.icons
 o.cmdheight = 0
 o.scrolloff = 16
 
-o.shell = "zsh"
+o.shell = "/usr/bin/zsh"
 o.shortmess = "filnxoOCFIs"
 o.virtualedit = "block"
 o.showtabline = 2
