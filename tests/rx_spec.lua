@@ -1,7 +1,3 @@
-local data = vim.fn.stdpath("data")
-
-vim.opt.runtimepath:prepend(data .. "/lazy/plenary.nvim/")
-
 local helpers = require("plenary.busted")
 
 local describe, it, before_each =
@@ -9,7 +5,7 @@ local describe, it, before_each =
 
 local rx = require("willothy.modules.rx")
 
----@type Runtime
+---@type Rx.Runtime
 local rt
 
 describe("rx.lua", function()

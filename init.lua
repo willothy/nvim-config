@@ -89,12 +89,3 @@ require("lazy").setup({
     },
   },
 })
-
-local R = require("lazy.view.render")
-R._title = R.title
-
-function R:title()
-  local i = #self._lines
-  self:_title()
-  table.remove(self._lines, i + 1)
-end

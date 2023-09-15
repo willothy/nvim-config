@@ -1,3 +1,6 @@
+[private]
+list:
+    @just --list
 
 test:
-    nvim --headless "+PlenaryBustedDirectory tests/"
+    @nvim --headless -u tests/init.lua

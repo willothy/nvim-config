@@ -1,8 +1,8 @@
----@alias SignalId integer
----@alias EffectId integer
+---@alias Rx.SignalId integer
+---@alias Rx.EffectId integer
 
 ---@generic T
----@class Set<T>
+---@class Rx.Set<T>
 local Set = {}
 Set.__index = Set
 
@@ -35,23 +35,23 @@ function Set:values()
   return vim.iter(self)
 end
 
----@class Runtime
----@field signal_values WeakTable
----@field signal_subscribers table<SignalId, Set>
----@field signal_id_free_list SignalId[]
+---@class Rx.Runtime
+---@field signal_values Rx.WeakTable
+---@field signal_subscribers table<Rx.SignalId, Rx.Set>
+---@field signal_id_free_list Rx.SignalId[]
 ---@field effects fun()[]
----@field running_effect EffectId?
----@field effect_dependencies table<EffectId, Set>
----@field effect_id_free_list EffectId[]
+---@field running_effect Rx.EffectId?
+---@field effect_dependencies table<Rx.EffectId, Rx.Set>
+---@field effect_id_free_list Rx.EffectId[]
 local Runtime
 
 ---@generic T
----@class Signal<T>
----@field rt Runtime
----@field id SignalId
+---@class Rx.Signal<T>
+---@field rt Rx.Runtime
+---@field id Rx.SignalId
 local Signal
 
----@class WeakTable
+---@class Rx.WeakTable
 local WeakTable = {}
 WeakTable.__mode = "v"
 WeakTable.__index = WeakTable
@@ -105,7 +105,7 @@ end
 
 ---@generic T
 ---@param init T
----@return Signal
+---@return Rx.Signal
 function Runtime:create_signal(init)
   if type(init) == "function" then
     init = init()
@@ -117,7 +117,7 @@ function Runtime:create_signal(init)
 end
 
 ---@param callback fun()
----@return EffectId
+---@return Rx.EffectId
 function Runtime:create_effect(callback)
   local id = table.remove(self.effect_id_free_list) or (#self.effects + 1)
   self.effects[id] = callback
@@ -147,9 +147,9 @@ Signal = {}
 Signal.__index = Signal
 
 ---@generic T
----@param id SignalId
----@param rt Runtime
----@return Signal<T>
+---@param id Rx.SignalId
+---@param rt Rx.Runtime
+---@return Rx.Signal<T>
 function Signal:new(id, rt)
   local proxy = newproxy(true)
   getmetatable(proxy).__gc = function()
@@ -196,23 +196,24 @@ end
 
 local rt = Runtime:new()
 
-local M = {}
+---@class Rx
+local Rx = {}
 
-function M.create_signal(init)
+function Rx.create_signal(init)
   return rt:create_signal(init)
 end
 
-function M.create_effect(callback)
+function Rx.create_effect(callback)
   return rt:create_effect(callback)
 end
 
----@param fn fun(rt: Runtime)
-function M.with_runtime(fn)
+---@param fn fun(rt: Rx.Runtime)
+function Rx.with_runtime(fn)
   fn(rt)
 end
 
-M.Runtime = Runtime
-M.Signal = Signal
-M.Set = Set
+Rx.Runtime = Runtime
+Rx.Signal = Signal
+Rx.Set = Set
 
-return M
+return Rx
