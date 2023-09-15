@@ -305,11 +305,11 @@ return {
     config = true,
     event = "User ExtraLazy",
   },
-  -- {
-  --   "chomosuke/term-edit.nvim",
-  --   opts = {
-  --     prompt_end = "✦ -> ",
-  --   },
-  --   event = "TermOpen",
-  -- },
+  {
+    "chomosuke/term-edit.nvim",
+    opts = {
+      prompt_end = "✦ -> ",
+    },
+    event = "TermOpen",
+  },
 }
