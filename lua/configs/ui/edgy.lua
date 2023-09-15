@@ -1,12 +1,5 @@
-local function get_size()
-  local round = function(n)
-    if n - math.floor(n) >= 0.5 then
-      return math.ceil(n)
-    else
-      return math.floor(n)
-    end
-  end
-  return round(vim.o.lines / 3.5)
+local function get_height()
+  return math.floor((vim.o.lines / 3.5) + 0.5)
 end
 
 ---@type table
@@ -24,14 +17,22 @@ function View:extend(props)
 end
 
 local bottom = View.new({
-  size = { height = get_size },
+  size = { height = get_height },
   filter = function(_buf, win)
     return vim.api.nvim_win_get_config(win).zindex == nil
   end,
 })
 
 local sidebar = View.new({
-  size = { width = get_size },
+  size = {
+    width = function()
+      if vim.o.columns > 120 then
+        return math.floor((vim.o.columns * 0.1) + 0.5)
+      else
+        return math.floor((vim.o.columns * 0.25) + 0.5)
+      end
+    end,
+  },
 })
 
 function _G.__edgy_term_title()
@@ -42,18 +43,16 @@ function _G.__edgy_term_title()
   return _G.dropbar.get_dropbar_str():gsub(" %s+", "")
 end
 
-local terminal = bottom:extend({
+local terminal = View.new({
+  ft = "terminal",
   title = "%{%v:lua.__edgy_term_title()%}",
-  open = function()
-    willothy.term.main:open()
-  end,
   wo = {
     number = false,
     relativenumber = false,
+    winhighlight = "Normal:Normal",
   },
   filter = function(buf, win)
     return vim.bo[buf].buftype == "terminal"
-      and vim.api.nvim_win_get_config(win).zindex == nil
   end,
 })
 
@@ -61,15 +60,17 @@ local trouble = bottom:extend({
   ft = "Trouble",
 })
 
+local function get_rhs_width()
+  if vim.o.columns > 120 then
+    return math.floor(vim.o.columns * 0.35)
+  else
+    return math.floor(vim.o.columns * 0.6)
+  end
+end
+
 local neogit = View.new({
   size = {
-    width = function()
-      if vim.o.columns > 120 then
-        return math.floor(vim.o.columns * 0.35)
-      else
-        return math.floor(vim.o.columns * 0.6)
-      end
-    end,
+    width = get_rhs_width,
   },
 })
 
@@ -95,6 +96,18 @@ local opts = {
     neogit:extend({
       ft = "NeogitReflogView",
       title = "Neogit log",
+    }),
+    terminal:extend({
+      open = function()
+        willothy.term.vertical:open()
+      end,
+      filter = function(buf, win)
+        return vim.bo[buf].buftype == "terminal"
+          and willothy.term.get_direction(buf, win) == "vertical"
+      end,
+      size = {
+        width = get_rhs_width,
+      },
     }),
   },
   left = {
@@ -170,10 +183,20 @@ local opts = {
     sidebar:extend({
       ft = "dapui_scopes",
       wo = { winbar = " Scopes" },
-      size = { height = get_size },
+      size = { height = get_height },
     }),
   },
   bottom = {
+    terminal:extend({
+      open = function()
+        willothy.term.main:open()
+      end,
+      filter = function(buf, win)
+        return vim.bo[buf].buftype == "terminal"
+          and willothy.term.get_direction(buf, win) == "horizontal"
+      end,
+      size = { height = get_height },
+    }),
     {
       ft = "help",
       filter = function(buf, win)
@@ -191,24 +214,6 @@ local opts = {
       ft = "dap-repl",
       title = "Debug REPL",
       wo = { winbar = false, statuscolumn = "" },
-    }),
-    terminal:extend({
-      ft = "terminal",
-      wo = {
-        winhighlight = "Normal:Normal",
-      },
-    }),
-    terminal:extend({
-      ft = "ToggleTerm",
-      wo = {
-        winhighlight = "Normal:Normal",
-      },
-    }),
-    terminal:extend({
-      ft = vim.o.shell,
-      wo = {
-        winhighlight = "Normal:Normal",
-      },
     }),
     bottom:extend({
       ft = "noice",
@@ -269,7 +274,7 @@ local opts = {
 
   options = {
     -- left = { size = 0.25 },
-    bottom = { size = get_size },
+    bottom = { size = get_height },
   },
 
   exit_when_last = true,

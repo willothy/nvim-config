@@ -22,6 +22,12 @@ register({
     end,
     "main",
   },
+  v = {
+    function()
+      willothy.term.vertical:toggle()
+    end,
+    "vertical",
+  },
   f = {
     function()
       willothy.term.float:toggle()

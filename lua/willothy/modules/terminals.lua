@@ -40,6 +40,11 @@ M.main = Terminal:extend({
   direction = "horizontal",
 })
 
+M.vertical = Terminal:extend({
+  display_name = "secondary",
+  direction = "vertical",
+})
+
 M.xplr = Terminal:extend({
   display_name = "xplr",
   cmd = "xplr",
@@ -121,6 +126,49 @@ function M.cargo_build()
       })
     end)
   )
+end
+
+function M.get_direction(buf, win)
+  win = win or vim.fn.bufwinid(buf)
+  if not win then
+    return
+  end
+  if vim.api.nvim_win_get_config(win).zindex ~= nil then
+    return "float"
+  end
+
+  local layout = vim.fn.winlayout()
+
+  local queue = { layout }
+  local direction
+  local current
+  repeat
+    current = table.remove(queue, 1)
+    if not current then
+      break
+    end
+    if current[1] ~= "leaf" then
+      for _, child in ipairs(current[2]) do
+        if child[1] == "leaf" then
+          if child[2] == win then
+            direction = current[1]
+            break
+          end
+        else
+          table.insert(queue, child)
+        end
+      end
+    end
+  until current == nil
+
+  if direction == "col" then
+    direction = "horizontal"
+  elseif direction == "row" then
+    direction = "vertical"
+  else
+    return
+  end
+  return direction
 end
 
 return M

@@ -1,7 +1,9 @@
+local autocmd = vim.api.nvim_create_autocmd
+
 local group =
   vim.api.nvim_create_augroup("willothy.autocmds", { clear = true })
 
-vim.api.nvim_create_autocmd("LspAttach", {
+autocmd("LspAttach", {
   callback = function(args)
     local bufnr = args.buf
     local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -31,14 +33,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
-vim.api.nvim_create_autocmd("BufWritePost", {
+autocmd("BufWritePost", {
   group = group,
   callback = function()
     require("mini.trailspace").trim()
   end,
 })
 
-vim.api.nvim_create_autocmd("FileType", {
+autocmd("FileType", {
   group = group,
   callback = function(ev)
     if vim.bo[ev.buf].buftype ~= "" then
@@ -47,16 +49,22 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-vim.api.nvim_create_autocmd({
-  "TermResponse",
-}, {
+autocmd("TermResponse", {
   group = group,
   callback = function()
     vim.cmd("checktime")
   end,
 })
 
-vim.api.nvim_create_autocmd("BufWinLeave", {
+autocmd("TermOpen", {
+  group = group,
+  callback = function(args)
+    local buf = args.buf
+    vim.bo[buf].filetype = "terminal"
+  end,
+})
+
+autocmd("BufWinLeave", {
   callback = function(ev)
     if vim.bo[ev.buf].filetype == "TelescopePrompt" then
       vim.cmd("silent! stopinsert!")
