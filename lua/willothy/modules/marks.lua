@@ -1,8 +1,7 @@
 ---@class Mark
+---@field project string
 ---@field file string
----@field name string
----@field line integer
----@field col integer
+---@field global boolean
 
 ---@class MarkTable: sqlite_tbl
 
@@ -18,9 +17,7 @@ local db = sqlite({
   uri = path,
   marks = {
     file = { "text", required = true },
-    name = { "text", required = true },
-    line = { "number", required = true },
-    col = { "number", required = true },
+    project = { "text", required = false },
     global = { "boolean", required = true },
   },
   opts = {},
@@ -29,45 +26,38 @@ local db = sqlite({
 local marks = db.marks
 
 ---@param file string
----@param name string
----@param line integer
----@param col integer?
----@param global boolean?
-function marks:set(file, name, line, col, global)
+---@param project string?
+function marks:set(file, project)
   file = vim.fs.normalize(file)
-  if vim.fn.strcharlen(name) ~= 1 then
-    vim.api.nvim_err_writeln("Mark name must be a single character")
-    return
-  end
-  local mark = self:where({ name = name, file = file })
-  if mark then
-    self:update({
-      where = { name = name, file = file },
-      set = { line = line, col = col or 0 },
-    })
-  else
+  local mark = self:where({
+    project = project,
+    file = file,
+    global = project == nil,
+  })
+  if not mark then
     self:insert({
-      name = name,
       file = file,
-      line = line,
-      col = col or 0,
-      global = global or false,
+      project = project,
+      global = project == nil,
     })
   end
 end
 
----@param file string
----@param name string?
-function marks:delete(file, name)
-  if vim.fn.strcharlen(name) ~= 1 then
-    vim.api.nvim_err_writeln("Mark name must be a single character")
-    return
+---@param project string
+---@param file string?
+function marks:delete(project, file)
+  local query = {
+    project = project,
+    global = project == nil,
+  }
+  if file then
+    query.file = vim.fs.normalize(file)
   end
-  file = vim.fs.normalize(file)
-  self:remove({ file = file, name = name })
+  self:remove(query)
 end
 
 function marks:clear()
+  ---@diagnostic disable-next-line: missing-parameter
   self:remove()
 end
 
