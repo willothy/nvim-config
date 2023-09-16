@@ -24,7 +24,9 @@ focus.setup({
     signcolumn = false,
     winhighlight = false,
   },
-  autoresize = {},
+  autoresize = {
+    center_hsplits = false,
+  },
 })
 
 vim.api.nvim_create_autocmd("FileType", {
