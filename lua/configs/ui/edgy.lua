@@ -39,7 +39,17 @@ function _G.__edgy_term_title()
   local buf = vim.api.nvim_get_current_buf()
   local win = vim.api.nvim_get_current_win()
   local bar = _G.dropbar.bars[buf][win]
-  bar.padding.left = 3
+  if vim.bo[buf].bt == "terminal" and not vim.b[buf].__dropbar_ready then
+    local old = bar.update_hover_hl
+    ---@diagnostic disable-next-line: duplicate-set-field
+    bar.update_hover_hl = function(self, col)
+      if col ~= nil then
+        col = col - 3
+      end
+      return old(self, col)
+    end
+    vim.b[buf].__dropbar_ready = true
+  end
   return _G.dropbar.get_dropbar_str():gsub(" %s+", "")
 end
 
@@ -102,8 +112,11 @@ local opts = {
         willothy.term.vertical:open()
       end,
       filter = function(buf, win)
-        return vim.bo[buf].buftype == "terminal"
-          and willothy.term.get_direction(buf, win) == "vertical"
+        local term = require("toggleterm.terminal").find(function(term)
+          return term.bufnr == buf
+        end)
+        return (vim.bo[buf].buftype == "terminal" and term == nil)
+          or (term ~= nil and term.direction == "vertical")
       end,
       size = {
         width = get_rhs_width,
@@ -192,8 +205,11 @@ local opts = {
         willothy.term.main:open()
       end,
       filter = function(buf, win)
-        return vim.bo[buf].buftype == "terminal"
-          and willothy.term.get_direction(buf, win) == "horizontal"
+        local term = require("toggleterm.terminal").find(function(term)
+          return term.bufnr == buf
+        end)
+        return (vim.bo[buf].buftype == "terminal" and term == nil)
+          or (term ~= nil and term.direction == "horizontal")
       end,
       size = { height = get_height },
     }),

@@ -14,6 +14,7 @@ local Terminal = BaseTerminal:new({
   start_in_insert = false,
   persist_size = true,
   shade_terminals = false,
+  auto_scroll = false,
   highlights = {
     Normal = { link = "Normal" },
     FloatBorder = { link = "NormalFloat" },
@@ -21,7 +22,12 @@ local Terminal = BaseTerminal:new({
   float_opts = {
     border = "solid",
   },
-  auto_scroll = false,
+  on_create = function(term)
+    -- fix for weird terminal scrolling
+    vim.api.nvim_exec_autocmds("BufEnter", {
+      buffer = term.bufnr,
+    })
+  end,
 })
 
 function Terminal:extend(opts)
@@ -141,8 +147,10 @@ function M.get_direction(buf, win)
 
   local queue = { layout }
   local direction
+  local last
   local current
   repeat
+    last = current
     current = table.remove(queue, 1)
     if not current then
       break
@@ -161,12 +169,18 @@ function M.get_direction(buf, win)
     end
   until current == nil
 
-  if direction == "col" then
-    direction = "horizontal"
-  elseif direction == "row" then
-    direction = "vertical"
+  if last == layout then
+    if direction == "col" then
+      direction = "horizontal"
+    elseif direction == "row" then
+      direction = "vertical"
+    end
   else
-    return
+    if direction == "col" then
+      direction = "vertical"
+    elseif direction == "row" then
+      direction = "horizontal"
+    end
   end
   return direction
 end

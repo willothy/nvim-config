@@ -1,14 +1,18 @@
 require("toggleterm").setup({
-  start_in_insert = true,
+  start_in_insert = false,
   close_on_exit = true,
   shade_terminals = false,
+  auto_scroll = false,
+  persist_size = false,
   on_create = function(term)
     vim.bo[term.bufnr].filetype = "terminal"
     local win
+    local view
     vim.api.nvim_create_autocmd("BufEnter", {
       buffer = term.bufnr,
       callback = function()
         win = vim.api.nvim_get_current_win()
+        view = vim.fn.winsaveview()
       end,
     })
     vim.api.nvim_create_autocmd("TermClose", {
