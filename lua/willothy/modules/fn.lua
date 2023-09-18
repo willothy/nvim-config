@@ -51,9 +51,7 @@ end
 ---@param msg string
 ---@param title string
 function M.popup(msg, title)
-  vim.schedule(function()
-    M.redirect("popup", msg, title)
-  end)
+  M.redirect("popup", msg, title)
 end
 
 function M.throttle(fn, delay)
