@@ -26,6 +26,9 @@ local function mkcaps(extra)
     }
 
     capabilities.offsetEncoding = "utf-8"
+    capabilities.textDocument.formatting = {
+      dynamicRegistration = false,
+    }
   end
 
   ---@diagnostic disable-next-line: missing-fields
@@ -136,6 +139,13 @@ require("mason-lspconfig").setup({
         attach = lsp_attach,
         filetypes = { "zsh", "sh", "bash" },
         root_dir = require("lspconfig.util").root_pattern(".git", ".zshrc"),
+      })
+    end,
+    intelephense = function()
+      lspconfig.intelephense.setup({
+        capabilities = capabilities,
+        on_attach = lsp_attach,
+        root_dir = require("lspconfig.util").root_pattern(".git"),
       })
     end,
   },

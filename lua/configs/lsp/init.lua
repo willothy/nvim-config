@@ -1,7 +1,7 @@
 ---@param client lsp.Client
 ---@param bufnr integer
-local function lsp_attach(client)
-  require("lsp-format").on_attach(client)
+local function lsp_attach(client, bufnr)
+  require("lsp-format").on_attach(client, bufnr)
 end
 
 return {
