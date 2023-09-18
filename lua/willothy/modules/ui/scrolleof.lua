@@ -75,23 +75,23 @@ M.toggle = function()
 end
 
 M.setup = function()
-  local disabled_ft = {
-    "terminal",
-  }
-
-  local scrollEOF_group =
-    vim.api.nvim_create_augroup("ScrollEOF", { clear = true })
-  vim.api.nvim_create_autocmd("FileType", {
-    group = scrollEOF_group,
-    callback = function()
-      disabled = disabled_ft[vim.bo.filetype] ~= nil or vim.bo.buftype ~= ""
-    end,
-  })
-
-  vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-    group = scrollEOF_group,
-    callback = check_eof_scrolloff,
-  })
+  -- local disabled_ft = {
+  --   "terminal",
+  -- }
+  --
+  -- local scrollEOF_group =
+  --   vim.api.nvim_create_augroup("ScrollEOF", { clear = true })
+  -- vim.api.nvim_create_autocmd("FileType", {
+  --   group = scrollEOF_group,
+  --   callback = function()
+  --     disabled = disabled_ft[vim.bo.filetype] ~= nil or vim.bo.buftype ~= ""
+  --   end,
+  -- })
+  --
+  -- vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+  --   group = scrollEOF_group,
+  --   callback = check_eof_scrolloff,
+  -- })
 end
 
 return M
