@@ -15,7 +15,8 @@ return {
     config = function()
       require("configs.editor.live_cmd")
     end,
-    cmd = { "Norm", "Reg", "Visual" },
+    -- cmd = { "Norm", "Reg", "Visual" },
+    event = "User ExtraLazy",
   },
   {
     "smoka7/multicursors.nvim",
@@ -101,7 +102,8 @@ return {
   },
   {
     "mrjones2014/legendary.nvim",
-    cmd = "Legendary",
+    -- cmd = "Legendary",
+    event = "User ExtraLazy",
     config = function()
       require("configs.editor.legendary")
     end,
@@ -180,6 +182,7 @@ return {
   {
     "akinsho/toggleterm.nvim",
     -- cmd = "ToggleTerm",
+    event = "User ExtraLazy",
     config = function()
       require("configs.terminal.toggleterm")
     end,
@@ -276,7 +279,8 @@ return {
   {
     "sindrets/diffview.nvim",
     config = true,
-    cmd = "DiffviewOpen",
+    -- cmd = "DiffviewOpen",
+    event = "User ExtraLazy",
   },
   {
     "akinsho/git-conflict.nvim",
@@ -289,7 +293,8 @@ return {
     "NeogitOrg/neogit",
     -- "cristiansofronie/neogit", -- neogit/neogit#803
     -- branch = "fix_garbage_printing",
-    cmd = "Neogit",
+    -- cmd = "Neogit",
+    event = "User ExtraLazy",
     config = function()
       require("configs.git.neogit")
     end,

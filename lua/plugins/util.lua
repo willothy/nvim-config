@@ -7,20 +7,20 @@ return {
   {
     "ellisonleao/glow.nvim",
     config = true,
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   {
     "rafcamlet/nvim-luapad",
     config = true,
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   {
     "lambdalisue/suda.vim",
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   {
     "mbbill/undotree",
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   {
     "willothy/NeoComposer.nvim",
@@ -41,7 +41,7 @@ return {
   {
     "Dhanus3133/LeetBuddy.nvim",
     config = true,
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   {
     "EtiamNullam/deferred-clipboard.nvim",
@@ -61,7 +61,7 @@ return {
   {
     "nacro90/numb.nvim",
     config = true,
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   {
     "gbprod/substitute.nvim",
@@ -73,7 +73,7 @@ return {
   {
     "tamton-aquib/keys.nvim",
     config = true,
-    cmd = "KeysToggle",
+    -- cmd = "KeysToggle",
   },
   {
     "folke/todo-comments.nvim",
@@ -85,12 +85,14 @@ return {
     config = function()
       require("configs.editor.attempt")
     end,
-    cmd = "Attempt",
+    -- cmd = "Attempt",
+    event = "User ExtraLazy",
   },
   {
     "rawnly/gist.nvim",
     config = true,
-    cmd = { "GistCreate", "GistCreateFromFile", "GistsList" },
+    event = "User ExtraLazy",
+    -- cmd = { "GistCreate", "GistCreateFromFile", "GistsList" },
   },
   {
     "Saecki/crates.nvim",
@@ -101,7 +103,7 @@ return {
   },
   {
     "tomiis4/Hypersonic.nvim",
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
     config = true,
   },
   {
@@ -112,19 +114,19 @@ return {
   {
     "ziontee113/color-picker.nvim",
     config = true,
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   {
     "krady21/compiler-explorer.nvim",
     config = true,
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   {
     "Tyler-Barham/floating-help.nvim",
     config = function()
       require("configs.editor.floating-help")
     end,
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   {
     "echasnovski/mini.misc",
@@ -133,12 +135,12 @@ return {
   {
     "jokajak/keyseer.nvim",
     config = true,
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   {
     "pwntester/octo.nvim",
     config = true,
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   -- {
   --   "subnut/nvim-ghost.nvim",

@@ -76,7 +76,7 @@ return {
   -- SIDEBARS --
   {
     "sidebar-nvim/sidebar.nvim",
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
     opts = function()
       return require("configs.ui.sidebars").sidebar
     end,
@@ -86,7 +86,7 @@ return {
     dependencies = {
       "mrbjarksen/neo-tree-diagnostics.nvim",
     },
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
     opts = function()
       return require("configs.ui.sidebars").neotree
     end,
@@ -96,7 +96,7 @@ return {
     opts = function()
       return require("configs.ui.sidebars").aerial
     end,
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   {
     "nvim-tree/nvim-web-devicons",
@@ -146,7 +146,7 @@ return {
     "tummetott/winshift.nvim",
     -- branch = "not_triggering_optionset_event",
     config = true,
-    event = "CmdlineEnter",
+    event = "User ExtraLazy",
   },
   {
     "willothy/winborder.nvim",
@@ -178,7 +178,6 @@ return {
   {
     -- "Bekaboo/dropbar.nvim",
     "willothy/dropbar.nvim",
-    -- dir = "~/projects/lua/dropbar.nvim/",
     config = function()
       require("configs.status.dropbar")
     end,

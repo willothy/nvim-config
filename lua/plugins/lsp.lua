@@ -96,7 +96,7 @@ return {
     config = function()
       require("configs.lsp.glance")
     end,
-    cmd = "Glance",
+    -- cmd = "Glance",
   },
   {
     "dgagn/diagflow.nvim",
@@ -124,7 +124,7 @@ return {
       -- Snippetsrequire\("cmp
       "L3MON4D3/LuaSnip",
     },
-    event = { "CmdlineEnter", "InsertEnter" },
+    event = { "User ExtraLazy", "InsertEnter" },
     config = function()
       require("configs.editor.cmp")
     end,
