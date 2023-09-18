@@ -10,6 +10,10 @@ return {
     event = "VeryLazy",
     enabled = false,
   },
+  {
+    "willothy/veil.nvim",
+    config = true,
+  },
   -- LAYOUT / CORE UI --
   {
     -- "folke/edgy.nvim",
@@ -103,6 +107,7 @@ return {
   -- WINDOWS --
   {
     "willothy/focus.nvim",
+    --"nvim-focus/focus.nvim",
     branch = "no-reset-view",
     -- dir = "~/projects/lua/focus.nvim/",
     config = function()
@@ -146,6 +151,7 @@ return {
   {
     "willothy/winborder.nvim",
     config = true,
+    -- dir = "~/projects/lua/winborder.nvim/",
     enabled = false,
     event = "VeryLazy",
   },

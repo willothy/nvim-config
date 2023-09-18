@@ -52,7 +52,7 @@ local components = {
       text = separators.left,
       fg = function(cx)
         if cx.is_focused or cx.buf_hovered or cx.tab_hovered then
-          return get_hex("TabLineSel", "bg")
+          return require("cokeline.hlgroups").get_hl_attr("TabLineSel", "bg")
         else
           return "Comment"
         end
@@ -88,9 +88,9 @@ local components = {
       end,
       fg = function(buffer)
         if buffer.is_focused then
-          return get_hex("TabLineSel", "bg")
+          return require("cokeline.hlgroups").get_hl_attr("TabLineSel", "bg")
         else
-          return get_hex("Comment", "fg")
+          return require("cokeline.hlgroups").get_hl_attr("Comment", "fg")
         end
       end,
       bg = "TabLine",
@@ -463,7 +463,7 @@ local opts = {
           text = function(tab)
             return string.format(
               " %s ",
-              vim.fn.fnamemodify(vim.fn.getcwd(-1, tab.index), ":t")
+              vim.fn.fnamemodify(vim.fn.getcwd(-1, tab.index or 1), ":t")
             )
           end,
           fg = "TabLine",
@@ -479,8 +479,11 @@ local opts = {
           text = icons.blocks.right.half,
           fg = function(tab)
             return ((hovered and hovered == tab.number) or tab.is_active)
-                and get_hex("TabLineSel", "bg")
-              or get_hex("Comment", "fg")
+                and require("cokeline.hlgroups").get_hl_attr(
+                  "TabLineSel",
+                  "bg"
+                )
+              or require("cokeline.hlgroups").get_hl_attr("Comment", "fg")
           end,
           bg = function(tab)
             return (hovered and hovered == tab.number) and "TabLineSel"
