@@ -35,8 +35,10 @@ o.foldcolumn = "1"
 o.foldlevel = 99
 o.foldenable = true
 o.foldlevelstart = 99
+o.foldopen = "block,mark,search,percent,undo"
 
 o.splitkeep = "cursor"
+o.smoothscroll = true
 o.mousescroll = "ver:1,hor:6"
 
 o.laststatus = 3
@@ -44,15 +46,17 @@ o.laststatus = 3
 o.number = true
 o.relativenumber = true
 
-o.tabstop = vim.bo.filetype == "lua" and 2 or 4
-o.shiftwidth = vim.bo.filetype == "lua" and 2 or 4
-o.softtabstop = -1
+o.tabstop = 2
+o.shiftwidth = 2
+o.softtabstop = 2
 o.expandtab = true
 
 o.wrap = false
 o.numberwidth = 1
 o.number = true
 o.relativenumber = true
+
+o.indentkeys = o.indentkeys .. ",!0\t"
 
 vim.opt.fillchars = {
   horiz = "─",
