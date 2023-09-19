@@ -106,10 +106,7 @@ return {
   },
   -- WINDOWS --
   {
-    "willothy/focus.nvim",
-    --"nvim-focus/focus.nvim",
-    -- branch = "no-reset-view",
-    dir = "~/projects/lua/focus.nvim/",
+    "nvim-focus/focus.nvim",
     config = function()
       require("configs.windows.focus")
     end,
