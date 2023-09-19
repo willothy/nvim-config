@@ -137,10 +137,12 @@ end
 
 function Runtime:run_effect(id)
   local effect = self.effects[id]
-  local last_effect = self.running_effect
-  self.running_effect = id
-  effect()
-  self.running_effect = last_effect
+  vim.schedule(function()
+    local last_effect = self.running_effect
+    self.running_effect = id
+    effect()
+    self.running_effect = last_effect
+  end)
 end
 
 Signal = {}
@@ -188,7 +190,10 @@ end
 ---@generic T
 ---@param fn fun(value: T): T
 function Signal:update(fn)
-  self.rt.signal_values[self.id] = fn(self.rt.signal_values[self.id])
+  local val = fn(self.rt.signal_values[self.id])
+  if val ~= nil then
+    self.rt.signal_values[self.id] = val
+  end
   self.rt.signal_subscribers[self.id]:values():each(function(effect_id)
     self.rt:run_effect(effect_id)
   end)
@@ -198,6 +203,10 @@ local rt = Runtime:new()
 
 ---@class Rx
 local Rx = {}
+
+function Rx._signal_count()
+  return rt.signal_values:len()
+end
 
 function Rx.create_signal(init)
   return rt:create_signal(init)

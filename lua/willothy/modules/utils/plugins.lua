@@ -153,53 +153,83 @@ end
 
 ---@param user string?
 function M.count_stars(user)
-  user = user or "willothy"
-  local buf = vim.lsp.util.open_floating_preview({ "", "", "" }, "", {
+  user = user or vim.env.USER
+  local width = math.max(12, #user + 2)
+  local buf, win = vim.lsp.util.open_floating_preview({ "" }, "", {
     focus = true,
     focusable = true,
-    border = "none",
     wrap = true,
-    width = 10,
-    height = 3,
+    width = width,
+    height = 1,
+    border = "solid",
+    title = { { user, "NormalFloat" } },
+    title_pos = "center",
   })
+  vim.wo[win].winhl = "FloatBorder:NormalFloat"
   local total = willothy.rx.create_signal(0)
+  local error = willothy.rx.create_signal()
   local Text = require("nui.text")
   local Line = require("nui.line")
   willothy.rx.create_effect(function()
     if vim.api.nvim_buf_is_valid(buf) then
-      vim.bo[buf].modifiable = true
-      local val = Text(tostring(total:get()))
-      vim.api.nvim_set_hl(0, "StarYellow", { foreground = "#f9d71c" })
-      local star = Text("", "StarYellow")
+      local val
+      local star
+      if error:get() then
+        val = Text(error:get())
+        star = Text("", "DiagnosticError")
+      else
+        val = Text(tostring(total:get()))
+        star = Text("", "DiagnosticWarn")
+      end
+
+      if (val:length() + 2) > width then
+        width = val:length() + 2
+        willothy.utils.window.update_config(win, function(conf)
+          conf.width = width
+        end)
+      end
+
       local lpad =
-        Text(string.rep(" ", math.floor((10 - val:length()) / 2) - 1))
+        Text(string.rep(" ", math.floor((width - val:length()) / 2) - 1))
       local line = Line({ lpad, star, Text(" "), val })
-      line:render(buf, -1, 2)
+
+      vim.bo[buf].modifiable = true
+      line:render(buf, -1, 1)
       vim.bo[buf].modifiable = false
     end
   end)
+  local buffer = ""
   vim.system({
     "gh",
     "api",
     "-X",
     "GET",
-    "/users/willothy/repos",
+    "/users/" .. user .. "/repos",
     "--paginate",
+    "-F",
+    "per_page=10",
     "--jq",
     ".[].stargazers_count",
   }, {
-    stdout = vim.schedule_wrap(function(e, data)
+    text = true,
+    stdout = function(e, data)
       if not data then
         return
       end
-      data = data:gsub("%s+", " ")
-      data = vim.iter(vim.split(data, " ")):each(function(num)
+      buffer = buffer .. data
+      data = data:gsub("%s+", "\n")
+      data = vim.iter(vim.split(data, "\n")):map(tonumber):each(function(num)
         total:update(function(t)
-          return t + (tonumber(num) or 0)
+          return t + num
         end)
       end)
-    end),
-  }, function() end)
+    end,
+  }, function(obj)
+    if obj.code ~= 0 or #obj.stderr ~= 0 then
+      local output = vim.json.decode(buffer)
+      error:set(output.message)
+    end
+  end)
 end
 
 ---View and/or bulk unstar github repos using a floating window and the gh cli

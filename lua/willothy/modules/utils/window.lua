@@ -233,6 +233,14 @@ function M.open(buf, config, enter)
   return vim.api.nvim_open_win(buf, enter or false, config), buf
 end
 
+---@param win integer,
+---@param fn fun(conf: vim.api.keyset.float_config)
+function M.update_config(win, fn)
+  local config = vim.api.nvim_win_get_config(win)
+  fn(config)
+  vim.api.nvim_win_set_config(win, config)
+end
+
 M.border = {}
 
 M.border.solid = {
