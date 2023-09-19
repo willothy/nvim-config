@@ -167,18 +167,18 @@ function M.count_stars(user)
   })
   vim.wo[win].winhl = "FloatBorder:NormalFloat"
   local total = willothy.rx.create_signal(0)
-  local error = willothy.rx.create_signal()
+  local err = willothy.rx.create_signal()
   local Text = require("nui.text")
   local Line = require("nui.line")
   willothy.rx.create_effect(function()
     if vim.api.nvim_buf_is_valid(buf) then
       local val
       local star
-      if error:get() then
-        val = Text(error:get())
+      if err() then
+        val = Text(err())
         star = Text("", "DiagnosticError")
       else
-        val = Text(tostring(total:get()))
+        val = Text(tostring(total()))
         star = Text("", "DiagnosticWarn")
       end
 
@@ -196,6 +196,8 @@ function M.count_stars(user)
       vim.bo[buf].modifiable = true
       line:render(buf, -1, 1)
       vim.bo[buf].modifiable = false
+    else
+      error("buffer is invalid")
     end
   end)
   local buffer = ""
@@ -220,14 +222,14 @@ function M.count_stars(user)
       data = data:gsub("%s+", "\n")
       data = vim.iter(vim.split(data, "\n")):map(tonumber):each(function(num)
         total:update(function(t)
-          return t + num
+          return (t or 0) + num
         end)
       end)
     end,
   }, function(obj)
     if obj.code ~= 0 or #obj.stderr ~= 0 then
       local output = vim.json.decode(buffer)
-      error:set(output.message)
+      err:set(output.message)
     end
   end)
 end

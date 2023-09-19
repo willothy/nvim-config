@@ -128,10 +128,12 @@ end
 
 function Runtime:remove_effect(id)
   self.effects[id] = nil
-  self.effect_dependencies[id]:values():each(function(signal_id)
-    self.signal_subscribers[signal_id]:remove(id)
-  end)
-  self.effect_dependencies[id] = nil
+  if self.effect_dependencies[id] ~= nil then
+    self.effect_dependencies[id]:values():each(function(signal_id)
+      self.signal_subscribers[signal_id]:remove(id)
+    end)
+    self.effect_dependencies[id] = nil
+  end
   table.insert(self.effect_id_free_list, id)
 end
 
@@ -146,7 +148,6 @@ function Runtime:run_effect(id)
 end
 
 Signal = {}
-Signal.__index = Signal
 
 ---@generic T
 ---@param id Rx.SignalId
@@ -162,6 +163,8 @@ function Signal:new(id, rt)
     rt.signal_values[id] = nil
     table.insert(rt.signal_id_free_list, id)
   end
+  self.__index = self
+  self.__call = self.get
   return setmetatable({
     id = id,
     rt = rt,
