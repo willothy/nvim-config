@@ -23,6 +23,7 @@ function M.is_fork(p)
 end
 
 function M.is_local(p)
+  ---@diagnostic disable: param-type-mismatch
   return not vim.startswith(p.dir, vim.fn.stdpath("data"))
 end
 
@@ -138,7 +139,7 @@ function M.unstar_repo(owner, repo)
     "DELETE",
     "/user/starred/" .. owner .. "/" .. repo,
   }, {}, function(obj)
-    local code, out, err = obj.code, obj.stdout, obj.stderr
+    local code, _out, err = obj.code, obj.stdout, obj.stderr
     if code == 0 then
       vim.notify("Unstarred " .. owner .. "/" .. repo)
     else
@@ -150,8 +151,33 @@ function M.unstar_repo(owner, repo)
   end)
 end
 
-function M.count_stars()
-  local total = 0
+---@param user string?
+function M.count_stars(user)
+  user = user or "willothy"
+  local buf = vim.lsp.util.open_floating_preview({ "", "", "" }, "", {
+    focus = true,
+    focusable = true,
+    border = "none",
+    wrap = true,
+    width = 10,
+    height = 3,
+  })
+  local total = willothy.rx.create_signal(0)
+  local Text = require("nui.text")
+  local Line = require("nui.line")
+  willothy.rx.create_effect(function()
+    if vim.api.nvim_buf_is_valid(buf) then
+      vim.bo[buf].modifiable = true
+      local val = Text(tostring(total:get()))
+      vim.api.nvim_set_hl(0, "StarYellow", { foreground = "#f9d71c" })
+      local star = Text("", "StarYellow")
+      local lpad =
+        Text(string.rep(" ", math.floor((10 - val:length()) / 2) - 1))
+      local line = Line({ lpad, star, Text(" "), val })
+      line:render(buf, -1, 2)
+      vim.bo[buf].modifiable = false
+    end
+  end)
   vim.system({
     "gh",
     "api",
@@ -162,17 +188,16 @@ function M.count_stars()
     "--jq",
     ".[].stargazers_count",
   }, {
-    -- text = true,
     stdout = vim.schedule_wrap(function(e, data)
       if not data then
         return
       end
       data = data:gsub("%s+", " ")
       data = vim.iter(vim.split(data, " ")):each(function(num)
-        total = total + (tonumber(num) or 0)
+        total:update(function(t)
+          return t + (tonumber(num) or 0)
+        end)
       end)
-
-      willothy.fn.popup(tostring(total), "stars")
     end),
   }, function() end)
 end
