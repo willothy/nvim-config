@@ -2,7 +2,7 @@ return {
   {
     "willothy/hollywood.nvim",
     event = "LspAttach",
-    dir = "~/projects/lua/hollywood.nvim",
+    -- dir = "~/projects/lua/hollywood.nvim",
   },
   {
     "aznhe21/actions-preview.nvim",

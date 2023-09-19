@@ -18,6 +18,7 @@ function M.is_fork(p)
     ["savior.nvim"] = true,
     ["nvim-cokeline"] = true,
     ["moveline.nvim"] = true,
+    ["veil.nvim"] = true,
   }
   return not my_plugins[p.name]
 end
