@@ -1,16 +1,32 @@
 # nvim-config
 
-My personal Neovim config. I would not recommend using this - It's setup for me, 
-I cannot guarantee that it will work for you, and I will not fix issues that 
-do not occur on my computers. However, feel free to copy paste snippets 
+My personal Neovim config. I would not recommend using this - It's setup for me,
+I cannot guarantee that it will work for you, and I will not fix issues that
+do not occur on my computers. However, feel free to copy paste snippets
 to add to your own config :)
 
 ## Bloated AND Blazingly Fast™
 
 - Over 150 plugins
-- Under 15ms startup on both my desktop and laptop
+- ~15ms startup on both my desktop and laptop
 - Lazy load EVERYTHING. Only a few plugins load before UiEnter.
 - I've spent a stupid amount of time optimizing
+
+## Some things I'm working on in this repo
+
+- `rx.lua`: Reactive extensions for Neovim
+  - [x] signals and effects
+  - [x] automatic dependency tracking
+  - [ ] automatic cleanup (wip)
+  - [ ] scoping & signal ownership
+- `player.lua`: Playerctl UI for Neovim
+  - [x] playerctl wrapper
+  - [ ] nui UI (wip)
+- `marks.lua`: sqlite-based mark manager, inspired by Harpoon (VERY wip)
+  - [ ] db schema
+  - [ ] db update wrappers (preserving list order)
+  - [ ] popup UI
+  - [ ] mapping functions
 
 ## Directory Structure
 
@@ -46,14 +62,14 @@ to add to your own config :)
      │   └──  window.lua        # <C-w> mappings
      │
      ├──  modules               # Access from the global willothy.*
-     │   ├──  floats.lua        # float dragging (disabled by default)
      │   ├──  fn.lua            # misc functions
      │   ├──  fs.lua            # filesystem stuff
      │   ├──  hl.lua            # highlight stuff
      │   ├──  icons.lua         # categorized icons
      │   ├──  keymap.lua        # keymap utilities
      │   ├──  marks.lua         # custom sqlite-powered marks (wip)
-     │   ├──  player.lua        # custom media controller / UI (wip)
+     │   ├──  player.lua        # custom playerctl wrapper / Nui-based UI (wip)
+     │   ├──  rx.lua            # reactive runtime (wip)
      │   ├──  terminals.lua     # customized toggleterm terminals
      │   │
      │   ├──  hydras            # hydras (willothy.hydras)
@@ -67,17 +83,21 @@ to add to your own config :)
      │   │   └──  windows.lua
      │   │
      │   ├──  ui                # ui (willothy.ui)
+     │   │   ├──  float_drag.lua# float dragging
+     │   │   ├──  scrolleof.lua # scroll past end of file (wip, using scrollEOF instead)
      │   │   └──  scrollbar.lua # custom scrollbars based on noice.nvim
      │   │
      │   └──  utils             # utilities (willothy.utils)
+     │       ├──  buf.lua       # buffer utilities
      │       ├──  cursor.lua    # hide and show noice cursor
      │       ├──  debug.lua     # get upvalues, func info etc.
      │       ├──  mode.lua      # get current mode name / color, incl. hydra
-     │       ├──  plugins.lua   # list and filter installed plugins
-     │       ├──  tabpage.lua   # tabpage utilities
-     │       ├──  window.lua    # window utilities
+     │       ├──  plugins.lua   # plugin / github utilities
+     │       ├──  progress.lua  # custom lsp progress messages
      │       ├──  table.lua     # table utilities
-     │       └──  templates.lua # filetype templates
+     │       ├──  tabpage.lua   # tabpage utilities
+     │       ├──  templates.lua # filetype templates
+     │       └──  window.lua    # window utilities
      │
      ├──  lines        # (bad) ascii canvas library
      └──  scratchpads  # place for me to mess around with random Lua stuff
