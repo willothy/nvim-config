@@ -167,38 +167,35 @@ function M.count_stars(user)
     title_pos = "center",
   })
   vim.wo[win].winhl = "FloatBorder:NormalFloat"
-  local total = willothy.rx.create_signal(0)
-  local err = willothy.rx.create_signal()
+  local rx = require("leptos")
+  local total = rx.create_signal(0)
+  local err = rx.create_signal()
   local Text = require("nui.text")
   local Line = require("nui.line")
-  willothy.rx.create_effect(function()
+  -- local rx = willothy.rx
+  rx.create_effect(function()
     if vim.api.nvim_buf_is_valid(buf) then
-      local val
+      local val = total.get()
       local star
-      if err() then
-        val = Text(err())
+      if err.get() then
+        val = Text(err.get())
         star = Text("", "DiagnosticError")
       else
-        val = Text(tostring(total()))
+        val = Text(tostring(val))
         star = Text("", "DiagnosticWarn")
       end
-
       if (val:length() + 2) > width then
         width = val:length() + 2
         willothy.utils.window.update_config(win, function(conf)
           conf.width = width
         end)
       end
-
       local lpad =
         Text(string.rep(" ", math.floor((width - val:length()) / 2) - 1))
       local line = Line({ lpad, star, Text(" "), val })
-
       vim.bo[buf].modifiable = true
       line:render(buf, -1, 1)
       vim.bo[buf].modifiable = false
-    else
-      error("buffer is invalid")
     end
   end)
   local buffer = ""
@@ -215,22 +212,30 @@ function M.count_stars(user)
     ".[].stargazers_count",
   }, {
     text = true,
-    stdout = function(e, data)
+    stdout = vim.schedule_wrap(function(e, data)
+      if e then
+        err.set(e)
+        return
+      end
       if not data then
         return
       end
       buffer = buffer .. data
       data = data:gsub("%s+", "\n")
-      data = vim.iter(vim.split(data, "\n")):map(tonumber):each(function(num)
-        total:update(function(t)
-          return (t or 0) + num
+      local num = vim
+        .iter(vim.split(data, "\n"))
+        :map(tonumber)
+        :fold(0, function(acc, num)
+          return acc + num
         end)
+      total.update(function(t)
+        return (t or 0) + num
       end)
-    end,
+    end),
   }, function(obj)
     if obj.code ~= 0 or #obj.stderr ~= 0 then
       local output = vim.json.decode(buffer)
-      err:set(output.message)
+      err.set(output.message)
     end
   end)
 end

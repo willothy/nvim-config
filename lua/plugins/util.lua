@@ -5,6 +5,11 @@ return {
   "famiu/bufdelete.nvim",
   "jbyuki/venn.nvim",
   {
+    "willothy/leptos.nvim",
+    -- dir = "~/projects/rust/leptos-test/",
+    event = "VeryLazy",
+  },
+  {
     "ellisonleao/glow.nvim",
     config = true,
     event = "User ExtraLazy",
