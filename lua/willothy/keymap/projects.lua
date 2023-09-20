@@ -9,6 +9,18 @@ register({
     end,
     "projects",
   },
+  F = {
+    function()
+      local buf = vim.api.nvim_get_current_buf()
+      local dir
+      if vim.bo[buf].buftype == "" then
+        dir = vim.fs.dirname(vim.api.nvim_buf_get_name(buf))
+      else
+        dir = vim.fn.getcwd()
+      end
+      willothy.fs.browse(dir)
+    end,
+  },
   v = {
     function()
       willothy.fs.browse(vim.fn.getcwd(-1))

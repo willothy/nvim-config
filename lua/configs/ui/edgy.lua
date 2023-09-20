@@ -295,7 +295,6 @@ local opts = {
 
   exit_when_last = true,
   close_when_all_hidden = true,
-  restore_terminals = true,
 
   wo = {
     winhighlight = "",
