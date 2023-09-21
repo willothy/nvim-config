@@ -5,6 +5,7 @@ files.setup({
     preview = false,
     width_focus = 25,
     width_preview = 40,
+    border = "solid",
   },
 })
 

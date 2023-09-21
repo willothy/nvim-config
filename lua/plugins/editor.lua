@@ -150,10 +150,13 @@ return {
     },
   },
   {
-    "echasnovski/mini.files",
+    -- "echasnovski/mini.files",
+    "willothy/mini.files",
+    -- dir = "~/projects/lua/mini.files/",
     config = function()
       require("configs.editor.mini-files")
     end,
+    event = "User ExtraLazy",
   },
   -- SESSIONS / PROJECTS --
   {

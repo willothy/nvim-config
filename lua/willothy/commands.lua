@@ -131,12 +131,7 @@ local commands = {
   },
   MiniFiles = {
     function()
-      require("mini.files")
-      if _G.MiniFiles.get_target_window() then
-        _G.MiniFiles.close()
-      else
-        _G.MiniFiles.open()
-      end
+      require("mini.files").open()
     end,
     desc = "Toggle mini.files",
   },
