@@ -74,7 +74,7 @@
   "multicursors.nvim": { "branch": "main", "commit": "b7a837496da6f5b39b610a7cbd6c3f7d05526d6e" },
   "murmur.lua": { "branch": "main", "commit": "85d3f1c3e98fa60b523abf40f4951d4ddb44fa54" },
   "neo-tree-diagnostics.nvim": { "branch": "main", "commit": "483019d251c31acd14102bc279f938f98d9a3de6" },
-  "neo-tree.nvim": { "branch": "v2.x", "commit": "80dc74d081823649809f78370fa5b204aa9a853a" },
+  "neo-tree.nvim": { "branch": "main", "commit": "71f1841ba6c652908678cece623f52c1fea8a6cd" },
   "neoconf.nvim": { "branch": "main", "commit": "b7cde4ba41eabf9bec9464c990bcf84a0fef4526" },
   "neodev.nvim": { "branch": "main", "commit": "53673d03258a4e4c49ab6ed621820510ac17e052" },
   "neogit": { "branch": "master", "commit": "f0bd7c736cc242258f0fdce0029f3b6331fe952b" },
