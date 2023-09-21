@@ -1,6 +1,6 @@
 local KeyCode = {
-  Move = vim.keycode("<M-LeftDrag>"),
-  Resize = vim.keycode("<S-LeftDrag>"),
+  Move = vim.keycode("<LeftDrag>"),
+  Resize = vim.keycode("<M-LeftDrag>"),
   LeftRelease = vim.keycode("<LeftRelease>"),
   RightRelease = vim.keycode("<RightRelease>"),
   MiddleRelease = vim.keycode("<MiddleRelease>"),
@@ -9,49 +9,69 @@ local KeyCode = {
 local FloatDrag = {}
 
 function FloatDrag:step()
-  local ok, info = pcall(vim.fn.getmousepos)
-  if not ok then
+  local info = vim.fn.getmousepos()
+  if not info then
     return
   end
 
   self.screencol = info.screencol
   self.screenrow = info.screenrow
-  if not self.w then
-    self.w = info.winid
-    self.c = info.wincol
-    self.r = info.winrow
+  if not self.win then
+    self.win = info.winid
+    self.wincol = info.wincol
+    self.winrow = info.winrow
   end
 end
 
 function FloatDrag:drag()
   FloatDrag:step()
-  local cfg = vim.api.nvim_win_get_config(self.w)
+  local cfg = vim.api.nvim_win_get_config(self.win)
   if cfg.relative == "" then
     return
   end
 
-  cfg.col[false] = self.screencol - self.c - 1
-  cfg.row[false] = self.screenrow - self.r - 2
-  vim.api.nvim_win_set_config(self.w, cfg)
+  if self.winrow > 2 then
+    self:reset()
+    return
+  end
+  self.winrow = 1
+
+  cfg.col = self.screencol - self.wincol - 1
+  cfg.row = self.screenrow - self.winrow - (cfg.title == nil and 0 or 1)
+  vim.api.nvim_win_set_config(self.win, cfg)
 end
 
 function FloatDrag:resize()
+  local first = false
+  if not self.win then
+    first = true
+  end
   FloatDrag:step()
 
-  local cfg = vim.api.nvim_win_get_config(self.w)
+  local cfg = vim.api.nvim_win_get_config(self.win)
   if cfg.relative == "" then
     return
   end
 
-  cfg.width = math.max(self.screencol - cfg.col[false] - cfg.col[true], 1)
-  cfg.height = math.max(self.screenrow - cfg.row[false] - cfg.row[true], 1)
-  vim.api.nvim_win_set_config(self.w, cfg)
+  if first then
+    local mouse = vim.fn.getmousepos()
+    if mouse.winrow ~= cfg.height or mouse.wincol ~= cfg.width then
+      self:reset()
+      return
+    end
+  end
+
+  cfg.width = math.max(self.screencol - cfg.col[false] - 2, 1)
+  cfg.height = math.max(self.screenrow - cfg.row[false] - 2, 1)
+  vim.api.nvim_win_set_config(self.win, cfg)
 end
 
 function FloatDrag:reset()
-  self.w = nil
+  self.win = nil
   self.screencol = nil
   self.screenrow = nil
+  self.winrow = nil
+  self.wincol = nil
 end
 
 function FloatDrag.setup(opts)

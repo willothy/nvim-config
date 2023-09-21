@@ -12,7 +12,7 @@ local Terminal = BaseTerminal:new({
   hidden = false,
   close_on_exit = true,
   start_in_insert = false,
-  persist_size = true,
+  persist_size = false,
   shade_terminals = false,
   auto_scroll = false,
   highlights = {
@@ -22,12 +22,6 @@ local Terminal = BaseTerminal:new({
   float_opts = {
     border = "solid",
   },
-  on_create = function(term)
-    -- fix for weird terminal scrolling
-    vim.api.nvim_exec_autocmds("BufEnter", {
-      buffer = term.bufnr,
-    })
-  end,
 })
 
 function Terminal:extend(opts)

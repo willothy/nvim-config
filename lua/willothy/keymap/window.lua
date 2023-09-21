@@ -1,15 +1,40 @@
 local keymap = willothy.keymap
 local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 
+local function resize(direction)
+  return function()
+    local win = vim.api.nvim_get_current_win()
+    local config = vim.api.nvim_win_get_config(win)
+    if config.zindex ~= nil then
+      if direction == "up" then
+        config.height = config.height - vim.v.count1
+      elseif direction == "down" then
+        config.height = config.height + vim.v.count1
+      elseif direction == "left" then
+        config.width = config.width - vim.v.count1
+      elseif direction == "right" then
+        config.width = config.width + vim.v.count1
+      end
+      vim.api.nvim_win_set_config(win, config)
+      return
+    end
+    require("smart-splits")["resize_" .. direction]()
+  end
+end
+
 register({
   ["<C-Up>"] = bind("smart-splits", "move_cursor_up"),
   ["<C-Down>"] = { bind("smart-splits", "move_cursor_down") },
   ["<C-Left>"] = { bind("smart-splits", "move_cursor_left") },
   ["<C-Right>"] = { bind("smart-splits", "move_cursor_right") },
-  ["<M-Up>"] = { bind("smart-splits", "resize_up") },
-  ["<M-Down>"] = { bind("smart-splits", "resize_down") },
-  ["<M-Left>"] = { bind("smart-splits", "resize_left") },
-  ["<M-Right>"] = { bind("smart-splits", "resize_right") },
+  -- ["<M-Up>"] = { bind("smart-splits", "resize_up") },
+  -- ["<M-Down>"] = { bind("smart-splits", "resize_down") },
+  -- ["<M-Left>"] = { bind("smart-splits", "resize_left") },
+  -- ["<M-Right>"] = { bind("smart-splits", "resize_right") },
+  ["<M-Up>"] = { resize("up") },
+  ["<M-Down>"] = { resize("down") },
+  ["<M-Left>"] = { resize("left") },
+  ["<M-Right>"] = { resize("right") },
   ["<C-k>"] = { bind("smart-splits", "move_cursor_up") },
   ["<C-j>"] = { bind("smart-splits", "move_cursor_down") },
   ["<C-h>"] = { bind("smart-splits", "move_cursor_left") },

@@ -7,12 +7,10 @@ require("toggleterm").setup({
   on_create = function(term)
     vim.bo[term.bufnr].filetype = "terminal"
     local win
-    local view
     vim.api.nvim_create_autocmd("BufEnter", {
       buffer = term.bufnr,
       callback = function()
         win = vim.api.nvim_get_current_win()
-        view = vim.fn.winsaveview()
       end,
     })
     vim.api.nvim_create_autocmd("TermClose", {
@@ -36,8 +34,8 @@ require("toggleterm").setup({
           end)
         local target = vim
           .iter(terms)
-          :filter(function(term)
-            return win_bufs[term] == nil
+          :filter(function(t)
+            return win_bufs[t] == nil
           end)
           :next() or vim.iter(terms):next()
 
