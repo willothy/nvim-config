@@ -44,7 +44,7 @@
   "glow.nvim": { "branch": "main", "commit": "5b38fb7b6e806cac62707a4aba8c10c5f14d5bb5" },
   "greyjoy.nvim": { "branch": "main", "commit": "8bc6e0ad020a32af9ec40c32b4c56766235c9873" },
   "guess-indent.nvim": { "branch": "main", "commit": "b8ae749fce17aa4c267eec80a6984130b94f80b2" },
-  "harpoon": { "branch": "master", "commit": "10ce0c9d0831176aed187ffd80a40a8e2a4e48b9" },
+  "harpoon": { "branch": "master", "commit": "b895aa9d21ad61d50647d969567209ca34b20367" },
   "headlines.nvim": { "branch": "master", "commit": "74a083a3c32a08be24f7dfcc6f448ecf47857f46" },
   "heirline.nvim": { "branch": "master", "commit": "7f1e805dfc001d5dbb7d894105063f463f6c7dcc" },
   "highlight-undo.nvim": { "branch": "main", "commit": "50a6884a8476be04ecce8f1c4ed692c5000ef0a1" },

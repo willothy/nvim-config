@@ -102,7 +102,10 @@ register({
     "pick buffer"
   ),
   ["<C-e>"] = bind("harpoon.ui", "toggle_quick_menu"):with_desc(
-    "harpoon: toggle"
+    "harpoon: marks"
+  ),
+  ["<C-c>"] = bind("harpoon.cmd-ui", "toggle_quick_menu"):with_desc(
+    "harpoon: commands"
   ),
   ["<M-k>"] = bind("moveline", "up"):with_desc("move: up"),
   ["<M-j>"] = bind("moveline", "down"):with_desc("move: down"),
