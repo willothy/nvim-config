@@ -104,9 +104,7 @@ dropbar.setup({
       ["<Esc>"] = close,
     },
     quick_navigation = true,
-    win_configs = {
-      -- border = "single",
-    },
+    win_configs = {},
   },
   fzf = {
     prompt = "%#GitSignsAdd#  ",

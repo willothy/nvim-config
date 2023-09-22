@@ -28,7 +28,7 @@ return {
     event = "User ExtraLazy",
   },
   {
-    "willothy/NeoComposer.nvim",
+    "ecthelionvi/NeoComposer.nvim",
     event = "User ExtraLazy",
     config = function()
       require("configs.editor.neocomposer")
