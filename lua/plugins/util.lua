@@ -29,9 +29,11 @@ return {
   },
   {
     "willothy/NeoComposer.nvim",
-    dir = "~/projects/lua/NeoComposer.nvim/",
-    event = "User ExtraLazy",
     opts = {
+      window = {
+        border = "solid",
+        winhl = {},
+      },
       colors = {
         bg = "#26283f",
       },

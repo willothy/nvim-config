@@ -14,15 +14,16 @@ local enable = function(buf, win)
   -- end
   local filetype = vim.bo[buf].filetype
   local disabled = {
-    "Trouble",
-    "qf",
-    "noice",
-    "dapui_scopes",
-    "dapui_breakpoints",
-    "dapui_stacks",
-    "dapui_watches",
-    "dapui_console",
-    "dap-repl",
+    ["Trouble"] = true,
+    ["qf"] = true,
+    ["noice"] = true,
+    ["dapui_scopes"] = true,
+    ["dapui_breakpoints"] = true,
+    ["dapui_stacks"] = true,
+    ["dapui_watches"] = true,
+    ["dapui_console"] = true,
+    ["dap-repl"] = true,
+    ["neocomposer-menu"] = true,
   }
   if vim.api.nvim_win_get_config(win).zindex ~= nil then
     return vim.bo[buf].buftype == "terminal"
@@ -120,16 +121,16 @@ dropbar.setup({
   },
 })
 
-willothy.event.on("ResessionPostLoad", function()
-  vim
-    .iter(vim.api.nvim_list_wins())
-    :map(function(win)
-      return vim.api.nvim_win_get_buf(win), win
-    end)
-    :filter(enable)
-    :each(function(_, win)
-      vim.wo[win].winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"
-    end)
-  utils.bar.exec("update", {}, {})
-end)
-willothy.event.emit("ResessionPostLoad")
+-- willothy.event.on("ResessionPostLoad", function()
+--   vim
+--     .iter(vim.api.nvim_list_wins())
+--     :map(function(win)
+--       return vim.api.nvim_win_get_buf(win), win
+--     end)
+--     :filter(enable)
+--     :each(function(_, win)
+--       vim.wo[win].winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"
+--     end)
+--   utils.bar.exec("update", {}, {})
+-- end)
+-- willothy.event.emit("ResessionPostLoad")

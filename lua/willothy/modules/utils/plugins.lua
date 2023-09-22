@@ -256,7 +256,7 @@ function M.starred_repos()
   local buf, win = vim.lsp.util.open_floating_preview({}, "", {
     focus = true,
     focusable = true,
-    border = "single",
+    border = "solid",
     wrap = true,
     width = 35,
     height = 15,
@@ -277,7 +277,7 @@ function M.starred_repos()
         list[cursor[1]].unstar = not list[cursor[1]].unstar
         list[cursor[1]].text = Text(
           list[cursor[1]].name,
-          list[cursor[1]].unstar and "Comment" or "Normal"
+          list[cursor[1]].unstar and "Comment" or "NormalFloat"
         )
       end
     end)
@@ -325,7 +325,7 @@ function M.starred_repos()
 
     config.title = {
       { "Starred", "FloatTitle" },
-      { " (" .. tostring(#list) .. ")", "Normal" },
+      { " (" .. tostring(#list) .. ")", "NormalFloat" },
     }
     config.title_pos = "center"
 
@@ -354,7 +354,7 @@ function M.starred_repos()
       repos.update(function(list)
         vim.iter(data):each(function(repo)
           repo = vim.json.decode(repo)
-          repo.text = Text(repo.name, "Normal")
+          repo.text = Text(repo.name, "NormalFloat")
           table.insert(list, repo)
         end)
       end)
