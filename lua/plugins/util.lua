@@ -29,15 +29,10 @@ return {
   },
   {
     "willothy/NeoComposer.nvim",
-    opts = {
-      window = {
-        border = "solid",
-        winhl = {},
-      },
-      colors = {
-        bg = "#26283f",
-      },
-    },
+    event = "User ExtraLazy",
+    config = function()
+      require("configs.editor.neocomposer")
+    end,
   },
   {
     "nmac427/guess-indent.nvim",

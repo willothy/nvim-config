@@ -20,8 +20,8 @@ local objects = {
   P = "paragraph",
   a = { name = "around" },
   i = { name = "inside" },
-  -- s = "statement",
-  -- F = "function",
+  s = "sentence",
+  F = "function",
   p = "paragraph",
   f = {
     function()
@@ -107,7 +107,20 @@ register({
   ["<M-k>"] = bind("moveline", "up"):with_desc("move: up"),
   ["<M-j>"] = bind("moveline", "down"):with_desc("move: down"),
   ["<C-s>"] = bind(vim.cmd.write):with_desc("save"),
-}, modes.non_editing + modes.insert)
+  -- macros
+  ["<C-q>"] = bind("NeoComposer.ui", "toggle_macro_menu"):with_desc(
+    "macro: open menu"
+  ),
+  Q = bind("NeoComposer.macro", "toggle_play_macro"):with_desc("macro: play"),
+  q = bind("NeoComposer.macro", "toggle_record"):with_desc("macro: record"),
+  cq = bind("NeoComposer.macro", "halt_macro"):with_desc("macro: stop"),
+  ["<C-n>"] = bind("NeoComposer.ui", "cycle_next"):with_desc(
+    "macro: cycle next"
+  ),
+  ["<C-p>"] = bind("NeoComposer.ui", "cycle_prev"):with_desc(
+    "macro: cycle prev"
+  ),
+}, modes.non_editing)
 
 register({
   name = "marks",
