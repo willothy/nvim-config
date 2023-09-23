@@ -3,7 +3,6 @@ local ns = vim.api.nvim_create_namespace("cokeline_diagnostics")
 
 local p = require("minimus").hex
 local mappings = require("cokeline.mappings")
-local get_hex = require("cokeline.hlgroups").get_hl_attr
 
 local separators = {
   left = icons.blocks.left[4],
@@ -332,7 +331,7 @@ local components = {
   },
   run = {
     text = function()
-      if require("dap").session() then
+      if package.loaded["dap"] and require("dap").session() then
         return string.format(" %s ", icons.dap.action.stop)
       end
       return string.format(" %s ", icons.dap.action.start)

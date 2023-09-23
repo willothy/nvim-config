@@ -251,6 +251,9 @@ local Devicon = {
 }
 
 local Harpoon = {
+  condition = function()
+    return package.loaded["harpoon"]
+  end,
   {
     fallthrough = false,
     {
@@ -461,7 +464,7 @@ local Sesh = Env("SESH_NAME")
 
 local DAPMessages = {
   condition = function()
-    return require("dap").session() ~= nil
+    return package.loaded["dap"] and require("dap").session()
   end,
   provider = function()
     return " " .. require("dap").status()
@@ -775,6 +778,6 @@ willothy.event.on("ColorScheme", function()
     statusline = C(StatusLine),
   })
 end)
-vim.schedule(function()
-  willothy.event.emit("UpdateHeirlineComponents")
-end)
+-- vim.schedule(function()
+--   willothy.event.emit("UpdateHeirlineComponents")
+-- end)
