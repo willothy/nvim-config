@@ -55,21 +55,24 @@ register({
   },
   o = {
     "<cmd>OverseerFloat<cr>",
-    "overseer",
+    "overseer: show",
   },
   r = {
-    name = "repl",
-    p = {
-      function()
-        willothy.term.py:toggle()
-      end,
-      "python",
-    },
-    l = {
-      function()
-        willothy.term.lua:toggle()
-      end,
-      "lua",
-    },
+    function()
+      require("overseer").run_template()
+    end,
+    "overseer: run",
+  },
+  p = {
+    function()
+      willothy.term.py:toggle()
+    end,
+    "python",
+  },
+  l = {
+    function()
+      willothy.term.lua:toggle()
+    end,
+    "lua",
   },
 }, modes.non_editing, "<leader>t")
