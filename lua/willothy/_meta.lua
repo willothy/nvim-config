@@ -13,6 +13,7 @@ willothy.player = require("willothy.modules.player")
 willothy.term = require("willothy.modules.terminals")
 willothy.marks = require("willothy.modules.marks")
 willothy.event = require("willothy.modules.event")
+willothy.async = require("willothy.modules.async")
 
 willothy.utils = {}
 willothy.utils.cursor = require("willothy.modules.utils.cursor")

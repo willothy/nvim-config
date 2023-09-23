@@ -1,7 +1,17 @@
 local M = {}
 
+local handles = setmetatable({}, { __mode = "k" })
+
+function M.running()
+  local current = coroutine.running()
+  if current and handles[current] then
+    return true
+  end
+end
+
 function M.run(func, callback, ...)
   local co = coroutine.create(func)
+  handles[co] = true
 
   local function step(...)
     local ret = { coroutine.resume(co, ...) }
@@ -25,23 +35,23 @@ function M.run(func, callback, ...)
       return
     end
 
-    --- @type integer, function
-    local nargs, fn = ret[2], ret[3]
+    local fn = ret[2]
 
-    assert(type(fn) == "function", "type error :: expected func")
+    ---@type any[]
+    local args = { unpack(ret, 3) }
+    args[#args + 1] = step
 
-    local args = { select(4, unpack(ret)) }
-    args[nargs] = step
-
-    fn(unpack(args, 1, nargs))
+    fn(unpack(args))
   end
 
   step(...)
 end
 
-function M.wait(argc, func, ...)
+function M.wait(func, ...)
+  local argc = select("#", ...) + 1
+
   local function pfunc(...)
-    local args = { ... } --- @type any[]
+    local args = { ... }
     local cb = args[argc]
     args[argc] = function(...)
       cb(true, ...)
@@ -51,7 +61,7 @@ function M.wait(argc, func, ...)
     end, unpack(args, 1, argc))
   end
 
-  local ret = { coroutine.yield(argc, pfunc, ...) }
+  local ret = { coroutine.yield(pfunc, ...) }
 
   local ok = ret[1]
   if not ok then
@@ -64,12 +74,21 @@ end
 
 function M.wrap(func)
   return function(...)
-    local argc = select("#", ...) + 1
-    return M.wait(argc, func, ...)
+    if not M.running() then
+      func(...)
+    end
+    return M.wait(func, ...)
   end
 end
 
-return M
+function M.void(func)
+  return function(...)
+    if M.running() then
+      return func(...)
+    end
+    return M.run(func, nil, ...)
+  end
+end
 
 -- local uv_open_dir = M.wrap(function(path, entries, cb)
 --   ---@diagnostic disable-next-line: param-type-mismatch
@@ -77,7 +96,7 @@ return M
 -- end)
 --
 -- local uv_read_dir = M.wrap(vim.uv.fs_readdir)
-
+--
 -- local function scandir(directory)
 --   local ok, dir = uv_open_dir(directory or vim.uv.cwd(), 1)
 --   local read = function()
@@ -98,7 +117,9 @@ return M
 --
 --   return res
 -- end
-
+--
 -- M.run(scandir, function(ok, res)
 --   vim.notify(vim.inspect(res))
 -- end)
+
+return M
