@@ -444,59 +444,35 @@ local opts = {
   },
   tabs = {
     placement = "right",
-    components = (function(hovered)
-      return {
-        {
-          text = function(tab)
-            return tab.is_first and separators.left or ""
-          end,
-          fg = "TabLine",
-          on_mouse_enter = function(tab)
-            hovered = tab.number
-          end,
-          on_mouse_leave = function()
-            hovered = false
-          end,
-        },
-        {
-          text = function(tab)
-            return string.format(
-              " %s ",
-              vim.fn.fnamemodify(vim.fn.getcwd(-1, tab.index or 1), ":t")
-            )
-          end,
-          fg = "TabLine",
-          bg = "TabLine",
-          on_mouse_enter = function(tab)
-            hovered = tab.number
-          end,
-          on_mouse_leave = function()
-            hovered = false
-          end,
-        },
-        {
-          text = icons.blocks.right.half,
-          fg = function(tab)
-            return ((hovered and hovered == tab.number) or tab.is_active)
-                and require("cokeline.hlgroups").get_hl_attr(
-                  "TabLineSel",
-                  "bg"
-                )
-              or require("cokeline.hlgroups").get_hl_attr("Comment", "fg")
-          end,
-          bg = function(tab)
-            return (hovered and hovered == tab.number) and "TabLineSel"
-              or "TabLine"
-          end,
-          on_mouse_enter = function(tab)
-            hovered = tab.number
-          end,
-          on_mouse_leave = function()
-            hovered = false
-          end,
-        },
-      }
-    end)(),
+    components = {
+      {
+        text = function(tab)
+          return tab.is_first and separators.left or ""
+        end,
+        fg = "TabLine",
+      },
+      {
+        text = function(tab)
+          return string.format(
+            " %s ",
+            vim.fn.fnamemodify(vim.fn.getcwd(-1, tab.index or 1), ":t")
+          )
+        end,
+        fg = "TabLine",
+        bg = "TabLine",
+      },
+      {
+        text = icons.blocks.right.half,
+        fg = function(tab)
+          return (tab.tab_hovered or tab.is_active)
+              and require("cokeline.hlgroups").get_hl_attr("TabLineSel", "bg")
+            or require("cokeline.hlgroups").get_hl_attr("Comment", "fg")
+        end,
+        bg = function(tab)
+          return tab.tab_hovered and "TabLineSel" or "TabLine"
+        end,
+      },
+    },
   },
   sidebar = {
     filetype = { "SidebarNvim", "neo-tree", "edgy", "aerial", "OverseerList" },
