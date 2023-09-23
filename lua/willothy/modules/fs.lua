@@ -58,19 +58,21 @@ function M.hijack_netrw()
   })
 end
 
-function M.set_browser()
+M.set_browser = willothy.async.void(function()
   local options = vim
     .iter(M.browsers)
-    :map(function(name)
+    :map(function(name, _)
       return name
     end)
     :totable()
-  vim.ui.select(options, {
+  local ok, item = willothy.async.wrap(vim.ui.select)(options, {
     prompt = "Browsers",
-  }, function(item)
-    M.browser = M.browsers[item] or M.browser
-  end)
-end
+  })
+  if not ok or not item then
+    return
+  end
+  M.browser = M.browsers[options[item]] or M.browser
+end)
 
 ---@param target string | string[] | nil | fun():string
 function M.browse(target, browser)

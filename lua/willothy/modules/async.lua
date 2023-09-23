@@ -72,6 +72,7 @@ function M.wait(func, ...)
   return ok, unpack(ret, 3, table.maxn(ret))
 end
 
+---@return fun(...):any
 function M.wrap(func)
   return function(...)
     if not M.running() then
@@ -90,24 +91,31 @@ function M.void(func)
   end
 end
 
--- local uv_open_dir = M.wrap(function(path, entries, cb)
---   ---@diagnostic disable-next-line: param-type-mismatch
---   return vim.uv.fs_opendir(path, cb, entries)
--- end)
---
--- local uv_read_dir = M.wrap(vim.uv.fs_readdir)
---
+---@type fun(cmd: string[], opts: table): vim.SystemCompleted
+M.system = M.wrap(vim.system)
+
+M.uv = {}
+
+---@type fun(path: string, entries: integer): boolean, luv_dir_t
+M.uv.fs_opendir = M.wrap(function(path, entries, cb)
+  return vim.uv.fs_opendir(path, cb, entries)
+end)
+
+---@type fun(dir: luv_dir_t): boolean, uv.aliases.fs_readdir_entries[]
+M.uv.fs_readdir = M.wrap(vim.uv.fs_readdir)
+
 -- local function scandir(directory)
---   local ok, dir = uv_open_dir(directory or vim.uv.cwd(), 1)
---   local read = function()
---     return uv_read_dir(dir)
+--   local ok, dir = M.uv.fs_opendir(directory or vim.uv.cwd(), 10)
+--
+--   if not ok then
+--     error(dir)
 --   end
 --
 --   local res = {}
 --
 --   local entries
 --   repeat
---     entries = select(2, read())
+--     entries = select(2, M.uv.fs_readdir(dir))
 --     if entries then
 --       vim.iter(entries):each(function(entry)
 --         table.insert(res, entry)
