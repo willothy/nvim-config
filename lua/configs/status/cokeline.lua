@@ -427,13 +427,6 @@ local opts = {
     components.space,
     components.sep.right,
     components.padding,
-    -- {
-    --   text = function()
-    --     _G.i = (_G.i or 0) + 1
-    --     vim.print(_G.i)
-    --     return ""
-    --   end,
-    -- },
   },
   rhs = {
     components.run,
