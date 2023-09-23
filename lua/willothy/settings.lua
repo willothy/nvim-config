@@ -35,7 +35,7 @@ o.foldcolumn = "1"
 o.foldlevel = 99
 o.foldenable = true
 o.foldlevelstart = 99
-o.foldopen = "block,mark,search,percent,undo"
+-- o.foldopen = "block,mark,search,percent,undo"
 
 o.splitkeep = "cursor"
 o.smoothscroll = true
@@ -56,7 +56,7 @@ o.numberwidth = 1
 o.number = true
 o.relativenumber = true
 
-o.indentkeys = o.indentkeys .. ",!0\t"
+-- o.indentkeys = o.indentkeys .. ",!0\t"
 
 vim.opt.fillchars = {
   horiz = "─",
