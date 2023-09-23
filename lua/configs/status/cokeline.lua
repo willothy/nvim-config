@@ -12,346 +12,288 @@ local separators = {
 local close_icon_normal = icons.actions.close
 local close_icon_hovered = icons.actions.close_box
 
-local components = {
-  sidebar_open = {
-    text = function(buffer)
-      local open = require("cokeline.sidebar").get_win("left") and true
-        or false
-      if (open and buffer.is_readonly) or (buffer.is_first and not open) then
-        return string.format(" %s ", open and "󰨂" or "󰨃")
-      end
-      return ""
-    end,
+local SidebarOpen = {
+  text = function(buffer)
+    local open = require("cokeline.sidebar").get_win("left") and true or false
+    if (open and buffer.is_readonly) or (buffer.is_first and not open) then
+      return string.format(" %s ", open and "󰨂" or "󰨃")
+    end
+    return ""
+  end,
+  fg = function(cx)
+    return cx.is_hovered and "TabLineSel" or "TabLine"
+  end,
+  bg = function(cx)
+    return cx.is_hovered and "TabLineSel" or "TabLine"
+  end,
+  on_click = function()
+    require("edgy").toggle("left")
+  end,
+}
+local Space = {
+  text = " ",
+  truncation = { priority = 1 },
+}
+
+local Separator = {
+  left = {
+    text = separators.left,
     fg = function(cx)
-      return cx.is_hovered and "TabLineSel" or "TabLine"
+      if cx.is_focused or cx.buf_hovered or cx.tab_hovered then
+        return require("cokeline.hlgroups").get_hl_attr("TabLineSel", "bg")
+      else
+        return "Comment"
+      end
     end,
     bg = function(cx)
-      return cx.is_hovered and "TabLineSel" or "TabLine"
-    end,
-    on_click = function()
-      require("edgy").toggle("left")
+      return (cx.buf_hovered or cx.tab_hovered) and "TabLineSel" or "TabLine"
     end,
   },
-  space = {
-    text = " ",
-    truncation = { priority = 1 },
-  },
-  space_if_not_focused = {
+  right = {
     text = function(buffer)
-      if not buffer.is_focused then
-        return " "
+      if buffer.is_last then
+        return separators.right
       else
         return ""
       end
     end,
-    truncation = { priority = 1 },
+    fg = "TabLine",
+    bg = "none",
   },
-  sep = {
-    left = {
-      text = separators.left,
-      fg = function(cx)
-        if cx.is_focused or cx.buf_hovered or cx.tab_hovered then
-          return require("cokeline.hlgroups").get_hl_attr("TabLineSel", "bg")
-        else
-          return "Comment"
-        end
-      end,
-      bg = function(cx)
-        return (cx.buf_hovered or cx.tab_hovered) and "TabLineSel" or "TabLine"
-      end,
-    },
-    right = {
-      text = function(buffer)
-        if buffer.is_last then
-          return separators.right
-        else
-          return ""
-        end
-      end,
-      fg = "TabLine",
-      bg = "none",
-    },
-  },
-  separator = function(side)
-    return {
-      text = function(buffer)
-        if
-          side == "left"--[[  and (buffer.is_focused or buffer.is_first) ]]
-        then
-          return separators.left
-        elseif side == "right" and (buffer.is_focused or buffer.is_last) then
-          return separators.right
-        else
-          return ""
-        end
-      end,
-      fg = function(buffer)
-        if buffer.is_focused then
-          return require("cokeline.hlgroups").get_hl_attr("TabLineSel", "bg")
-        else
-          return require("cokeline.hlgroups").get_hl_attr("Comment", "fg")
-        end
-      end,
-      bg = "TabLine",
-      truncation = { priority = 1 },
-    }
+}
+
+local Devicon = {
+  text = function(buffer)
+    if mappings.is_picking_focus() or mappings.is_picking_close() then
+      return buffer.pick_letter .. " "
+    end
+    return buffer.devicon.icon
   end,
-  two_spaces = {
-    text = "  ",
-    truncation = { priority = 1 },
+  fg = function(buffer)
+    return (mappings.is_picking_focus() and "DiagnosticWarn")
+      or (mappings.is_picking_close() and "DiagnosticError")
+      or buffer.devicon.color
+  end,
+  italic = function(_)
+    return mappings.is_picking_focus() or mappings.is_picking_close()
+  end,
+  bold = function(_)
+    return mappings.is_picking_focus() or mappings.is_picking_close()
+  end,
+  truncation = { priority = 1 },
+}
+
+local UniquePrefix = {
+  text = function(buffer)
+    return buffer.unique_prefix
+  end,
+  fg = function(buffer)
+    if buffer.is_focused then
+      return require("cokeline.hlgroups").get_hl_attr("TabLineSel", "bg")
+    else
+      return "TabLine"
+    end
+  end,
+  truncation = {
+    priority = 3,
+    direction = "left",
   },
-  devicon = {
-    text = function(buffer)
-      if mappings.is_picking_focus() or mappings.is_picking_close() then
-        return buffer.pick_letter .. " "
-      end
-      return buffer.devicon.icon
-    end,
-    fg = function(buffer)
-      return (mappings.is_picking_focus() and "DiagnosticWarn")
-        or (mappings.is_picking_close() and "DiagnosticError")
-        or buffer.devicon.color
-    end,
-    italic = function(_)
-      return mappings.is_picking_focus() or mappings.is_picking_close()
-    end,
-    bold = function(_)
-      return mappings.is_picking_focus() or mappings.is_picking_close()
-    end,
-    truncation = { priority = 1 },
+}
+local Filename = {
+  text = function(buffer)
+    return buffer.filename
+  end,
+  bold = function(buffer)
+    return buffer.is_focused
+  end,
+  underline = function(buffer)
+    return buffer.is_hovered and not buffer.is_focused
+  end,
+  sp = function(buffer)
+    --[[ if buffer.is_focused then
+          return "TabLine"
+        else ]]
+    if buffer.diagnostics.errors ~= 0 then
+      return "DiagnosticError"
+    elseif buffer.diagnostics.warnings ~= 0 then
+      return "DiagnosticWarn"
+    elseif buffer.diagnostics.infos ~= 0 then
+      return "DiagnosticInfo"
+    else
+      return "TabLine"
+    end
+  end,
+  fg = function(buffer)
+    --[[ if buffer.is_focused then
+          return "TabLine"
+        else ]]
+    if buffer.diagnostics.errors ~= 0 then
+      return "DiagnosticError"
+    elseif buffer.diagnostics.warnings ~= 0 then
+      return "DiagnosticWarn"
+    elseif buffer.diagnostics.infos ~= 0 then
+      return "DiagnosticInfo"
+    else
+      return "TabLine"
+    end
+  end,
+  bg = "TabLine",
+  truncation = {
+    priority = 2,
+    direction = "left",
   },
-  index = {
-    text = function(buffer)
-      return buffer.index .. ": "
-    end,
-    truncation = { priority = 1 },
-  },
-  unique_prefix = {
-    text = function(buffer)
-      return buffer.unique_prefix
-    end,
-    fg = function(buffer)
-      if buffer.is_focused then
-        return require("cokeline.hlgroups").get_hl_attr("TabLineSel", "bg")
-      else
-        return "TabLine"
-      end
-    end,
-    truncation = {
-      priority = 3,
-      direction = "left",
+}
+local Diagnostics = (function()
+  local Popup = require("nui.popup")
+
+  local popup = Popup({
+    enter = false,
+    focusable = false,
+    border = {
+      style = "rounded",
     },
-  },
-  filename = {
+    position = {
+      row = 1,
+      col = 0,
+    },
+    relative = "editor",
+    size = {
+      width = 20,
+      height = 1,
+    },
+  })
+
+  return {
     text = function(buffer)
-      return buffer.filename
-    end,
-    bold = function(buffer)
-      return buffer.is_focused
-    end,
-    underline = function(buffer)
-      return buffer.is_hovered and not buffer.is_focused
-    end,
-    sp = function(buffer)
-      --[[ if buffer.is_focused then
-          return "TabLine"
-        else ]]
-      if buffer.diagnostics.errors ~= 0 then
-        return "DiagnosticError"
-      elseif buffer.diagnostics.warnings ~= 0 then
-        return "DiagnosticWarn"
-      elseif buffer.diagnostics.infos ~= 0 then
-        return "DiagnosticInfo"
-      else
-        return "TabLine"
-      end
+      return (
+        buffer.diagnostics.errors ~= 0
+        and icons.diagnostics.errors .. " " .. buffer.diagnostics.errors
+      )
+        or (buffer.diagnostics.warnings ~= 0 and icons.diagnostics.warnings .. " " .. buffer.diagnostics.warnings)
+        or ""
     end,
     fg = function(buffer)
-      --[[ if buffer.is_focused then
-          return "TabLine"
-        else ]]
-      if buffer.diagnostics.errors ~= 0 then
-        return "DiagnosticError"
-      elseif buffer.diagnostics.warnings ~= 0 then
-        return "DiagnosticWarn"
-      elseif buffer.diagnostics.infos ~= 0 then
-        return "DiagnosticInfo"
-      else
-        return "TabLine"
-      end
+      return (buffer.diagnostics.errors ~= 0 and "DiagnosticError")
+        or (buffer.diagnostics.warnings ~= 0 and "DiagnosticWarn")
+        or nil
     end,
     bg = "TabLine",
-    truncation = {
-      priority = 2,
-      direction = "left",
-    },
-  },
-  diagnostics = (function()
-    local Popup = require("nui.popup")
-
-    local popup = Popup({
-      enter = false,
-      focusable = false,
-      border = {
-        style = "rounded",
-      },
-      position = {
-        row = 1,
-        col = 0,
-      },
-      relative = "editor",
-      size = {
-        width = 20,
-        height = 1,
-      },
-    })
-
-    return {
-      text = function(buffer)
-        return (
-          buffer.diagnostics.errors ~= 0
-          and icons.diagnostics.errors .. " " .. buffer.diagnostics.errors
-        )
-          or (buffer.diagnostics.warnings ~= 0 and icons.diagnostics.warnings .. " " .. buffer.diagnostics.warnings)
-          or ""
-      end,
-      fg = function(buffer)
-        return (buffer.diagnostics.errors ~= 0 and "DiagnosticError")
-          or (buffer.diagnostics.warnings ~= 0 and "DiagnosticWarn")
-          or nil
-      end,
-      bg = "TabLine",
-      truncation = { priority = 1 },
-      on_click = function(_id, _clicks, _button, _modifiers, buffer)
-        local trouble = require("trouble")
-        if buffer.is_focused then
-          trouble.toggle()
-        elseif trouble.is_open() then
-          if vim.bo.filetype == "Trouble" then
-            buffer:focus()
-            trouble.close()
-          else
-            buffer:focus()
-          end
+    truncation = { priority = 1 },
+    on_click = function(_id, _clicks, _button, _modifiers, buffer)
+      local trouble = require("trouble")
+      if buffer.is_focused then
+        trouble.toggle()
+      elseif trouble.is_open() then
+        if vim.bo.filetype == "Trouble" then
+          buffer:focus()
+          trouble.close()
         else
           buffer:focus()
-          trouble.open()
         end
-      end,
-      on_mouse_enter = function(buffer, mouse_col)
-        local text = {}
-        local width = 0
-        if buffer.diagnostics.errors > 0 then
-          table.insert(text, {
-            icons.diagnostics.errors
-              .. " "
-              .. buffer.diagnostics.errors
-              .. " ",
-            "DiagnosticSignError",
-          })
-          width = width + #tostring(buffer.diagnostics.errors) + 3
-        end
-        if buffer.diagnostics.warnings > 0 then
-          table.insert(text, {
-            icons.diagnostics.warnings
-              .. " "
-              .. buffer.diagnostics.warnings
-              .. " ",
-            "DiagnosticSignWarn",
-          })
-          width = width + #tostring(buffer.diagnostics.warnings) + 3
-        end
-        if buffer.diagnostics.infos > 0 then
-          table.insert(text, {
-            icons.diagnostics.info .. " " .. buffer.diagnostics.infos .. " ",
-            "DiagnosticSignInfo",
-          })
-          width = width + #tostring(buffer.diagnostics.infos) + 3
-        end
-        if buffer.diagnostics.hints > 0 then
-          table.insert(text, {
-            icons.diagnostics.hints .. " " .. buffer.diagnostics.hints .. " ",
-            "DiagnosticSignpint",
-          })
-          width = width + #tostring(buffer.diagnostics.hints) + 3
-        end
-        popup.win_config.width = width
-        popup.win_config.col = mouse_col - 1
-        popup:mount()
-        if not popup.bufnr then
-          return
-        end
-        vim.api.nvim_buf_set_extmark(popup.bufnr, ns, 0, 0, {
-          id = 1,
-          virt_text = text,
-          virt_text_pos = "overlay",
+      else
+        buffer:focus()
+        trouble.open()
+      end
+    end,
+    on_mouse_enter = function(buffer, mouse_col)
+      local text = {}
+      local width = 0
+      if buffer.diagnostics.errors > 0 then
+        table.insert(text, {
+          icons.diagnostics.errors .. " " .. buffer.diagnostics.errors .. " ",
+          "DiagnosticSignError",
         })
-      end,
-      on_mouse_leave = function()
-        popup:unmount()
-      end,
-    }
-  end)(),
-  close_or_unsaved = {
-    text = function(buffer)
-      if buffer.is_hovered then
-        return buffer.is_modified and (icons.misc.modified .. " ")
-          or (close_icon_hovered .. " ")
+        width = width + #tostring(buffer.diagnostics.errors) + 3
+      end
+      if buffer.diagnostics.warnings > 0 then
+        table.insert(text, {
+          icons.diagnostics.warnings
+            .. " "
+            .. buffer.diagnostics.warnings
+            .. " ",
+          "DiagnosticSignWarn",
+        })
+        width = width + #tostring(buffer.diagnostics.warnings) + 3
+      end
+      if buffer.diagnostics.infos > 0 then
+        table.insert(text, {
+          icons.diagnostics.info .. " " .. buffer.diagnostics.infos .. " ",
+          "DiagnosticSignInfo",
+        })
+        width = width + #tostring(buffer.diagnostics.infos) + 3
+      end
+      if buffer.diagnostics.hints > 0 then
+        table.insert(text, {
+          icons.diagnostics.hints .. " " .. buffer.diagnostics.hints .. " ",
+          "DiagnosticSignpint",
+        })
+        width = width + #tostring(buffer.diagnostics.hints) + 3
+      end
+      popup.win_config.width = width
+      popup.win_config.col = mouse_col - 1
+      popup:mount()
+      if not popup.bufnr then
+        return
+      end
+      vim.api.nvim_buf_set_extmark(popup.bufnr, ns, 0, 0, {
+        id = 1,
+        virt_text = text,
+        virt_text_pos = "overlay",
+      })
+    end,
+    on_mouse_leave = function()
+      popup:unmount()
+    end,
+  }
+end)()
+local CloseOrUnsaved = {
+  text = function(buffer)
+    if buffer.is_hovered then
+      return buffer.is_modified and (icons.misc.modified .. " ")
+        or (close_icon_hovered .. " ")
+    else
+      return buffer.is_modified and (icons.misc.modified .. " ")
+        or (close_icon_normal .. " ") -- icons.actions.close
+    end
+  end,
+  fg = "TabLine",
+  bold = true,
+  truncation = { priority = 1 },
+  on_click = function(_, _, _, _, buffer)
+    buffer:delete()
+  end,
+}
+
+local Padding = {
+  text = function(buffer)
+    return buffer.is_last and " " or ""
+  end,
+  bg = "TabLineFill",
+  fg = "none",
+}
+
+local Debug = {
+  text = function()
+    if package.loaded["dap"] and require("dap").session() then
+      return string.format(" %s ", icons.dap.action.stop)
+    end
+    return string.format(" %s ", icons.dap.action.start)
+  end,
+  bg = "TabLineFill",
+  fg = function(cx)
+    return cx.is_hovered and p.lemon_chiffon or p.blue
+  end,
+  on_click = function(_id, _clicks, button, _modifiers, _buffer)
+    if button == "l" then
+      if require("dap").session() then
+        require("dap").terminate()
       else
-        return buffer.is_modified and (icons.misc.modified .. " ")
-          or (close_icon_normal .. " ") -- icons.actions.close
+        require("configs.debugging").launch()
       end
-    end,
-    fg = "TabLine",
-    bold = true,
-    truncation = { priority = 1 },
-    on_click = function(_, _, _, _, buffer)
-      buffer:delete()
-    end,
-  },
-  padding = {
-    text = function(buffer)
-      return buffer.is_last and " " or ""
-    end,
-    bg = "TabLineFill",
-    fg = "none",
-  },
-  front_padding = {
-    text = function(buffer)
-      return buffer.is_focused and "" or " "
-    end,
-  },
-  clock = {
-    text = function(cx)
-      return icons.misc.datetime
-        .. (cx.is_hovered and os.date("%a %b %d") or os.date("%I:%M"))
-    end,
-    bg = "none",
-    fg = p.blue,
-  },
-  run = {
-    text = function()
-      if package.loaded["dap"] and require("dap").session() then
-        return string.format(" %s ", icons.dap.action.stop)
-      end
-      return string.format(" %s ", icons.dap.action.start)
-    end,
-    bg = "TabLineFill",
-    fg = function(cx)
-      return cx.is_hovered and p.lemon_chiffon or p.blue
-    end,
-    on_click = function(_id, _clicks, button, _modifiers, _buffer)
-      if button == "l" then
-        if require("dap").session() then
-          require("dap").terminate()
-        else
-          require("configs.debugging").launch()
-        end
-      else
-        vim.cmd("Greyjoy")
-      end
-    end,
-  },
+    else
+      vim.cmd("Greyjoy")
+    end
+  end,
 }
 
 local function harpoon_sorter()
@@ -414,23 +356,21 @@ local opts = {
     end,
   },
   components = {
-    -- components.sidebar_open,
-    components.sep.left,
-    components.space,
-    components.devicon,
-    components.unique_prefix,
-    components.filename,
-    components.space,
-    components.diagnostics,
-    components.two_spaces,
-    components.close_or_unsaved,
-    components.space,
-    components.sep.right,
-    components.padding,
+    Separator.left,
+    Space,
+    Devicon,
+    UniquePrefix,
+    Filename,
+    Space,
+    Diagnostics,
+    Space,
+    CloseOrUnsaved,
+    Space,
+    Separator.right,
+    Padding,
   },
   rhs = {
-    components.run,
-    -- components.clock,
+    Debug,
   },
   mappings = {
     disable_mouse = false,
@@ -483,10 +423,9 @@ local opts = {
         end,
         bg = "TabLine",
       },
-      components.sidebar_open,
+      SidebarOpen,
     },
   },
 }
 
 require("cokeline").setup(opts)
--- require("cokeline").setup()
