@@ -99,7 +99,7 @@ return {
     -- cmd = "Glance",
   },
   {
-    "dgagn/diagflow.nvim",
+    "willothy/diagflow.nvim",
     config = function()
       require("configs.lsp.diagflow")
     end,

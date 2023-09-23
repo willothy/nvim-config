@@ -2,8 +2,9 @@ local icons = willothy.icons
 
 local opts = {
   placement = "top",
-  scope = "line",
-  show_sign = false,
+  -- scope = "line",
+  scope = "node",
+  show_sign = true,
   update_event = {
     "DiagnosticChanged",
     "BufReadPost",
