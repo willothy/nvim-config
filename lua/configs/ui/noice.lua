@@ -11,10 +11,10 @@ local border_style = {
 
 require("noice").setup({
   status = {
-    progress = {
-      event = "lsp",
-      kind = "progress",
-    },
+    -- progress = {
+    --   event = "lsp",
+    --   kind = "progress",
+    -- },
   },
   presets = {
     long_message_to_split = true,
