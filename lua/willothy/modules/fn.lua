@@ -124,4 +124,47 @@ function M.make_clickable(fn, text)
   return ("%%%s@%s@%s%%X"):format(id, handler, text)
 end
 
+local Range = function(start_row, start_col, end_row, end_col)
+  return {
+    start_row = start_row,
+    start_col = start_col,
+    end_row = end_row,
+    end_col = end_col,
+
+    contains = function(self, other)
+      return self.start_row <= other.start_row
+        -- and self.start_col <= other.start_col
+        and self.end_row >= other.end_row
+      -- and self.end_col >= other.end_col
+    end,
+  }
+end
+
+function M.diagnostics()
+  local buf = vim.api.nvim_get_current_buf()
+  local win = vim.api.nvim_get_current_win()
+  local cursor = vim.api.nvim_win_get_cursor(win)
+
+  local node = vim.treesitter.get_node({
+    bufnr = buf,
+    pos = {
+      cursor[1] - 1,
+      cursor[2],
+    },
+  })
+  if not node then
+    return
+  end
+  local range = Range(vim.treesitter.get_node_range(node))
+
+  return vim
+    .iter(vim.diagnostic.get(buf))
+    :filter(function(diag)
+      local diag_range =
+        Range(diag.lnum, diag.col, diag.end_lnum, diag.end_col)
+      return range:contains(diag_range)
+    end)
+    :totable()
+end
+
 return M

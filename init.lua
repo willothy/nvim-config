@@ -4,6 +4,11 @@ if vim.g.neovide then
   vim.o.guifont = "FiraCode Nerd Font:h10"
 end
 
+local function test()
+  -- todo
+  local x
+end
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
