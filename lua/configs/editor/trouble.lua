@@ -17,13 +17,9 @@ trouble.setup({
 
 local view = require("trouble.view")
 local update = view.update
-local create = view.create
 view.update = function(self, opts)
   update(self, opts)
-  vim.b[self.buf].trouble_mode = opts.mode
-end
-view.create = function(opts)
-  local buf = create(opts)
-  vim.b[buf.buf].trouble_mode = opts.mode
-  return buf
+  if opts and opts.mode then
+    vim.b[self.buf].trouble_mode = opts.mode
+  end
 end
