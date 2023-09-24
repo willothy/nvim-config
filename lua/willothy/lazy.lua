@@ -11,10 +11,10 @@ return {
     require("willothy.keymap")
 
     ---@diagnostic disable-next-line: duplicate-set-field
-    vim.ui.select = function(...)
-      require("telescope").load_extension("ui-select")
-      vim.ui.select(...)
-    end
+    -- vim.ui.select = function(...)
+    --   require("telescope").load_extension("ui-select")
+    --   vim.ui.select(...)
+    -- end
 
     vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" })
 
