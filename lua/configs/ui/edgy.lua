@@ -308,7 +308,7 @@ local opts = {
   animate = {
     enabled = true,
     fps = 60,
-    cps = 180,
+    cps = 160,
     on_begin = function()
       vim.g.minianimate_disable = true
     end,
@@ -317,6 +317,22 @@ local opts = {
     end,
   },
 }
+
+local A = require("edgy.animate")
+
+local timer
+A.schedule = function()
+  if not (timer and timer:is_active()) then
+    timer = vim.defer_fn(function()
+      if A.animate() then
+        vim.g.minianimate_disable = true
+        A.schedule()
+      else
+        vim.g.minianimate_disable = false
+      end
+    end, 1000 / opts.animate.fps)
+  end
+end
 
 local V = require("edgy.view")
 ---@param view Edgy.View.Opts
