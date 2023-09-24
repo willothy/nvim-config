@@ -80,9 +80,9 @@ return {
     dependencies = {
       "kevinhwang91/promise-async",
     },
-    config = function()
-      require("configs.lsp.ufo")
-    end,
+    opts = {
+      fold_virt_text_handler = vim.F.if_nil,
+    },
   },
   {
     "jose-elias-alvarez/null-ls.nvim",
