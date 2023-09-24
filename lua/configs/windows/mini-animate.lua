@@ -90,3 +90,4 @@ anim.setup({
     subresize = subresize(easing.ease_out),
   },
 })
+vim.api.nvim_exec_autocmds("WinScrolled", {})
