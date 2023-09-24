@@ -22,21 +22,14 @@ require("nvim-treesitter.configs").setup({
     "jsonc",
     "json",
   },
-  -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
-  -- Automatically install missing parsers when entering buffer
-  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
   auto_install = true,
   highlight = {
-    -- `false` will disable the whole extension
     enable = true,
     disable = {
-      "lua", -- lua treesitter highlight is buggy
       "css",
       "scss",
     },
-    -- list of language that will be disabled
-    -- additional_vim_regex_highlighting = true,
     additional_vim_regex_highlighting = false,
   },
   indent = {
@@ -62,16 +55,6 @@ require("nvim-treesitter.configs").setup({
     },
     swap = {
       enable = true,
-      swap_next = {
-        -- ["]z"] = { query = "@scope", desc = "swap" },
-        -- ["]z"] = {
-        --   query = "@field.outer",
-        --   desc = "Select language scope",
-        -- },
-      },
-      swap_previous = {
-        -- ["[z"] = { query = "(field) @field", desc = "swap" },
-      },
     },
     move = {
       enable = true,

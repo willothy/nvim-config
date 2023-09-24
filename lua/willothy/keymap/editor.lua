@@ -23,6 +23,12 @@ local objects = {
   s = "sentence",
   F = "function",
   p = "paragraph",
+  d = {
+    function()
+      require("various-textobjs").diagnostic()
+    end,
+    "diagnostic",
+  },
   f = {
     function()
       require("nvim-treesitter.textobjects.select").select_textobject(
@@ -59,6 +65,15 @@ require("which-key").register({
     },
   },
 }, { mode = modes.non_editing })
+
+register({
+  ["<CR>"] = bind("wildfire", "init_selection"):with_desc("wildfire: init"),
+}, modes.normal)
+
+register({
+  ["<CR>"] = bind("wildfire", "node_incremental"):with_desc("wildfire: init"),
+  ["<BS>"] = bind("wildfire", "node_decremental"):with_desc("wildfire: init"),
+}, { "x", "v" })
 
 register({
   w = bind("spider", "motion", "w"):with_desc("which_key_ignore"),

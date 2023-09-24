@@ -81,7 +81,7 @@ return {
       "IndianBoy42/tree-sitter-just",
       "chrisgrieser/nvim-various-textobjs",
     },
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     config = function()
       require("configs.editor.treesitter")
     end,
@@ -133,7 +133,7 @@ return {
   {
     "willothy/savior.nvim",
     config = true,
-    event = "User ExtraLazy",
+    event = { "InsertEnter", "TextChanged" },
   },
   {
     "gbprod/yanky.nvim",
@@ -152,11 +152,10 @@ return {
   {
     -- "echasnovski/mini.files",
     "willothy/mini.files",
-    -- dir = "~/projects/lua/mini.files/",
     config = function()
       require("configs.editor.mini-files")
     end,
-    event = "User ExtraLazy",
+    event = "CmdlineEnter",
   },
   -- SESSIONS / PROJECTS --
   {
@@ -184,8 +183,7 @@ return {
   -- TERMINAL --
   {
     "akinsho/toggleterm.nvim",
-    -- cmd = "ToggleTerm",
-    event = "User ExtraLazy",
+    event = "CmdlineEnter",
     config = function()
       require("configs.terminal.toggleterm")
     end,
@@ -205,8 +203,7 @@ return {
   },
   {
     "desdic/greyjoy.nvim",
-    event = "User ExtraLazy",
-    -- cmd = "Greyjoy",
+    event = "CmdlineEnter",
     config = function()
       require("configs.terminal.greyjoy")
     end,
@@ -238,7 +235,7 @@ return {
     config = function()
       require("configs.navigation.portal")
     end,
-    -- cmd = "Portal",
+    event = "CmdlineEnter",
   },
   {
     "chrisgrieser/nvim-spider",
@@ -253,8 +250,13 @@ return {
   },
   {
     "SUSTech-data/wildfire.nvim",
-    event = "User ExtraLazy",
-    config = true,
+    opts = {
+      keymaps = {
+        init_selection = false,
+        node_incremental = false,
+        node_decremental = false,
+      },
+    },
   },
   {
     "abecodes/tabout.nvim",
@@ -283,7 +285,7 @@ return {
     "sindrets/diffview.nvim",
     config = true,
     -- cmd = "DiffviewOpen",
-    event = "User ExtraLazy",
+    event = "CmdlineEnter",
   },
   {
     "akinsho/git-conflict.nvim",
@@ -294,10 +296,7 @@ return {
   },
   {
     "NeogitOrg/neogit",
-    -- "cristiansofronie/neogit", -- neogit/neogit#803
-    -- branch = "fix_garbage_printing",
-    -- cmd = "Neogit",
-    event = "User ExtraLazy",
+    event = "CmdlineEnter",
     config = function()
       require("configs.git.neogit")
     end,
