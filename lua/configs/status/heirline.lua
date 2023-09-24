@@ -364,11 +364,9 @@ local Git = (
       end,
     },
     condition = function(self)
-      -- if vim.bo.buftype == "terminal" then
-      --   return false
-      -- end
       return (
         self.buf
+        and vim.api.nvim_buf_is_valid(self.buf)
         and (
           vim.b[self.buf].gitsigns_head or vim.b[self.buf].gitsigns_status_dict
         )
