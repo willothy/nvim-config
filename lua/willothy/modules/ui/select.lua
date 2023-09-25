@@ -24,9 +24,9 @@ function M.ui_select(items, opts, on_choice)
         text = opts.format_item(item)
       end
       local virt_text
-      if text:match("%(.*%)%s*$") then
-        virt_text = text:match("%((.*)%)")
-        text = text:gsub("%(.*%)%s*$", "")
+      if string.match(text, "%(.*%)%s*$") then
+        virt_text = string.match(text, "%((.*)%)")
+        text = string.gsub(text, "%(.*%)%s*$", "")
       end
       return dropbar_menu_entry_t:new({
         virt_text = virt_text
@@ -36,6 +36,21 @@ function M.ui_select(items, opts, on_choice)
             icon = " ",
             icon_hl = "Special",
             name = text,
+            preview = function(self)
+              if opts.preview then
+                opts.preview(self, item, idx)
+              end
+            end,
+            preview_restore_view = function(self)
+              if opts.preview_restore_view then
+                opts.preview_restore_view(self, item, idx)
+              end
+            end,
+            preview_restore_hl = function(self)
+              if opts.preview_restore_hl then
+                opts.preview_restore_hl(self, item, idx)
+              end
+            end,
             on_click = function(self)
               self.entry.menu:close()
               vim.schedule(function()

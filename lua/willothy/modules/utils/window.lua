@@ -139,9 +139,8 @@ function M.close_all()
   )
 end
 
-function M.select_float()
+function M.select()
   local wins = M.iter()
-    :filter(M.is_float)
     :filter(M.is_focusable)
     :map(function(win)
       local buf = vim.api.nvim_win_get_buf(win)
@@ -177,7 +176,33 @@ function M.select_float()
     return
   end
 
-  vim.ui.select(wins, {}, function(item)
+  vim.ui.select(wins, {
+    format_item = function(item)
+      return item.name ~= "" and item.name or item.ft
+    end,
+    preview = function(self, item)
+      item._cache_winhl = vim.wo[item.win].winhl
+      local winhl = {
+        Normal = "Visual",
+        NormalFloat = "Visual",
+        FloatBorder = "Visual",
+        FloatTitle = "Visual",
+        EdgyTitle = "Visual",
+      }
+      vim.wo[item.win].winhl = table.concat(
+        vim
+          .iter(winhl)
+          :map(function(k, v)
+            return k .. ":" .. v
+          end)
+          :totable(),
+        ","
+      )
+    end,
+    preview_restore_view = function(self, item)
+      vim.wo[item.win].winhl = item._cache_winhl
+    end,
+  }, function(item)
     if vim.api.nvim_win_is_valid(item.win) then
       vim.api.nvim_set_current_win(item.win)
     else
@@ -237,7 +262,10 @@ end
 ---@param fn fun(conf: vim.api.keyset.float_config)
 function M.update_config(win, fn)
   local config = vim.api.nvim_win_get_config(win)
-  fn(config)
+  local res = fn(config)
+  if res ~= nil then
+    config = res
+  end
   vim.api.nvim_win_set_config(win, config)
 end
 
