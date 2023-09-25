@@ -53,8 +53,11 @@ function M.ui_select(items, opts, on_choice)
     math.max(
       vim
         .iter(entries)
-        :map(function(e)
-          return math.max(e:displaywidth(), e.virt_text and #e.virt_text or 0)
+        :map(function(entry)
+          return math.max(
+            entry:displaywidth(),
+            entry.virt_text and (vim.fn.strlen(entry.virt_text) + 2) or 0
+          )
         end)
         :fold(0, math.max),
       opts.prompt and (vim.fn.strcharlen(opts.prompt) + 2) or 0,
@@ -63,22 +66,31 @@ function M.ui_select(items, opts, on_choice)
     math.floor(vim.o.columns / 2)
   )
 
+  local height = math.max(
+    vim.iter(entries):fold(0, function(acc, entry)
+      return acc + (entry.virt_text and 2 or 1)
+    end),
+    3
+  )
+
   local menu = dropbar_menu_t:new({
     entries = entries,
     prev_win = vim.api.nvim_get_current_win(),
     win_configs = {
       relative = "cursor",
       title = opts.prompt,
+      row = 1,
+      col = 1,
       width = width,
-      height = math.max(#entries, 3) * 2,
+      height = height,
       border = opts.prompt and {
         " ",
         " ",
         " ",
         "",
-        "",
-        "",
-        "",
+        " ",
+        " ",
+        " ",
         "",
       },
       title_pos = opts.prompt and "center",
@@ -94,6 +106,7 @@ function M.ui_select(items, opts, on_choice)
   end
 
   for line, entry in vim.iter(entries):enumerate() do
+    ---@cast entry dropbar_menu_entry_t
     if entry.virt_text then
       vim.api.nvim_buf_set_extmark(
         buf,
@@ -102,7 +115,10 @@ function M.ui_select(items, opts, on_choice)
         0,
         {
           virt_lines = {
-            { { "\t", "NormalFloat" }, { entry.virt_text, "Comment" } },
+            {
+              { " ", entry.components[1].name_hl },
+              { entry.virt_text, "Comment" },
+            },
           },
         }
       )
