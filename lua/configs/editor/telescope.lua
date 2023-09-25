@@ -70,9 +70,6 @@ t.setup({
     },
   }),
   extensions = {
-    ["ui-select"] = {
-      require("telescope.themes").get_cursor({}),
-    },
     file_browser = {
       theme = "ivy",
       mappings = {
@@ -159,7 +156,6 @@ local extensions = {
   "menufacture",
   "fzf",
   "neoclip",
-  "ui-select",
   "smart_history",
   "file_browser",
   -- "fzf_writer", -- currently broken

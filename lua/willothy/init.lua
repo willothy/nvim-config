@@ -101,6 +101,7 @@ willothy.ui = module("ui")
 willothy.ui.scrollbar = lazy("scrollbar", "ui")
 willothy.ui.scrolleof = lazy("scrolleof", "ui")
 willothy.ui.float_drag = lazy("lsp_status", "ui")
+willothy.ui.select = lazy("select", "ui")
 
 willothy.hydras = module("hydras")
 willothy.hydras.git = lazy("git", "hydras")

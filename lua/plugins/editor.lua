@@ -121,7 +121,6 @@ return {
       "debugloop/telescope-undo.nvim",
       "dhruvmanila/browser-bookmarks.nvim",
       "nvim-telescope/telescope-frecency.nvim",
-      "nvim-telescope/telescope-ui-select.nvim",
       "nvim-telescope/telescope-smart-history.nvim",
       -- "nvim-telescope/telescope-fzf-writer.nvim", -- cool but currently broken
     },
