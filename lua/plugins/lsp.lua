@@ -92,13 +92,6 @@ return {
     event = "User ExtraLazy",
   },
   {
-    "dnlhc/glance.nvim",
-    config = function()
-      require("configs.lsp.glance")
-    end,
-    -- cmd = "Glance",
-  },
-  {
     "dgagn/diagflow.nvim",
     -- "willothy/diagflow.nvim",
     config = function()
