@@ -29,7 +29,8 @@ function M.ui_select(items, opts, on_choice)
         text = text:gsub("%(.*%)%s*$", "")
       end
       return dropbar_menu_entry_t:new({
-        virt_text = virt_text,
+        virt_text = virt_text
+          and { { " ", "NormalFloat" }, { virt_text, "Comment" } },
         components = {
           dropbar_symbol_t:new({
             icon = " ",
@@ -49,6 +50,14 @@ function M.ui_select(items, opts, on_choice)
     end)
     :totable()
 
+  local function virt_text_width(chunks)
+    local total = 0
+    for _, chunk in ipairs(chunks) do
+      total = total + vim.fn.strcharlen(chunk[1])
+    end
+    return total
+  end
+
   local width = math.min(
     math.max(
       vim
@@ -56,7 +65,7 @@ function M.ui_select(items, opts, on_choice)
         :map(function(entry)
           return math.max(
             entry:displaywidth(),
-            entry.virt_text and (vim.fn.strlen(entry.virt_text) + 2) or 0
+            entry.virt_text and (virt_text_width(entry.virt_text) + 2) or 0
           )
         end)
         :fold(0, math.max),
@@ -98,32 +107,6 @@ function M.ui_select(items, opts, on_choice)
   })
 
   menu:open()
-
-  local buf = menu.buf
-
-  if not buf then
-    return
-  end
-
-  for line, entry in vim.iter(entries):enumerate() do
-    ---@cast entry dropbar_menu_entry_t
-    if entry.virt_text then
-      vim.api.nvim_buf_set_extmark(
-        buf,
-        vim.api.nvim_create_namespace("dropbar"),
-        line - 1,
-        0,
-        {
-          virt_lines = {
-            {
-              { " ", entry.components[1].name_hl },
-              { entry.virt_text, "Comment" },
-            },
-          },
-        }
-      )
-    end
-  end
 end
 
 M.setup = function()
