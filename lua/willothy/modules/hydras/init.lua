@@ -34,13 +34,11 @@ M.Hydra = function(hintfunc, config)
   local ready = false
   if config.body and config.body ~= "" then
     vim.keymap.set(config.mode, config.body, function()
-      if this == nil then
-        config.body = nil
-        if hintfunc then
-          config.hint = hintfunc(config)
-        end
-        this = require("hydra")(config)
+      config.body = nil
+      if hintfunc and config.hint == nil then
+        config.hint = hintfunc(config)
       end
+      this = require("hydra")(config)
       this:activate()
     end)
     local ok, wk = pcall(require, "which-key")
@@ -54,6 +52,8 @@ M.Hydra = function(hintfunc, config)
       }, {})
     end
   else
+  end
+  if type(this) ~= "table" then
     this = setmetatable({}, {
       __index = function(_, k)
         if not ready then

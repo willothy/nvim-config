@@ -2,6 +2,7 @@ vim.loader.enable()
 
 if vim.g.neovide then
   vim.o.guifont = "FiraCode Nerd Font:h10"
+  vim.o.guifont = "FiraCode Nerd Font:h10"
 end
 
 local function test()
