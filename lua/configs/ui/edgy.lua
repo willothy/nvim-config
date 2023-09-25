@@ -347,4 +347,5 @@ function V.new(view, edgebar)
   self.opening = false
   return self
 end
+
 require("edgy").setup(opts)

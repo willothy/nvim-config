@@ -25,6 +25,9 @@ function Window:_create_buf(temp)
     return self.buf
   end
   self.buf = vim.api.nvim_create_buf(false, true)
+  -- vim.keymap.set("n", "<LeftMouse>", function() end, {
+  --   buffer = self.buf,
+  -- })
   if temp then
     vim.api.nvim_create_autocmd("BufLeave", {
       buffer = self.buf,
@@ -59,7 +62,7 @@ function Window:open()
   end
   local buf = self:_create_buf()
   self.buf = buf
-  local win = vim.api.nvim_open_win(buf, true, self.config)
+  local win = vim.api.nvim_open_win(buf, false, self.config)
   self.id = win
   M.windows[win] = self
 end
@@ -112,12 +115,12 @@ local w1 = Window.new({
   row = math.floor((vim.o.lines - 10) / 2),
   style = "minimal",
   zindex = 50,
+  focusable = false,
 })
 
 function w1:hover(row, col)
   for linenr, line in ipairs(self._lines or {}) do
     for _, text in ipairs(line._texts or {}) do
-      vim.print(linenr .. " " .. row)
       if linenr == row then
         text:set(text._content, "YankyYanked")
       else
@@ -127,7 +130,6 @@ function w1:hover(row, col)
   end
 end
 w1:open()
-w1:set_option("virtualedit", "all")
 w1:_render({
   Line({ Text("Test", "NormalFloat") }),
   Line({ Text("Test2", "NormalFloat") }),
@@ -144,10 +146,11 @@ local w2 = Window.new({
   -- row = math.floor((vim.o.lines - 10) / 2),
   style = "minimal",
   zindex = 201,
+  focusable = false,
 })
-function w2:click(_, _, btn)
-  vim.print("clicked")
-end
+-- function w2:click(_, _, btn)
+--   vim.print("clicked")
+-- end
 function w2:hover(row, _, btn)
   local line = (self._lines or {})[1]
   for _, text in ipairs(line._texts or {}) do
@@ -165,6 +168,16 @@ w2:_render({
 })
 w2:set_option("winhl", "Normal:NormalNC")
 
+-- vim.keymap.set("n", "<LeftMouse>", function()
+--   local mouse = vim.fn.getmousepos()
+--   local win = M.windows[mouse.winid]
+--   if win then
+--     win:click(mouse.winrow, mouse.wincol, "l")
+--   else
+--     vim.api.nvim_win_set_cursor(mouse.winid, { mouse.line, mouse.column - 1 })
+--   end
+-- end, { noremap = true })
+
 vim.on_key(function(key)
   if key == vim.keycode("<MouseMove>") then
     local mouse = vim.fn.getmousepos()
@@ -180,11 +193,6 @@ vim.on_key(function(key)
       M.windows[mouse.winid]:_render()
     else
       M.hovered = nil
-    end
-  elseif key == vim.keycode("<LeftMouse>") then
-    local mouse = vim.fn.getmousepos()
-    if M.windows[mouse.winid] then
-      M.windows[mouse.winid]:click(mouse.winrow, mouse.wincol, "l")
     end
   end
 end)
