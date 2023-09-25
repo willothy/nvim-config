@@ -118,6 +118,7 @@ function M.ui_select(items, opts, on_choice)
         "",
       },
       title_pos = opts.prompt and "center",
+      zindex = 200,
     },
   })
 
