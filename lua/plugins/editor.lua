@@ -216,6 +216,13 @@ return {
   },
   -- NAVIGATION --
   {
+    "LeonHeidelbach/trailblazer.nvim",
+    config = function()
+      require("configs.navigation.trailblazer")
+    end,
+    event = "User ExtraLazy",
+  },
+  {
     "folke/flash.nvim",
     config = function()
       require("configs.navigation.flash")
