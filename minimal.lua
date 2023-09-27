@@ -1,3 +1,5 @@
+vim.g.mapleader = " "
+
 local tmp = vim.env.TMPDIR
   or vim.env.TEMPDIR
   or vim.env.TMP
@@ -7,13 +9,30 @@ local data = tmp .. "/" .. (vim.env.NVIM_APPNAME or "nvim")
 local packages_root = data .. "/site"
 local cloned_root = packages_root .. "/pack/packages/start"
 
+local data_dir = vim.fn.stdpath("data")
+vim.env.PATH = vim.env.PATH .. ":" .. data_dir .. "/mason/bin"
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  once = true,
+  callback = function()
+    pcall(vim.treesitter.start)
+    vim.lsp.start({
+      name = "lua_ls",
+      cmd = { "lua-language-server" },
+      root_dir = vim.fn.getcwd(),
+      filetypes = { "lua" },
+    })
+  end,
+})
+
 local plugins = {
-  -- {
-  --   "Bekaboo/dropbar.nvim",
-  --   config = function()
-  --     require("dropbar").setup()
-  --   end,
-  -- },
+  {
+    "Bekaboo/dropbar.nvim",
+    config = function()
+      require("dropbar").setup()
+      vim.keymap.set("n", "<leader>b", require("dropbar.api").pick)
+    end,
+  },
   -- {
   --   "willothy/nvim-cokeline",
   --   config = function()
