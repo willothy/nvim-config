@@ -15,6 +15,7 @@ end
 --- Create an async function that can be called from a synchronous context.
 --- Cannot return values as it is non-blocking.
 --- @param fn fun(...)
+--- @return fun(...)
 local function void(fn)
   return function(...)
     resume(create(fn), ...)
@@ -35,6 +36,7 @@ end
 --- Wrap a callback-style function to be async.
 --- @param fn fun(...):...
 --- @param argc integer
+--- @return async fun(...):...
 local function wrap(fn, argc)
   return function(...)
     local args = { ... }
@@ -44,8 +46,16 @@ local function wrap(fn, argc)
 end
 
 --- Yields to the Neovim scheduler
+--- @async
 local function schedule()
   return yield(vim.schedule(callback()))
+end
+
+--- Yields the current task, resuming when the specified timeout has elapsed.
+--- @async
+--- @param timeout integer
+local function defer(timeout)
+  yield(vim.defer_fn(callback(), timeout))
 end
 
 --- Async vim.system
@@ -55,24 +65,43 @@ local system = wrap(vim.system, 3)
 --- Async vim.uv wrapper
 local uv = {}
 
---- @type async fun(path: string, entries: integer): luv_dir_t
+--- @type async fun(path: string, entries: integer): string?, luv_dir_t
 uv.fs_opendir = function(path, entries)
   ---@diagnostic disable-next-line: param-type-mismatch
-  return select(2, yield(vim.uv.fs_opendir(path, callback(), entries)))
+  return yield(vim.uv.fs_opendir(path, callback(), entries))
 end
 
---- @type async fun(dir: luv_dir_t): uv.aliases.fs_readdir_entries[]
+--- @type async fun(dir: luv_dir_t): string?, uv.aliases.fs_readdir_entries[]
 uv.fs_readdir = wrap(vim.uv.fs_readdir, 2)
 
 -- run(function()
---   -- schedule()
---   -- local output = system({ "ls" }, {})
---   -- vim.notify(output.stdout)
---   return system({ "ls" }, {}).stdout
+--   -- schedule()           -- wait until the nvim api is safe to call
+--   -- system({ "ls" }, {}) -- run a command and yield until it's done
+--   -- defer(2000)          -- wait 2 seconds and then resume the task
+--
+--   local err, dir
+--   local entries = {}
+--   err, dir = uv.fs_opendir(vim.fn.getcwd() or vim.uv.cwd() or vim.env.PWD, 5)
+--   if err then
+--     return "could not open dir"
+--   end
+--   local current
+--   repeat
+--     err, current = uv.fs_readdir(dir)
+--     if current then
+--       for _, entry in ipairs(current) do
+--         table.insert(entries, entry)
+--       end
+--     end
+--   until err or not current
+--   if err then
+--     return "could not read dir"
+--   end
+--   return entries
 -- end, function(x)
 --   if type(x) == "table" then
 --     vim.notify(vim.inspect(x))
---   else
+--   elseif x then
 --     vim.notify(x)
 --   end
 -- end)
@@ -83,6 +112,7 @@ return {
   run = run,
   wrap = wrap,
   schedule = schedule,
+  defer = defer,
   system = system,
   uv = uv,
 }
