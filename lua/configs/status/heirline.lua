@@ -354,9 +354,12 @@ local Git = (
       pattern = { "ExtraLazy", "UpdateHeirlineComponents" },
       callback = function(self)
         if
-          vim.iter(require("edgy.editor").list_wins().main):find(function(win)
-            return win == vim.api.nvim_get_current_win()
-          end)
+          package.loaded["edgy"]
+          and vim
+            .iter(require("edgy.editor").list_wins().main)
+            :find(function(win)
+              return win == vim.api.nvim_get_current_win()
+            end)
         then
           self.buf = vim.api.nvim_get_current_buf()
           self:fetch()

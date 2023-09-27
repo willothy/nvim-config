@@ -1,6 +1,7 @@
 local anyline = false
 
 return {
+  "MunifTanjim/nui.nvim",
   -- STARTUP --
   {
     "echasnovski/mini.starter",
