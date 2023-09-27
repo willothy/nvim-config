@@ -65,7 +65,7 @@ M.set_browser = willothy.async.void(function()
       return name
     end)
     :totable()
-  local ok, item = willothy.async.wrap(vim.ui.select)(options, {
+  local ok, item = willothy.async.wrap(vim.ui.select, 3)(options, {
     prompt = "Browsers",
   })
   if not ok or not item then
