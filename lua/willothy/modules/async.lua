@@ -92,7 +92,9 @@ function M.void(func)
 end
 
 ---@type fun(cmd: string[], opts: table): vim.SystemCompleted
-M.system = M.wrap(vim.system)
+M.system = M.wrap(function(cmd, opts, cb)
+  vim.system(cmd, opts, cb)
+end)
 
 M.uv = {}
 

@@ -177,6 +177,7 @@ return {
   {
     -- "Bekaboo/dropbar.nvim",
     "willothy/dropbar.nvim",
+    branch = "feat-menu-virt-text",
     -- dir = "~/projects/lua/dropbar.nvim/",
     config = function()
       require("configs.status.dropbar")
