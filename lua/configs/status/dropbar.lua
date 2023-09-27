@@ -98,13 +98,15 @@ dropbar.setup({
     },
   },
   menu = {
-    scrolloff = 5,
     keymaps = {
       q = close,
       ["<Esc>"] = close,
     },
     quick_navigation = true,
     win_configs = {},
+    scrollbar = {
+      floating = true,
+    },
   },
   fzf = {
     prompt = "%#GitSignsAdd#  ",
