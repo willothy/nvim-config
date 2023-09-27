@@ -132,4 +132,83 @@ M.uv.fs_readdir = M.wrap(vim.uv.fs_readdir)
 --   vim.notify(vim.inspect(res))
 -- end)
 
+-- Experiment with EXTREMELY simple async:
+--
+-- local yield = coroutine.yield
+-- local resume = coroutine.resume
+-- local running = coroutine.running
+-- local create = coroutine.create
+--
+-- --- Create a callback function that resumes the current or specified coroutine when called.
+-- local callback = function(co)
+--   co = co or running()
+--   return function(...)
+--     resume(co, ...)
+--   end
+-- end
+--
+-- --- Create an async function that can be called from a synchronous context.
+-- --- Cannot return values as it is non-blocking.
+-- local void = function(fn)
+--   return function(...)
+--     resume(create(fn), ...)
+--   end
+-- end
+--
+-- --- Async vim.system
+-- local system = function(cmd, opts)
+--   return yield(vim.system(cmd, opts, callback()))
+-- end
+--
+-- local uv = {}
+--
+-- ---@async
+-- ---@param path string
+-- ---@param entries integer
+-- ---@return luv_dir_t
+-- uv.fs_opendir = function(path, entries)
+--   ---@diagnostic disable-next-line: param-type-mismatch
+--   return select(2, yield(vim.uv.fs_opendir(path, callback(), entries)))
+-- end
+--
+-- ---@async
+-- ---@param dir luv_dir_t
+-- ---@return uv.aliases.fs_readdir_entries[]
+-- uv.fs_readdir = function(dir)
+--   return select(2, yield(vim.uv.fs_readdir(dir, callback())))
+-- end
+--
+-- ---@async
+-- ---@param directory string
+-- ---@return uv.aliases.fs_readdir_entries[]
+-- local function scandir(directory)
+--   local dir = uv.fs_opendir(directory or vim.uv.cwd(), 10)
+--
+--   local res = {}
+--
+--   local entries
+--   repeat
+--     entries = uv.fs_readdir(dir)
+--     vim.iter(entries or {}):each(function(entry)
+--       table.insert(res, entry)
+--     end)
+--   until not entries
+--
+--   return res
+-- end
+--
+-- --- Yields to the Neovim scheduler
+-- local schedule = function()
+--   return yield(vim.schedule(callback()))
+-- end
+--
+-- local main = void(function()
+--   -- schedule()
+--   -- local output = system({ "ls" }, {})
+--   -- vim.notify(output.stdout)
+--   -- vim.notify(vim.inspect(scandir()))
+-- end)
+--
+-- main()
+
 return M

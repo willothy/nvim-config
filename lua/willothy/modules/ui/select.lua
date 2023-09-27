@@ -33,7 +33,7 @@ function M.ui_select(items, opts, on_choice)
           and { { " ", "NormalFloat" }, { virt_text, "Comment" } },
         components = {
           dropbar_symbol_t:new({
-            icon = " ",
+            icon = " ",
             icon_hl = "Special",
             name = text,
             preview = function(self)
