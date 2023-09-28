@@ -1,5 +1,12 @@
 return {
   {
+    "Wansmer/symbol-usage.nvim",
+    config = function()
+      require("configs.lsp.symbol-usage")
+    end,
+    event = "LspAttach",
+  },
+  {
     "willothy/hollywood.nvim",
     event = "LspAttach",
     -- dir = "~/projects/lua/hollywood.nvim",
