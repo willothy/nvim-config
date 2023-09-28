@@ -88,16 +88,9 @@ register({
     bind("spectre", "toggle"),
     "search/replace",
   },
-  ["<S-Esc>"] = {
-    bind("trouble", "toggle", "document_diagnostics"),
-    "diagnostics",
-  },
   v = {
     name = "visual",
   },
-  K = bind("rust-tools.hover_actions", "hover_actions"):with_desc(
-    "lsp: hover"
-  ),
 }, modes.non_editing)
 
 require("which-key").register({

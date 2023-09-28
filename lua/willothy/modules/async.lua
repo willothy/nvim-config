@@ -178,12 +178,50 @@ end
 local lsp = {}
 
 --- Async wrapper around `vim.lsp.buf_request`.
---- @type async fun(bufnr: integer, method: string, params: table?): { error: lsp.ResponseError, result: any, context: table, config: table? }
+--- @type async fun(bufnr: integer, method: string, params: table?): error: lsp.ResponseError?, result: any, context: lsp.HandlerContext, config: table?
 lsp.buf_request = wrap(vim.lsp.buf_request, 4)
 
 --- Async wrapper around `vim.lsp.buf_request_all`.
 --- @type async fun(bufnr: integer, method: string, params: table?): table<integer, { error: lsp.ResponseError, result: any }>
 lsp.buf_request_all = wrap(vim.lsp.buf_request_all, 4)
+
+lsp.request = {}
+
+lsp.request.references = function(buf, params)
+  return lsp.buf_request(buf, "textDocument/references", params)
+end
+
+lsp.request.definition = function(buf, params)
+  return lsp.buf_request(buf, "textDocument/definition", params)
+end
+
+lsp.request.type_definition = function(buf, params)
+  return lsp.buf_request(buf, "textDocument/typeDefinition", params)
+end
+
+lsp.request.implementation = function(buf, params)
+  return lsp.buf_request(buf, "textDocument/implementation", params)
+end
+
+lsp.request.rename = function(buf, params)
+  return lsp.buf_request(buf, "textDocument/rename", params)
+end
+
+lsp.request.signature_help = function(buf, params)
+  return lsp.buf_request(buf, "textDocument/signatureHelp", params)
+end
+
+lsp.request.document_symbols = function(buf, params)
+  return lsp.buf_request(buf, "textDocument/documentSymbol", params)
+end
+
+lsp.request.hover = function(buf, params)
+  return lsp.buf_request(buf, "textDocument/hover", params)
+end
+
+lsp.request.inlay_hint = function(buf, params)
+  return lsp.buf_request(buf, "textDocument/inlayHint", params)
+end
 
 --- Wrapper that creates and queues a work request, yields, and resumes the current task with the results.
 --- Must be called from an async context.
@@ -196,13 +234,16 @@ end
 --- @type async fun(cmd: string[], opts: table): vim.SystemCompleted
 local system = wrap(vim.system, 3)
 
--- run(function()
---   return work(function()
---     return 5
---   end)
--- end, function(x)
---   vim.notify(tostring(x))
--- end)
+run(function()
+  return {
+    lsp.request.signature_help(
+      vim.api.nvim_get_current_buf(),
+      vim.lsp.util.make_position_params(vim.api.nvim_get_current_win())
+    ),
+  }
+end, function(data)
+  vim.notify(vim.inspect(data))
+end)
 
 -- run(function()
 --   -- schedule()           -- wait until the nvim api is safe to call
