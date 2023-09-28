@@ -1,64 +1,201 @@
 ---@class Mark
+---@field id integer
 ---@field project string
 ---@field file string
----@field global boolean
 
----@class MarkTable: sqlite_tbl
+---@class Project
+---@field name string
+---@field cwd string
+
+---@class MarksTable: sqlite_tbl
+
+---@class ProjectsTable: sqlite_tbl
 
 ---@class MarkDatabase: sqlite_db
----@field marks MarkTable
+---@field marks MarksTable
+---@field projects ProjectsTable
 
 local sqlite = require("sqlite.db")
 
-local path = (vim.fn.stdpath("data") .. "/databases/marks.sqlite3")
+---@class Marks
+---@field db_path string
+---@field private _db MarkDatabase
+---@field private _projects ProjectsTable
+---@field private _marks MarksTable
+local M = {}
 
----@type MarkDatabase
-local db = sqlite({
-  uri = path,
-  marks = {
-    file = { "text", required = true },
-    project = { "text", required = false },
-    global = { "boolean", required = true },
-  },
-  opts = {},
-})
+M.db_path = vim.fn.stdpath("data") .. "/databases/marks.sqlite3"
 
-local marks = db.marks
+function M.ensure_setup()
+  if not M._db then
+    M.setup()
+  end
+end
 
----@param file string
----@param project string?
-function marks:set(file, project)
-  file = vim.fs.normalize(file)
-  local mark = self:where({
-    project = project,
-    file = file,
-    global = project == nil,
+function M.project_root()
+  M.ensure_setup()
+  local cwd = vim.fn.getcwd(-1)
+  if not cwd then
+    return
+  end
+  local root = vim.fs.find({
+    ".git",
+    "package.json",
+    "Cargo.toml",
+  }, {
+    upward = true,
+    stop = vim.uv.os_homedir(),
+    path = cwd,
+  })[1]
+  if not root then
+    return
+  end
+  cwd = vim.fs.dirname(root)
+  return cwd
+end
+
+function M.list_projects()
+  M.ensure_setup()
+  ---@diagnostic disable-next-line: missing-fields
+  return M._projects:get({})
+end
+
+function M.current_project()
+  M.ensure_setup()
+  local cwd = M.project_root()
+  if not cwd then
+    return
+  end
+  local current = M._projects:where({
+    cwd = cwd,
   })
-  if not mark then
-    self:insert({
-      file = file,
-      project = project,
-      global = project == nil,
-    })
+  if current then
+    return current
   end
-end
-
----@param project string
----@param file string?
-function marks:delete(project, file)
-  local query = {
-    project = project,
-    global = project == nil,
-  }
-  if file then
-    query.file = vim.fs.normalize(file)
+  local name = vim.fs.basename(cwd)
+  if not name then
+    return
   end
-  self:remove(query)
+  M._projects:insert({
+    name = name,
+    cwd = cwd,
+  })
+  return M._projects:where({
+    cwd = cwd,
+  })
 end
 
-function marks:clear()
-  ---@diagnostic disable-next-line: missing-parameter
-  self:remove()
+function M.list_marks()
+  M.ensure_setup()
+  local current = M.current_project()
+  if not current then
+    return
+  end
+  ---@diagnostic disable-next-line: missing-fields
+  return M._marks:get({
+    where = { project = current.cwd },
+  })
 end
 
-return marks
+function M.create_mark(file)
+  M.ensure_setup()
+  file = file or vim.api.nvim_buf_get_name(0)
+  local current = M.current_project()
+  if not current then
+    return
+  end
+
+  local mark = M._marks:where({
+    project = current.cwd,
+    file = file,
+  })
+
+  if mark then
+    return mark
+  end
+
+  M._marks:insert({
+    project = current.cwd,
+    file = file,
+  })
+  return M._marks:where({
+    project = current.cwd,
+    file = file,
+  })
+end
+
+function M.delete_mark(file)
+  M.ensure_setup()
+  file = file or vim.api.nvim_buf_get_name(0)
+  local current = M.current_project()
+  if not current then
+    return
+  end
+  M._marks:remove({
+    project = current.cwd,
+    file = file,
+  })
+end
+
+function M.toggle_mark(file)
+  M.ensure_setup()
+  file = file or vim.api.nvim_buf_get_name(0)
+  local current = M.current_project()
+  if not current then
+    return
+  end
+  local mark = M._marks:where({
+    project = current.cwd,
+    file = file,
+  })
+  if mark then
+    M._marks:remove(mark)
+    return
+  end
+  M._marks:insert({
+    project = current.cwd,
+    file = file,
+  })
+end
+
+function M.delete_marks()
+  M.ensure_setup()
+  local current = M.current_project()
+  if not current then
+    return
+  end
+  M._marks:remove({ project = current.cwd })
+end
+
+function M.setup(opts)
+  opts = opts or {}
+
+  if opts.db_path then
+    M.db_path = opts.db_path
+  end
+
+  local db_dir = vim.fn.fnamemodify(M.db_path, ":h")
+  if db_dir and not vim.loop.fs_stat(db_dir) then
+    vim.fn.mkdir(db_dir, "p")
+  end
+
+  local db = sqlite({
+    uri = M.db_path,
+    marks = {
+      id = { "integer", primary = true },
+      file = { "text", required = true },
+      project = { "text", required = true, reference = "projects.cwd" },
+    },
+    projects = {
+      name = { "text", required = true },
+      cwd = { "text", required = true, primary = true },
+    },
+    opts = {},
+  })
+
+  M._db = db
+  M._projects = db.projects
+  M._marks = db.marks
+end
+
+return M
