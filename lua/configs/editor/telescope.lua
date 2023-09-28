@@ -39,6 +39,10 @@ local function create_and_add_to_harpoon(prompt_bufnr)
 end
 
 local open_win = function(enter, width, height, row, col, title, border)
+  -- local has_title = type(title) == "string" or type(title) == "table"
+  -- if not has_title then
+  --   vim.print(title)
+  -- end
   local Layout = require("telescope.pickers.layout")
   local bufnr = vim.api.nvim_create_buf(false, true)
   local winid = vim.api.nvim_open_win(bufnr, enter, {
@@ -49,8 +53,8 @@ local open_win = function(enter, width, height, row, col, title, border)
     row = row,
     col = col,
     border = border or "solid",
-    title = title,
-    title_pos = title and "center",
+    title = title and title or nil,
+    title_pos = title and "center" or nil,
   })
 
   return Layout.Window({
@@ -407,7 +411,7 @@ telescope.setup({
   },
   extensions = {
     file_browser = {
-      theme = "ivy",
+      -- theme = "ivy",
       mappings = {
         ["i"] = {
           ["<C-a>"] = add_to_harpoon,
@@ -421,16 +425,12 @@ telescope.setup({
       layout_config = {
         width = vim.o.columns,
       },
-      preview_title = false,
-      results_title = false,
+      sorting_strategy = "ascending",
       prompt_path = true,
-      display_stat = { date = false, size = false },
-      borderchars = {
-        preview = { " ", " ", " ", " ", " ", " ", " ", " " },
-        prompt = { " ", " ", " ", " ", " ", " ", " ", " " },
-        results = { " ", " ", " ", " ", " ", " ", " ", " " },
-      },
+      -- display_stat = { date = false, size = false },
       create_layout = bottom_pane,
+      display_stat = false,
+      -- display_stat = { date = false, size = true, mode = false },
     },
     undo = {
       use_delta = true,

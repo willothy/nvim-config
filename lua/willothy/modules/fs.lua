@@ -4,7 +4,13 @@ local M = {}
 
 M.browsers = {
   telescope = function(target)
-    require("telescope").extensions.file_browser.file_browser({ cwd = target })
+    require("telescope").extensions.file_browser.file_browser({
+      cwd = target,
+      display_stat = {
+        size = true,
+        date = true,
+      },
+    })
   end,
   mini = function(target)
     require("mini.files").open(target)
