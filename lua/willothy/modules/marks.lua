@@ -1,5 +1,6 @@
 ---@class Mark
 ---@field id integer
+---@field ord integer
 ---@field project string
 ---@field file string
 
@@ -94,6 +95,7 @@ function M.list_marks()
   ---@diagnostic disable-next-line: missing-fields
   return M._marks:get({
     where = { project = current.cwd },
+    order_by = { asc = { "ord" } },
   })
 end
 
@@ -117,6 +119,7 @@ function M.create_mark(file)
   M._marks:insert({
     project = current.cwd,
     file = file,
+    ord = #M.list_marks(),
   })
   return M._marks:where({
     project = current.cwd,
@@ -149,12 +152,13 @@ function M.toggle_mark(file)
     file = file,
   })
   if mark then
-    M._marks:remove(mark)
+    M._marks:remove({ id = mark.id })
     return
   end
   M._marks:insert({
     project = current.cwd,
     file = file,
+    ord = #M.list_marks(),
   })
 end
 
@@ -183,12 +187,13 @@ function M.setup(opts)
     uri = M.db_path,
     marks = {
       id = { "integer", primary = true },
+      ord = { "integer", required = true },
       file = { "text", required = true },
       project = { "text", required = true, reference = "projects.cwd" },
     },
     projects = {
-      name = { "text", required = true },
       cwd = { "text", required = true, primary = true },
+      name = { "text", required = true },
     },
     opts = {},
   })
