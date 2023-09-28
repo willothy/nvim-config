@@ -56,7 +56,6 @@ return {
   {
     enabled = not anyline,
     "lukas-reineke/indent-blankline.nvim",
-    branch = "v3",
   },
   {
     "willothy/anyline.nvim",
@@ -161,7 +160,7 @@ return {
   -- STATUS --
   {
     "willothy/nvim-cokeline",
-    branch = "render-cache",
+    -- branch = "render-cache",
     -- dir = "~/projects/lua/cokeline/",
     config = function()
       require("configs.status.cokeline")

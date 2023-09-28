@@ -1,3 +1,5 @@
+local a = require("micro-async")
+
 local M = {}
 
 M.browsers = {
@@ -58,14 +60,14 @@ function M.hijack_netrw()
   })
 end
 
-M.set_browser = willothy.async.void(function()
+M.set_browser = a.void(function()
   local options = vim
     .iter(M.browsers)
     :map(function(name, _)
       return name
     end)
     :totable()
-  local ok, item = willothy.async.wrap(vim.ui.select, 3)(options, {
+  local ok, item = a.wrap(vim.ui.select, 3)(options, {
     prompt = "Browsers",
   })
   if not ok or not item then

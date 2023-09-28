@@ -1,9 +1,9 @@
 vim.g.nvim_ghost_autostart = 0
 
 return {
-  "willothy/futures.nvim",
   "famiu/bufdelete.nvim",
   "jbyuki/venn.nvim",
+  "willothy/micro-async.nvim",
   {
     "willothy/leptos.nvim",
     -- dir = "~/projects/rust/leptos-test/",

@@ -82,7 +82,6 @@ willothy.player = lazy("player")
 willothy.term = lazy("terminals")
 willothy.marks = lazy("marks")
 willothy.event = lazy("event")
-willothy.async = lazy("async")
 
 willothy.utils = module("utils")
 willothy.utils.cursor = lazy("cursor", "utils")

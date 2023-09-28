@@ -117,7 +117,9 @@ register({
   ),
   ["<M-k>"] = bind("moveline", "up"):with_desc("move: up"),
   ["<M-j>"] = bind("moveline", "down"):with_desc("move: down"),
-  ["<C-s>"] = bind(vim.cmd.write):with_desc("save"),
+  ["<C-s>"] = bind(function()
+    vim.cmd.write()
+  end):with_desc("save"),
   -- macros
   ["<C-q>"] = bind("NeoComposer.ui", "toggle_macro_menu"):with_desc(
     "macro: open menu"
