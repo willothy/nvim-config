@@ -26,11 +26,12 @@ end
 --- @param fn fun(...):...:any
 --- @param cb fun(...)
 local function run(fn, cb, ...)
-  local args = { ... }
-  local task = create(function()
-    cb(fn(unpack(args)))
-  end)
-  resume(task)
+  resume(
+    create(function(...)
+      cb(fn(...))
+    end),
+    ...
+  )
 end
 
 --- Wrap a callback-style function to be async.
@@ -57,10 +58,6 @@ end
 local function defer(timeout)
   yield(vim.defer_fn(callback(), timeout))
 end
-
---- Async vim.system
---- @type async fun(cmd: string[], opts: table): vim.SystemCompleted
-local system = wrap(vim.system, 3)
 
 --- Async vim.uv wrapper
 local uv = {}
@@ -107,6 +104,21 @@ uv.fs_mkdir = wrap(vim.uv.fs_mkdir, 3)
 --- @type async fun(path: string, mode: integer): err: string?, success: boolean?
 uv.fs_chmod = wrap(vim.uv.fs_chmod, 3)
 
+--- @type async fun(path: string, uid: integer, gid: integer): err: string?, success: boolean?
+uv.fs_chown = wrap(vim.uv.fs_chown, 4)
+
+--- @type async fun(fd: integer, mode: integer): err: string?, success: boolean?
+uv.fs_fchmod = wrap(vim.uv.fs_fchmod, 3)
+
+--- @type async fun(fd: integer, uid: integer, gid: integer): err: string?, success: boolean?
+uv.fs_fchown = wrap(vim.uv.fs_fchown, 4)
+
+--- @type async fun(address: uv.aliases.getsockname_rtn)
+uv.getnameinfo = wrap(vim.uv.getnameinfo, 2)
+
+--- @type async fun(path: string, new_path: string, flags: uv.aliases.fs_copyfile_flags): err: string?, success: boolean?
+uv.fs_copyfile = wrap(vim.uv.fs_copyfile, 4)
+
 --- @type async fun(fd: integer, atime: integer, mtime: integer): err: string?, success: boolean?
 uv.fs_futime = wrap(vim.uv.fs_futime, 4)
 
@@ -152,6 +164,46 @@ uv.fs_close = wrap(vim.uv.fs_close, 2)
 --- @type async fun(path: string, atime: integer, mtime: integer): err: string?, success: boolean?
 uv.fs_utime = wrap(vim.uv.fs_utime, 4)
 
+--- @type async fun(fn: fun(...:uv.aliases.threadargs):...: uv.aliases.threadargs): luv_work_ctx_t
+uv.new_work = function(fn)
+  return vim.uv.new_work(fn, callback())
+end
+
+--- @type async fun(work: luv_work_ctx_t, ...:uv.aliases.threadargs): ...: uv.aliases.threadargs
+uv.queue_work = function(work, ...)
+  return yield(vim.uv.queue_work(work, ...))
+end
+
+--- Async wrapper for LSP requests
+local lsp = {}
+
+--- Async wrapper around `vim.lsp.buf_request`.
+--- @type async fun(bufnr: integer, method: string, params: table?): { error: lsp.ResponseError, result: any, context: table, config: table? }
+lsp.buf_request = wrap(vim.lsp.buf_request, 4)
+
+--- Async wrapper around `vim.lsp.buf_request_all`.
+--- @type async fun(bufnr: integer, method: string, params: table?): table<integer, { error: lsp.ResponseError, result: any }>
+lsp.buf_request_all = wrap(vim.lsp.buf_request_all, 4)
+
+--- Wrapper that creates and queues a work request, yields, and resumes the current task with the results.
+--- Must be called from an async context.
+--- @type async fun(fn: (fun(...:uv.aliases.threadargs):...: uv.aliases.threadargs), ...: uv.aliases.threadargs):...:uv.aliases.threadargs
+local work = function(fn, ...)
+  return uv.queue_work(uv.new_work(fn), ...)
+end
+
+--- Async vim.system
+--- @type async fun(cmd: string[], opts: table): vim.SystemCompleted
+local system = wrap(vim.system, 3)
+
+-- run(function()
+--   return work(function()
+--     return 5
+--   end)
+-- end, function(x)
+--   vim.notify(tostring(x))
+-- end)
+
 -- run(function()
 --   -- schedule()           -- wait until the nvim api is safe to call
 --   -- system({ "ls" }, {}) -- run a command and yield until it's done
@@ -191,6 +243,8 @@ return {
   wrap = wrap,
   schedule = schedule,
   defer = defer,
-  system = system,
   uv = uv,
+  lsp = lsp,
+  system = system,
+  work = work,
 }
