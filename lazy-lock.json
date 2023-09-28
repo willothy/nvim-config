@@ -130,6 +130,7 @@
   "substitute.nvim": { "branch": "main", "commit": "89dbe55cccee36bcb5e2be8c2d92ff8716601734" },
   "suda.vim": { "branch": "master", "commit": "8b0fc3711760195aba104e2d190cff9af8267052" },
   "tabout.nvim": { "branch": "master", "commit": "0d275c8d25f32457e67b5c66d6ae43f26a61bce5" },
+  "telescope-arecibo.nvim": { "branch": "master", "commit": "b706322027e44894c30f1d0a9bd79b35eb3e451a" },
   "telescope-file-browser.nvim": { "branch": "master", "commit": "6e51d0cd6447cf2525412220ff0a2885eef9039c" },
   "telescope-frecency.nvim": { "branch": "master", "commit": "eaaabc90ed082b84a2e9b0ce4ab8c6753b7c50f9" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "6c921ca12321edaa773e324ef64ea301a1d0da62" },
