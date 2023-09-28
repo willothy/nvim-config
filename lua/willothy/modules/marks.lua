@@ -1,3 +1,7 @@
+---The idea behind this module is to provide a way to mark files in a project.
+---It's pretty much a clone of Harpoon, but without the terminal stuff and using
+---a sqlite database instead of a json file.
+
 ---@class Mark
 ---@field id integer
 ---@field ord integer
@@ -201,6 +205,12 @@ function M.setup(opts)
   M._db = db
   M._projects = db.projects
   M._marks = db.marks
+
+  vim.api.nvim_create_autocmd("VimLeavePre", {
+    callback = function()
+      M._db:close()
+    end,
+  })
 end
 
 return M
