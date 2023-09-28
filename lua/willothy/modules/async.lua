@@ -234,16 +234,16 @@ end
 --- @type async fun(cmd: string[], opts: table): vim.SystemCompleted
 local system = wrap(vim.system, 3)
 
-run(function()
-  return {
-    lsp.request.signature_help(
-      vim.api.nvim_get_current_buf(),
-      vim.lsp.util.make_position_params(vim.api.nvim_get_current_win())
-    ),
-  }
-end, function(data)
-  vim.notify(vim.inspect(data))
-end)
+-- run(function()
+--   return {
+--     lsp.request.signature_help(
+--       vim.api.nvim_get_current_buf(),
+--       vim.lsp.util.make_position_params(vim.api.nvim_get_current_win())
+--     ),
+--   }
+-- end, function(data)
+--   vim.notify(vim.inspect(data))
+-- end)
 
 -- run(function()
 --   -- schedule()           -- wait until the nvim api is safe to call
