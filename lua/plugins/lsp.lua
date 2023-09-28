@@ -1,6 +1,7 @@
 return {
   {
     "Wansmer/symbol-usage.nvim",
+    enabled = false,
     config = function()
       require("configs.lsp.symbol-usage")
     end,
