@@ -38,6 +38,8 @@ return {
   },
   {
     "rcarriga/nvim-notify",
+    -- "willothy/nvim-notify",
+    -- dir = "~/projects/lua/nvim-notify",
     event = "VeryLazy",
     config = function()
       require("configs.ui.notify")

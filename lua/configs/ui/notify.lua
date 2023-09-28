@@ -21,7 +21,7 @@ local function anim(direction)
         height = state.message.height,
         col = vim.opt.columns:get(),
         row = next_row,
-        border = "rounded",
+        border = "single",
         style = "minimal",
       }
     end,
@@ -53,6 +53,7 @@ local function anim(direction)
     end,
     function(state, win)
       return {
+        border = "FloatBorder",
         width = {
           1,
           frequency = 2.5,
@@ -80,5 +81,5 @@ notify.setup({
   timeout = 5000,
   stages = anim(Dir.TOP_DOWN),
   -- top_down = false,
-  background_color = "none",
+  -- background_color = "#ffffff",
 })
