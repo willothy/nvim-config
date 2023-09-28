@@ -56,14 +56,6 @@ autocmd("TermResponse", {
   end,
 })
 
-autocmd("TermOpen", {
-  group = group,
-  callback = function(args)
-    local buf = args.buf
-    vim.bo[buf].filetype = "terminal"
-  end,
-})
-
 autocmd("BufWinLeave", {
   callback = function(ev)
     if vim.bo[ev.buf].filetype == "TelescopePrompt" then

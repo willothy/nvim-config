@@ -27,19 +27,12 @@ local enable = function(buf, win)
   }
   if vim.api.nvim_win_get_config(win).zindex ~= nil then
     return vim.bo[buf].buftype == "terminal"
+      and vim.bo[buf].filetype == "terminal"
   end
   return vim.bo[buf].buflisted == true
     and vim.bo[buf].buftype == ""
     and vim.api.nvim_buf_get_name(buf) ~= ""
     and not disabled[filetype]
-end
-
-local fuzzy_find = function()
-  local menu = require("dropbar.utils").menu.get_current()
-  if not menu then
-    return
-  end
-  menu:fuzzy_find_open()
 end
 
 local close = function()

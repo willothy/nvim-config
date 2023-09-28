@@ -1,3 +1,5 @@
+local telescope = require("telescope")
+
 local function get_filename(path)
   local start, _ = path:find("[%w%s!-={-|]+[_%.].+")
   return path:sub(start, #path)
@@ -28,7 +30,6 @@ local function add_to_harpoon(prompt_bufnr)
 end
 
 local function create_and_add_to_harpoon(prompt_bufnr)
-  local telescope = require("telescope")
   local fb_actions = telescope.extensions.file_browser.actions
   local path = fb_actions.create(prompt_bufnr)
   if path ~= nil then
@@ -36,30 +37,6 @@ local function create_and_add_to_harpoon(prompt_bufnr)
     print("Added " .. get_filename(path) .. " to harpoon")
   end
 end
-
----@class Theme
-local Theme = {}
-Theme.__index = Theme
-
----@return Theme
-function Theme:with(opts)
-  local theme = vim.tbl_extend("force", self, opts)
-  return setmetatable(theme, Theme)
-end
-
-local my_theme = Theme:with({
-  layout_strategy = "flex",
-  borderchars = {
-    -- preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-    -- prompt = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-    -- results = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-    preview = { " ", " ", " ", " ", " ", " ", " ", " " },
-    prompt = { " ", " ", " ", " ", " ", " ", " ", " " },
-    results = { " ", " ", " ", " ", " ", " ", " ", " " },
-  },
-})
-
-local t = require("telescope")
 
 local open_win = function(enter, width, height, row, col, title, border)
   local Layout = require("telescope.pickers.layout")
@@ -108,31 +85,33 @@ local update_win = function(window, opts)
   end
 end
 
+local function map_range(
+  input_start,
+  input_end,
+  output_start,
+  output_end,
+  input
+)
+  local input_length = input_end - input_start
+  local output_length = output_end - output_start
+  local _start = math.max(output_start, output_end)
+  local _end = math.min(output_start, output_end)
+  return math.min(
+    _start,
+    math.max(
+      _end,
+      output_start + ((input - input_start) / input_length) * output_length
+    )
+  )
+end
+
 local bottom_pane = function(picker)
   local Layout = require("telescope.pickers.layout")
 
   local function get_configs()
     local height = math.floor((vim.o.lines / 2) + 0.5) - 2
-
     local hide_preview = vim.o.columns < 80
-    local preview_ratio = 3
-
-    local function map_range(
-      input_start,
-      input_end,
-      output_start,
-      output_end,
-      input
-    )
-      local input_length = input_end - input_start
-      local output_length = output_end - output_start
-      return (
-        output_start + ((input - input_start) / input_length) * output_length
-      )
-    end
-
-    preview_ratio =
-      math.max(2, math.min(3, map_range(80, 150, 3, 2, vim.o.columns)))
+    local preview_ratio = map_range(80, 150, 3, 2, vim.o.columns)
 
     local preview_width = math.floor(vim.o.columns / preview_ratio) - 2
     local results_width = hide_preview and vim.o.columns
@@ -148,10 +127,20 @@ local bottom_pane = function(picker)
     }
     if not hide_preview then
       res.preview = {
-        width = preview_width,
+        width = preview_width - 1,
         height = height - 1,
         row = vim.o.lines - height - 2,
         col = results_width + 2,
+        border = {
+          "│",
+          " ",
+          " ",
+          " ",
+          " ",
+          " ",
+          "│",
+          "│",
+        },
       }
     end
     res.prompt = {
@@ -159,6 +148,16 @@ local bottom_pane = function(picker)
       height = 1,
       row = math.floor(vim.o.lines / 2),
       col = 0,
+      border = {
+        " ",
+        " ",
+        " ",
+        " ",
+        "─",
+        "─",
+        "─",
+        " ",
+      },
     }
     return res
   end
@@ -175,7 +174,7 @@ local bottom_pane = function(picker)
       c.results.height,
       c.results.row,
       c.results.col,
-      "Results"
+      picker.results_title
     )
     self.preview = open_win(
       false,
@@ -183,7 +182,8 @@ local bottom_pane = function(picker)
       c.preview.height,
       c.preview.row,
       c.preview.col,
-      "Preview"
+      picker.preview_title,
+      c.preview.border
     )
     self.prompt = open_win(
       true,
@@ -191,7 +191,8 @@ local bottom_pane = function(picker)
       c.prompt.height,
       c.prompt.row,
       c.prompt.col,
-      "Prompt"
+      picker.prompt_title,
+      c.prompt.border
     )
   end
 
@@ -207,7 +208,7 @@ local bottom_pane = function(picker)
         c.preview.height,
         c.preview.row,
         c.preview.col,
-        "Preview"
+        picker.preview_title
       )
     elseif not c.preview and self.preview then
       close_win(self.preview)
@@ -229,15 +230,10 @@ local custom = function(picker)
   local Layout = require("telescope.pickers.layout")
 
   local function get_configs()
-    local width = math.min(math.floor(vim.o.columns / 3) * 2, 120)
+    local width = math.min(math.floor(vim.o.columns / 6) * 5, 120)
     local height = math.floor((vim.o.lines / 3) + 0.5) * 2
 
-    local preview_ratio = 3
-    local ease_linear = function(min, max, value)
-      return min + (max - min) * value
-    end
-
-    preview_ratio = ease_linear(3, 2, (width - 80) / 40)
+    local preview_ratio = map_range(100, 150, 3, 2.2, vim.o.columns)
 
     if vim.o.columns > 120 then
       local row = math.floor((vim.o.lines / 2) - (height / 2))
@@ -257,13 +253,33 @@ local custom = function(picker)
           width = preview_width,
           height = height,
           row = row,
-          col = col + results_width + 1,
+          col = col + results_width + 2,
+          border = {
+            "│",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+            "│",
+            "│",
+          },
         },
         prompt = {
           width = results_width,
           height = 1,
           row = row + height - 1,
           col = col,
+          border = {
+            "─",
+            "─",
+            "─",
+            " ",
+            " ",
+            " ",
+            " ",
+            " ",
+          },
         },
       }
     else
@@ -296,8 +312,18 @@ local custom = function(picker)
         res.preview = {
           width = width,
           height = math.floor(height / 2),
-          row = row,
+          row = row - 2,
           col = col,
+          border = {
+            " ",
+            " ",
+            " ",
+            " ",
+            "─",
+            "─",
+            "─",
+            " ",
+          },
         }
       end
       return res
@@ -316,7 +342,7 @@ local custom = function(picker)
       c.results.height,
       c.results.row,
       c.results.col,
-      "Results"
+      picker.results_title
     )
     if c.preview then
       self.preview = open_win(
@@ -325,7 +351,8 @@ local custom = function(picker)
         c.preview.height,
         c.preview.row,
         c.preview.col,
-        "Preview"
+        picker.preview_title,
+        c.preview.border
       )
     end
     self.prompt = open_win(
@@ -334,7 +361,7 @@ local custom = function(picker)
       c.prompt.height,
       c.prompt.row,
       c.prompt.col,
-      nil,
+      picker.propmt_title,
       c.prompt.border
     )
   end
@@ -351,7 +378,7 @@ local custom = function(picker)
         c.preview.height,
         c.preview.row,
         c.preview.col,
-        "Preview"
+        picker.preview_title or "Preview"
       )
     elseif not c.preview and self.preview then
       close_win(self.preview)
@@ -369,15 +396,15 @@ local custom = function(picker)
   return Layout(layout)
 end
 
-t.setup({
+telescope.setup({
   pickers = {},
-  defaults = my_theme:with({
+  defaults = {
     history = {
       path = vim.fn.stdpath("data") .. "/databases/telescope_history.sqlite3",
       limit = 200,
     },
     create_layout = custom,
-  }),
+  },
   extensions = {
     file_browser = {
       theme = "ivy",
@@ -407,7 +434,6 @@ t.setup({
     },
     undo = {
       use_delta = true,
-      side_by_side = vim.o.columns > side_by_side_min,
       entry_format = "$STAT, $TIME",
       -- layout_strategy = "bottom_pane",
       sorting_strategy = "ascending",
@@ -445,7 +471,7 @@ t.setup({
       url_open_command = "xdg-open",
       create_layout = custom,
     },
-    frecency = my_theme:with({
+    frecency = {
       ignore_patterns = {
         "*.git/*",
         "*/tmp/*",
@@ -460,7 +486,7 @@ t.setup({
       preview_title = "Preview",
       results_title = "Files",
       create_layout = custom,
-    }),
+    },
   },
 })
 
@@ -483,4 +509,4 @@ local extensions = {
   "frecency",
 }
 
-vim.iter(extensions):each(t.load_extension)
+vim.iter(extensions):each(telescope.load_extension)
