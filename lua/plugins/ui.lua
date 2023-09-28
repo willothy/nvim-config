@@ -160,7 +160,7 @@ return {
   -- STATUS --
   {
     "willothy/nvim-cokeline",
-    -- branch = "render-cache",
+    branch = "incremental-truncate",
     -- dir = "~/projects/lua/cokeline/",
     config = function()
       require("configs.status.cokeline")

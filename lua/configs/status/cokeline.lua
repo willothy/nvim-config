@@ -140,7 +140,7 @@ local Filename = {
   bg = "TabLine",
   truncation = {
     priority = 2,
-    direction = "left",
+    direction = "right",
   },
 }
 local Diagnostics = (function()
