@@ -297,7 +297,7 @@ function M._menu_buf_autocmd(buf)
   vim.api.nvim_create_autocmd("BufLeave", {
     buffer = buf,
     once = true,
-    callback = M.close_menu,
+    callback = vim.schedule_wrap(M.close_menu),
   })
 
   vim.api.nvim_create_autocmd({
