@@ -393,12 +393,12 @@ local mouse_scroll_up = function(prompt_bufnr)
   local picker = action_state.get_current_picker(prompt_bufnr)
 
   local mouse_win = vim.fn.getmousepos().winid
-  local win_info = vim.api.nvim_win_call(mouse_win, vim.fn.winsaveview)
   if picker.results_win == mouse_win then
+    local win_info = vim.api.nvim_win_call(mouse_win, vim.fn.winsaveview)
     if win_info.topline > 1 then
       sched_if_valid(prompt_bufnr, function()
+        -- picker:set_selection(vim.fn.getmousepos().line - 1)
         actions.results_scrolling_up(prompt_bufnr)
-        picker:set_selection(vim.fn.getmousepos().line - 1)
       end)
     end
     return ""
@@ -408,7 +408,7 @@ local mouse_scroll_up = function(prompt_bufnr)
     end)
     return ""
   else
-    return "<ScrollWheelDown>"
+    return "<ScrollWheelUp>"
   end
 end
 
@@ -420,18 +420,18 @@ local mouse_scroll_down = function(prompt_bufnr)
   local mouse_win = vim.fn.getmousepos().winid
   local win_info = vim.api.nvim_win_call(mouse_win, vim.fn.winsaveview)
   if mouse_win == picker.results_win then
-    sched_if_valid(prompt_bufnr, function()
-      if
-        win_info.topline
-        < (
-          vim.api.nvim_buf_line_count(vim.api.nvim_win_get_buf(mouse_win))
-          - vim.api.nvim_win_get_height(mouse_win)
-        )
-      then
+    if
+      win_info.topline
+      < (
+        vim.api.nvim_buf_line_count(vim.api.nvim_win_get_buf(mouse_win))
+        - vim.api.nvim_win_get_height(mouse_win)
+      )
+    then
+      sched_if_valid(prompt_bufnr, function()
         actions.results_scrolling_down(prompt_bufnr)
         picker:set_selection(vim.fn.getmousepos().line - 1)
-      end
-    end)
+      end)
+    end
     return ""
   elseif mouse_win == picker.preview_win then
     sched_if_valid(prompt_bufnr, function()
@@ -439,7 +439,7 @@ local mouse_scroll_down = function(prompt_bufnr)
     end)
     return ""
   else
-    return "<ScrollWheelUp>"
+    return "<ScrollWheelDown>"
   end
 end
 
@@ -622,9 +622,8 @@ telescope.setup({
       show_unindexed = true,
       db_safe_mode = false,
       default_workspace = "CWD",
-      show_filter_column = true,
       workspaces = {
-        ["nvim"] = "/home/willothy/.config/nvim/",
+        -- ["nvim"] = "/home/willothy/.config/nvim/",
         ["dotfiles"] = "/home/willothy/.config",
         ["projects"] = "/home/willothy/projects",
         ["lua"] = "/home/willothy/projects/lua",
@@ -635,6 +634,7 @@ telescope.setup({
       prompt_title = "Find Files",
       preview_title = "Preview",
       results_title = "Files",
+      temp__scrolling_limit = 100,
     },
   },
 })

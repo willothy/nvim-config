@@ -124,7 +124,7 @@ return {
         -- "nvim-telescope/telescope-frecency.nvim",
         -- commit = "fbda5d91d6e787f5977787fa4a81da5c8e22160a",
         "willothy/telescope-frecency.nvim",
-        branch = "fix-workspaces",
+        branch = "fix-workspace-filter",
         -- dir = "~/projects/lua/telescope-frecency.nvim",
       },
       "nvim-telescope/telescope-smart-history.nvim",

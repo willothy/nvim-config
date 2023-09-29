@@ -131,7 +131,7 @@
   "suda.vim": { "branch": "master", "commit": "8b0fc3711760195aba104e2d190cff9af8267052" },
   "tabout.nvim": { "branch": "master", "commit": "0d275c8d25f32457e67b5c66d6ae43f26a61bce5" },
   "telescope-file-browser.nvim": { "branch": "master", "commit": "6e51d0cd6447cf2525412220ff0a2885eef9039c" },
-  "telescope-frecency.nvim": { "branch": "fix-workspaces", "commit": "2773d9cbe08e6cfe0b8abe66f3215a1ade76e3ec" },
+  "telescope-frecency.nvim": { "branch": "fix-workspace-filter", "commit": "e75c6eaf5c147e5fd3977753087961fbde277cc9" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "6c921ca12321edaa773e324ef64ea301a1d0da62" },
   "telescope-heading.nvim": { "branch": "main", "commit": "23ce2c9ef252aecbaa37300c1209b5ef2b51e6c5" },
   "telescope-menufacture": { "branch": "main", "commit": "a12ba19b6e750707c5a63488d02c6b7f2b9d745b" },
