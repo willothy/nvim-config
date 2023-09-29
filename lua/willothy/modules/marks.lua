@@ -2,7 +2,7 @@
 ---It's pretty much a clone of Harpoon, but without the terminal stuff and using
 ---a sqlite database instead of a json file.
 ---
---- TODO:
+---TODO:
 --- - [ ] Write tests
 --- - [ ] Add support for project switching
 --- - [ ] Add support for global marks
@@ -297,7 +297,7 @@ function M._menu_buf_autocmd(buf)
   vim.api.nvim_create_autocmd("BufLeave", {
     buffer = buf,
     once = true,
-    callback = vim.schedule_wrap(M.close_menu),
+    callback = M.close_menu,
   })
 
   vim.api.nvim_create_autocmd({
@@ -318,12 +318,15 @@ end
 
 function M.close_menu()
   M.save_state()
-  if M._menu_win and vim.api.nvim_win_is_valid(M._menu_win) then
-    vim.api.nvim_win_close(M._menu_win, true)
-  end
-  if M._menu_buf and vim.api.nvim_buf_is_valid(M._menu_buf) then
-    vim.api.nvim_buf_delete(M._menu_buf, { force = true })
-  end
+  local win = M._menu_win
+  vim.schedule(function()
+    if M._menu_buf and vim.api.nvim_buf_is_valid(M._menu_buf) then
+      vim.api.nvim_buf_delete(M._menu_buf, { force = false })
+    end
+    if win and vim.api.nvim_win_is_valid(win) then
+      vim.api.nvim_win_close(win, true)
+    end
+  end)
   M._menu_win = nil
   M._menu_buf = nil
 end
@@ -364,6 +367,7 @@ function M._menu_open_win()
   local win = vim.api.nvim_open_win(M._menu_buf, true, win_opts)
   vim.wo[win].relativenumber = false
   vim.wo[win].number = true
+  vim.wo[win].winhl = "Normal:HarpoonWindow,FloatBorder:HarpoonBorder"
   M._menu_win = win
 end
 
