@@ -8,7 +8,7 @@ register({
   f = {
     function()
       require("telescope._extensions.frecency").exports.frecency({
-        show_filter_column = { "LSP", "CWD", "projects" },
+        sorter = require("telescope").extensions.fzf.native_fzf_sorter(),
       })
     end,
     "files",
