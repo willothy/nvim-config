@@ -13,7 +13,7 @@ function M.ui_select(items, opts, on_choice)
 
   opts = opts or {}
 
-  opts.prompt = opts.prompt and vim.trim(opts.prompt:gsub(":$", ""))
+  opts.prompt = opts.prompt and vim.trim(opts.prompt:gsub(":%s*$", ""))
 
   local entries = vim
     .iter(items)
