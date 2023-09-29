@@ -26,6 +26,9 @@ M.neotree = {
     "git_status",
     "diagnostics",
   },
+  filesystem = {
+    hijack_netrw_behavior = "disabled",
+  },
 }
 
 M.aerial = {

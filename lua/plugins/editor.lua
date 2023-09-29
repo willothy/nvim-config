@@ -154,8 +154,9 @@ return {
     },
   },
   {
-    -- "echasnovski/mini.files",
-    "willothy/mini.files",
+    "echasnovski/mini.files",
+    -- "willothy/mini.files",
+    enabled=false,
     config = function()
       require("configs.editor.mini-files")
     end,

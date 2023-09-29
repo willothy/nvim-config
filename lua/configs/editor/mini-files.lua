@@ -5,8 +5,10 @@ files.setup({
     preview = false,
     width_focus = 25,
     width_preview = 40,
+    height_focus = 20,
     border = "solid",
   },
+  use_as_default_explorer = false,
 })
 
 local harpoon = function(buf)

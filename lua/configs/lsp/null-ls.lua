@@ -14,7 +14,7 @@ null_ls.setup({
         "typescript",
         "scss",
         "css",
-        "html",
+        -- "html",
         "json",
         "markdown",
       },
