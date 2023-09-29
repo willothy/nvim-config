@@ -106,6 +106,7 @@ end
 function M.create_mark(file)
   M.ensure_setup()
   file = file or vim.api.nvim_buf_get_name(0)
+  file = vim.fs.normalize(file)
   local current = M.current_project()
   if not current then
     return
@@ -134,6 +135,7 @@ end
 function M.delete_mark(file)
   M.ensure_setup()
   file = file or vim.api.nvim_buf_get_name(0)
+  file = vim.fs.normalize(file)
   local current = M.current_project()
   if not current then
     return
@@ -147,6 +149,7 @@ end
 function M.toggle_mark(file)
   M.ensure_setup()
   file = file or vim.api.nvim_buf_get_name(0)
+  file = vim.fs.normalize(file)
   local current = M.current_project()
   if not current then
     return
@@ -192,10 +195,11 @@ function M.toggle_menu()
     return acc
   end)
 
-  local buf = vim.api.nvim_create_buf(false, true)
+  local buf = vim.api.nvim_create_buf(false, false)
+  vim.bo[buf].buflisted = false
   vim.bo[buf].buftype = "acwrite"
   vim.bo[buf].filetype = "marks"
-  vim.bo[buf].bufhidden = "wipe"
+  vim.bo[buf].bufhidden = "delete"
 
   for linenr, mark in ipairs(marks) do
     local line = mark.file
@@ -259,15 +263,13 @@ function M.toggle_menu()
   end
 
   local close_win = function()
-    vim.schedule(function()
-      save_state()
-      if vim.api.nvim_win_is_valid(win) then
-        vim.api.nvim_win_close(win, true)
-      end
-      if vim.api.nvim_buf_is_valid(buf) then
-        vim.api.nvim_buf_delete(buf, { force = true })
-      end
-    end)
+    save_state()
+    if vim.api.nvim_win_is_valid(win) then
+      vim.api.nvim_win_close(win, true)
+    end
+    if vim.api.nvim_buf_is_valid(buf) then
+      vim.api.nvim_buf_delete(buf, { force = true })
+    end
     M._menu_win = nil
   end
 
@@ -290,7 +292,8 @@ function M.toggle_menu()
     end
     close_win()
     vim.schedule(function()
-      local bufnr = vim.uri_to_bufnr("file://" .. mark.file)
+      local path = vim.fs.normalize(mark.file)
+      local bufnr = vim.uri_to_bufnr("file://" .. path)
       if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
         if not vim.api.nvim_buf_is_loaded(bufnr) then
           vim.fn.bufload(bufnr)
@@ -319,15 +322,6 @@ function M.toggle_menu()
     buffer = buf,
     once = true,
     callback = save_state,
-  })
-
-  vim.api.nvim_create_autocmd({
-    "TextChanged",
-    "TextChangedI",
-    "TextChangedP",
-  }, {
-    buffer = buf,
-    callback = function() end,
   })
 
   vim.api.nvim_create_autocmd({
