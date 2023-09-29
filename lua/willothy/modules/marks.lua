@@ -1,6 +1,16 @@
 ---The idea behind this module is to provide a way to mark files in a project.
 ---It's pretty much a clone of Harpoon, but without the terminal stuff and using
 ---a sqlite database instead of a json file.
+---
+--- TODO:
+--- - [ ] Write tests
+--- - [ ] Add support for project switching
+--- - [ ] Add support for global marks
+--- - [ ] Add more metadata to marks
+--- - [ ] Support relative paths
+--- - [ ] Better rendering using Nui
+--- - [ ] Devicons
+---
 
 ---@class Mark
 ---@field id integer
@@ -178,11 +188,9 @@ function M.delete_marks()
   M._marks:remove({ project = current.cwd })
 end
 
-function M.toggle_menu()
-  M.ensure_setup()
-  if M._menu_win and vim.api.nvim_win_is_valid(M._menu_win) then
-    vim.api.nvim_win_close(M._menu_win, true)
-    M._menu_win = nil
+function M.save_state()
+  local buf = M._menu_buf
+  if not buf or not vim.api.nvim_buf_is_valid(buf) then
     return
   end
   local marks = M.list_marks()
@@ -194,103 +202,83 @@ function M.toggle_menu()
     acc[mark.file] = mark
     return acc
   end)
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, true)
+  lines = vim.split(table.concat(lines, "\n"), "\n", { trimempty = true })
+  local order = {}
+  for i, line in ipairs(lines) do
+    local fname = vim.trim(line)
+    local mark = mark_files[line]
+    if not mark then
+      mark = M.create_mark(fname)
+      mark_files[line] = mark
+    end
+    if mark then
+      mark.found = true
+      order[i] = mark.id
+    end
+  end
+  for i, id in ipairs(order) do
+    M._marks:update({
+      where = {
+        id = id,
+      },
+      set = {
+        ord = i - 1,
+      },
+    })
+  end
+  for _, mark in pairs(mark_files) do
+    if not mark.found then
+      M._marks:remove({ id = mark.id })
+    end
+  end
+end
 
+function M._menu_get_or_create_buf()
+  if M._menu_buf and vim.api.nvim_buf_is_valid(M._menu_buf) then
+    return M._menu_buf
+  end
   local buf = vim.api.nvim_create_buf(false, false)
+  vim.api.nvim_buf_set_name(buf, "mark-menu")
+  M._menu_buf = buf
+
+  M._menu_buf_options(buf)
+  M._menu_buf_keymaps(buf)
+  M._menu_buf_autocmd(buf)
+
+  return buf
+end
+
+function M._menu_buf_options(buf)
   vim.bo[buf].buflisted = false
   vim.bo[buf].buftype = "acwrite"
   vim.bo[buf].filetype = "marks"
   vim.bo[buf].bufhidden = "delete"
-
-  for linenr, mark in ipairs(marks) do
-    local line = mark.file
-    vim.api.nvim_buf_set_lines(buf, linenr - 1, linenr, false, { line })
-  end
-  vim.bo[buf].modified = false
   vim.bo[buf].swapfile = false
   vim.bo[buf].undofile = false
+end
 
-  local width = 50
-  local height = 10 -- clamp(10, 10, #marks)
-  local row = math.floor((vim.o.lines - height) / 2)
-  local col = math.floor((vim.o.columns - width) / 2)
+function M._menu_buf_keymaps(buf)
+  vim.keymap.set("n", "<esc>", M.close_menu, { buffer = buf })
 
-  local win_opts = {
-    relative = "editor",
-    width = width,
-    height = height,
-    row = row,
-    col = col,
-    style = "minimal",
-  }
-
-  local win = vim.api.nvim_open_win(buf, true, win_opts)
-  M._menu_win = win
-
-  local save_state = function()
-    if not vim.api.nvim_buf_is_valid(buf) then
-      return
-    end
-    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, true)
-    lines = vim.split(table.concat(lines, "\n"), "\n", { trimempty = true })
-    local order = {}
-    for i, line in ipairs(lines) do
-      local fname = vim.trim(line)
-      local mark = mark_files[line]
-      if not mark then
-        mark = M.create_mark(fname)
-        mark_files[line] = mark
-      end
-      if mark then
-        mark.found = true
-        order[i] = mark.id
-      end
-    end
-    for i, id in ipairs(order) do
-      M._marks:update({
-        where = {
-          id = id,
-        },
-        set = {
-          ord = i - 1,
-        },
-      })
-    end
-    for _, mark in pairs(mark_files) do
-      if not mark.found then
-        M._marks:remove({ id = mark.id })
-      end
-    end
-  end
-
-  local close_win = function()
-    save_state()
-    if vim.api.nvim_win_is_valid(win) then
-      vim.api.nvim_win_close(win, true)
-    end
-    if vim.api.nvim_buf_is_valid(buf) then
-      vim.api.nvim_buf_delete(buf, { force = true })
-    end
-    M._menu_win = nil
-  end
-
-  vim.keymap.set("n", "<esc>", close_win, {
-    buffer = buf,
-  })
-
-  vim.keymap.set("n", "q", close_win, {
-    buffer = buf,
-  })
+  vim.keymap.set("n", "q", M.close_menu, { buffer = buf })
 
   vim.keymap.set("n", "<cr>", function()
-    local cursor = vim.api.nvim_win_get_cursor(win)
+    local marks = M.list_marks()
+    if not marks then
+      return
+    end
+    local cursor = vim.api.nvim_win_get_cursor(0)
     local mark = marks[cursor[1]]
     if not mark then
-      mark = M.create_mark(vim.api.nvim_get_current_line())
+      mark = M.create_mark(
+        vim.fs.normalize(vim.trim(vim.api.nvim_get_current_line()))
+      )
       if not mark then
         return
       end
     end
-    close_win()
+    M.close_menu()
     vim.schedule(function()
       local path = vim.fs.normalize(mark.file)
       local bufnr = vim.uri_to_bufnr("file://" .. path)
@@ -302,16 +290,14 @@ function M.toggle_menu()
         vim.api.nvim_set_current_buf(bufnr)
       end
     end)
-  end, {
-    buffer = buf,
-  })
+  end, { buffer = buf })
+end
 
+function M._menu_buf_autocmd(buf)
   vim.api.nvim_create_autocmd("BufLeave", {
     buffer = buf,
     once = true,
-    callback = function()
-      close_win()
-    end,
+    callback = M.close_menu,
   })
 
   vim.api.nvim_create_autocmd({
@@ -321,16 +307,80 @@ function M.toggle_menu()
   }, {
     buffer = buf,
     once = true,
-    callback = save_state,
+    callback = M.save_state,
   })
 
-  vim.api.nvim_create_autocmd({
-    "BufWriteCmd",
-    "InsertLeave",
-  }, {
+  vim.api.nvim_create_autocmd({ "BufWriteCmd", "TextChanged" }, {
     buffer = buf,
-    callback = save_state,
+    callback = M.save_state,
   })
+end
+
+function M.close_menu()
+  M.save_state()
+  if M._menu_win and vim.api.nvim_win_is_valid(M._menu_win) then
+    vim.api.nvim_win_close(M._menu_win, true)
+  end
+  if M._menu_buf and vim.api.nvim_buf_is_valid(M._menu_buf) then
+    vim.api.nvim_buf_delete(M._menu_buf, { force = true })
+  end
+  M._menu_win = nil
+  M._menu_buf = nil
+end
+
+---@param marks Mark[]
+function M._menu_render_lines(marks)
+  local lines = vim
+    .iter(marks)
+    :map(function(mark)
+      return mark.file
+    end)
+    :totable()
+  vim.api.nvim_buf_set_lines(M._menu_buf, 0, -1, false, lines)
+  vim.bo[M._menu_buf].modified = false
+end
+
+function M.menu_is_open()
+  return M._menu_win and vim.api.nvim_win_is_valid(M._menu_win)
+end
+
+function M._menu_open_win()
+  local width = 50
+  local height = 10 -- clamp(10, 10, #marks)
+  local row = math.floor((vim.o.lines - height) / 2)
+  local col = math.floor((vim.o.columns - width) / 2)
+
+  local win_opts = {
+    relative = "editor",
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+    border = "solid",
+    title = "Marks",
+    title_pos = "center",
+  }
+
+  local win = vim.api.nvim_open_win(M._menu_buf, true, win_opts)
+  vim.wo[win].relativenumber = false
+  vim.wo[win].number = true
+  M._menu_win = win
+end
+
+function M.toggle_menu()
+  M.ensure_setup()
+  if M.menu_is_open() then
+    return M.close_menu()
+  end
+
+  local marks = M.list_marks()
+  if not marks then
+    return
+  end
+
+  M._menu_get_or_create_buf()
+  M._menu_render_lines(marks)
+  M._menu_open_win()
 end
 
 function M.setup(opts)
