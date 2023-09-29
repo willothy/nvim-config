@@ -167,4 +167,18 @@ function M.diagnostics()
     :totable()
 end
 
+function M.map_range(input_start, input_end, output_start, output_end, input)
+  local input_length = input_end - input_start
+  local output_length = output_end - output_start
+  local max = math.max(output_start, output_end)
+  local min = math.min(output_start, output_end)
+  return math.min(
+    max,
+    math.max(
+      min,
+      output_start + ((input - input_start) / input_length) * output_length
+    )
+  )
+end
+
 return M

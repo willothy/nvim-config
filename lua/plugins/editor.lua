@@ -120,9 +120,14 @@ return {
       "crispgm/telescope-heading.nvim",
       "debugloop/telescope-undo.nvim",
       "dhruvmanila/browser-bookmarks.nvim",
-      "nvim-telescope/telescope-frecency.nvim",
+      {
+        -- "nvim-telescope/telescope-frecency.nvim",
+        -- commit = "fbda5d91d6e787f5977787fa4a81da5c8e22160a",
+        "willothy/telescope-frecency.nvim",
+        branch = "fix-workspaces",
+        -- dir = "~/projects/lua/telescope-frecency.nvim",
+      },
       "nvim-telescope/telescope-smart-history.nvim",
-      -- "nvim-telescope/telescope-fzf-writer.nvim", -- cool but currently broken
     },
   },
   {

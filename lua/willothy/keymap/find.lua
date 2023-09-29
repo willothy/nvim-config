@@ -6,7 +6,11 @@ local telescope = willothy.fn.telescope
 register({
   name = "find",
   f = {
-    telescope.frecency,
+    function()
+      require("telescope._extensions.frecency").exports.frecency({
+        show_filter_column = { "LSP", "CWD", "projects" },
+      })
+    end,
     "files",
   },
   s = {

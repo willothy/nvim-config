@@ -5,8 +5,6 @@ local function get_filename(path)
   return path:sub(start, #path)
 end
 
-local side_by_side_min = 110
-
 local function add_to_harpoon(prompt_bufnr)
   local fb_utils = require("telescope._extensions.file_browser.utils")
   local files = fb_utils.get_selected_files(prompt_bufnr) -- get selected files
@@ -89,33 +87,13 @@ local update_win = function(window, opts)
   end
 end
 
-local function map_range(
-  input_start,
-  input_end,
-  output_start,
-  output_end,
-  input
-)
-  local input_length = input_end - input_start
-  local output_length = output_end - output_start
-  local _start = math.max(output_start, output_end)
-  local _end = math.min(output_start, output_end)
-  return math.min(
-    _start,
-    math.max(
-      _end,
-      output_start + ((input - input_start) / input_length) * output_length
-    )
-  )
-end
-
 local bottom_pane = function(picker)
   local Layout = require("telescope.pickers.layout")
 
   local function get_configs()
     local height = math.floor((vim.o.lines / 2) + 0.5) - 2
     local hide_preview = vim.o.columns < 80
-    local preview_ratio = map_range(80, 150, 3, 2, vim.o.columns)
+    local preview_ratio = willothy.fn.map_range(80, 150, 3, 2, vim.o.columns)
 
     local preview_width = math.floor(vim.o.columns / preview_ratio) - 2
     local results_width = hide_preview and vim.o.columns
@@ -230,14 +208,15 @@ local bottom_pane = function(picker)
   return Layout(layout)
 end
 
-local custom = function(picker)
+local flexible = function(picker)
   local Layout = require("telescope.pickers.layout")
 
   local function get_configs()
     local width = math.min(math.floor(vim.o.columns / 6) * 5, 120)
     local height = math.floor((vim.o.lines / 3) + 0.5) * 2
 
-    local preview_ratio = map_range(100, 150, 3, 2.2, vim.o.columns)
+    local preview_ratio =
+      willothy.fn.map_range(100, 150, 3, 2.2, vim.o.columns)
 
     if vim.o.columns > 120 then
       local row = math.floor((vim.o.lines / 2) - (height / 2))
@@ -400,6 +379,118 @@ local custom = function(picker)
   return Layout(layout)
 end
 
+local sched_if_valid = function(buf, fn)
+  vim.schedule(function()
+    if vim.api.nvim_buf_is_valid(buf) then
+      fn()
+    end
+  end)
+end
+
+local mouse_scroll_up = function(prompt_bufnr)
+  local action_state = require("telescope.actions.state")
+  local actions = require("telescope.actions")
+  local picker = action_state.get_current_picker(prompt_bufnr)
+
+  local mouse_win = vim.fn.getmousepos().winid
+  local win_info = vim.api.nvim_win_call(mouse_win, vim.fn.winsaveview)
+  if picker.results_win == mouse_win then
+    if win_info.topline > 1 then
+      sched_if_valid(prompt_bufnr, function()
+        actions.results_scrolling_up(prompt_bufnr)
+        picker:set_selection(vim.fn.getmousepos().line - 1)
+      end)
+    end
+    return ""
+  elseif mouse_win == picker.preview_win then
+    sched_if_valid(prompt_bufnr, function()
+      actions.preview_scrolling_up(prompt_bufnr)
+    end)
+    return ""
+  else
+    return "<ScrollWheelDown>"
+  end
+end
+
+local mouse_scroll_down = function(prompt_bufnr)
+  local action_state = require("telescope.actions.state")
+  local actions = require("telescope.actions")
+  local picker = action_state.get_current_picker(prompt_bufnr)
+
+  local mouse_win = vim.fn.getmousepos().winid
+  local win_info = vim.api.nvim_win_call(mouse_win, vim.fn.winsaveview)
+  if mouse_win == picker.results_win then
+    sched_if_valid(prompt_bufnr, function()
+      if
+        win_info.topline
+        < (
+          vim.api.nvim_buf_line_count(vim.api.nvim_win_get_buf(mouse_win))
+          - vim.api.nvim_win_get_height(mouse_win)
+        )
+      then
+        actions.results_scrolling_down(prompt_bufnr)
+        picker:set_selection(vim.fn.getmousepos().line - 1)
+      end
+    end)
+    return ""
+  elseif mouse_win == picker.preview_win then
+    sched_if_valid(prompt_bufnr, function()
+      actions.preview_scrolling_down(prompt_bufnr)
+    end)
+    return ""
+  else
+    return "<ScrollWheelUp>"
+  end
+end
+
+local mouse_click = function(prompt_bufnr)
+  local action_state = require("telescope.actions.state")
+  local actions = require("telescope.actions")
+  local picker = action_state.get_current_picker(prompt_bufnr)
+
+  local pos = vim.fn.getmousepos()
+  if pos and pos.winid == picker.results_win then
+    sched_if_valid(prompt_bufnr, function()
+      picker:set_selection(pos.line - 1)
+    end)
+  elseif pos and pos.winid == picker.preview_win then
+    sched_if_valid(prompt_bufnr, function()
+      actions.select_default(prompt_bufnr)
+    end)
+  end
+  return ""
+end
+
+local double_mouse_click = function(prompt_bufnr)
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+  local picker = action_state.get_current_picker(prompt_bufnr)
+
+  local pos = vim.fn.getmousepos()
+  if pos and pos.winid == picker.results_win then
+    sched_if_valid(prompt_bufnr, function()
+      picker:set_selection(pos.line - 1)
+      actions.select_default(prompt_bufnr)
+    end)
+  end
+  return ""
+end
+
+local function mouse_move(prompt_bufnr)
+  local action_state = require("telescope.actions.state")
+  local picker = action_state.get_current_picker(prompt_bufnr)
+
+  local mouse = vim.fn.getmousepos()
+  if mouse and mouse.winid == picker.results_win then
+    sched_if_valid(prompt_bufnr, function()
+      picker:set_selection(mouse.line - 1)
+    end)
+    return ""
+  else
+    return "<MouseMove>"
+  end
+end
+
 telescope.setup({
   pickers = {},
   defaults = {
@@ -407,11 +498,71 @@ telescope.setup({
       path = vim.fn.stdpath("data") .. "/databases/telescope_history.sqlite3",
       limit = 200,
     },
-    create_layout = custom,
+    create_layout = flexible,
+    find_command = { "fd", "--type", "f", "--strip-cwd-prefix" },
+    dynamic_preview_title = true,
+    -- get_status_text = function(self, opts)
+    --   return ""
+    -- end,
+    mappings = {
+      i = {
+        ["<MouseMove>"] = {
+          mouse_move,
+          type = "action",
+          opts = { expr = true },
+        },
+        ["<scrollwheeldown>"] = {
+          mouse_scroll_down,
+          type = "action",
+          opts = { expr = true },
+        },
+        ["<scrollwheelup>"] = {
+          mouse_scroll_up,
+          type = "action",
+          opts = { expr = true },
+        },
+        ["<leftmouse>"] = {
+          mouse_click,
+          type = "action",
+          opts = { expr = true },
+        },
+        ["<2-LeftMouse>"] = {
+          double_mouse_click,
+          type = "action",
+          opts = { expr = true },
+        },
+      },
+      n = {
+        ["<MouseMove>"] = {
+          mouse_move,
+          type = "action",
+          opts = { expr = true },
+        },
+        ["<ScrollWheelDown>"] = {
+          mouse_scroll_up,
+          type = "action",
+          opts = { expr = true },
+        },
+        ["<ScrollWheelUp>"] = {
+          mouse_scroll_down,
+          type = "action",
+          opts = { expr = true },
+        },
+        ["<LeftMouse>"] = {
+          mouse_click,
+          type = "action",
+          opts = { expr = true },
+        },
+        ["<2-LeftMouse>"] = {
+          double_mouse_click,
+          type = "action",
+          opts = { expr = true },
+        },
+      },
+    },
   },
   extensions = {
     file_browser = {
-      -- theme = "ivy",
       mappings = {
         ["i"] = {
           ["<C-a>"] = add_to_harpoon,
@@ -422,20 +573,14 @@ telescope.setup({
           ["<C-a>"] = add_to_harpoon,
         },
       },
-      layout_config = {
-        width = vim.o.columns,
-      },
       sorting_strategy = "ascending",
       prompt_path = true,
-      -- display_stat = { date = false, size = false },
       create_layout = bottom_pane,
       display_stat = false,
-      -- display_stat = { date = false, size = true, mode = false },
     },
     undo = {
-      use_delta = true,
+      use_delta = false,
       entry_format = "$STAT, $TIME",
-      -- layout_strategy = "bottom_pane",
       sorting_strategy = "ascending",
       mappings = {
         i = {
@@ -447,29 +592,24 @@ telescope.setup({
       results_title = "Undo History",
       prompt_title = "Search",
       preview_title = "Edit Diff",
-      create_layout = custom,
     },
     macros = {
       theme = "dropdown",
       results_title = "Macros",
       prompt_title = "Find Macros",
-      create_layout = custom,
     },
     heading = {
       treesitter = true,
-      create_layout = custom,
     },
     fzf = {
-      fuzzy = true, -- false will only do exact matching
-      override_generic_sorter = true, -- override the generic sorter
-      override_file_sorter = true, -- override the file sorter
-      case_mode = "smart_case", -- or "ignore_case" or "respect_case"
-      -- the default case_mode is "smart_case"
+      fuzzy = true,
+      override_generic_sorter = true,
+      override_file_sorter = true,
+      case_mode = "smart_case",
     },
     bookmarks = {
       selected_browser = "brave",
       url_open_command = "xdg-open",
-      create_layout = custom,
     },
     frecency = {
       ignore_patterns = {
@@ -477,15 +617,24 @@ telescope.setup({
         "*/tmp/*",
         "/home/willothy/.dotfiles/*",
       },
+      use_sqlite = true,
       show_scores = false,
+      show_unindexed = true,
+      db_safe_mode = false,
+      default_workspace = "CWD",
+      show_filter_column = true,
       workspaces = {
-        ["dotfiles"] = "/home/willothy/.config/",
-        ["projects"] = "/home/willothy/projects/",
+        ["nvim"] = "/home/willothy/.config/nvim/",
+        ["dotfiles"] = "/home/willothy/.config",
+        ["projects"] = "/home/willothy/projects",
+        ["lua"] = "/home/willothy/projects/lua",
+        ["rust"] = "/home/willothy/projects/rust",
+        ["js"] = "/home/willothy/projects/js/",
+        ["cxx"] = "/home/willothy/projects/cxx/",
       },
       prompt_title = "Find Files",
       preview_title = "Preview",
       results_title = "Files",
-      create_layout = custom,
     },
   },
 })
@@ -496,7 +645,6 @@ local extensions = {
   "neoclip",
   "smart_history",
   "file_browser",
-  -- "fzf_writer", -- currently broken
   "projects",
   "noice",
   "macros",
