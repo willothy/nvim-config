@@ -47,13 +47,6 @@ return {
     event = "User ExtraLazy",
   },
   {
-    "EtiamNullam/deferred-clipboard.nvim",
-    opts = {
-      fallback = "unnamedplus",
-    },
-    event = "User ExtraLazy",
-  },
-  {
     "AckslD/nvim-neoclip.lua",
     opts = {
       enable_persistent_history = true,
