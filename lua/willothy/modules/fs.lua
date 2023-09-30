@@ -1,5 +1,3 @@
-local a = require("micro-async")
-
 local M = {}
 
 M.browsers = {
@@ -66,21 +64,24 @@ function M.hijack_netrw()
   })
 end
 
-M.set_browser = a.void(function()
-  local options = vim
-    .iter(M.browsers)
-    :map(function(name, _)
-      return name
-    end)
-    :totable()
-  local ok, item = a.wrap(vim.ui.select, 3)(options, {
-    prompt = "Browsers",
-  })
-  if not ok or not item then
-    return
-  end
-  M.browser = M.browsers[options[item]] or M.browser
-end)
+M.set_browser = function()
+  local a = require("micro-async")
+  a.void(function()
+    local options = vim
+      .iter(M.browsers)
+      :map(function(name, _)
+        return name
+      end)
+      :totable()
+    local ok, item = a.wrap(vim.ui.select, 3)(options, {
+      prompt = "Browsers",
+    })
+    if not ok or not item then
+      return
+    end
+    M.browser = M.browsers[options[item]] or M.browser
+  end)()
+end
 
 ---@param target string | string[] | nil | fun():string
 function M.browse(target, browser)
