@@ -11,7 +11,6 @@ willothy.icons = require("willothy.modules.icons")
 willothy.keymap = require("willothy.modules.keymap")
 willothy.player = require("willothy.modules.player")
 willothy.term = require("willothy.modules.terminals")
-willothy.marks = require("willothy.modules.marks")
 willothy.event = require("willothy.modules.event")
 
 willothy.utils = {}
@@ -29,6 +28,9 @@ willothy.utils.progress = require("willothy.modules.utils.progress")
 
 willothy.ui = {}
 willothy.ui.scrollbar = require("willothy.modules.ui.scrollbar")
+willothy.ui.scrolleof = require("willothy.modules.ui.scrolleof")
+willothy.ui.float_drag = require("willothy.modules.ui.float_drag")
+willothy.ui.select = require("willothy.modules.ui.select")
 
 willothy.hydras = {}
 willothy.hydras.git = require("willothy.modules.hydras.git")

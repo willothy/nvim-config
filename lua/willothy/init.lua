@@ -80,7 +80,6 @@ willothy.icons = lazy("icons")
 willothy.keymap = lazy("keymap")
 willothy.player = lazy("player")
 willothy.term = lazy("terminals")
-willothy.marks = lazy("marks")
 willothy.event = lazy("event")
 
 willothy.utils = module("utils")
