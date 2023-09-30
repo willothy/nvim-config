@@ -1,10 +1,9 @@
 return {
   setup = function()
-    -- setup hydras
-    willothy.hydras.__load_all()
-
     -- setup ui
-    willothy.ui.__load_all()
+    willothy.ui.scrollbar.setup()
+    willothy.ui.scrolleof.setup()
+    willothy.ui.float_drag.setup()
 
     require("willothy.commands")
     require("willothy.autocmds")
