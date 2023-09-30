@@ -156,7 +156,6 @@ return {
   {
     "echasnovski/mini.files",
     -- "willothy/mini.files",
-    enabled=false,
     config = function()
       require("configs.editor.mini-files")
     end,
@@ -241,6 +240,27 @@ return {
     config = function()
       require("configs.navigation.harpoon")
     end,
+  },
+  {
+    "willothy/wrangler.nvim",
+    config = true,
+    event = "User ExtraLazy",
+    keys = {
+      {
+        "<C-m>",
+        function()
+          require("wrangler").toggle_menu()
+        end,
+        desc = "wrangler: toggle menu",
+      },
+      {
+        "<leader>mw",
+        function()
+          require("wrangler").toggle_mark()
+        end,
+        desc = "wrangler: toggle mark",
+      },
+    },
   },
   {
     "cbochs/portal.nvim",

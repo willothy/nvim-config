@@ -100,7 +100,9 @@ return {
   {
     "tomiis4/Hypersonic.nvim",
     event = "User ExtraLazy",
-    config = true,
+    config = function()
+      require("configs.editor.hypersonic")
+    end,
   },
   {
     "tzachar/highlight-undo.nvim",
