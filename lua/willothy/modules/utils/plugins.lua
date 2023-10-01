@@ -19,6 +19,9 @@ function M.is_fork(p)
     ["nvim-cokeline"] = true,
     ["moveline.nvim"] = true,
     ["veil.nvim"] = true,
+    ["wrangler.nvim"] = true,
+    ["micro-async.nvim"] = true,
+    ["leptos.nvim"] = true,
   }
   return not my_plugins[p.name]
 end
