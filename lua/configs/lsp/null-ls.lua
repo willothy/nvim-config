@@ -3,15 +3,15 @@ local builtins = null_ls.builtins
 
 null_ls.setup({
   sources = {
-    null_ls.builtins.formatting.protolint,
-    null_ls.builtins.diagnostics.protolint,
+    -- null_ls.builtins.formatting.protolint,
+    -- null_ls.builtins.diagnostics.protolint,
     -- builtins.formatting.markdownlint,
     -- builtins.formatting.taplo,
     -- builtins.diagnostics.commitlint,
-    builtins.diagnostics.markdownlint,
+    -- builtins.diagnostics.markdownlint,
     -- builtins.diagnostics.semgrep,
     -- builtins.diagnostics.shellcheck,
-    builtins.diagnostics.zsh,
+    -- builtins.diagnostics.zsh,
     builtins.code_actions.refactoring,
     builtins.code_actions.gitrebase,
     -- builtins.code_actions.ts_node_action,

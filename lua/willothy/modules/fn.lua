@@ -80,26 +80,55 @@ function M.throttle(fn, delay)
   end
 end
 
-function M.debounce(fn, delay)
-  local timer = vim.uv.new_timer()
+function M.debounce_leading(fn, ms)
+  fn = vim.schedule_wrap(fn)
+  local timer = vim.loop.new_timer()
+  local running = false
 
-  local proxy = newproxy(false)
-  local canary
-  return function(...)
-    canary = canary
-      or debug.setmetatable(proxy, {
-        __gc = vim.schedule_wrap(function()
-          timer:stop()
-          timer:close()
-        end),
-      })
-    if canary and timer:is_active() then
-      timer:stop()
+  local canary = newproxy(true)
+  getmetatable(canary).__gc = function()
+    -- close the timer handle when the function is GC'd
+    if not timer:is_closing() then
+      timer:close()
     end
-    local args = { ... }
-    timer:start(delay, 0, function()
-      fn(unpack(args))
+  end
+
+  return function(...)
+    timer:start(ms, 0, function()
+      running = false
     end)
+
+    -- just to ensure that the canary is captured in the closure
+    if canary and not running then
+      running = true
+      fn(...)
+    end
+  end
+end
+
+function M.debounce_trailing(fn, ms)
+  local timer = vim.loop.new_timer()
+  local canary = newproxy(true)
+
+  getmetatable(canary).__gc = function()
+    -- close the timer handle when the function is GC'd
+    if not timer:is_closing() then
+      timer:close()
+    end
+  end
+
+  return function(...)
+    local args = vim.F.pack_len(...)
+    -- just to ensure that the canary is captured in the closure
+    if canary then
+      timer:start(
+        ms,
+        0,
+        vim.schedule_wrap(function()
+          fn(vim.F.unpack_len(args))
+        end)
+      )
+    end
   end
 end
 
