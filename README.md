@@ -22,11 +22,6 @@ to add to your own config :)
 - `player.lua`: Playerctl UI for Neovim
   - [x] playerctl wrapper
   - [ ] nui UI (wip)
-- `marks.lua`: sqlite-based mark manager, inspired by Harpoon (VERY wip)
-  - [ ] db schema
-  - [ ] db update wrappers (preserving list order)
-  - [ ] popup UI
-  - [ ] mapping functions
 
 ## Directory Structure
 
@@ -67,7 +62,6 @@ to add to your own config :)
      │   ├──  hl.lua            # highlight stuff
      │   ├──  icons.lua         # categorized icons
      │   ├──  keymap.lua        # keymap utilities
-     │   ├──  marks.lua         # custom sqlite-powered marks (wip)
      │   ├──  player.lua        # custom playerctl wrapper / Nui-based UI (wip)
      │   ├──  rx.lua            # reactive runtime (wip)
      │   ├──  terminals.lua     # customized toggleterm terminals
@@ -85,7 +79,8 @@ to add to your own config :)
      │   ├──  ui                # ui (willothy.ui)
      │   │   ├──  float_drag.lua# float dragging
      │   │   ├──  scrolleof.lua # scroll past end of file (wip, using scrollEOF instead)
-     │   │   └──  scrollbar.lua # custom scrollbars based on noice.nvim
+     │   │   ├──  scrollbar.lua # custom scrollbars based on noice.nvim
+     │   │   └──  select.lua    # vim.ui.select powered by dropbar.nvim
      │   │
      │   └──  utils             # utilities (willothy.utils)
      │       ├──  buf.lua       # buffer utilities
