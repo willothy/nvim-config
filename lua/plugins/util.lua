@@ -99,7 +99,7 @@ return {
   },
   {
     "tomiis4/Hypersonic.nvim",
-    event = "User ExtraLazy",
+    event = "CmdlineEnter",
     config = function()
       require("configs.editor.hypersonic")
     end,
