@@ -120,12 +120,7 @@ return {
       "crispgm/telescope-heading.nvim",
       "debugloop/telescope-undo.nvim",
       "dhruvmanila/browser-bookmarks.nvim",
-      {
-        -- "nvim-telescope/telescope-frecency.nvim",
-        "willothy/telescope-frecency.nvim",
-        branch = "fix-workspace-filter",
-        -- dir = "~/projects/lua/telescope-frecency.nvim",
-      },
+      "nvim-telescope/telescope-frecency.nvim",
       "nvim-telescope/telescope-smart-history.nvim",
     },
   },
