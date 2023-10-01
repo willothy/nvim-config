@@ -14,7 +14,8 @@ require("portal").setup({
     ["<down>"] = true,
   },
   window_options = {
-    border = "rounded",
+    -- border = "single",
+    border = { "", " ", "", "", "", "─", "─", "" },
   },
 })
 
