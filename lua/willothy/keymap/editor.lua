@@ -64,6 +64,8 @@ require("which-key").register({
       "lsp: definitions",
     },
   },
+  H = { "^", "start of line" },
+  L = { "$", "end of line" },
 }, { mode = modes.non_editing })
 
 register({
