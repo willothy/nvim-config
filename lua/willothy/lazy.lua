@@ -1,9 +1,8 @@
 return {
   setup = function()
     -- setup ui
-    willothy.ui.scrollbar.setup()
-    willothy.ui.scrolleof.setup()
-    willothy.ui.float_drag.setup()
+    willothy.ui.setup()
+    willothy.hydras.setup()
 
     require("willothy.commands")
     require("willothy.autocmds")

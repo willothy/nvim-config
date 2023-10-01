@@ -1,61 +1,83 @@
-local function lazy(module)
+local function module()
+  local submodules = {}
+  local setup = {}
+
   local mt = {}
+
   function mt:__index(k)
-    if not package.loaded[module] then
-      local mod = require(module)
-      if rawget(mod, "setup") then
+    if not submodules[k] then
+      return
+    end
+    local mod
+    if type(submodules[k]) == "table" then
+      mod = submodules[k]
+    else
+      mod = require("willothy.modules." .. submodules[k])
+    end
+    if not setup[k] then
+      if mod.setup then
         mod.setup()
       end
-      return mod[k]
+      setup[k] = true
     end
-    return require(module)[k]
+    return mod
   end
   function mt:__newindex(k, v)
-    require(module)[k] = v
+    submodules[k] = v
   end
-  return setmetatable({}, mt)
+
+  local m = {}
+
+  function m.setup()
+    for k in pairs(submodules) do
+      if not setup[k] then
+        if m[k].setup then
+          m[k].setup()
+        end
+        setup[k] = true
+      end
+    end
+  end
+
+  return setmetatable(m, mt)
 end
 
-local base = "willothy.modules."
+willothy = module()
+willothy.fs = "fs"
+willothy.hl = "hl"
+willothy.fn = "fn"
+willothy.rx = "rx"
+willothy.icons = "icons"
+willothy.keymap = "keymap"
+willothy.player = "player"
+willothy.term = "terminals"
+willothy.event = "event"
 
-willothy = {}
-willothy.fs = lazy(base .. "fs")
-willothy.hl = lazy(base .. "hl")
-willothy.fn = lazy(base .. "fn")
-willothy.rx = lazy(base .. "rx")
-willothy.icons = lazy(base .. "icons")
-willothy.keymap = lazy(base .. "keymap")
-willothy.player = lazy(base .. "player")
-willothy.term = lazy(base .. "terminals")
-willothy.event = lazy(base .. "event")
+willothy.utils = module()
+willothy.utils.cursor = "utils.cursor"
+willothy.utils.window = "utils.window"
+willothy.utils.buf = "utils.buf"
+willothy.utils.tabpage = "utils.tabpage"
+willothy.utils.mode = "utils.mode"
+willothy.utils.plugins = "utils.plugins"
+willothy.utils.debug = "utils.debug"
+willothy.utils.table = "utils.table"
+willothy.utils.progress = "utils.progress"
 
-willothy.utils = {}
-willothy.utils.cursor = lazy(base .. "utils.cursor")
-willothy.utils.window = lazy(base .. "utils.window")
-willothy.utils.buf = lazy(base .. "utils.buf")
-willothy.utils.tabpage = lazy(base .. "utils.tabpage")
-willothy.utils.mode = lazy(base .. "utils.mode")
-willothy.utils.plugins = lazy(base .. "utils.plugins")
-willothy.utils.debug = lazy(base .. "utils.debug")
-willothy.utils.table = lazy(base .. "utils.table")
-willothy.utils.progress = lazy(base .. "utils.progress")
+willothy.ui = module()
+willothy.ui.scrollbar = "ui.scrollbar"
+willothy.ui.scrolleof = "ui.scrolleof"
+willothy.ui.float_drag = "ui.float_drag"
+willothy.ui.select = "ui.select"
 
-willothy.ui = {}
-willothy.ui.scrollbar = lazy(base .. "ui.scrollbar")
-willothy.ui.scrolleof = lazy(base .. "ui.scrolleof")
-willothy.ui.float_drag = lazy(base .. "ui.float_drag")
-willothy.ui.select = lazy(base .. "ui.select")
-
-willothy.hydras = {}
-willothy.hydras.git = lazy(base .. "hydras.git")
-willothy.hydras.options = lazy(base .. "hydras.options")
-willothy.hydras.telescope = lazy(base .. "hydras.telescope")
-willothy.hydras.diagrams = lazy(base .. "hydras.diagrams")
-willothy.hydras.windows = lazy(base .. "hydras.windows")
-willothy.hydras.buffers = lazy(base .. "hydras.buffers")
-willothy.hydras.swap = lazy(base .. "hydras.swap")
-
-willothy.lazy = lazy
+willothy.hydras = module()
+willothy.hydras.git = "hydras.git"
+willothy.hydras.options = "hydras.options"
+willothy.hydras.telescope = "hydras.telescope"
+willothy.hydras.diagrams = "hydras.diagrams"
+willothy.hydras.windows = "hydras.windows"
+willothy.hydras.buffers = "hydras.buffers"
+willothy.hydras.swap = "hydras.swap"
 
 require("willothy.settings")
 

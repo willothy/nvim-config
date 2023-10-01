@@ -24,9 +24,10 @@ function M.ui_select(items, opts, on_choice)
         text = opts.format_item(item)
       end
       local virt_text
-      if string.match(text, "%(.*%)%s*$") then
-        virt_text = string.match(text, "%((.*)%)")
-        text = string.gsub(text, "%(.*%)%s*$", "")
+      local vt_pat = "%((.*)%)%s*%.?%s*$"
+      if text:match(vt_pat) then
+        virt_text = text:match(vt_pat)
+        text = text:gsub(vt_pat, "")
       end
       return dropbar_menu_entry_t:new({
         virt_text = virt_text
@@ -126,6 +127,21 @@ function M.ui_select(items, opts, on_choice)
   })
 
   menu:open()
+
+  vim.api.nvim_create_autocmd("CursorMoved", {
+    buffer = menu.buf,
+    callback = function()
+      local cursor = vim.api.nvim_win_get_cursor(menu.win)
+      local eventignore = vim.o.eventignore
+      vim.o.eventignore = "all"
+      vim.api.nvim_win_set_cursor(menu.win, {
+        cursor[1],
+        1,
+      })
+      menu:update_hover_hl({ cursor[1], 1 })
+      vim.o.eventignore = eventignore
+    end,
+  })
 end
 
 M.setup = function()
