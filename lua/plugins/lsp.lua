@@ -101,6 +101,20 @@ return {
     event = "User ExtraLazy",
   },
   {
+    "stevearc/conform.nvim",
+    config = function()
+      require("configs.lsp.conform")
+    end,
+    event = "User ExtraLazy",
+  },
+  {
+    "mfussenegger/nvim-lint",
+    config = function()
+      require("configs.lsp.nvim-lint")
+    end,
+    event = "User ExtraLazy",
+  },
+  {
     "dgagn/diagflow.nvim",
     -- "willothy/diagflow.nvim",
     config = function()
