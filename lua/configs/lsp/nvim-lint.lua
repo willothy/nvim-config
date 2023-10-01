@@ -1,7 +1,7 @@
 local lint = require("lint")
 
 lint.linters_by_ft = {
-  lua = { "selene" },
+  -- lua = { "selene" },
   proto = { "protolint" },
   markdown = { "markdownlint" },
   zsh = { "shellcheck" },

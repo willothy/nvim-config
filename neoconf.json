@@ -29,7 +29,8 @@
         "nvim-cokeline",
         "toggleterm.nvim",
         "overseer.nvim",
-        "dropbar.nvim"
+        "dropbar.nvim",
+        "micro-async.nvim"
       ]
     }
   },
