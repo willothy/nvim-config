@@ -1,3 +1,4 @@
+---@diagnostic disable: inject-field
 --- UI select module using Dropbar.nvim
 
 -- utils for code actions
@@ -21,17 +22,19 @@ local function _str_byteindex_enc(line, index, encoding)
       return #line
     end
   elseif encoding == "utf-16" then
+    ---@diagnostic disable-next-line: return-type-mismatch
     return vim.str_byteindex(line, index, true)
   elseif encoding == "utf-32" then
+    ---@diagnostic disable-next-line: return-type-mismatch
     return vim.str_byteindex(line, index)
   else
     error("Invalid encoding: " .. vim.inspect(encoding))
   end
 end
 
-local function get_lines(_bufnr)
-  vim.fn.bufload(_bufnr)
-  return vim.api.nvim_buf_get_lines(_bufnr, 0, -1, false)
+local function get_lines(bufnr)
+  vim.fn.bufload(bufnr)
+  return vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 end
 
 -- based on https://github.com/neovim/neovim/blob/v0.7.2/runtime/lua/vim/lsp/util.lua#L277-L298
@@ -58,8 +61,8 @@ local function get_line_byte_from_position(lines, position, offset_encoding)
   return col
 end
 
-local function get_eol(_bufnr)
-  local ff = vim.api.nvim_buf_get_option(_bufnr, "fileformat")
+local function get_eol(bufnr)
+  local ff = vim.api.nvim_get_option_value("fileformat", { buf = bufnr })
   if ff == "dos" then
     return "\r\n"
   elseif ff == "unix" then
@@ -214,6 +217,7 @@ local function diff_workspace_edit(workspace_edit, offset_encoding)
         diff = diff .. string.format("--- a/%s\n", path)
         diff = diff .. string.format("+++ b/%s\n", path)
         diff = diff
+          ---@diagnostic disable-next-line: param-type-mismatch
           .. vim.trim(diff_text_document_edit(change, offset_encoding))
           .. "\n"
         diff = diff .. "\n"
@@ -234,6 +238,7 @@ local function diff_workspace_edit(workspace_edit, offset_encoding)
           string.format("diff --code-actions a/%s b/%s", path, path),
           string.format("--- a/%s", path),
           string.format("+++ b/%s", path),
+          ---@diagnostic disable-next-line: param-type-mismatch
           vim.trim(diff_text_edits(changes, bufnr, offset_encoding)),
           "",
           "",
@@ -388,33 +393,78 @@ function M.ui_select(items, opts, on_choice)
   })
 end
 
-M.code_actions = function(options)
-  local a = require("micro-async")
-  local lsp = require("micro-async.lsp")
-  local api = vim.api
+local function apply_code_action(action, client, ctx)
   local util = vim.lsp.util
+  if action.edit then
+    util.apply_workspace_edit(action.edit, client.offset_encoding)
+  end
+  if action.command then
+    local command = type(action.command) == "table" and action.command
+      or action
+    client._exec_cmd(command, ctx)
+  end
+end
 
-  local buf_request_all = a.wrap(vim.lsp.buf_request_all, 4)
+local function exec_selected_action(action_tuple, ctx)
+  if not action_tuple then
+    return
+  end
+  local client = vim.lsp.get_client_by_id(action_tuple[1])
+  if not client then
+    vim.notify("No client found for selected action", vim.log.levels.ERROR)
+    return
+  end
+  local action = action_tuple[2]
 
+  ---@diagnostic disable-next-line: invisible
+  local reg = client.dynamic_capabilities:get(
+    "textDocument/codeAction",
+    { bufnr = ctx.bufnr }
+  )
+
+  local supports_resolve = vim.tbl_get(
+    reg or {},
+    "registerOptions",
+    "resolveProvider"
+  ) or client.supports_method("codeAction/resolve")
+
+  if not action.edit and client and supports_resolve then
+    client.request("codeAction/resolve", action, function(err, resolved_action)
+      if err then
+        vim.notify(err.code .. ": " .. err.message, "error")
+        return
+      end
+      apply_code_action(resolved_action, client, ctx)
+    end, ctx.bufnr)
+  else
+    apply_code_action(action, client, ctx)
+  end
+end
+
+M.code_actions = function(options)
   options = options or {}
 
+  local a = require("micro-async")
+  local util = vim.lsp.util
+
+  local bufnr = vim.api.nvim_get_current_buf()
+
   a.void(function()
-    local context = options.context or {}
-    if not context.triggerKind then
-      context.triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Invoked
-    end
-    local bufnr = vim.api.nvim_get_current_buf()
-    if not context.diagnostics then
-      context.diagnostics = vim.lsp.diagnostic.get_line_diagnostics(bufnr)
-    end
+    local context = {}
+    context.triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Invoked
+    context.diagnostics = vim.lsp.diagnostic.get_line_diagnostics(bufnr)
+
     local params = util.make_range_params()
     params.context = context
 
-    local code_actions, ctx =
-      buf_request_all(bufnr, "textDocument/codeAction", params)
+    local client_actions =
+      a.lsp.buf_request_all(bufnr, "textDocument/codeAction", params)
 
-    local action_tuples = vim
-      .iter(pairs(code_actions))
+    local actions = vim
+      .iter(pairs(client_actions))
+      :filter(function(_, actions)
+        return actions.error == nil and actions.result ~= nil
+      end)
       :map(function(client, actions)
         return vim
           .iter(actions.result)
@@ -428,80 +478,17 @@ M.code_actions = function(options)
         return acc
       end)
 
-    local function apply_action(action, client)
-      if action.edit then
-        util.apply_workspace_edit(action.edit, client.offset_encoding)
-      end
-      if action.command then
-        local command = type(action.command) == "table" and action.command
-          or action
-        client._exec_cmd(command, ctx)
-      end
-    end
-
-    local function on_user_choice(action_tuple)
-      if not action_tuple then
-        return
-      end
-      -- textDocument/codeAction can return either Command[] or CodeAction[]
-      --
-      -- CodeAction
-      --  ...
-      --  edit?: WorkspaceEdit    -- <- must be applied before command
-      --  command?: Command
-      --
-      -- Command:
-      --  title: string
-      --  command: string
-      --  arguments?: any[]
-      --
-      ---@type lsp.Client?
-      local client = vim.lsp.get_client_by_id(action_tuple[1])
-      if not client then
-        return
-      end
-      local action = action_tuple[2]
-
-      ---@diagnostic disable-next-line: invisible
-      local reg = client.dynamic_capabilities:get(
-        "textDocument/codeAction",
-        { bufnr = ctx.bufnr }
-      )
-
-      local supports_resolve = vim.tbl_get(
-        reg or {},
-        "registerOptions",
-        "resolveProvider"
-      ) or client.supports_method("codeAction/resolve")
-
-      if not action.edit and client and supports_resolve then
-        client.request(
-          "codeAction/resolve",
-          action,
-          function(err, resolved_action)
-            if err then
-              vim.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
-              return
-            end
-            apply_action(resolved_action, client)
-          end,
-          ctx.bufnr
-        )
-      else
-        apply_action(action, client)
-      end
-    end
-
-    if #action_tuples == 0 then
+    if vim.tbl_isempty(actions) then
+      vim.notify("No code actions available", "info")
       return
     end
 
-    M.ui_select(action_tuples, {
+    local selection = a.ui.select(actions, {
       prompt = "Code actions:",
       kind = "codeaction",
       format_item = function(action_tuple)
         local title = action_tuple[2].title:gsub("\r\n", "\\r\\n")
-        return title:gsub("\n", "\\n")
+        return title:gsub("\n%s+", ""):gsub("\n", "\\n")
       end,
       ---@param self dropbar_symbol_t
       preview = function(self, item)
@@ -513,7 +500,16 @@ M.code_actions = function(options)
               and self.entry.menu.preview_buf
             or vim.api.nvim_create_buf(false, true)
           local text = vim
-            .iter(vim.split(diff_workspace_edit(item[2].edit, "utf-8") or "", "\n"))
+            .iter(
+              vim.split(
+                diff_workspace_edit(
+                  item[2].edit,
+                  vim.lsp.util._get_offset_encoding(bufnr)
+                ) or "",
+                "\n",
+                { trimempty = true }
+              )
+            )
             :skip(3)
             :filter(function(line)
               return not vim.startswith(line, "@@")
@@ -555,6 +551,7 @@ M.code_actions = function(options)
             false,
             text
           )
+          vim.bo[self.entry.menu.preview_buf].filetype = vim.bo[bufnr].filetype
           local ns =
             vim.api.nvim_create_namespace("dropbar-code-action-preview")
           for _, i in ipairs(add_lines) do
@@ -577,8 +574,6 @@ M.code_actions = function(options)
               -1
             )
           end
-          -- vim.bo[self.entry.menu.preview_buf].filetype = "lua"
-          vim.bo[self.entry.menu.preview_buf].syntax = "diff"
           self.entry.menu.preview_win = (
             self.entry.menu.preview_win
             and vim.api.nvim_win_is_valid(self.entry.menu.preview_win)
@@ -587,7 +582,7 @@ M.code_actions = function(options)
             or vim.api.nvim_open_win(self.entry.menu.preview_buf, false, {
               relative = "win",
               focusable = false,
-              height = #text, -- math.min(10, #text),
+              height = math.min(#text, 15),
               width = math.min(80, math.max(50, max_line_len + 2)),
               row = -1,
               col = vim.api.nvim_win_get_width(0) + 1,
@@ -596,7 +591,7 @@ M.code_actions = function(options)
         end
       end,
       ---@param self dropbar_symbol_t
-      preview_restore_view = function(self, item)
+      preview_restore_view = function(self)
         if
           self.entry.menu.preview_win
           and vim.api.nvim_win_is_valid(self.entry.menu.preview_win)
@@ -605,12 +600,15 @@ M.code_actions = function(options)
           self.entry.menu.preview_win = nil
         end
       end,
-    }, on_user_choice)
+    })
+
+    exec_selected_action(selection, context)
   end)()
 end
 
 M.setup = function()
   vim.ui.select = M.ui_select
+  vim.lsp.buf.code_action = M.code_actions
 end
 
 return setmetatable(M, {
