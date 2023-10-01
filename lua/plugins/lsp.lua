@@ -53,10 +53,6 @@ return {
     event = "LspAttach",
   },
   {
-    "lukas-reineke/lsp-format.nvim",
-    config = true,
-  },
-  {
     -- "simrat39/rust-tools.nvim",
     "willothy/rust-tools.nvim",
     -- dir = "~/projects/lua/rust-tools.nvim/",
