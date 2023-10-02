@@ -12,6 +12,10 @@ to add to your own config :)
 - Lazy load EVERYTHING. Only a few plugins load before UiEnter.
 - I've spent a stupid amount of time optimizing
 
+![eeeeeeeeeeeeeeeeee](https://github.com/willothy/nvim-config/assets/38540736/7c7b5756-bc8b-4a07-a140-b36f9da30ac2)
+![startuptime](https://github.com/willothy/nvim-config/assets/38540736/7713eadd-0b2a-4ab2-9188-cbd0eb1f24aa)<br>
+*fastest recorded startup time with this config*
+
 ## Some things I'm working on in this repo
 
 - `rx.lua`: Reactive extensions for Neovim
