@@ -35,15 +35,12 @@ return {
   },
   {
     "nmac427/guess-indent.nvim",
-    opts = {
-      auto_cmd = true,
-    },
+    opts = { auto_cmd = true },
     event = "VeryLazy",
   },
   {
     "Dhanus3133/LeetBuddy.nvim",
     config = true,
-    event = "VeryLazy",
     cmd = {
       "LBQuestion",
       "LBQuestions",
