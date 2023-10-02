@@ -78,6 +78,10 @@ local function get_rhs_width()
   end
 end
 
+local function is_float(win)
+  return vim.api.nvim_win_get_config(win).zindex ~= nil
+end
+
 local neogit = View.new({
   size = {
     width = get_rhs_width,
@@ -161,23 +165,24 @@ local opts = {
     sidebar:extend({
       title = "Diagnostics",
       ft = "neo-tree",
-      filter = function(buf)
+      filter = function(buf, win)
         return vim.b[buf].neo_tree_source == "diagnostics"
+          and not is_float(win)
       end,
     }),
     sidebar:extend({
       title = "Git",
       ft = "neo-tree",
-      filter = function(buf)
-        return vim.b[buf].neo_tree_source == "git_status"
+      filter = function(buf, win)
+        return vim.b[buf].neo_tree_source == "git_status" and not is_float(win)
       end,
       open = "Neotree git_status",
     }),
     sidebar:extend({
       title = "Buffers",
       ft = "neo-tree",
-      filter = function(buf)
-        return vim.b[buf].neo_tree_source == "buffers"
+      filter = function(buf, win)
+        return vim.b[buf].neo_tree_source == "buffers" and not is_float(win)
       end,
       open = "Neotree buffers",
     }),
@@ -251,39 +256,43 @@ local opts = {
     }),
     trouble:extend({
       title = "Diagnostics",
-      filter = function(buf)
+      filter = function(buf, win)
         return vim.b[buf].trouble_mode == "document_diagnostics"
           or vim.b[buf].trouble_mode == "workspace_diagnostics"
+            and not is_float(win)
       end,
     }),
     trouble:extend({
       title = "References",
-      filter = function(buf)
+      filter = function(buf, win)
         return vim.b[buf].trouble_mode == "lsp_references"
+          and not is_float(win)
       end,
     }),
     trouble:extend({
       title = "Definitions",
-      filter = function(buf)
+      filter = function(buf, win)
         return vim.b[buf].trouble_mode == "lsp_definitions"
+          and not is_float(win)
       end,
     }),
     trouble:extend({
       title = "Type Definitions",
-      filter = function(buf)
+      filter = function(buf, win)
         return vim.b[buf].trouble_mode == "lsp_type_definitions"
+          and not is_float(win)
       end,
     }),
     trouble:extend({
       title = "QuickFix",
-      filter = function(buf)
-        return vim.b[buf].trouble_mode == "quickfix"
+      filter = function(buf, win)
+        return vim.b[buf].trouble_mode == "quickfix" and not is_float(win)
       end,
     }),
     trouble:extend({
       title = "LocList",
-      filter = function(buf)
-        return vim.b[buf].trouble_mode == "loclist"
+      filter = function(buf, win)
+        return vim.b[buf].trouble_mode == "loclist" and not is_float(win)
       end,
     }),
   },
@@ -321,6 +330,7 @@ local opts = {
 local A = require("edgy.animate")
 
 local timer
+---@diagnostic disable-next-line: duplicate-set-field
 A.schedule = function()
   if not (timer and timer:is_active()) then
     timer = vim.defer_fn(function()
@@ -336,7 +346,8 @@ end
 
 local V = require("edgy.view")
 ---@param view Edgy.View.Opts
----@diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable: duplicate-set-field
+---@diagnostic disable: inject-field
 function V.new(view, edgebar)
   local mt = getmetatable(view)
   local self = mt and view or setmetatable(view, V)

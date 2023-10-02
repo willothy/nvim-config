@@ -146,7 +146,20 @@ return {
   },
   {
     "stevearc/stickybuf.nvim",
-    config = true,
+    opts = {
+      get_auto_pin = function(bufnr)
+        -- Shell terminals will all have ft `terminal`, and can be switched between.
+        -- They should be pinned by filetype only, not bufnr.
+        if vim.bo[bufnr].filetype == "terminal" then
+          return "filetype"
+        end
+        -- Non-shell terminals should be pinned by bufnr, not filetype.
+        if vim.bo[bufnr].buftype == "terminal" then
+          return "bufnr"
+        end
+        return require("stickybuf").should_auto_pin(bufnr)
+      end,
+    },
   },
   -- STATUS --
   {

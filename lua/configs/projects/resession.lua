@@ -2,9 +2,9 @@ local resession = require("resession")
 
 resession.setup({
   extensions = {
-    scope = {
-      enable_in_tab = true,
-    },
+    -- scope = {
+    --   enable_in_tab = true,
+    -- },
     overseer = {
       enable_in_tab = true,
     },
@@ -67,6 +67,7 @@ willothy.event.on(
     if lazy_open then
       require("lazy.view").show()
     end
+    vim.o.showtabline = 2
   end)
 )
 
@@ -88,9 +89,28 @@ willothy.event.on("ResessionSavePost", function()
   progress = nil
 end)
 
+local function should_reset()
+  local wins = vim.api.nvim_list_wins()
+  for _, win in ipairs(wins) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if
+      vim.bo[buf].buftype ~= "nofile"
+      and vim.api.nvim_win_get_config(win).relative ~= ""
+    then
+      return false
+    end
+    if vim.api.nvim_buf_get_name(buf) ~= "" then
+      return false
+    end
+  end
+  return true
+end
+
 local commands = {
   load = function(session)
-    local ok = pcall(resession.load, session)
+    local ok = pcall(resession.load, session, {
+      reset = should_reset(),
+    })
     if not ok then
       vim.notify("Unknown session: " .. session, "warn")
     end
@@ -102,7 +122,7 @@ local commands = {
     end
   end,
   list = function()
-    resession.load(nil)
+    resession.load(nil, { reset = should_reset() })
   end,
   save = function(session)
     if not session then

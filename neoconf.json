@@ -22,7 +22,7 @@
         "harpoon",
         "sqlite.lua",
         "resession.nvim",
-        "telescope.nvim",
+        // "telescope.nvim",
         "noice.nvim",
         "sg.nvim",
         "nvim-cmp",
