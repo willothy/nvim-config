@@ -70,59 +70,6 @@ willothy.event.on(
   end)
 )
 
-vim.api.nvim_create_user_command("Session", function(args)
-  args = args.fargs
-  local command = args[1]
-  if not command then
-    vim.notify("No command specified", "warn")
-    return
-  end
-  if command == "load" then
-    if not args[2] then
-      resession.load(nil, { dir = "dirsession" })
-      return
-    end
-    local lookup = {}
-    for _, session in ipairs(resession.list()) do
-      local o = { name = session }
-      lookup[session] = o
-    end
-    for _, session in ipairs(resession.list({ dir = "dirsession" })) do
-      local name = session:gsub("_", "/")
-      local o = { name = session, dir = "dirsession" }
-      lookup[session] = o
-    end
-    if lookup[args[2]] then
-      resession.load(lookup[args[2]].name, { dir = lookup[args[2]].dir })
-    else
-      vim.notify("Session not found: " .. args[2], "warn")
-    end
-  elseif command == "list" then
-    resession.load(nil, { dir = "dirsession" })
-  elseif command == "save" then
-    resession.save_all({ notify = false })
-  end
-end, {
-  nargs = "*",
-  complete = function(arg, _line, pos)
-    local list = {}
-    if pos < 8 then
-      return list
-    end
-    local options = {
-      "load",
-      "save",
-      "list",
-    }
-    for _, option in ipairs(options) do
-      if vim.startswith(option, arg) then
-        table.insert(list, option)
-      end
-    end
-    return list
-  end,
-})
-
 -- show an LSP progress indicator for session save
 local progress
 willothy.event.on("ResessionSavePre", function()
@@ -141,6 +88,80 @@ willothy.event.on("ResessionSavePost", function()
   progress = nil
 end)
 
+local commands = {
+  load = function(session)
+    local ok = pcall(resession.load, session)
+    if not ok then
+      vim.notify("Unknown session: " .. session, "warn")
+    end
+  end,
+  delete = function(session)
+    local ok = pcall(resession.delete, session)
+    if not ok then
+      vim.notify("Unknown session: " .. session, "warn")
+    end
+  end,
+  list = function()
+    resession.load(nil)
+  end,
+  save = function(session)
+    if not session then
+      return resession.save_all({ notify = false })
+    end
+    resession.save(session)
+  end,
+}
+
+vim.api.nvim_create_user_command("Session", function(args)
+  args = args.fargs
+  local command = args[1]
+  if not command then
+    vim.notify("No command specified", "warn")
+  elseif commands[command] then
+    commands[command](unpack(args, 2))
+  else
+    vim.notify("Unknown command: " .. command, "warn")
+    return
+  end
+end, {
+  nargs = "*",
+  desc = "Manage sessions",
+  complete = function(arg, line)
+    local res = vim.api.nvim_parse_cmd(line, {})
+    local argc = #res.args
+    local first = false
+    if argc == 0 then
+      first = true
+    end
+    if argc == 1 and not line:match("%s$") then
+      first = true
+    end
+    if first then
+      return vim
+        .iter(commands)
+        :filter(function(option)
+          return vim.startswith(option, arg)
+        end)
+        :map(function(name)
+          return name
+        end)
+        :totable()
+    elseif argc == 2 or (argc == 1 and line:match("%s$")) then
+      if res.args[1] == "load" or res.args[1] == "delete" then
+        return vim
+          .iter(resession.list())
+          :filter(function(session)
+            return vim.startswith(session, arg)
+          end)
+          :map(function(session)
+            return session
+          end)
+          :totable()
+      end
+    end
+  end,
+})
+
 if
   -- Only load the session if nvim was started with no args
   vim.fn.argc(-1) == 0
@@ -154,7 +175,7 @@ then
   resession.load(
     ---@diagnostic disable-next-line: param-type-mismatch
     vim.fs.basename(vim.fs.basename(vim.fn.getcwd())),
-    { dir = "dirsession", silence_errors = true, reset = false }
+    { silence_errors = true, reset = false }
   )
 end
 
@@ -166,7 +187,7 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
       vim.api.nvim_win_call(win, function()
         ---@diagnostic disable-next-line: param-type-mismatch
         local name = vim.fs.basename(vim.fn.getcwd(-1))
-        resession.save_tab(name, { dir = "dirsession", notify = false })
+        resession.save_tab(name, { notify = false })
       end)
     end)
     resession.save_all({ notify = false })

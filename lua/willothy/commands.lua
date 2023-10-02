@@ -138,13 +138,16 @@ local commands = {
   Scratch = {
     function(args)
       local f = vim.fn.tempname()
+      if not f then
+        return
+      end
       local buf = vim.api.nvim_create_buf(false, true)
       vim.api.nvim_buf_set_name(buf, f)
       vim.bo[buf].filetype = (args.args and (#args.args > 1)) and args.args[1]
         or "lua"
       vim.bo[buf].buftype = ""
-      vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-      vim.api.nvim_buf_set_option(buf, "swapfile", false)
+      vim.bo["bufhidden"] = "wipe"
+      vim.bo["swapfile"] = false
       vim.api.nvim_set_current_buf(buf)
     end,
     desc = "Open a scratch buffer",
