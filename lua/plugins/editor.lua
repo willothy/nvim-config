@@ -157,7 +157,10 @@ return {
   },
   -- SESSIONS / PROJECTS --
   {
-    "stevearc/resession.nvim",
+    -- "stevearc/resession.nvim",
+    "willothy/resession.nvim",
+    branch = "fix-load-dir",
+    -- dir = "~/projects/lua/resession.nvim/",
     dependencies = {
       "tiagovla/scope.nvim",
     },

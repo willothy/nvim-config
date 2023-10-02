@@ -70,6 +70,59 @@ willothy.event.on(
   end)
 )
 
+vim.api.nvim_create_user_command("Session", function(args)
+  args = args.fargs
+  local command = args[1]
+  if not command then
+    vim.notify("No command specified", "warn")
+    return
+  end
+  if command == "load" then
+    if not args[2] then
+      resession.load(nil, { dir = "dirsession" })
+      return
+    end
+    local lookup = {}
+    for _, session in ipairs(resession.list()) do
+      local o = { name = session }
+      lookup[session] = o
+    end
+    for _, session in ipairs(resession.list({ dir = "dirsession" })) do
+      local name = session:gsub("_", "/")
+      local o = { name = session, dir = "dirsession" }
+      lookup[session] = o
+    end
+    if lookup[args[2]] then
+      resession.load(lookup[args[2]].name, { dir = lookup[args[2]].dir })
+    else
+      vim.notify("Session not found: " .. args[2], "warn")
+    end
+  elseif command == "list" then
+    resession.load(nil, { dir = "dirsession" })
+  elseif command == "save" then
+    resession.save_all({ notify = false })
+  end
+end, {
+  nargs = "*",
+  complete = function(arg, _line, pos)
+    local list = {}
+    if pos < 8 then
+      return list
+    end
+    local options = {
+      "load",
+      "save",
+      "list",
+    }
+    for _, option in ipairs(options) do
+      if vim.startswith(option, arg) then
+        table.insert(list, option)
+      end
+    end
+    return list
+  end,
+})
+
 -- show an LSP progress indicator for session save
 local progress
 willothy.event.on("ResessionSavePre", function()
@@ -99,20 +152,23 @@ if
   and not vim.g.nosession
 then
   resession.load(
-    vim.fn.getcwd(),
+    ---@diagnostic disable-next-line: param-type-mismatch
+    vim.fs.basename(vim.fs.basename(vim.fn.getcwd())),
     { dir = "dirsession", silence_errors = true, reset = false }
   )
 end
 
 vim.api.nvim_create_autocmd("VimLeavePre", {
-  callback = function()
+  callback = vim.schedule_wrap(function()
     resession.save("last", { notify = false })
     vim.iter(vim.api.nvim_list_tabpages()):each(function(tab)
       local win = vim.api.nvim_tabpage_get_win(tab)
       vim.api.nvim_win_call(win, function()
-        local cwd = vim.fn.getcwd(-1)
-        resession.save_tab(cwd, { dir = "dirsession", notify = false })
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local name = vim.fs.basename(vim.fn.getcwd(-1))
+        resession.save_tab(name, { dir = "dirsession", notify = false })
       end)
     end)
-  end,
+    resession.save_all({ notify = false })
+  end),
 })
