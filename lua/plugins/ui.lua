@@ -17,6 +17,20 @@ return {
   },
   -- LAYOUT / CORE UI --
   {
+    -- "folke/which-key.nvim",
+    "willothy/which-key.nvim",
+    config = function()
+      require("configs.editor.which-key")
+    end,
+    event = "User ExtraLazy",
+  },
+  {
+    "nvim-tree/nvim-web-devicons",
+    config = function()
+      require("configs.ui.icons")
+    end,
+  },
+  {
     -- "folke/edgy.nvim",
     "willothy/edgy.nvim",
     -- dir = "~/projects/lua/edgy.nvim",
@@ -101,9 +115,9 @@ return {
     event = "User ExtraLazy",
   },
   {
-    "nvim-tree/nvim-web-devicons",
+    "folke/trouble.nvim",
     config = function()
-      require("configs.ui.icons")
+      require("configs.editor.trouble")
     end,
   },
   -- WINDOWS --

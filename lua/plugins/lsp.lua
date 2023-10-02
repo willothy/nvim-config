@@ -8,18 +8,6 @@ return {
     event = "LspAttach",
   },
   {
-    "willothy/hollywood.nvim",
-    event = "LspAttach",
-    -- dir = "~/projects/lua/hollywood.nvim",
-  },
-  {
-    "aznhe21/actions-preview.nvim",
-    config = function()
-      require("configs.lsp.actions-preview")
-    end,
-    event = "LspAttach",
-  },
-  {
     "ThePrimeagen/refactoring.nvim",
     config = true,
     event = "LspAttach",
@@ -30,18 +18,18 @@ return {
   },
   {
     "nvim-neotest/neotest",
+    config = function()
+      require("configs.editor.neotest")
+    end,
     dependencies = {
       "rouge8/neotest-rust",
     },
     event = "LspAttach",
-    config = function()
-      require("configs.editor.neotest")
-    end,
   },
   {
     "j-hui/fidget.nvim",
+    -- enabled = false,,
     branch = "legacy",
-    -- enabled = false,
     config = function()
       require("configs.lsp.fidget")
     end,
@@ -54,14 +42,22 @@ return {
   },
   {
     -- "simrat39/rust-tools.nvim",
-    "willothy/rust-tools.nvim",
     -- dir = "~/projects/lua/rust-tools.nvim/",
+    "willothy/rust-tools.nvim",
     branch = "master",
   },
   {
     "p00f/clangd_extensions.nvim",
     config = true,
     event = "LspAttach",
+  },
+  {
+    "sourcegraph/sg.nvim",
+    config = function()
+      require("configs.lsp.sourcegraph")
+    end,
+    event = "User ExtraLazy",
+    build = "nvim -l build/init.lua",
   },
   {
     "williamboman/mason.nvim",

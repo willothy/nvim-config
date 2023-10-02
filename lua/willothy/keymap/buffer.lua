@@ -37,7 +37,7 @@ register({
     end,
     "dropbar: open",
   },
-  p = {
+  b = {
     function()
       require("cokeline.mappings").pick("focus")
     end,
@@ -53,6 +53,6 @@ register({
     function()
       require("bufdelete").bufdelete(vim.v.count)
     end,
-    "close current",
+    "delete",
   },
 }, modes.non_editing, "<leader>b")

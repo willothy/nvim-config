@@ -1,8 +1,8 @@
 return {
   "folke/neoconf.nvim",
-  "anuvyklack/hydra.nvim",
   "kkharji/sqlite.lua",
   "nvim-lua/plenary.nvim",
+  "anuvyklack/hydra.nvim",
   {
     "lukas-reineke/headlines.nvim",
     config = function()
@@ -38,22 +38,8 @@ return {
     end,
   },
   {
-    "folke/trouble.nvim",
-    config = function()
-      require("configs.editor.trouble")
-    end,
-  },
-  {
     "nvim-pack/nvim-spectre",
     config = true,
-  },
-  {
-    "sourcegraph/sg.nvim",
-    config = function()
-      require("configs.lsp.sourcegraph")
-    end,
-    event = "User ExtraLazy",
-    build = "nvim -l build/init.lua",
   },
   {
     "willothy/moveline.nvim",
@@ -89,16 +75,6 @@ return {
   {
     "chrisgrieser/nvim-various-textobjs",
     config = true,
-  },
-  {
-    -- "folke/which-key.nvim",
-    "willothy/which-key.nvim",
-    -- branch = "description-sort",
-    -- dir = "~/projects/lua/which-key.nvim/",
-    config = function()
-      require("configs.editor.which-key")
-    end,
-    event = "User ExtraLazy",
   },
   {
     "mrjones2014/legendary.nvim",
@@ -272,7 +248,6 @@ return {
     config = function()
       require("configs.editor.reach")
     end,
-    -- cmd = "ReachOpen",
   },
   {
     "SUSTech-data/wildfire.nvim",
