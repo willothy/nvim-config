@@ -6,7 +6,6 @@ return {
   "willothy/micro-async.nvim",
   {
     "willothy/leptos.nvim",
-    -- dir = "~/projects/rust/leptos-test/",
     event = "VeryLazy",
   },
   {
@@ -55,26 +54,9 @@ return {
     event = "User ExtraLazy",
   },
   {
-    "nacro90/numb.nvim",
-    config = true,
-    event = "User ExtraLazy",
-  },
-  {
-    "gbprod/substitute.nvim",
-    opts = {
-      yank_substituted_text = true,
-    },
-    event = "User ExtraLazy",
-  },
-  {
     "tamton-aquib/keys.nvim",
     config = true,
     -- cmd = "KeysToggle",
-  },
-  {
-    "folke/todo-comments.nvim",
-    config = true,
-    event = "User ExtraLazy",
   },
   {
     "m-demare/attempt.nvim",
@@ -112,7 +94,7 @@ return {
   {
     "ziontee113/color-picker.nvim",
     config = true,
-    event = "User ExtraLazy",
+    cmd = "PickColor",
   },
   {
     "krady21/compiler-explorer.nvim",
@@ -124,11 +106,7 @@ return {
     config = function()
       require("configs.editor.floating-help")
     end,
-    event = "User ExtraLazy",
-  },
-  {
-    "echasnovski/mini.misc",
-    config = true,
+    cmd = "FloatingHelp",
   },
   {
     "jokajak/keyseer.nvim",
@@ -140,22 +118,11 @@ return {
     config = true,
     event = "User ExtraLazy",
   },
+  -- TODO: re-enable this
   -- {
   --   "subnut/nvim-ghost.nvim",
   --   event = "User ExtraLazy",
   -- },
-  {
-    "utilyre/sentiment.nvim",
-    event = "VeryLazy",
-    opts = {
-      delay = 30,
-      pairs = {
-        { "(", ")" },
-        { "{", "}" },
-        { "[", "]" },
-      },
-    },
-  },
   {
     "mong8se/actually.nvim",
     config = true,

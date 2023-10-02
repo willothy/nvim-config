@@ -2,23 +2,10 @@ local anyline = false
 
 return {
   "MunifTanjim/nui.nvim",
-  -- STARTUP --
-  {
-    "echasnovski/mini.starter",
-    config = function()
-      require("configs.ui.mini-starter")
-    end,
-    event = "VeryLazy",
-    enabled = false,
-  },
-  {
-    "willothy/veil.nvim",
-    config = true,
-  },
   -- LAYOUT / CORE UI --
   {
     -- "folke/which-key.nvim",
-    "willothy/which-key.nvim",
+    "willothy/which-key.nvim", -- fork with fixes and description sort
     config = function()
       require("configs.editor.which-key")
     end,
@@ -52,8 +39,6 @@ return {
   },
   {
     "rcarriga/nvim-notify",
-    -- "willothy/nvim-notify",
-    -- dir = "~/projects/lua/nvim-notify",
     event = "VeryLazy",
     config = function()
       require("configs.ui.notify")
@@ -62,24 +47,16 @@ return {
   -- SCOPE / CURSORWORD --
   {
     "echasnovski/mini.indentscope",
+    dependencies = {
+      -- Using both in conjunction looks nice.
+      -- Indent-blankline is setup in the same file
+      -- as mini.indentscope.
+      "lukas-reineke/indent-blankline.nvim",
+    },
     name = "mini.indentscope",
-    enabled = not anyline,
     event = "VeryLazy",
     config = function()
       require("configs.ui.mini-indentscope")
-    end,
-  },
-  {
-    enabled = not anyline,
-    "lukas-reineke/indent-blankline.nvim",
-  },
-  {
-    "willothy/anyline.nvim",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    enabled = anyline,
-    event = "VeryLazy",
-    config = function()
-      require("configs.ui.anyline")
     end,
   },
   {
@@ -158,16 +135,8 @@ return {
   },
   {
     "tummetott/winshift.nvim",
-    -- branch = "not_triggering_optionset_event",
     config = true,
     event = "User ExtraLazy",
-  },
-  {
-    "willothy/winborder.nvim",
-    config = true,
-    -- dir = "~/projects/lua/winborder.nvim/",
-    enabled = false,
-    event = "VeryLazy",
   },
   {
     "stevearc/stickybuf.nvim",
@@ -176,7 +145,7 @@ return {
   -- STATUS --
   {
     "willothy/nvim-cokeline",
-    branch = "incremental-truncate",
+    -- branch = "incremental-truncate",
     -- dir = "~/projects/lua/cokeline/",
     config = function()
       require("configs.status.cokeline")
@@ -193,8 +162,6 @@ return {
   {
     -- "Bekaboo/dropbar.nvim",
     "willothy/dropbar.nvim",
-    -- branch = "feat-menu-virt-text",
-    -- branch = "feat-fuzzy-finding",
     -- dir = "~/projects/lua/dropbar.nvim/",
     config = function()
       require("configs.status.dropbar")
@@ -226,6 +193,8 @@ return {
     end,
     event = "UiEnter",
   },
-  "rktjmp/lush.nvim",
-  "folke/tokyonight.nvim",
+  {
+    "rktjmp/lush.nvim",
+    cmd = "Lushify",
+  },
 }

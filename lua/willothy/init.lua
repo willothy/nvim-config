@@ -66,7 +66,6 @@ willothy.utils.progress = "utils.progress"
 
 willothy.ui = module()
 willothy.ui.scrollbar = "ui.scrollbar"
-willothy.ui.scrolleof = "ui.scrolleof"
 willothy.ui.float_drag = "ui.float_drag"
 willothy.ui.select = "ui.select"
 willothy.ui.code_actions = "ui.code_actions"

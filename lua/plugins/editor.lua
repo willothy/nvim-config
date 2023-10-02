@@ -1,23 +1,26 @@
 return {
+  -- DEPENDENCIES --
   "folke/neoconf.nvim",
   "kkharji/sqlite.lua",
   "nvim-lua/plenary.nvim",
   "anuvyklack/hydra.nvim",
-  {
-    "lukas-reineke/headlines.nvim",
-    config = function()
-      require("configs.editor.headlines")
-    end,
-    ft = { "markdown", "help" },
-  },
+  -- COMMANDS --
   {
     "smjonas/live-command.nvim",
     config = function()
       require("configs.editor.live_cmd")
     end,
-    -- cmd = { "Norm", "Reg", "Visual" },
     event = "User ExtraLazy",
   },
+  {
+    -- TODO: Do I need this?
+    "mrjones2014/legendary.nvim",
+    event = "User ExtraLazy",
+    config = function()
+      require("configs.editor.legendary")
+    end,
+  },
+  -- EDITING --
   {
     "smoka7/multicursors.nvim",
     config = function()
@@ -48,17 +51,13 @@ return {
     build = "make build",
   },
   {
-    "jmbuhr/otter.nvim",
-    dependencies = {
-      "hrsh7th/nvim-cmp",
-      "neovim/nvim-lspconfig",
-      "nvim-treesitter/nvim-treesitter",
+    "gbprod/substitute.nvim",
+    opts = {
+      yank_substituted_text = true,
     },
-    ft = { "markdown", "help" },
-    config = function()
-      require("configs.editor.otter")
-    end,
+    event = "User ExtraLazy",
   },
+  -- TREESITTER --
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
@@ -77,13 +76,62 @@ return {
     config = true,
   },
   {
-    "mrjones2014/legendary.nvim",
-    -- cmd = "Legendary",
-    event = "User ExtraLazy",
+    "lukas-reineke/headlines.nvim",
     config = function()
-      require("configs.editor.legendary")
+      require("configs.editor.headlines")
+    end,
+    ft = { "markdown", "help" },
+  },
+  {
+    "jmbuhr/otter.nvim",
+    dependencies = {
+      "hrsh7th/nvim-cmp",
+      "neovim/nvim-lspconfig",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    ft = { "markdown", "help" },
+    config = function()
+      require("configs.editor.otter")
     end,
   },
+  {
+    "folke/todo-comments.nvim",
+    config = true,
+    event = "User ExtraLazy",
+  },
+  -- DEFAULT FEATURE EXTENSIONS --
+  {
+    "gbprod/yanky.nvim",
+    event = "User ExtraLazy",
+    config = function()
+      require("configs.editor.yanky")
+    end,
+  },
+  {
+    "willothy/marks.nvim",
+    event = "User ExtraLazy",
+    opts = {
+      refresh_interval = 1000,
+    },
+  },
+  {
+    "nacro90/numb.nvim",
+    config = true,
+    event = "User ExtraLazy",
+  },
+  {
+    "utilyre/sentiment.nvim",
+    event = "VeryLazy",
+    opts = {
+      delay = 30,
+      pairs = {
+        { "(", ")" },
+        { "{", "}" },
+        { "[", "]" },
+      },
+    },
+  },
+  -- FILE MANAGERS & FUZZY FINDERS --
   {
     "nvim-telescope/telescope.nvim",
     config = function()
@@ -103,25 +151,6 @@ return {
   {
     "nvim-telescope/telescope-fzf-native.nvim",
     build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-  },
-  {
-    "willothy/savior.nvim",
-    config = true,
-    event = { "InsertEnter", "TextChanged" },
-  },
-  {
-    "gbprod/yanky.nvim",
-    event = "User ExtraLazy",
-    config = function()
-      require("configs.editor.yanky")
-    end,
-  },
-  {
-    "willothy/marks.nvim",
-    event = "User ExtraLazy",
-    opts = {
-      refresh_interval = 1000,
-    },
   },
   {
     "echasnovski/mini.files",
@@ -153,6 +182,11 @@ return {
   {
     "tiagovla/scope.nvim",
     config = true,
+  },
+  {
+    "willothy/savior.nvim",
+    config = true,
+    event = { "InsertEnter", "TextChanged" },
   },
   -- TERMINAL --
   {

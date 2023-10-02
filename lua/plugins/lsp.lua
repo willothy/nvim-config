@@ -1,12 +1,5 @@
 return {
-  {
-    "Wansmer/symbol-usage.nvim",
-    enabled = false,
-    config = function()
-      require("configs.lsp.symbol-usage")
-    end,
-    event = "LspAttach",
-  },
+  -- DEVELOPMENT & TESTING --
   {
     "ThePrimeagen/refactoring.nvim",
     config = true,
@@ -24,11 +17,21 @@ return {
     dependencies = {
       "rouge8/neotest-rust",
     },
-    event = "LspAttach",
+    event = "VeryLazy",
+  },
+  -- LSP UI --
+  {
+    "kevinhwang91/nvim-ufo",
+    name = "ufo",
+    dependencies = {
+      "kevinhwang91/promise-async",
+    },
+    opts = {
+      fold_virt_text_handler = vim.F.if_nil,
+    },
   },
   {
     "j-hui/fidget.nvim",
-    -- enabled = false,,
     branch = "legacy",
     config = function()
       require("configs.lsp.fidget")
@@ -40,25 +43,7 @@ return {
     config = true,
     event = "LspAttach",
   },
-  {
-    -- "simrat39/rust-tools.nvim",
-    -- dir = "~/projects/lua/rust-tools.nvim/",
-    "willothy/rust-tools.nvim",
-    branch = "master",
-  },
-  {
-    "p00f/clangd_extensions.nvim",
-    config = true,
-    event = "LspAttach",
-  },
-  {
-    "sourcegraph/sg.nvim",
-    config = function()
-      require("configs.lsp.sourcegraph")
-    end,
-    event = "User ExtraLazy",
-    build = "nvim -l build/init.lua",
-  },
+  -- LANGUAGE SERVERS & RELATED TOOLS --
   {
     "williamboman/mason.nvim",
     event = "User ExtraLazy",
@@ -75,17 +60,25 @@ return {
     event = "VeryLazy",
   },
   {
-    "kevinhwang91/nvim-ufo",
-    name = "ufo",
-    dependencies = {
-      "kevinhwang91/promise-async",
-    },
-    opts = {
-      fold_virt_text_handler = vim.F.if_nil,
-    },
+    "sourcegraph/sg.nvim",
+    config = function()
+      require("configs.lsp.sourcegraph")
+    end,
+    event = "User ExtraLazy",
+    build = "nvim -l build/init.lua",
   },
   {
-    -- "jose-elias-alvarez/null-ls.nvim", -- archived
+    -- "simrat39/rust-tools.nvim",
+    "willothy/rust-tools.nvim",
+    branch = "master",
+  },
+  {
+    "p00f/clangd_extensions.nvim",
+    config = true,
+    event = "LspAttach",
+  },
+  -- DIAGNOSTICS & FORMATTING --
+  {
     "nvimtools/none-ls.nvim",
     config = function()
       require("configs.lsp.null-ls")
@@ -161,7 +154,7 @@ return {
     config = true,
     event = "InsertEnter",
   },
-  -- DAP --
+  -- DEBUGGING --
   {
     "mfussenegger/nvim-dap",
     dependencies = {

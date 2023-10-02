@@ -28,9 +28,9 @@ willothy.utils.progress = require("willothy.modules.utils.progress")
 
 willothy.ui = {}
 willothy.ui.scrollbar = require("willothy.modules.ui.scrollbar")
-willothy.ui.scrolleof = require("willothy.modules.ui.scrolleof")
 willothy.ui.float_drag = require("willothy.modules.ui.float_drag")
 willothy.ui.select = require("willothy.modules.ui.select")
+willothy.ui.code_actions = require("willothy.modules.ui.code_actions")
 
 willothy.hydras = {}
 willothy.hydras.git = require("willothy.modules.hydras.git")
