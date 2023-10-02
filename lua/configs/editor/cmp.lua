@@ -184,7 +184,6 @@ cmp.setup.cmdline(":", {
   sources = cmp.config.sources({
     { name = "cmdline", group_index = 0 },
     { name = "path", group_index = 0 },
-    { name = "nvim_lsp", group_index = 0 },
     { name = "copilot", group_index = 0 },
     { name = "cmdline_history", group_index = 1 },
   }),
