@@ -143,14 +143,15 @@ local Filename = {
     direction = "right",
   },
 }
-local Diagnostics = (function()
+
+local function create_popup()
   local Popup = require("nui.popup")
 
-  local popup = Popup({
+  return Popup({
     enter = false,
     focusable = false,
     border = {
-      style = "rounded",
+      style = "solid",
     },
     position = {
       row = 1,
@@ -162,90 +163,95 @@ local Diagnostics = (function()
       height = 1,
     },
   })
+end
 
-  return {
-    text = function(buffer)
-      return (
-        buffer.diagnostics.errors ~= 0
-        and icons.diagnostics.errors .. " " .. buffer.diagnostics.errors
-      )
-        or (buffer.diagnostics.warnings ~= 0 and icons.diagnostics.warnings .. " " .. buffer.diagnostics.warnings)
-        or ""
-    end,
-    fg = function(buffer)
-      return (buffer.diagnostics.errors ~= 0 and "DiagnosticError")
-        or (buffer.diagnostics.warnings ~= 0 and "DiagnosticWarn")
-        or nil
-    end,
-    bg = "TabLine",
-    truncation = { priority = 1 },
-    on_click = function(_id, _clicks, _button, _modifiers, buffer)
-      local trouble = require("trouble")
-      if buffer.is_focused then
-        trouble.toggle()
-      elseif trouble.is_open() then
-        if vim.bo.filetype == "Trouble" then
-          buffer:focus()
-          trouble.close()
-        else
-          buffer:focus()
-        end
+local Diagnostics
+Diagnostics = {
+  text = function(buffer)
+    return (
+      buffer.diagnostics.errors ~= 0
+      and icons.diagnostics.errors .. " " .. buffer.diagnostics.errors
+    )
+      or (buffer.diagnostics.warnings ~= 0 and icons.diagnostics.warnings .. " " .. buffer.diagnostics.warnings)
+      or ""
+  end,
+  fg = function(buffer)
+    return (buffer.diagnostics.errors ~= 0 and "DiagnosticError")
+      or (buffer.diagnostics.warnings ~= 0 and "DiagnosticWarn")
+      or nil
+  end,
+  bg = "TabLine",
+  truncation = { priority = 1 },
+  on_click = function(_id, _clicks, _button, _modifiers, buffer)
+    local trouble = require("trouble")
+    if buffer.is_focused then
+      trouble.toggle()
+    elseif trouble.is_open() then
+      if vim.bo.filetype == "Trouble" then
+        buffer:focus()
+        trouble.close()
       else
         buffer:focus()
-        trouble.open()
       end
-    end,
-    on_mouse_enter = function(buffer, mouse_col)
-      local text = {}
-      local width = 0
-      if buffer.diagnostics.errors > 0 then
-        table.insert(text, {
-          icons.diagnostics.errors .. " " .. buffer.diagnostics.errors .. " ",
-          "DiagnosticSignError",
-        })
-        width = width + #tostring(buffer.diagnostics.errors) + 3
-      end
-      if buffer.diagnostics.warnings > 0 then
-        table.insert(text, {
-          icons.diagnostics.warnings
-            .. " "
-            .. buffer.diagnostics.warnings
-            .. " ",
-          "DiagnosticSignWarn",
-        })
-        width = width + #tostring(buffer.diagnostics.warnings) + 3
-      end
-      if buffer.diagnostics.infos > 0 then
-        table.insert(text, {
-          icons.diagnostics.info .. " " .. buffer.diagnostics.infos .. " ",
-          "DiagnosticSignInfo",
-        })
-        width = width + #tostring(buffer.diagnostics.infos) + 3
-      end
-      if buffer.diagnostics.hints > 0 then
-        table.insert(text, {
-          icons.diagnostics.hints .. " " .. buffer.diagnostics.hints .. " ",
-          "DiagnosticSignpint",
-        })
-        width = width + #tostring(buffer.diagnostics.hints) + 3
-      end
-      popup.win_config.width = width
-      popup.win_config.col = mouse_col - 1
-      popup:mount()
-      if not popup.bufnr then
-        return
-      end
-      vim.api.nvim_buf_set_extmark(popup.bufnr, ns, 0, 0, {
-        id = 1,
-        virt_text = text,
-        virt_text_pos = "overlay",
+    else
+      buffer:focus()
+      trouble.open()
+    end
+  end,
+  on_mouse_enter = function(buffer, mouse_col)
+    local text = {}
+    local width = 0
+    if buffer.diagnostics.errors > 0 then
+      table.insert(text, {
+        icons.diagnostics.errors .. " " .. buffer.diagnostics.errors .. " ",
+        "DiagnosticSignError",
       })
-    end,
-    on_mouse_leave = function()
-      popup:unmount()
-    end,
-  }
-end)()
+      width = width + #tostring(buffer.diagnostics.errors) + 3
+    end
+    if buffer.diagnostics.warnings > 0 then
+      table.insert(text, {
+        icons.diagnostics.warnings
+          .. " "
+          .. buffer.diagnostics.warnings
+          .. " ",
+        "DiagnosticSignWarn",
+      })
+      width = width + #tostring(buffer.diagnostics.warnings) + 3
+    end
+    if buffer.diagnostics.infos > 0 then
+      table.insert(text, {
+        icons.diagnostics.info .. " " .. buffer.diagnostics.infos .. " ",
+        "DiagnosticSignInfo",
+      })
+      width = width + #tostring(buffer.diagnostics.infos) + 3
+    end
+    if buffer.diagnostics.hints > 0 then
+      table.insert(text, {
+        icons.diagnostics.hints .. " " .. buffer.diagnostics.hints .. " ",
+        "DiagnosticSignpint",
+      })
+      width = width + #tostring(buffer.diagnostics.hints) + 3
+    end
+    Diagnostics.popup = Diagnostics.popup or create_popup()
+    Diagnostics.popup.win_config.width = width
+    Diagnostics.popup.win_config.col = mouse_col - 1
+    Diagnostics.popup:mount()
+    if not Diagnostics.popup.bufnr then
+      return
+    end
+    vim.api.nvim_buf_set_extmark(Diagnostics.popup.bufnr, ns, 0, 0, {
+      id = 1,
+      virt_text = text,
+      virt_text_pos = "overlay",
+    })
+  end,
+  on_mouse_leave = function()
+    if Diagnostics.popup then
+      Diagnostics.popup:unmount()
+    end
+  end,
+}
+
 local CloseOrUnsaved = {
   text = function(buffer)
     if buffer.is_hovered then

@@ -1,10 +1,5 @@
 vim.loader.enable()
 
-if vim.g.neovide then
-  vim.o.guifont = "FiraCode Nerd Font:h10"
-  vim.o.guifont = "FiraCode Nerd Font:h10"
-end
-
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
@@ -44,16 +39,7 @@ require("lazy").setup({
     cmd = "diffview.nvim",
   },
   ui = {
-    border = {
-      { " ", "NormalFloat" },
-      { " ", "NormalFloat" },
-      { " ", "NormalFloat" },
-      { " ", "NormalFloat" },
-      { " ", "NormalFloat" },
-      { " ", "NormalFloat" },
-      { " ", "NormalFloat" },
-      { " ", "NormalFloat" },
-    },
+    border = "solid",
   },
   performance = {
     cache = {
@@ -62,7 +48,6 @@ require("lazy").setup({
     reset_packpath = true,
     rtp = {
       reset = true,
-      paths = {},
       disabled_plugins = {
         "gzip",
         "matchit",

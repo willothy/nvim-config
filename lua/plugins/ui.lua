@@ -1,5 +1,3 @@
-local anyline = false
-
 return {
   "MunifTanjim/nui.nvim",
   -- LAYOUT / CORE UI --
