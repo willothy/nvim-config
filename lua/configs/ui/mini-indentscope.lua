@@ -5,10 +5,8 @@ require("ibl").setup({
   },
   whitespace = {
     highlight = "IndentScope",
-    enabled = false,
   },
   scope = { enabled = false },
-  show_current_context = false,
 })
 
 require("mini.indentscope").setup({
