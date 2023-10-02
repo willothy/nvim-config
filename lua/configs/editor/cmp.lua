@@ -187,6 +187,18 @@ cmp.setup.cmdline(":", {
     { name = "copilot", group_index = 0 },
     { name = "cmdline_history", group_index = 1 },
   }),
+  sorting = {
+    priority_weight = 10,
+    comparators = {
+      cmp.config.compare.kind,
+      cmp.config.compare.recently_used,
+      cmp.config.compare.offset,
+      cmp.config.compare.exact,
+      cmp.config.compare.score,
+      cmp.config.compare.length,
+      cmp.config.compare.order,
+    },
+  },
   enabled = function()
     -- Set of disable commands
     local disabled = {
@@ -204,13 +216,6 @@ cmp.setup.filetype("harpoon", {
     { name = "path" },
   }),
   formatting = format,
-  -- completion = {
-  --   keyword_length = 0,
-  -- },
-  -- autocomplete = {
-  --   "TextChanged",
-  --   "InsertEnter",
-  -- },
 })
 
 cmp.setup.filetype("gitcommit", {
