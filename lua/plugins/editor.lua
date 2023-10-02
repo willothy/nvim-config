@@ -12,14 +12,6 @@ return {
     end,
     event = "VeryLazy",
   },
-  {
-    -- TODO: Do I need this?
-    "mrjones2014/legendary.nvim",
-    cmd = "Legendary",
-    config = function()
-      require("configs.editor.legendary")
-    end,
-  },
   -- EDITING --
   {
     "smoka7/multicursors.nvim",

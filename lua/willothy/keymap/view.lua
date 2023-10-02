@@ -1,13 +1,6 @@
 local keymap = willothy.keymap
 local bind, register, modes = keymap.bind, keymap.register, keymap.modes
 
-local legendary = function(filter)
-  return function()
-    local f = require("legendary.filters")
-    require("legendary").find({ filters = { f[filter]() } })
-  end
-end
-
 local cody
 
 local telescope = willothy.fn.telescope
@@ -39,23 +32,4 @@ register({
     "cody chat",
   },
   u = { vim.cmd.UndotreeToggle, "undotree" },
-  L = {
-    name = "legendary",
-    k = {
-      legendary("keymaps"),
-      "keymaps",
-    },
-    a = {
-      legendary("autocmds"),
-      "autocmds",
-    },
-    c = {
-      legendary("commands"),
-      "commands",
-    },
-    f = {
-      legendary("funcs"),
-      "functions",
-    },
-  },
 }, modes.non_editing, "<leader>v")
