@@ -146,6 +146,7 @@ return {
   },
   {
     "stevearc/stickybuf.nvim",
+    event = "VeryLazy",
     opts = {
       get_auto_pin = function(bufnr)
         -- Shell terminals will all have ft `terminal`, and can be switched between.
