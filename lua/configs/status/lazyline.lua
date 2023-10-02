@@ -92,7 +92,7 @@ local Devicon = {
   end,
   lazy = true,
   update = {
-    "User ExtraLazy",
+    "VeryLazy",
     "BufEnter",
     "TermEnter",
     "TermClose",

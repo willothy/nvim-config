@@ -18,6 +18,11 @@ function M.ui_select(items, opts, on_choice)
 
   opts.prompt = opts.prompt and vim.trim(opts.prompt:gsub(":%s*$", ""))
 
+  local virt_text_pat = "%((.*)%)%s*%.?%s*$"
+  if opts.kind == "legendary.nvim" then
+    virt_text_pat = "^%s*([^│]*│[^|]*)%s*│%s*"
+  end
+
   local entries = vim
     .iter(items)
     :enumerate()
@@ -27,10 +32,9 @@ function M.ui_select(items, opts, on_choice)
         text = opts.format_item(item)
       end
       local virt_text
-      local vt_pat = "%((.*)%)%s*%.?%s*$"
-      if text:match(vt_pat) then
-        virt_text = text:match(vt_pat)
-        text = text:gsub(vt_pat, "")
+      if text:match(virt_text_pat) then
+        virt_text = text:match(virt_text_pat)
+        text = text:gsub(virt_text_pat, "")
       end
       return dropbar_menu_entry_t:new({
         virt_text = virt_text
@@ -91,7 +95,7 @@ function M.ui_select(items, opts, on_choice)
       opts.prompt and (vim.fn.strcharlen(opts.prompt) + 2) or 0,
       16
     ),
-    math.floor(vim.o.columns / 2)
+    math.max(math.floor(vim.o.columns / 2), math.floor(vim.o.columns - 30))
   )
 
   local height = math.min(
@@ -119,13 +123,15 @@ function M.ui_select(items, opts, on_choice)
         " ",
         " ",
         "",
-        " ",
-        " ",
-        " ",
+        -- " ",
+        -- " ",
+        -- " ",
+        "",
+        "",
+        "",
         "",
       },
       title_pos = opts.prompt and "center",
-      zindex = 200,
     },
   })
 

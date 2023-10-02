@@ -303,32 +303,40 @@ local Debug = {
 }
 
 local function harpoon_sorter()
-  local harpoon = require("harpoon.mark")
   local cache = {}
+  local setup = false
 
   local function marknum(buf, force)
     local b = cache[buf.number]
     if b == nil or force then
-      b = harpoon.get_index_of(buf.path)
+      b = require("harpoon.mark").get_index_of(buf.path)
       cache[buf.number] = b
     end
     return b
   end
 
-  harpoon.on("changed", function()
-    for _, buf in ipairs(require("cokeline.buffers").get_visible()) do
-      cache[buf.number] = marknum(buf, true)
-    end
-  end)
-
   ---@param a Buffer
   ---@param b Buffer
   -- Use this in `config.buffers.new_buffers_position`
   return function(a, b)
+    -- Only run this if harpoon is loaded, otherwise just use the default sorting.
+    -- This could be used to only run if a user has harpoon installed, but
+    -- I'm mainly using it to avoid loading harpoon on UiEnter.
+    local has_harpoon = package.loaded["harpoon"] ~= nil
+    if not has_harpoon then
+      return a._valid_index < b._valid_index
+    elseif not setup then
+      require("harpoon.mark").on("changed", function()
+        for _, buf in ipairs(require("cokeline.buffers").get_visible()) do
+          cache[buf.number] = marknum(buf, true)
+        end
+      end)
+      setup = true
+    end
     -- switch the a and b._valid_index to place non-harpoon buffers on the left
     -- side of the tabline - this puts them on the right.
-    local ma = marknum(a) --b._valid_index
-    local mb = marknum(b) --a._valid_index
+    local ma = marknum(a)
+    local mb = marknum(b)
     if ma and not mb then
       return true
     elseif mb and not ma then

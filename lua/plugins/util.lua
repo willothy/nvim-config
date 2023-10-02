@@ -11,24 +11,24 @@ return {
   {
     "ellisonleao/glow.nvim",
     config = true,
-    event = "User ExtraLazy",
+    cmd = "Glow",
   },
   {
     "rafcamlet/nvim-luapad",
     config = true,
-    event = "User ExtraLazy",
+    cmd = "Luapad",
   },
   {
     "lambdalisue/suda.vim",
-    event = "User ExtraLazy",
+    cmd = { "SudaRead", "SudaWrite" },
   },
   {
     "mbbill/undotree",
-    event = "User ExtraLazy",
+    cmd = { "UndotreeToggle", "UndotreeShow" },
   },
   {
     "ecthelionvi/NeoComposer.nvim",
-    event = "User ExtraLazy",
+    event = "VeryLazy",
     config = function()
       require("configs.editor.neocomposer")
     end,
@@ -38,12 +38,17 @@ return {
     opts = {
       auto_cmd = true,
     },
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "Dhanus3133/LeetBuddy.nvim",
     config = true,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
+    cmd = {
+      "LBQuestion",
+      "LBQuestions",
+      "LBSplit",
+    },
   },
   {
     "AckslD/nvim-neoclip.lua",
@@ -51,26 +56,19 @@ return {
       enable_persistent_history = true,
       continuous_sync = true,
     },
-    event = "User ExtraLazy",
-  },
-  {
-    "tamton-aquib/keys.nvim",
-    config = true,
-    -- cmd = "KeysToggle",
+    event = "VeryLazy",
   },
   {
     "m-demare/attempt.nvim",
     config = function()
       require("configs.editor.attempt")
     end,
-    -- cmd = "Attempt",
-    event = "User ExtraLazy",
+    cmd = "Attempt",
   },
   {
     "rawnly/gist.nvim",
     config = true,
-    event = "User ExtraLazy",
-    -- cmd = { "GistCreate", "GistCreateFromFile", "GistsList" },
+    cmd = { "GistCreate", "GistCreateFromFile", "GistsList" },
   },
   {
     "Saecki/crates.nvim",
@@ -89,7 +87,7 @@ return {
   {
     "tzachar/highlight-undo.nvim",
     config = true,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "ziontee113/color-picker.nvim",
@@ -99,7 +97,10 @@ return {
   {
     "krady21/compiler-explorer.nvim",
     config = true,
-    event = "User ExtraLazy",
+    cmd = {
+      "CECompile",
+      "CECompileLive",
+    },
   },
   {
     "Tyler-Barham/floating-help.nvim",
@@ -111,22 +112,22 @@ return {
   {
     "jokajak/keyseer.nvim",
     config = true,
-    event = "User ExtraLazy",
+    cmd = "KeySeer",
   },
   {
     "pwntester/octo.nvim",
     config = true,
-    event = "User ExtraLazy",
+    cmd = "Octo",
   },
   -- TODO: re-enable this
   -- {
   --   "subnut/nvim-ghost.nvim",
-  --   event = "User ExtraLazy",
+  --   event = "VeryLazy",
   -- },
   {
     "mong8se/actually.nvim",
     config = true,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "gbprod/stay-in-place.nvim",
@@ -136,6 +137,6 @@ return {
   {
     "Aasim-A/scrollEOF.nvim",
     config = true,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
 }

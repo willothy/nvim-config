@@ -7,7 +7,7 @@ return {
     config = function()
       require("configs.editor.which-key")
     end,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "nvim-tree/nvim-web-devicons",
@@ -67,7 +67,10 @@ return {
   -- SIDEBARS --
   {
     "sidebar-nvim/sidebar.nvim",
-    event = "User ExtraLazy",
+    cmd = {
+      "SidebarNvimOpen",
+      "SidebarNvimToggle",
+    },
     opts = function()
       return require("configs.ui.sidebars").sidebar
     end,
@@ -77,7 +80,7 @@ return {
     dependencies = {
       "mrbjarksen/neo-tree-diagnostics.nvim",
     },
-    event = "User ExtraLazy",
+    cmd = "Neotree",
     opts = function()
       return require("configs.ui.sidebars").neotree
     end,
@@ -87,7 +90,12 @@ return {
     opts = function()
       return require("configs.ui.sidebars").aerial
     end,
-    event = "User ExtraLazy",
+    cmd = {
+      "AerialToggle",
+      "AerialOpen",
+      "AerialNavToggle",
+      "AerialNavOpen",
+    },
   },
   {
     "folke/trouble.nvim",
@@ -113,7 +121,7 @@ return {
   },
   {
     "willothy/nvim-window-picker",
-    -- event = "User ExtraLazy",
+    -- event = "VeryLazy",
     config = function()
       require("configs.windows.window-picker")
     end,
@@ -123,7 +131,7 @@ return {
     config = function()
       require("configs.windows.smart-splits")
     end,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "kwkarlwang/bufresize.nvim",
@@ -134,7 +142,7 @@ return {
   {
     "tummetott/winshift.nvim",
     config = true,
-    event = "User ExtraLazy",
+    cmd = "WinShift",
   },
   {
     "stevearc/stickybuf.nvim",
@@ -160,6 +168,7 @@ return {
   {
     -- "Bekaboo/dropbar.nvim",
     "willothy/dropbar.nvim",
+    branch = "feat-floating-scrollbar",
     -- dir = "~/projects/lua/dropbar.nvim/",
     config = function()
       require("configs.status.dropbar")
@@ -178,7 +187,7 @@ return {
   },
   {
     "willothy/incline.nvim",
-    event = "User ExtraLazy",
+    event = "VeryLazy",
     config = function()
       require("configs.status.incline")
     end,

@@ -10,12 +10,12 @@ return {
     config = function()
       require("configs.editor.live_cmd")
     end,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     -- TODO: Do I need this?
     "mrjones2014/legendary.nvim",
-    event = "User ExtraLazy",
+    cmd = "Legendary",
     config = function()
       require("configs.editor.legendary")
     end,
@@ -32,7 +32,7 @@ return {
     config = function()
       require("configs.editor.comment")
     end,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "cshuaimin/ssr.nvim",
@@ -47,7 +47,7 @@ return {
   {
     "willothy/moveline.nvim",
     branch = "oxi",
-    event = "User ExtraLazy",
+    event = "VeryLazy",
     build = "make build",
   },
   {
@@ -55,7 +55,7 @@ return {
     opts = {
       yank_substituted_text = true,
     },
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   -- TREESITTER --
   {
@@ -66,14 +66,9 @@ return {
       "IndianBoy42/tree-sitter-just",
       "chrisgrieser/nvim-various-textobjs",
     },
-    -- event = "VeryLazy",
     config = function()
       require("configs.editor.treesitter")
     end,
-  },
-  {
-    "chrisgrieser/nvim-various-textobjs",
-    config = true,
   },
   {
     "lukas-reineke/headlines.nvim",
@@ -97,19 +92,19 @@ return {
   {
     "folke/todo-comments.nvim",
     config = true,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   -- DEFAULT FEATURE EXTENSIONS --
   {
     "gbprod/yanky.nvim",
-    event = "User ExtraLazy",
+    event = "VeryLazy",
     config = function()
       require("configs.editor.yanky")
     end,
   },
   {
     "willothy/marks.nvim",
-    event = "User ExtraLazy",
+    event = "VeryLazy",
     opts = {
       refresh_interval = 1000,
     },
@@ -117,7 +112,7 @@ return {
   {
     "nacro90/numb.nvim",
     config = true,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "utilyre/sentiment.nvim",
@@ -137,7 +132,7 @@ return {
     config = function()
       require("configs.editor.telescope")
     end,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
     dependencies = {
       "nvim-telescope/telescope-file-browser.nvim",
       "molecule-man/telescope-menufacture",
@@ -221,26 +216,27 @@ return {
     config = function()
       require("configs.editor.overseer")
     end,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   -- NAVIGATION --
-  {
-    "LeonHeidelbach/trailblazer.nvim",
-    config = function()
-      require("configs.navigation.trailblazer")
-    end,
-    event = "User ExtraLazy",
-  },
+  -- {
+  --   "LeonHeidelbach/trailblazer.nvim",
+  --   config = function()
+  --     require("configs.navigation.trailblazer")
+  --   end,
+  --   -- event = "VeryLazy",
+  -- },
   {
     "folke/flash.nvim",
     config = function()
       require("configs.navigation.flash")
     end,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     -- "ThePrimeagen/harpoon",
     "willothy/harpoon", -- harpoon fork with toggleterm integration
+    event = "VeryLazy",
     config = function()
       require("configs.navigation.harpoon")
     end,
@@ -248,7 +244,7 @@ return {
   {
     "willothy/wrangler.nvim",
     config = true,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
     keys = {
       {
         "<C-m>",
@@ -327,7 +323,7 @@ return {
     config = function()
       require("configs.git.git-conflict")
     end,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "NeogitOrg/neogit",
@@ -345,7 +341,7 @@ return {
   {
     "echasnovski/mini.trailspace",
     config = true,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "chomosuke/term-edit.nvim",

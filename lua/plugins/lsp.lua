@@ -46,7 +46,7 @@ return {
   -- LANGUAGE SERVERS & RELATED TOOLS --
   {
     "williamboman/mason.nvim",
-    event = "User ExtraLazy",
+    event = "VeryLazy",
     config = true,
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
@@ -64,7 +64,7 @@ return {
     config = function()
       require("configs.lsp.sourcegraph")
     end,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
     build = "nvim -l build/init.lua",
   },
   {
@@ -83,21 +83,21 @@ return {
     config = function()
       require("configs.lsp.null-ls")
     end,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "stevearc/conform.nvim",
     config = function()
       require("configs.lsp.conform")
     end,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "mfussenegger/nvim-lint",
     config = function()
       require("configs.lsp.nvim-lint")
     end,
-    event = "User ExtraLazy",
+    event = "VeryLazy",
   },
   {
     "dgagn/diagflow.nvim",
@@ -105,14 +105,13 @@ return {
     config = function()
       require("configs.lsp.diagflow")
     end,
-    event = "User ExtraLazy",
+    event = "DiagnosticChanged",
   },
   -- COMPLETION --
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
       "hrsh7th/cmp-buffer",
-      -- "FelipeLema/cmp-async-path",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lsp",
@@ -123,10 +122,10 @@ return {
       "zbirenbaum/copilot-cmp",
       "petertriho/cmp-git",
 
-      -- Snippetsrequire\("cmp
+      -- Snippets
       "L3MON4D3/LuaSnip",
     },
-    event = { "User ExtraLazy", "InsertEnter" },
+    event = { "CmdlineEnter", "InsertEnter" },
     config = function()
       require("configs.editor.cmp")
     end,
@@ -136,11 +135,12 @@ return {
     config = function()
       require("configs.editor.autopairs")
     end,
+    event = "InsertEnter",
   },
   {
     "windwp/nvim-ts-autotag",
     config = true,
-    event = "User ExtraLazy",
+    event = "InsertEnter",
   },
   {
     "zbirenbaum/copilot.lua",

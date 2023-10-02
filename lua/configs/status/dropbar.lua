@@ -114,7 +114,7 @@ dropbar.setup({
   },
 })
 
--- willothy.event.on("ResessionPostLoad", function()
+-- willothy.event.on("ResessionLoadPost", function()
 --   vim
 --     .iter(vim.api.nvim_list_wins())
 --     :map(function(win)
@@ -126,4 +126,4 @@ dropbar.setup({
 --     end)
 --   utils.bar.exec("update", {}, {})
 -- end)
--- willothy.event.emit("ResessionPostLoad")
+-- willothy.event.emit("ResessionLoadPost")
