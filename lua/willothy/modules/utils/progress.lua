@@ -16,7 +16,7 @@ local function new_client(name, public)
     cmd = function(_dispatchers)
       local stopped = false
       return {
-        request = function(method, params, callback)
+        request = function(method, _params, callback)
           if method == "initialize" and public then
             callback(nil, {
               capabilities = {},
@@ -31,7 +31,7 @@ local function new_client(name, public)
         is_closing = function()
           return stopped
         end,
-        stop = function()
+        terminate = function()
           stopped = true
         end,
       }
@@ -51,7 +51,8 @@ function M.create(config)
   local handle = {}
 
   local token = next_token()
-  local client = get_client()
+  local client = config.client_name and new_client(config.client_name)
+    or get_client()
   local started = false
   local running = false
 
@@ -107,6 +108,10 @@ function M.create(config)
 
     send()
     running = false
+    if config.client_name then
+      ---@diagnostic disable-next-line: param-type-mismatch
+      vim.lsp.stop_client(client, true)
+    end
   end
 
   return handle

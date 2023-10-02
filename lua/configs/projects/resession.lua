@@ -14,7 +14,7 @@ resession.setup({
   },
   autosave = {
     enabled = true,
-    interval = 300,
+    interval = 60,
     notify = false,
   },
   tab_buf_filter = function(tabpage, bufnr)
@@ -48,7 +48,7 @@ resession.setup({
 })
 
 local lazy_open = false
-resession.add_hook("pre_load", function()
+willothy.event.on("ResessionLoadPre", function()
   local view = require("lazy.view")
   if view.view then
     lazy_open = true
@@ -61,14 +61,32 @@ resession.add_hook("pre_load", function()
   end
 end)
 
-resession.add_hook(
-  "post_load",
+willothy.event.on(
+  "ResessionLoadPost",
   vim.schedule_wrap(function()
     if lazy_open then
       require("lazy.view").show()
     end
   end)
 )
+
+-- show an LSP progress indicator for session save
+local progress
+willothy.event.on("ResessionSavePre", function()
+  progress = willothy.utils.progress.create({
+    title = "saving",
+    message = "saving session",
+    client_name = "resession",
+  })
+  progress:begin()
+end)
+
+willothy.event.on("ResessionSavePost", function()
+  if progress then
+    progress:finish({})
+  end
+  progress = nil
+end)
 
 if
   -- Only load the session if nvim was started with no args
@@ -85,6 +103,7 @@ then
     { dir = "dirsession", silence_errors = true, reset = false }
   )
 end
+
 vim.api.nvim_create_autocmd("VimLeavePre", {
   callback = function()
     resession.save("last", { notify = false })
