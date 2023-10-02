@@ -2,9 +2,6 @@ local resession = require("resession")
 
 resession.setup({
   extensions = {
-    -- scope = {
-    --   enable_in_tab = true,
-    -- },
     overseer = {
       enable_in_tab = true,
     },
