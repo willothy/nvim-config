@@ -217,19 +217,31 @@ local opts = {
     sidebar:extend({
       ft = "dapui_watches",
       wo = { winbar = " Watches" },
+      open = function()
+        require("dapui").open()
+      end,
     }),
     sidebar:extend({
       ft = "dapui_stacks",
       wo = { winbar = " Stacks" },
+      open = function()
+        require("dapui").open()
+      end,
     }),
     sidebar:extend({
       ft = "dapui_breakpoints",
       wo = { winbar = " Breakpoints" },
+      open = function()
+        require("dapui").open()
+      end,
     }),
     sidebar:extend({
       ft = "dapui_scopes",
       wo = { winbar = " Scopes" },
       size = { height = get_height },
+      open = function()
+        require("dapui").open()
+      end,
     }),
   },
   bottom = {
@@ -261,11 +273,17 @@ local opts = {
       ft = "dapui_console",
       title = "Debug Console",
       wo = { winbar = " Debug Console" },
+      open = function()
+        require("dapui").open()
+      end,
     }),
     bottom:extend({
       ft = "dap-repl",
       title = "Debug REPL",
       wo = { winbar = false, statuscolumn = "" },
+      open = function()
+        require("dapui").open()
+      end,
     }),
     bottom:extend({
       ft = "neotest-output-panel",
