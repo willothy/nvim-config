@@ -93,11 +93,16 @@ local opts = {
     neogit:extend({
       ft = "NeogitStatus",
       title = "Neogit",
-      open = "Neogit",
+      open = function()
+        require("neogit").open()
+      end,
     }),
     neogit:extend({
       ft = "NeogitPopup",
       title = "Neogit",
+      open = function()
+        require("neogit").open()
+      end,
     }),
     neogit:extend({
       ft = "NeogitCommitMessage",
@@ -106,10 +111,16 @@ local opts = {
     neogit:extend({
       ft = "NeogitLogView",
       title = "Neogit log",
+      open = function()
+        require("neogit").open({ "log" })
+      end,
     }),
     neogit:extend({
       ft = "NeogitReflogView",
       title = "Neogit log",
+      open = function()
+        require("neogit").open({ "log" })
+      end,
     }),
     terminal:extend({
       open = function()
@@ -134,14 +145,19 @@ local opts = {
       filter = function(_buf, win)
         return vim.api.nvim_win_get_config(win).zindex == nil
       end,
+      open = function()
+        require("overseer").open()
+      end,
     }),
     sidebar:extend({
       ft = "SidebarNvim",
       title = "Sidebar",
+      open = "SidebarNvimOpen",
     }),
     sidebar:extend({
       ft = "gh",
       title = "Gists",
+      open = "GistsList",
     }),
     sidebar:extend({
       ft = "aerial",
@@ -153,6 +169,9 @@ local opts = {
     sidebar:extend({
       title = "Neotest Summary",
       ft = "neotest-summary",
+      open = function()
+        require("neotest").summary.open()
+      end,
     }),
     sidebar:extend({
       title = "Files",
@@ -160,7 +179,9 @@ local opts = {
       filter = function(buf, win)
         return vim.b[buf].neo_tree_source == "filesystem" and not is_float(win)
       end,
-      open = "Neotree",
+      open = function()
+        vim.cmd.Neotree("filesystem")
+      end,
     }),
     sidebar:extend({
       title = "Diagnostics",
@@ -169,6 +190,9 @@ local opts = {
         return vim.b[buf].neo_tree_source == "diagnostics"
           and not is_float(win)
       end,
+      open = function()
+        vim.cmd.Neotree("diagnostics")
+      end,
     }),
     sidebar:extend({
       title = "Git",
@@ -176,7 +200,9 @@ local opts = {
       filter = function(buf, win)
         return vim.b[buf].neo_tree_source == "git_status" and not is_float(win)
       end,
-      open = "Neotree git_status",
+      open = function()
+        vim.cmd.Neotree("git_status")
+      end,
     }),
     sidebar:extend({
       title = "Buffers",
@@ -184,7 +210,9 @@ local opts = {
       filter = function(buf, win)
         return vim.b[buf].neo_tree_source == "buffers" and not is_float(win)
       end,
-      open = "Neotree buffers",
+      open = function()
+        vim.cmd.Neotree("buffers")
+      end,
     }),
     sidebar:extend({
       ft = "dapui_watches",
@@ -224,6 +252,9 @@ local opts = {
         return vim.bo[buf].buftype == "help"
           and vim.api.nvim_win_get_config(win).zindex == nil
       end,
+      open = function()
+        vim.cmd.help()
+      end,
       size = { height = 0.4 },
     },
     bottom:extend({
@@ -239,9 +270,15 @@ local opts = {
     bottom:extend({
       ft = "neotest-output-panel",
       title = "Neotest output",
+      open = function()
+        require("neotest").output_panel.open()
+      end,
     }),
     bottom:extend({
       ft = "noice",
+      open = function()
+        vim.cmd.Noice()
+      end,
     }),
     bottom:extend({
       ft = "qf",
@@ -249,6 +286,9 @@ local opts = {
       wo = {
         winhighlight = "Normal:Normal",
       },
+      open = function()
+        vim.cmd.copen()
+      end,
     }),
     bottom:extend({
       ft = "spectre_panel",
@@ -257,6 +297,9 @@ local opts = {
         number = false,
         relativenumber = false,
       },
+      open = function()
+        require("spectre").open()
+      end,
     }),
     trouble:extend({
       title = "Diagnostics",
@@ -265,12 +308,18 @@ local opts = {
           or vim.b[buf].trouble_mode == "workspace_diagnostics"
             and not is_float(win)
       end,
+      open = function()
+        require("trouble").open("document_diagonstics")
+      end,
     }),
     trouble:extend({
       title = "References",
       filter = function(buf, win)
         return vim.b[buf].trouble_mode == "lsp_references"
           and not is_float(win)
+      end,
+      open = function()
+        require("trouble").open("lsp_references")
       end,
     }),
     trouble:extend({
@@ -279,6 +328,9 @@ local opts = {
         return vim.b[buf].trouble_mode == "lsp_definitions"
           and not is_float(win)
       end,
+      open = function()
+        require("trouble").open("lsp_definitions")
+      end,
     }),
     trouble:extend({
       title = "Type Definitions",
@@ -286,17 +338,26 @@ local opts = {
         return vim.b[buf].trouble_mode == "lsp_type_definitions"
           and not is_float(win)
       end,
+      open = function()
+        require("trouble").open("lsp_type_definitions")
+      end,
     }),
     trouble:extend({
       title = "QuickFix",
       filter = function(buf, win)
         return vim.b[buf].trouble_mode == "quickfix" and not is_float(win)
       end,
+      open = function()
+        require("trouble").open("quickfix")
+      end,
     }),
     trouble:extend({
       title = "LocList",
       filter = function(buf, win)
         return vim.b[buf].trouble_mode == "loclist" and not is_float(win)
+      end,
+      open = function()
+        require("trouble").open("loclist")
       end,
     }),
   },
