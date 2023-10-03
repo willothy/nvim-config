@@ -240,7 +240,6 @@ local Devicon = {
   update = {
     "User",
     pattern = {
-      "ExtraLazy",
       "UpdateHeirlineComponents",
     },
     callback = function(self)
@@ -299,7 +298,6 @@ local Harpoon = {
   update = {
     "User",
     pattern = {
-      "ExtraLazy",
       "UpdateHarpoonStatus",
       "UpdateHeirlineComponents",
     },
@@ -329,7 +327,6 @@ local Recording = (
     update = {
       "User",
       pattern = {
-        "ExtraLazy",
         "NeoComposerRecordingSet",
         "NeoComposerPlayingSet",
         "NeoComposerDelaySet",
@@ -351,7 +348,7 @@ local Git = (
   C({
     update = {
       "User",
-      pattern = { "ExtraLazy", "UpdateHeirlineComponents" },
+      pattern = { "UpdateHeirlineComponents" },
       callback = function(self)
         if
           package.loaded["edgy"]

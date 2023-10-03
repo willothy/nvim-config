@@ -8,8 +8,6 @@ return {
     require("willothy.autocmds")
     require("willothy.keymap")
 
-    vim.api.nvim_exec_autocmds("User", { pattern = "ExtraLazy" })
-
     -- Inform vim how to enable undercurl in wezterm
     vim.api.nvim_exec2(
       [[
