@@ -21,8 +21,8 @@ function M.ui_select(items, opts, on_choice)
   local virt_text_pat = "%((.*)%)%s*%.?%s*$"
   if opts.kind == "legendary.nvim" then
     virt_text_pat = "^%s*([^│]*│[^|]*)%s*│%s*"
-  elseif opts.kind == "resession_load" then
-    virt_text_pat = "%s*%[([^%]]+)%]%s*$"
+    -- elseif opts.kind == "resession_load" then
+    --   virt_text_pat = "%s*%[([^%]]+)%]%s*$"
   end
 
   local entries = vim
