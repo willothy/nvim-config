@@ -192,7 +192,7 @@ then
   resession.load(
     ---@diagnostic disable-next-line: param-type-mismatch
     vim.fs.basename(vim.fs.basename(vim.fn.getcwd())),
-    { silence_errors = true, reset = false }
+    { silence_errors = true, reset = true }
   )
 end
 
