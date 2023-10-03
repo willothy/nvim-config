@@ -237,6 +237,10 @@ local opts = {
       wo = { winbar = false, statuscolumn = "" },
     }),
     bottom:extend({
+      ft = "neotest-output-panel",
+      title = "Neotest output",
+    }),
+    bottom:extend({
       ft = "noice",
     }),
     bottom:extend({

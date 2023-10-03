@@ -3,6 +3,7 @@ local focus = require("focus")
 local ignore_filetypes = {
   ["neo-tree"] = true,
   ["dap-repl"] = true,
+  ["neotest-summary"] = true,
   SidebarNvim = true,
   Trouble = true,
   terminal = true,
@@ -32,6 +33,11 @@ focus.setup({
 vim.api.nvim_create_autocmd("FileType", {
   callback = function(args)
     local buf = args.buf
-    vim.b[buf].focus_disable = ignore_filetypes[vim.bo[buf].filetype]
+    local win = vim.fn.bufwinid(buf)
+    if win and require("edgy").get_win(win) then
+      vim.b[buf].focus_disable = true
+    else
+      vim.b[buf].focus_disable = ignore_filetypes[vim.bo[buf].filetype]
+    end
   end,
 })

@@ -16,6 +16,7 @@ return {
     end,
     dependencies = {
       "rouge8/neotest-rust",
+      "nvim-neotest/neotest-plenary",
     },
     event = "VeryLazy",
   },

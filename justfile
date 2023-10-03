@@ -3,4 +3,4 @@ list:
     @just --list
 
 test:
-    @nvim --headless -u tests/init.lua
+    @nvim --headless -u tests/minimal_init.lua

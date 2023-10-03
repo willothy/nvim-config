@@ -1,6 +1,7 @@
 require("neotest").setup({
   adapters = {
     require("neotest-rust"),
+    require("neotest-plenary"),
   },
   summary = {
     enabled = true,
