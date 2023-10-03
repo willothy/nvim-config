@@ -62,7 +62,7 @@
   "mini.files": { "branch": "main", "commit": "9f810400dc306e2d8130fd77671b143b8ce67a87" },
   "mini.indentscope": { "branch": "main", "commit": "f60e9b51a6214c73a170ffc5445ce91560981031" },
   "mini.trailspace": { "branch": "main", "commit": "c41ab1035d184ff20c1aebd76639320c055afebe" },
-  "minimus": { "branch": "main", "commit": "6f56c3fd510e05c4393c569be1203ef23e9c6eb5" },
+  "minimus": { "branch": "main", "commit": "dce52c8364db214e9d6c21de8efb087e840dcb67" },
   "moveline.nvim": { "branch": "oxi", "commit": "440259cee48aaa5080fc284cfbabf186f560ea85" },
   "multicursors.nvim": { "branch": "main", "commit": "d1dcefb61811d2cb1dcb1b963e869656cf93cb52" },
   "murmur.lua": { "branch": "main", "commit": "85d3f1c3e98fa60b523abf40f4951d4ddb44fa54" },

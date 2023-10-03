@@ -393,7 +393,6 @@ local opts = {
   },
 
   keys = {
-    -- ["q"] = false,
     ["Q"] = false,
   },
 
@@ -401,12 +400,8 @@ local opts = {
     enabled = true,
     fps = 60,
     cps = 160,
-    on_begin = function()
-      vim.g.minianimate_disable = true
-    end,
-    on_end = function()
-      vim.g.minianimate_disable = false
-    end,
+    on_begin = function() end,
+    on_end = function() end,
   },
 }
 
@@ -418,10 +413,12 @@ A.schedule = function()
   if not (timer and timer:is_active()) then
     timer = vim.defer_fn(function()
       if A.animate() then
+        require("focus").focus_disable()
         vim.g.minianimate_disable = true
         A.schedule()
       else
         vim.g.minianimate_disable = false
+        require("focus").focus_enable()
       end
     end, 1000 / opts.animate.fps)
   end
