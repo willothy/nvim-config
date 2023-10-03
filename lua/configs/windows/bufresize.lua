@@ -4,7 +4,9 @@ require("bufresize").setup({
     keys = {},
   },
   resize = {
-    trigger_events = { "VimResized" },
+    trigger_events = {
+      "VimResized",
+    },
     increment = 1,
   },
 })

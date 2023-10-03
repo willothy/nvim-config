@@ -24,6 +24,7 @@ vim.api.nvim_create_autocmd("User", {
 
 require("lazy").setup({
   { import = "plugins" },
+  -- This is how I get Lazy to profile my config.
   {
     name = "willothy",
     main = "willothy",
