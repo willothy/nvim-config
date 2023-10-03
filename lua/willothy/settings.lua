@@ -8,7 +8,6 @@ o.shell = "/usr/bin/zsh"
 o.shortmess = "filnxoOCFIs"
 o.virtualedit = "block"
 o.signcolumn = "yes"
-o.numberwidth = 8
 o.wrap = false
 o.number = true
 o.relativenumber = true
