@@ -77,6 +77,7 @@ return {
   },
   {
     "nvim-neo-tree/neo-tree.nvim",
+    branch = "main",
     dependencies = {
       "mrbjarksen/neo-tree-diagnostics.nvim",
     },
