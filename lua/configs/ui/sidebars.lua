@@ -11,7 +11,7 @@ M.sidebar = {
     "files",
     -- "symbols",
     -- "diagnostics",
-    -- "todos",
+    "todos",
     "containers",
   },
 }
