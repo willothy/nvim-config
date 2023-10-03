@@ -157,8 +157,8 @@ local opts = {
     sidebar:extend({
       title = "Files",
       ft = "neo-tree",
-      filter = function(buf)
-        return vim.b[buf].neo_tree_source == "filesystem"
+      filter = function(buf, win)
+        return vim.b[buf].neo_tree_source == "filesystem" and not is_float(win)
       end,
       open = "Neotree",
     }),
