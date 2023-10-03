@@ -640,21 +640,21 @@ telescope.setup({
 })
 
 local extensions = {
-  "menufacture",
   "fzf",
-  "neoclip",
-  "smart_history",
-  "file_browser",
-  "projects",
-  "noice",
-  "macros",
-  "scope",
-  "yank_history",
-  "undo",
-  "heading",
-  "attempt",
-  "bookmarks",
   "frecency",
+  "smart_history",
+  -- "menufacture",
+  -- "neoclip",
+  -- "file_browser",
+  -- "projects",
+  -- "noice",
+  -- "macros",
+  -- "scope",
+  -- "yank_history",
+  -- "undo",
+  -- "heading",
+  -- "attempt",
+  -- "bookmarks",
 }
 
 vim.iter(extensions):each(telescope.load_extension)
