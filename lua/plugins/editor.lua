@@ -145,6 +145,7 @@ return {
   -- SESSIONS / PROJECTS --
   {
     "stevearc/resession.nvim",
+    -- dir = "~/projects/lua/resession.nvim/",
     dependencies = {
       "tiagovla/scope.nvim",
     },

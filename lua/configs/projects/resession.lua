@@ -2,6 +2,9 @@ local resession = require("resession")
 
 resession.setup({
   extensions = {
+    edgy = {
+      enable_in_tab = true,
+    },
     overseer = {
       enable_in_tab = true,
     },
@@ -45,7 +48,9 @@ resession.setup({
 })
 
 local lazy_open = false
-willothy.event.on("ResessionLoadPre", function()
+
+resession.add_hook("pre_load", function()
+  require("focus").focus_disable()
   local view = require("lazy.view")
   if view.view then
     lazy_open = true
@@ -58,15 +63,15 @@ willothy.event.on("ResessionLoadPre", function()
   end
 end)
 
-willothy.event.on(
-  "ResessionLoadPost",
-  vim.schedule_wrap(function()
+resession.add_hook("post_load", function()
+  require("focus").focus_enable()
+  vim.o.showtabline = 2
+  vim.schedule(function()
     if lazy_open then
       require("lazy.view").show()
     end
-    vim.o.showtabline = 2
   end)
-)
+end)
 
 -- show an LSP progress indicator for session save
 local progress

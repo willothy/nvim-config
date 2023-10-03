@@ -327,7 +327,7 @@ local opts = {
             and not is_float(win)
       end,
       open = function()
-        require("trouble").open("document_diagonstics")
+        require("trouble").open("document_diagnostics")
       end,
     }),
     trouble:extend({
