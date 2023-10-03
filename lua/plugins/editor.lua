@@ -65,20 +65,25 @@ return {
   {
     "lukas-reineke/headlines.nvim",
     config = function()
-      require("configs.editor.headlines")
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        callback = function()
+          require("configs.editor.headlines")
+        end,
+      })
     end,
     ft = { "markdown", "help" },
   },
   {
     "jmbuhr/otter.nvim",
-    dependencies = {
-      "hrsh7th/nvim-cmp",
-      "neovim/nvim-lspconfig",
-      "nvim-treesitter/nvim-treesitter",
-    },
     ft = { "markdown", "help" },
     config = function()
-      require("configs.editor.otter")
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        callback = function()
+          require("configs.editor.otter")
+        end,
+      })
     end,
   },
   {
