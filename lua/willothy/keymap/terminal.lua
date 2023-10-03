@@ -1,6 +1,5 @@
 local keymap = willothy.keymap
--- selene: allow(unused_variable)
-local bind, modes = keymap.bind, keymap.modes
+local modes = keymap.modes
 
 local wk = require("which-key")
 
@@ -9,10 +8,17 @@ wk.register({
 }, { mode = modes.terminal })
 
 wk.register({
-  ["<C-Enter>"] = bind(willothy.term, "toggle"):with_desc("terminal: toggle"),
+  ["<C-Enter>"] = {
+    function()
+      willothy.term.main:toggle()
+    end,
+    "terminal: toggle",
+  },
   ["<S-Enter>"] = {
-    bind(willothy.term, "toggle"),
-    "terminal",
+    function()
+      willothy.term.main:toggle()
+    end,
+    "terminal: toggle",
   },
 }, { mode = modes.non_editing + modes.terminal })
 

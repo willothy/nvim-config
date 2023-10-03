@@ -1,15 +1,6 @@
 ---@diagnostic disable: missing-fields
 require("tree-sitter-just").setup({})
 
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("willothy.treesitter", { clear = true }),
-  callback = function(ev)
-    if vim.bo[ev.buf].buftype == "" then
-      vim.treesitter.start(ev.buf)
-    end
-  end,
-})
-
 require("nvim-treesitter.configs").setup({
   -- A list of parser names, or "all"
   ensure_installed = {
