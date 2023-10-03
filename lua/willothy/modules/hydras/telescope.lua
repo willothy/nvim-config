@@ -1,7 +1,7 @@
 local telescope = willothy.fn.telescope
 local Hydra = require("willothy.modules.hydras").Hydra
 
-return Hydra(function(config)
+local hint = function(config)
   ---@type Lines
   local Lines = require("willothy.lines")
   local backgrounds = require("willothy.lines.backgrounds")
@@ -51,25 +51,21 @@ return Hydra(function(config)
     + 3
 
   local bg = backgrounds.space
-  local btm = elements.misc.land_border:trim_trailing_whitespace()
-  local fg = elements.telescope.dog:trim_trailing_whitespace()
   local drop = Lines:empty({ vert_size, bg.dimensions[2] })
 
   bg = bg:truncate_height(vert_size, 9)
 
-  local map_col = bg.dimensions[2] - maps.dimensions[2] - 4
-
   return drop
-    :overlay(bg)
-    :overlay(btm, vert_size)
-    :overlay(fg, (vert_size - fg.dimensions[1] + 1) - bg.dimensions[1], nil)
-    :overlay(maps, 2, map_col, true)
-    :overlay(backups, 3 + maps.dimensions[1], map_col, true)
-    :overlay(exits, -1, map_col, false)
+    :overlay(maps, 1, 1, true)
+    :overlay(backups, 2 + maps.dimensions[1], 1, true)
+    :overlay(exits, 4 + maps.dimensions[1], 1, false)
     :trim_trailing_whitespace()
     :escape()
     :render()
-end, {
+end
+
+local config = {
+
   name = "Telescope",
   config = {
     color = "blue",
@@ -120,4 +116,8 @@ end, {
     },
     { "q", nil, { exit = true, nowait = true, desc = "close" } },
   },
-})
+}
+
+config.hint = hint(config)
+
+return Hydra(config)

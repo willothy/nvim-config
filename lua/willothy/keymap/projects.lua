@@ -1,7 +1,9 @@
 local keymap = willothy.keymap
-local register, modes = keymap.register, keymap.modes
+local modes = keymap.modes
 
-register({
+local wk = require("which-key")
+
+wk.register({
   name = "projects",
   f = {
     function()
@@ -20,6 +22,7 @@ register({
       end
       willothy.fs.browse(dir)
     end,
+    "current file parent dir",
   },
   v = {
     function()
@@ -51,4 +54,4 @@ register({
     end,
     "zsh config",
   },
-}, modes.non_editing, "<leader>p")
+}, { mode = modes.non_editing, prefix = "<leader>p" })

@@ -1,5 +1,5 @@
 local keymap = willothy.keymap
-local bind, register, modes = keymap.bind, keymap.register, keymap.modes
+local bind, modes = keymap.bind, keymap.modes
 
 local function resize(direction)
   return function()
@@ -19,10 +19,13 @@ local function resize(direction)
       return
     end
     require("smart-splits")["resize_" .. direction]()
-  end
+  end,
+    "resize: " .. direction
 end
 
-register({
+local wk = require("which-key")
+
+wk.register({
   ["<C-Up>"] = bind("smart-splits", "move_cursor_up"),
   ["<C-Down>"] = { bind("smart-splits", "move_cursor_down") },
   ["<C-Left>"] = { bind("smart-splits", "move_cursor_left") },
@@ -108,4 +111,4 @@ register({
       "pick: close",
     },
   },
-}, modes.non_pending)
+}, { mode = modes.non_pending })

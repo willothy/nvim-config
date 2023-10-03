@@ -1,8 +1,10 @@
 local keymap = willothy.keymap
 -- selene: allow(unused_variable)
-local bind, register, modes = keymap.bind, keymap.register, keymap.modes
+local bind, modes = keymap.bind, keymap.modes
 
-register({
+local wk = require("which-key")
+
+wk.register({
   name = "buffer",
   r = {
     function()
@@ -55,4 +57,4 @@ register({
     end,
     "delete",
   },
-}, modes.non_editing, "<leader>b")
+}, { mode = modes.non_editing, prefix = "<leader>b" })

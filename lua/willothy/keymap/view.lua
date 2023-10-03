@@ -1,11 +1,13 @@
 local keymap = willothy.keymap
-local bind, register, modes = keymap.bind, keymap.register, keymap.modes
+local bind, modes = keymap.bind, keymap.modes
 
 local cody
 
 local telescope = willothy.fn.telescope
 
-register({
+local wk = require("which-key")
+
+wk.register({
   name = "view",
   q = bind("trouble", "open", "quickfix"):with_desc("trouble: quickfix"),
   l = bind("trouble", "open", "loclist"):with_desc("trouble: loclist"),
@@ -32,4 +34,4 @@ register({
     "cody chat",
   },
   u = { vim.cmd.UndotreeToggle, "undotree" },
-}, modes.non_editing, "<leader>v")
+}, { mode = modes.non_editing, prefix = "<leader>v" })

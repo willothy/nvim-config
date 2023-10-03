@@ -12,58 +12,6 @@ function M.find(mode, lhs)
   end
 end
 
-function M.register(tree, modes, prefix)
-  if type(modes) == "string" then
-    modes = { modes }
-  end
-  local function traverse(node, lhs, key)
-    local t = type(node)
-    if
-      t ~= "table"
-      or type(node[1]) == "string"
-      or type(node[1]) == "function"
-      or type(node[1]) == "table"
-    then
-      local rhs, opts
-      if t == "function" then
-        rhs = node
-        opts = {}
-      else
-        if t == "string" and key == "name" then
-          M.group(modes, lhs:gsub(key .. "$", ""), node, true)
-          return
-        end
-        rhs = type(node) == "table" and node[1]
-        if rhs then
-          if type(rhs) == "table" then
-            local prev = rhs
-            rhs = function(...)
-              prev(...)
-            end
-          end
-          opts = {
-            desc = node.desc or node[2] or "which_key_ignore",
-            silent = node.silent,
-            expr = node.expr,
-            noremap = node.noremap,
-          }
-        else
-          if type(node) == "string" then
-            rhs = lhs
-            opts = { desc = node }
-          end
-        end
-      end
-      vim.keymap.set(modes, lhs, rhs, opts)
-    else
-      for k, v in pairs(node) do
-        traverse(v, lhs .. k, k)
-      end
-    end
-  end
-  traverse(tree, prefix or "")
-end
-
 local group = function(obj)
   return setmetatable(obj, {
     __add = function(self, other)

@@ -1,20 +1,22 @@
 local keymap = willothy.keymap
 -- selene: allow(unused_variable)
-local bind, register, modes = keymap.bind, keymap.register, keymap.modes
+local bind, modes = keymap.bind, keymap.modes
 
-register({
+local wk = require("which-key")
+
+wk.register({
   ["<Esc>"] = { "<C-\\><C-n>", "Exit terminal" },
-}, modes.terminal)
+}, { mode = modes.terminal })
 
-register({
+wk.register({
   ["<C-Enter>"] = bind(willothy.term, "toggle"):with_desc("terminal: toggle"),
   ["<S-Enter>"] = {
     bind(willothy.term, "toggle"),
     "terminal",
   },
-}, modes.non_editing + modes.terminal)
+}, { mode = modes.non_editing + modes.terminal })
 
-register({
+wk.register({
   name = "terminal",
   t = {
     function()
@@ -75,4 +77,4 @@ register({
     end,
     "lua",
   },
-}, modes.non_editing, "<leader>t")
+}, { mode = modes.non_editing, prefix = "<leader>t" })

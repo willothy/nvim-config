@@ -1,9 +1,11 @@
 local keymap = willothy.keymap
-local register, modes = keymap.register, keymap.modes
+local modes = keymap.modes
 
 local telescope = willothy.fn.telescope
 
-register({
+local wk = require("which-key")
+
+wk.register({
   name = "find",
   f = {
     function()
@@ -36,4 +38,4 @@ register({
     telescope.builtin,
     "telescope pickers",
   },
-}, modes.non_editing, "<leader>f")
+}, { mode = modes.non_editing, prefix = "<leader>f" })

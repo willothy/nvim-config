@@ -1,5 +1,5 @@
 local keymap = willothy.keymap
-local register, modes = keymap.register, keymap.modes
+local modes = keymap.modes
 
 local neogit = setmetatable({}, {
   __index = function(_, popup)
@@ -12,7 +12,9 @@ local neogit = setmetatable({}, {
   end,
 })
 
-register({
+local wk = require("which-key")
+
+wk.register({
   name = "git",
   c = neogit.commit,
   b = neogit.branch,
@@ -30,4 +32,4 @@ register({
     end,
     "open in browser",
   },
-}, modes.non_editing, "<leader>g")
+}, { mode = modes.non_editing, prefix = "<leader>g" })

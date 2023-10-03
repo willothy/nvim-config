@@ -1,7 +1,9 @@
 local keymap = willothy.keymap
-local bind, register, modes = keymap.bind, keymap.register, keymap.modes
+local bind, modes = keymap.bind, keymap.modes
 
-register({
+local wk = require("which-key")
+
+wk.register({
   name = "previous",
   b = {
     function()
@@ -15,9 +17,9 @@ register({
   ),
   m = bind("marks", "prev"):with_desc("mark"),
   d = bind("vim.diagnostic", "goto_prev"):with_desc("diagnostic"),
-}, modes.normal, "[")
+}, { mode = modes.normal, prefix = "[" })
 
-register({
+wk.register({
   name = "next",
   b = {
     function()
@@ -31,4 +33,4 @@ register({
   ),
   m = bind("marks", "next"):with_desc("mark"),
   d = bind("vim.diagnostic", "goto_next"):with_desc("diagnostic"),
-}, modes.normal, "]")
+}, { mode = modes.normal, prefix = "]" })

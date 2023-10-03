@@ -1,8 +1,10 @@
 local keymap = willothy.keymap
 -- selene: allow(unused_variable)
-local bind, register, modes = keymap.bind, keymap.register, keymap.modes
+local bind, modes = keymap.bind, keymap.modes
 
-register({
+local wk = require("which-key")
+
+wk.register({
   name = "lsp",
   a = bind(vim.lsp.buf.code_action):with_desc("code actions"),
   r = bind(vim.lsp.buf.references):with_desc("references"),
@@ -21,10 +23,11 @@ register({
         true
       )
     end,
+    "rename",
   },
-}, modes.non_editing, "<leader>c")
+}, { mode = modes.non_editing, prefix = "<leader>c" })
 
-register({
+wk.register({
   ["<S-Esc>"] = {
     bind("trouble", "toggle", "document_diagnostics"),
     "diagnostics",
@@ -32,4 +35,4 @@ register({
   K = bind("rust-tools.hover_actions", "hover_actions"):with_desc(
     "lsp: hover"
   ),
-}, modes.non_editing)
+}, { mode = modes.non_editing })

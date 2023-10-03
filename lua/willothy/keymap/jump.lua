@@ -1,8 +1,10 @@
 local keymap = willothy.keymap
 -- selene: allow(unused_variable)
-local bind, register, modes = keymap.bind, keymap.register, keymap.modes
+local bind, modes = keymap.bind, keymap.modes
 
-register({
+local wk = require("which-key")
+
+wk.register({
   name = "jump",
   d = {
     function()
@@ -42,4 +44,4 @@ register({
     end,
     "changelist",
   },
-}, modes.non_editing, "<leader>j")
+}, { mode = modes.non_editing, prefix = "<leader>j" })

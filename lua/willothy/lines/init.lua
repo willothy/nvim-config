@@ -190,7 +190,8 @@ function Lines:actions(actions, width, fmt)
 
     available = available - (right_len > 0 and 2 or 0)
 
-    local l_available = right_len > 0 and math.floor(available / 2) or available
+    local l_available = right_len > 0 and math.floor(available / 2)
+      or available
     local r_available = available - l_available
 
     if left_len > l_available then

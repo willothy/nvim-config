@@ -1,5 +1,5 @@
 local keymap = willothy.keymap
-local bind, register, modes = keymap.bind, keymap.register, keymap.modes
+local bind, modes = keymap.bind, keymap.modes
 
 local objects = {
   w = "word",
@@ -42,12 +42,14 @@ local objects = {
   e = "expression",
 }
 
-require("which-key").register({
+local wk = require("which-key")
+
+wk.register({
   i = objects,
   a = objects,
 }, { mode = { "o", "v" } })
 
-require("which-key").register({
+wk.register({
   g = {
     name = "go",
     ["?"] = bind("which-key", "show"):with_desc("which-key"),
@@ -68,23 +70,23 @@ require("which-key").register({
   L = { "$", "end of line" },
 }, { mode = modes.non_editing })
 
-register({
+wk.register({
   ["<CR>"] = bind("wildfire", "init_selection"):with_desc("wildfire: init"),
-}, modes.normal)
+}, { mode = modes.normal })
 
-register({
+wk.register({
   ["<CR>"] = bind("wildfire", "node_incremental"):with_desc("wildfire: init"),
   ["<BS>"] = bind("wildfire", "node_decremental"):with_desc("wildfire: init"),
-}, { "x", "v" })
+}, { mode = { "x", "v" } })
 
-register({
+wk.register({
   w = bind("spider", "motion", "w"):with_desc("which_key_ignore"),
   b = bind("spider", "motion", "b"):with_desc("which_key_ignore"),
   e = bind("spider", "motion", "e"):with_desc("which_key_ignore"),
   ge = bind("spider", "motion", "ge"):with_desc("which_key_ignore"),
-}, { "n", "o", "x", "v" })
+}, { mode = { "n", "o", "x", "v" } })
 
-register({
+wk.register({
   ["<C-F>"] = {
     -- bind("ssr", "open"),
     bind("spectre", "toggle"),
@@ -93,21 +95,21 @@ register({
   v = {
     name = "visual",
   },
-}, modes.non_editing)
+}, { mode = modes.non_editing })
 
-require("which-key").register({
+wk.register({
   [";"] = { "flash: next" },
   [","] = { "flash: prev" },
 }, { mode = modes.non_editing + "o" })
 
-require("which-key").register({
+wk.register({
   j = "which_key_ignore",
   k = "which_key_ignore",
   h = "which_key_ignore",
   l = "which_key_ignore",
 }, { mode = modes.all })
 
-register({
+wk.register({
   ["<F1>"] = bind("cokeline.mappings", "pick", "focus"):with_desc(
     "pick buffer"
   ),
@@ -135,16 +137,16 @@ register({
   ["<C-p>"] = bind("NeoComposer.ui", "cycle_prev"):with_desc(
     "macro: cycle prev"
   ),
-}, modes.non_editing)
+}, { mode = modes.non_editing })
 
-register({
+wk.register({
   name = "marks",
   d = bind("marks", "delete"):with_desc("delete mark"),
   m = bind("reach", "marks"),
   h = bind("harpoon.mark", "toggle_file"):with_desc("harpoon: toggle mark"),
-}, modes.non_editing, "<leader>m")
+}, { mode = modes.non_editing, prefix = "<leader>m" })
 
-register({
+wk.register({
   ["<F5>"] = {
     bind("configs.debugging.dap", "launch"),
     "dap: launch debugger",
@@ -154,9 +156,9 @@ register({
   ["<F10>"] = bind("dap", "step_over"),
   ["<S-F10>"] = bind("dap", "step_out"),
   ["<F12>"] = bind("dap", "step_into"),
-}, modes.normal)
+}, { mode = modes.normal })
 
-register({
+wk.register({
   ["<Tab>"] = bind("stay-in-place", "shift_right_line"):with_desc(
     "indent: increase"
   ),
@@ -169,9 +171,9 @@ register({
   ["<"] = "indent: decrease",
   [">"] = "indent: increase",
   ["="] = "indent: auto",
-}, modes.normal)
+}, { mode = modes.normal })
 
-register({
+wk.register({
   ["<M-k>"] = { bind("moveline", "block_up"), "move: up" },
   ["<M-j>"] = { bind("moveline", "block_down"), "move: down" },
   ["<Tab>"] = bind("stay-in-place", "shift_right_visual"):with_desc(
@@ -185,13 +187,13 @@ register({
   ["<"] = "indent: decrease",
   [">"] = "indent: increase",
   ["="] = "indent: auto",
-}, modes.visual)
+}, { mode = modes.visual })
 
 local function fmt(name, is_after)
   return string.format("%s %s", name, is_after and "󱞣" or "󱞽")
 end
 
-register({
+wk.register({
   p = {
     "<Plug>(YankyPutAfter)",
     fmt("put", true),
@@ -216,18 +218,18 @@ register({
     "<Plug>(YankyCycleBackward)",
     fmt("yanky: cycle"),
   },
-}, { "n", "x", "v", "o" })
+}, { mode = { "n", "x", "v", "o" } })
 
-register({
+wk.register({
   s = {
     function()
       require("flash").jump()
     end,
     "flash: jump",
   },
-}, { "n", "x", "v", "o" })
+}, { mode = { "n", "x", "v", "o" } })
 
-register({
+wk.register({
   r = {
     function()
       local mode = vim.api.nvim_get_mode().mode
@@ -239,9 +241,9 @@ register({
     end,
     "flash: remote",
   },
-}, "o")
+}, { mode = "o" })
 
-register({
+wk.register({
   ["<C-s>"] = {
     function()
       require("flash").toggle()
@@ -252,4 +254,4 @@ register({
     function() end,
     "which_key_ignore",
   },
-}, modes.command)
+}, { mode = modes.command })
