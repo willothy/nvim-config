@@ -33,7 +33,7 @@
   "flash.nvim": { "branch": "main", "commit": "79e79ae45c3512ff1edc5da55f38ca8ee8d857b9" },
   "flatten.nvim": { "branch": "main", "commit": "67c70f0be3bc536850e1c224a39aef075d23344f" },
   "floating-help.nvim": { "branch": "main", "commit": "2064d8156f966a24a9c409e6f6c6f8f4cabce58d" },
-  "focus.nvim": { "branch": "master", "commit": "40fee169fa502eb0b87bcaa0f8e2af051326ed14" },
+  "focus.nvim": { "branch": "feat-disable-per-buffer", "commit": "4e92b36adf172e61a76a524df5b311aecda3c345" },
   "gist.nvim": { "branch": "main", "commit": "92b13e486dd9fd083750450e0d262fcc68a62b91" },
   "git-conflict.nvim": { "branch": "main", "commit": "896261933afe2fddf6fb043d9cd4d88301b151a9" },
   "gitlinker.nvim": { "branch": "master", "commit": "3cc5ff8d2068f0690826fad096d0296c0e189721" },

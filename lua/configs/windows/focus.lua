@@ -30,7 +30,8 @@ focus.setup({
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  callback = function()
-    vim.w.focus_disable = ignore_filetypes[vim.bo.filetype]
+  callback = function(args)
+    local buf = args.buf
+    vim.b[buf].focus_disable = ignore_filetypes[vim.bo[buf].filetype]
   end,
 })

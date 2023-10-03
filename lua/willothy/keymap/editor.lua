@@ -82,7 +82,7 @@ register({
   b = bind("spider", "motion", "b"):with_desc("which_key_ignore"),
   e = bind("spider", "motion", "e"):with_desc("which_key_ignore"),
   ge = bind("spider", "motion", "ge"):with_desc("which_key_ignore"),
-}, { "n", "o", "x" })
+}, { "n", "o", "x", "v" })
 
 register({
   ["<C-F>"] = {

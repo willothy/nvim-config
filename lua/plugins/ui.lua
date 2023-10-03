@@ -106,7 +106,9 @@ return {
   },
   -- WINDOWS --
   {
-    "nvim-focus/focus.nvim",
+    -- "nvim-focus/focus.nvim",
+    "willothy/focus.nvim",
+    branch = "feat-disable-per-buffer",
     -- dir = "~/projects/lua/focus.nvim/",
     config = function()
       require("configs.windows.focus")
