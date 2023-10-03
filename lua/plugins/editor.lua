@@ -145,7 +145,7 @@ return {
     config = function()
       require("configs.editor.mini-files")
     end,
-    event = "CmdlineEnter",
+    cmd = "MiniFiles",
   },
   -- SESSIONS / PROJECTS --
   {
@@ -178,7 +178,7 @@ return {
   -- TERMINAL --
   {
     "akinsho/toggleterm.nvim",
-    event = "CmdlineEnter",
+    cmd = "ToggleTerm",
     config = function()
       require("configs.terminal.toggleterm")
     end,
@@ -198,7 +198,7 @@ return {
   },
   {
     "desdic/greyjoy.nvim",
-    event = "CmdlineEnter",
+    cmd = "Greyjoy",
     config = function()
       require("configs.terminal.greyjoy")
     end,
@@ -259,7 +259,7 @@ return {
     config = function()
       require("configs.navigation.portal")
     end,
-    event = "CmdlineEnter",
+    cmd = "Portal",
   },
   {
     "chrisgrieser/nvim-spider",
@@ -307,8 +307,13 @@ return {
   {
     "sindrets/diffview.nvim",
     config = true,
-    -- cmd = "DiffviewOpen",
-    event = "CmdlineEnter",
+    cmd = {
+      "DiffviewOpen",
+      "DiffviewToggleFiles",
+      "DiffviewFocusFiles",
+      "DiffviewRefresh",
+      "DiffviewFileHistory",
+    },
   },
   {
     "akinsho/git-conflict.nvim",
@@ -319,7 +324,7 @@ return {
   },
   {
     "NeogitOrg/neogit",
-    event = "CmdlineEnter",
+    cmd = "Neogit",
     config = function()
       require("configs.git.neogit")
     end,

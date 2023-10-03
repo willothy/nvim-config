@@ -64,7 +64,15 @@ return {
     config = function()
       require("configs.lsp.sourcegraph")
     end,
-    event = "VeryLazy",
+    cmd = {
+      "CodyDo",
+      "CodyTask",
+      "CodyAsk",
+      "CodyChat",
+      "CodyToggle",
+      "SourcegraphSearch",
+      "SourcegraphLink",
+    },
     build = "nvim -l build/init.lua",
   },
   {

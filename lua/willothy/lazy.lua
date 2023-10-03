@@ -6,6 +6,7 @@ return {
 
     require("willothy.commands")
     require("willothy.autocmds")
+    -- TODO: organize and minimize keymaps
     require("willothy.keymap")
 
     -- Inform vim how to enable undercurl in wezterm
