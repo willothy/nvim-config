@@ -65,25 +65,15 @@ return {
   {
     "lukas-reineke/headlines.nvim",
     config = function()
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "VeryLazy",
-        callback = function()
-          require("configs.editor.headlines")
-        end,
-      })
+      require("configs.editor.headlines")
     end,
-    ft = { "markdown", "help" },
+    event = "VeryLazy",
   },
   {
     "jmbuhr/otter.nvim",
-    ft = { "markdown", "help" },
+    event = "VeryLazy",
     config = function()
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "VeryLazy",
-        callback = function()
-          require("configs.editor.otter")
-        end,
-      })
+      require("configs.editor.otter")
     end,
   },
   {
