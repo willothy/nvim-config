@@ -151,7 +151,7 @@ local function create_popup()
     enter = false,
     focusable = false,
     border = {
-      style = "solid",
+      style = { " ", " ", " ", " ", " ", " ", " ", " " },
     },
     position = {
       row = 1,
@@ -233,7 +233,7 @@ Diagnostics = {
       width = width + #tostring(buffer.diagnostics.hints) + 3
     end
     Diagnostics.popup = Diagnostics.popup or create_popup()
-    Diagnostics.popup.win_config.width = width
+    Diagnostics.popup.win_config.width = width - 1
     Diagnostics.popup.win_config.col = mouse_col - 1
     Diagnostics.popup:mount()
     if not Diagnostics.popup.bufnr then
