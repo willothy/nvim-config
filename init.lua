@@ -18,7 +18,7 @@ vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
   callback = function()
     vim.o.shada = shada
-    vim.api.nvim_exec2("rshada", {})
+    pcall(vim.api.nvim_exec2, "rshada", {})
   end,
 })
 
