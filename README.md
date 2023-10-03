@@ -12,8 +12,8 @@ to add to your own config :)
 - Lazy load EVERYTHING. Only a few plugins load before UiEnter.
 - I've spent a stupid amount of time optimizing
 
-![n_plugins](https://github.com/willothy/nvim-config/assets/38540736/e2902140-76fb-4291-b1d3-2f8f5d007889)
-![startuptime](https://github.com/willothy/nvim-config/assets/38540736/43c942d4-e6ec-4c15-ae52-463cd9eb896e)<br>
+![startuptime](https://github.com/willothy/nvim-config/assets/38540736/43c942d4-e6ec-4c15-ae52-463cd9eb896e)
+![n_plugins](https://github.com/willothy/nvim-config/assets/38540736/e2902140-76fb-4291-b1d3-2f8f5d007889)<br>
 *fastest recorded startup time with this config*
 
 
