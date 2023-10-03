@@ -30,14 +30,35 @@ focus.setup({
   },
 })
 
+local function should_disable(buf, win)
+  win = win or vim.fn.bufwinid(buf)
+  if win and require("edgy").get_win(win) then
+    return true
+  else
+    return ignore_filetypes[vim.bo[buf].filetype]
+  end
+end
+
 vim.api.nvim_create_autocmd("FileType", {
   callback = function(args)
     local buf = args.buf
-    local win = vim.fn.bufwinid(buf)
-    if win and require("edgy").get_win(win) then
+    if should_disable(buf) then
       vim.b[buf].focus_disable = true
     else
-      vim.b[buf].focus_disable = ignore_filetypes[vim.bo[buf].filetype]
+      vim.b[buf].focus_disable = nil
     end
   end,
 })
+
+vim
+  .iter(vim.api.nvim_list_wins())
+  :filter(function(win)
+    return vim.api.nvim_win_get_config(win).zindex == nil
+  end)
+  :map(function(win)
+    return vim.api.nvim_win_get_buf(win), win
+  end)
+  :filter(should_disable)
+  :each(function(buf)
+    vim.b[buf].focus_disable = true
+  end)

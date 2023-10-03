@@ -173,6 +173,7 @@ return {
     config = function()
       require("configs.status.cokeline")
     end,
+    priority = 100,
     event = "UiEnter",
   },
   {
@@ -180,11 +181,13 @@ return {
     config = function()
       require("configs.status.heirline")
     end,
+    priority = 100,
     event = "UiEnter",
   },
   {
     -- "Bekaboo/dropbar.nvim",
     "willothy/dropbar.nvim",
+    priority = 100,
     branch = "feat-floating-scrollbar",
     -- dir = "~/projects/lua/dropbar.nvim/",
     config = function()
@@ -194,6 +197,7 @@ return {
   },
   {
     "luukvbaal/statuscol.nvim",
+    priority = 100,
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },
@@ -212,6 +216,7 @@ return {
   -- COLORS --
   {
     "willothy/minimus",
+    priority = 100,
     config = function()
       vim.api.nvim_exec2("colorscheme minimus", {})
     end,
