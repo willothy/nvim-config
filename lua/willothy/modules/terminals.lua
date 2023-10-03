@@ -24,15 +24,24 @@ local Terminal = BaseTerminal:new({
   },
 })
 
+---@param opts TermCreateArgs
+---@return Terminal
+---@diagnostic disable-next-line: inject-field
 function Terminal:extend(opts)
   opts = opts or {}
   self.__index = self
-  return setmetatable(opts, self)
+  return setmetatable(opts--[[@as Terminal]], self)
 end
 
 M.float = Terminal:extend({
   display_name = "floating",
   direction = "float",
+  on_create = function(term)
+    local buf = term.bufnr
+    vim.keymap.set("n", "q", function()
+      term:close()
+    end, { buffer = buf })
+  end,
 })
 
 M.main = Terminal:extend({

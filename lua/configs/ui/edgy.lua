@@ -53,6 +53,10 @@ function _G.__edgy_term_title()
   return _G.dropbar.get_dropbar_str():gsub(" %s+", "")
 end
 
+local function is_float(win)
+  return vim.api.nvim_win_get_config(win).zindex ~= nil
+end
+
 local terminal = View.new({
   ft = "terminal",
   title = "%{%v:lua.__edgy_term_title()%}",
@@ -62,7 +66,7 @@ local terminal = View.new({
     winhighlight = "Normal:Normal",
   },
   filter = function(buf, win)
-    return vim.bo[buf].buftype == "terminal"
+    return vim.bo[buf].buftype == "terminal" and not is_float(win)
   end,
 })
 
@@ -76,10 +80,6 @@ local function get_rhs_width()
   else
     return math.floor(vim.o.columns * 0.6)
   end
-end
-
-local function is_float(win)
-  return vim.api.nvim_win_get_config(win).zindex ~= nil
 end
 
 local neogit = View.new({
@@ -115,7 +115,7 @@ local opts = {
       open = function()
         willothy.term.vertical:open()
       end,
-      filter = function(buf, win)
+      filter = function(buf)
         local term = require("toggleterm.terminal").find(function(term)
           return term.bufnr == buf
         end)
@@ -209,7 +209,7 @@ local opts = {
       open = function()
         willothy.term.main:open()
       end,
-      filter = function(buf, win)
+      filter = function(buf)
         local term = require("toggleterm.terminal").find(function(term)
           return term.bufnr == buf
         end)
