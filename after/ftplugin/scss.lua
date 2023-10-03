@@ -9,6 +9,5 @@ bo.expandtab = true
 bo.smartindent = false
 
 wo.wrap = false
-wo.numberwidth = 1
 wo.number = true
 wo.relativenumber = true

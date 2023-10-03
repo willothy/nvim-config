@@ -7,8 +7,13 @@ o.scrolloff = 16
 o.shell = "/usr/bin/zsh"
 o.shortmess = "filnxoOCFIs"
 o.virtualedit = "block"
-o.showtabline = 2
 o.signcolumn = "yes"
+o.numberwidth = 8
+o.wrap = false
+o.number = true
+o.relativenumber = true
+o.showtabline = 2
+o.laststatus = 3
 
 o.swapfile = true
 o.backup = false
@@ -41,20 +46,10 @@ o.splitkeep = "cursor"
 o.smoothscroll = true
 o.mousescroll = "ver:1,hor:6"
 
-o.laststatus = 3
-
-o.number = true
-o.relativenumber = true
-
 o.tabstop = 2
 o.shiftwidth = 2
 o.softtabstop = 2
 o.expandtab = true
-
-o.wrap = false
-o.numberwidth = 1
-o.number = true
-o.relativenumber = true
 
 -- o.indentkeys = o.indentkeys .. ",!0\t"
 
