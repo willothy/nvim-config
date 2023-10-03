@@ -10,6 +10,18 @@ local conf_path = vim.fn.stdpath("config")
 
 vim.opt.rtp:prepend(lazy_path)
 
+-- Loading shada is SLOW, so we're going to load it manually,
+-- after UI-enter so it doesn't block startup.
+local shada = vim.o.shada
+vim.o.shada = ""
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  callback = function()
+    vim.o.shada = shada
+    vim.api.nvim_exec2("rshada", {})
+  end,
+})
+
 require("lazy").setup({
   { import = "plugins" },
   {
