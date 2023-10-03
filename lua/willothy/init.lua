@@ -114,5 +114,24 @@ require("willothy.settings")
 return {
   setup = function()
     willothy.fs.hijack_netrw()
+
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "VeryLazy",
+      once = true,
+      callback = function()
+        -- setup ui
+        willothy.ui.setup()
+        willothy.hydras.setup()
+
+        -- Inform vim how to enable undercurl in wezterm
+        vim.api.nvim_exec2(
+          [[
+                  let &t_Cs = "\e[4:3m"
+                  let &t_Ce = "\e[4:0m"
+              ]],
+          {}
+        )
+      end,
+    })
   end,
 }

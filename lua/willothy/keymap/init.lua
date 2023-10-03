@@ -11,23 +11,27 @@ local disable = {
   "<4-RightMouse>",
 }
 
-for _, v in ipairs(disable) do
-  vim.keymap.set(
-    { "n", "v", "i" },
-    v,
-    function() end,
-    { expr = true, desc = "which_key_ignore" }
-  )
-end
+return {
+  setup = function()
+    for _, v in ipairs(disable) do
+      vim.keymap.set(
+        { "n", "v", "i" },
+        v,
+        function() end,
+        { expr = true, desc = "which_key_ignore" }
+      )
+    end
 
-require("willothy.keymap.editor")
-require("willothy.keymap.terminal")
-require("willothy.keymap.cycle")
-require("willothy.keymap.view")
-require("willothy.keymap.find")
-require("willothy.keymap.git")
-require("willothy.keymap.buffer")
-require("willothy.keymap.projects")
-require("willothy.keymap.lsp")
-require("willothy.keymap.jump")
-require("willothy.keymap.window")
+    require("willothy.keymap.editor")
+    require("willothy.keymap.terminal")
+    require("willothy.keymap.cycle")
+    require("willothy.keymap.view")
+    require("willothy.keymap.find")
+    require("willothy.keymap.git")
+    require("willothy.keymap.buffer")
+    require("willothy.keymap.projects")
+    require("willothy.keymap.lsp")
+    require("willothy.keymap.jump")
+    require("willothy.keymap.window")
+  end,
+}

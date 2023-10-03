@@ -100,6 +100,7 @@ return {
   },
   {
     "folke/trouble.nvim",
+    cmd = "Trouble",
     config = function()
       require("configs.editor.trouble")
     end,
@@ -124,7 +125,6 @@ return {
   },
   {
     "willothy/nvim-window-picker",
-    -- event = "VeryLazy",
     config = function()
       require("configs.windows.window-picker")
     end,

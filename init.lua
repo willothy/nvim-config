@@ -26,15 +26,29 @@ require("lazy").setup({
   { import = "plugins" },
   -- This is how I get Lazy to profile my config.
   {
-    name = "willothy",
+    name = "willothy.init",
     main = "willothy",
     dir = conf_path,
     lazy = false,
     config = true,
   },
   {
-    name = "willothy.lazy",
-    main = "willothy.lazy",
+    name = "willothy.commands",
+    main = "willothy.commands",
+    dir = conf_path,
+    event = "VeryLazy",
+    config = true,
+  },
+  {
+    name = "willothy.autocmds",
+    main = "willothy.autocmds",
+    dir = conf_path,
+    event = "VeryLazy",
+    config = true,
+  },
+  {
+    name = "willothy.keymap",
+    main = "willothy.keymap",
     dir = conf_path,
     event = "VeryLazy",
     config = true,

@@ -160,20 +160,24 @@ local commands = {
   },
 }
 
-vim.iter(commands):each(function(name, cmd)
-  vim.api.nvim_create_user_command(name, cmd[1], {
-    buffer = cmd.buffer,
-    nargs = cmd.nargs,
-    bar = cmd.bar,
-    bang = cmd.bang,
-    complete = cmd.complete,
-    force = cmd.force,
-    preview = cmd.preview,
-    desc = cmd.desc,
-    range = cmd.range,
-    count = cmd.count,
-    addr = cmd.addr,
-    register = cmd.register,
-    keepscript = cmd.keepscript,
-  })
-end)
+return {
+  setup = function()
+    vim.iter(commands):each(function(name, cmd)
+      vim.api.nvim_create_user_command(name, cmd[1], {
+        buffer = cmd.buffer,
+        nargs = cmd.nargs,
+        bar = cmd.bar,
+        bang = cmd.bang,
+        complete = cmd.complete,
+        force = cmd.force,
+        preview = cmd.preview,
+        desc = cmd.desc,
+        range = cmd.range,
+        count = cmd.count,
+        addr = cmd.addr,
+        register = cmd.register,
+        keepscript = cmd.keepscript,
+      })
+    end)
+  end,
+}
