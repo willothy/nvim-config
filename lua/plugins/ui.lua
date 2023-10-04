@@ -99,8 +99,10 @@ return {
     },
   },
   {
-    "folke/trouble.nvim",
+    -- "folke/trouble.nvim",
+    "willothy/trouble.nvim",
     cmd = "Trouble",
+    branch = "fix-fillchars",
     config = function()
       require("configs.editor.trouble")
     end,
@@ -109,6 +111,9 @@ return {
   {
     -- "nvim-focus/focus.nvim",
     "willothy/focus.nvim",
+    dependencies = {
+      "echasnovski/mini.animate",
+    },
     branch = "master",
     -- dir = "~/projects/lua/focus.nvim/",
     config = function()

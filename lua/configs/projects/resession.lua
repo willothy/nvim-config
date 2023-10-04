@@ -2,9 +2,9 @@ local resession = require("resession")
 
 resession.setup({
   extensions = {
-    -- edgy = {
-    --   enable_in_tab = true,
-    -- },
+    edgy = {
+      enable_in_tab = true,
+    },
     overseer = {
       enable_in_tab = true,
     },
@@ -50,7 +50,6 @@ resession.setup({
 local lazy_open = false
 
 resession.add_hook("pre_load", function()
-  require("focus").focus_disable()
   local view = require("lazy.view")
   if view.view then
     lazy_open = true
@@ -64,7 +63,6 @@ resession.add_hook("pre_load", function()
 end)
 
 resession.add_hook("post_load", function()
-  require("focus").focus_enable()
   vim.o.showtabline = 2
   vim.schedule(function()
     if lazy_open then
@@ -196,22 +194,57 @@ if
 then
   resession.load(
     ---@diagnostic disable-next-line: param-type-mismatch
-    vim.fs.basename(vim.fs.basename(vim.fn.getcwd())),
+    vim.fs.basename(vim.fn.getcwd()),
     { silence_errors = true, reset = true }
   )
 end
 
-vim.api.nvim_create_autocmd("VimLeavePre", {
-  callback = vim.schedule_wrap(function()
-    resession.save("last", { notify = false })
-    vim.iter(vim.api.nvim_list_tabpages()):each(function(tab)
-      local win = vim.api.nvim_tabpage_get_win(tab)
-      vim.api.nvim_win_call(win, function()
-        ---@diagnostic disable-next-line: param-type-mismatch
-        local name = vim.fs.basename(vim.fn.getcwd(-1))
-        resession.save_tab(name, { notify = false })
+local function last_win_closing(curwin)
+  curwin = curwin or vim.api.nvim_get_current_win()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if
+      win ~= curwin
+      and require("edgy").get_win(win) == nil
+      and vim.api.nvim_win_get_config(win).zindex == nil
+    then
+      return false
+    end
+  end
+  return true
+end
+
+local au = vim.api.nvim_create_augroup("willothy.resession", { clear = true })
+
+vim.api.nvim_create_autocmd("WinClosed", {
+  group = au,
+  callback = function(ev)
+    if last_win_closing() then
+      resession.save("last", { notify = false })
+      vim.iter(vim.api.nvim_list_tabpages()):each(function(tab)
+        local win = vim.api.nvim_tabpage_get_win(tab)
+        vim.api.nvim_win_call(win, function()
+          ---@diagnostic disable-next-line: param-type-mismatch
+          local name = vim.fs.basename(vim.fn.getcwd(-1))
+          resession.save_tab(name, { notify = false })
+        end)
       end)
-    end)
-    resession.save_all({ notify = false })
-  end),
+    end
+  end,
 })
+
+-- vim.api.nvim_create_autocmd("QuitPre", {
+--   group = au,
+--   callback = function()
+--     resession.save("last", { notify = false })
+--     if last_win_closing() then
+--       vim.iter(vim.api.nvim_list_tabpages()):each(function(tab)
+--         local win = vim.api.nvim_tabpage_get_win(tab)
+--         vim.api.nvim_win_call(win, function()
+--           ---@diagnostic disable-next-line: param-type-mismatch
+--           local name = vim.fs.basename(vim.fn.getcwd(-1))
+--           resession.save_tab(name, { notify = false })
+--         end)
+--       end)
+--     end
+--   end,
+-- })

@@ -9,10 +9,15 @@ trouble.setup({
     hint = icons.hint,
     information = icons.info,
   },
+  fold_open = willothy.icons.fold.open,
+  -- fold_closed = willothy.icons.fold.closed,
+  fold_closed = "e",
   auto_open = false,
   auto_close = true,
   track_cursor = true,
   padding = false,
+  indent_lines = false,
+  use_diagnostic_signs = true,
 })
 
 local view = require("trouble.view")

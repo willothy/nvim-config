@@ -322,9 +322,11 @@ local opts = {
     trouble:extend({
       title = "Diagnostics",
       filter = function(buf, win)
-        return vim.b[buf].trouble_mode == "document_diagnostics"
+        return (
+          vim.b[buf].trouble_mode == "document_diagnostics"
           or vim.b[buf].trouble_mode == "workspace_diagnostics"
-            and not is_float(win)
+          or vim.b[buf].trouble_mode == nil
+        ) and not is_float(win)
       end,
       open = function()
         require("trouble").open("document_diagnostics")
@@ -385,7 +387,8 @@ local opts = {
     bottom = { size = get_height },
   },
 
-  exit_when_last = true,
+  -- exit_when_last = true,
+  exit_when_last = false,
   close_when_all_hidden = true,
 
   wo = {

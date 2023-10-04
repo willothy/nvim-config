@@ -19,17 +19,6 @@ local ignore_filetypes = {
   OverseerList = true,
 }
 
-focus.setup({
-  ui = {
-    cursorline = false,
-    signcolumn = false,
-    winhighlight = false,
-  },
-  autoresize = {
-    center_hsplits = false,
-  },
-})
-
 local function should_disable(buf, win)
   win = win or vim.fn.bufwinid(buf)
   if win and require("edgy").get_win(win) then
@@ -62,3 +51,15 @@ vim
   :each(function(buf)
     vim.b[buf].focus_disable = true
   end)
+vim.schedule(function()
+  focus.setup({
+    ui = {
+      cursorline = false,
+      signcolumn = false,
+      winhighlight = false,
+    },
+    autoresize = {
+      center_hsplits = false,
+    },
+  })
+end)

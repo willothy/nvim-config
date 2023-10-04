@@ -62,9 +62,36 @@ require("statuscol").setup({
       },
     },
   },
+  ft_ignore = {
+    "Trouble",
+  },
   clickhandlers = {
     FoldOther = false,
   },
+})
+
+vim.o.stc = "%!v:lua.StatusCol()"
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("willothy.stc", { clear = true }),
+  callback = function()
+    vim.o.statuscolumn = "%!v:lua.StatusCol()"
+  end,
+})
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "ResessionLoadPost",
+  callback = function()
+    vim
+      .iter(vim.api.nvim_list_wins())
+      :filter(function(w)
+        local buf = vim.api.nvim_win_get_buf(w)
+        return vim.bo[buf].buftype == ""
+      end)
+      :each(function(win)
+        vim.wo[win].stc = "%!v:lua.StatusCol()"
+      end)
+  end,
 })
 
 vim
