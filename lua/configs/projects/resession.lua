@@ -208,48 +208,79 @@ then
   )
 end
 
-local function last_win_closing(wins, nwins)
-  local curwin = vim.api.nvim_get_current_win()
-  for i = 1, nwins do
-    local win = wins[i]
-    if
-      win ~= curwin
-      and vim.api.nvim_win_is_valid(win)
-      and vim.api.nvim_win_get_config(win).zindex == nil
-      and require("edgy").get_win(win) == nil
-    then
-      return false
-    end
-  end
-  return true
-end
-
-local function has_normal_win(wins, nwins)
-  for i = 1, nwins do
-    local win = wins[i]
-    if
-      vim.api.nvim_win_is_valid(win)
-      and vim.api.nvim_win_get_config(win).zindex == nil
-      and require("edgy").get_win(win) == nil
-    then
-      return true
-    end
-  end
-  return false
-end
+-- local function last_win_closing(wins, nwins)
+--   local curwin = vim.api.nvim_get_current_win()
+--   for i = 1, nwins do
+--     local win = wins[i]
+--     if
+--       win ~= curwin
+--       and vim.api.nvim_win_is_valid(win)
+--       and vim.api.nvim_win_get_config(win).zindex == nil
+--       and require("edgy").get_win(win) == nil
+--     then
+--       return false
+--     end
+--   end
+--   return true
+-- end
+--
+-- local function has_normal_win(wins, nwins)
+--   for i = 1, nwins do
+--     local win = wins[i]
+--     if
+--       vim.api.nvim_win_is_valid(win)
+--       and vim.api.nvim_win_get_config(win).zindex == nil
+--       and require("edgy").get_win(win) == nil
+--     then
+--       return true
+--     end
+--   end
+--   return false
+-- end
 
 local au = vim.api.nvim_create_augroup("ResessionAutosave", { clear = true })
+
+-- vim.api.nvim_create_autocmd("QuitPre", {
+--   group = au,
+--   callback = function()
+--     resession.save("last", { notify = false })
+--     local wins = vim.api.nvim_tabpage_list_wins(0)
+--     local nwins = #wins
+--     if has_normal_win(wins, nwins) then
+--       local name = vim.fs.basename(vim.fn.getcwd(-1) --[[@as string]])
+--       resession.save_tab(name, { notify = false })
+--       if last_win_closing(wins, nwins) then
+--         vim.api.nvim_exec2("qa!", {})
+--       end
+--     end
+--   end,
+-- })
 
 vim.api.nvim_create_autocmd("QuitPre", {
   group = au,
   callback = function()
     resession.save("last", { notify = false })
+    local curwin = vim.api.nvim_get_current_win()
     local wins = vim.api.nvim_tabpage_list_wins(0)
-    local nwins = #wins
-    if has_normal_win(wins, nwins) then
+    local has_normal = false
+    local is_last = true
+    for i = 1, #wins do
+      local win = wins[i]
+      if
+        vim.api.nvim_win_get_config(win).zindex == nil
+        and require("edgy").get_win(win) == nil
+      then
+        has_normal = true
+        if win ~= curwin then
+          is_last = false
+          break
+        end
+      end
+    end
+    if has_normal then
       local name = vim.fs.basename(vim.fn.getcwd(-1) --[[@as string]])
       resession.save_tab(name, { notify = false })
-      if last_win_closing(wins, nwins) then
+      if is_last then
         vim.api.nvim_exec2("qa!", {})
       end
     end
