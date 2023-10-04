@@ -13,6 +13,12 @@ wk.register({
   l = bind("trouble", "open", "loclist"):with_desc("trouble: loclist"),
   d = bind("dapui", "toggle"):with_desc("dap-ui"),
   o = { telescope.oldfiles, "oldfiles" },
+  p = {
+    function()
+      willothy.player.toggle()
+    end,
+    "player",
+  },
   r = {
     telescope.registers,
     "registers",

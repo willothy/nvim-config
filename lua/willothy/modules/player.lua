@@ -21,8 +21,8 @@ function playerctl.track(fn)
 
       if code == 0 and out then
         local ok, decoded = pcall(vim.json.decode, out)
-        decoded.length = tonumber(decoded.length)
         if ok then
+          decoded.length = tonumber(decoded.length)
           fn(decoded)
         end
       elseif code ~= 0 then
@@ -91,12 +91,13 @@ end
 
 local ns = vim.api.nvim_create_namespace("nvim_media_ctrl")
 
-local popup_cfg = {
+local view = Popup({
   border = "single",
   focusable = false,
-}
-
-local view = Popup(popup_cfg)
+})
+local controls = Popup({
+  border = "none",
+})
 
 local layout = Layout({
   relative = "editor",
@@ -109,7 +110,20 @@ local layout = Layout({
     height = 10,
   },
   zindex = 100,
-}, { Layout.Box(view, { size = { width = "100%", height = 7 } }) })
+}, {
+  Layout.Box({
+    Layout.Box(view, {
+      size = { width = "100%", height = 6 },
+    }),
+    Layout.Box(controls, {
+      size = { width = "100%", height = 2 },
+      position = { row = 7 },
+    }),
+  }, {
+    dir = "col",
+    size = { width = "100%", height = 8 },
+  }),
+})
 
 local Player = {}
 
@@ -163,13 +177,12 @@ function Player.setup()
     },
   }
 
-  -- stylua: ignore start
-  vim.iter(commands)
+  vim
+    .iter(commands)
     :map(function(name, cmd)
       return name, unpack(cmd)
     end)
     :each(vim.api.nvim_create_user_command)
-  -- stylua: ignore end
 end
 
 function Player.start_timer()
@@ -188,11 +201,34 @@ end
 function Player.cleanup()
   if Player.timer then
     if not Player.timer:is_closing() then
-      Player.timer:stop()
       Player.timer:close()
     end
     Player.timer = nil
   end
+end
+
+local play_id
+local prev_id
+local next_id
+local function make_controls(winid)
+  local playing = Player.playing
+  local prev, _prev_id = willothy.fn.make_clickable(function()
+    playerctl.previous()
+    Player.update()
+  end, "󰙣", prev_id)
+  prev_id = _prev_id
+  local play, _play_id = willothy.fn.make_clickable(function()
+    playerctl.play_pause()
+    Player.update()
+  end, playing and "" or "", play_id)
+  play_id = _play_id
+  local next, _next_id = willothy.fn.make_clickable(function()
+    playerctl.next()
+    Player.update()
+  end, "󰙡", next_id)
+  next_id = _next_id
+  vim.wo[winid].winbar = string.format("%%=%s %s %s%%=", prev, play, next)
+  vim.wo[winid].winhl = "WinBar:FloatTitle,WinBarNC:FloatTitle"
 end
 
 function Player.update()
@@ -285,6 +321,7 @@ function Player.update()
   playerctl.status(function(status)
     status = status:gsub("%s+$", ""):gsub("^%s+", "")
     Player.playing = status == "Playing"
+    make_controls(controls.winid)
     n_done = n_done + 1
     done()
   end)
@@ -301,17 +338,34 @@ function Player.update()
 end
 
 function Player.show()
-  if Player.win and vim.api.nvim_win_is_valid(Player.win) then
+  if layout.winid and vim.api.nvim_win_is_valid(layout.winid) then
     return
   end
   layout:mount()
+  controls:on("WinEnter", function()
+    local prev_win = vim.fn.win_getid(vim.fn.winnr("#"))--[[@as integer]]
+
+    local buf = vim.api.nvim_win_get_buf(prev_win)
+    local last_exit = vim.api.nvim_buf_get_mark(buf, '"')
+    vim.api.nvim_set_current_win(prev_win)
+    vim.api.nvim_win_set_cursor(prev_win, last_exit)
+    -- vim.api.nvim_win_set_cursor
+  end)
   Player.update()
   Player.start_timer()
 end
 
+function Player.toggle()
+  if layout.winid and vim.api.nvim_win_is_valid(layout.winid) then
+    Player.hide()
+  else
+    Player.show()
+  end
+end
+
 function Player.hide()
-  layout:unmount()
   Player.cleanup()
+  layout:unmount()
 end
 
 return Player

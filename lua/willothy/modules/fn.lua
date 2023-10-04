@@ -138,19 +138,19 @@ local function next_id()
   _id = _id + 1
   return id
 end
-function M.make_clickable(fn, text)
+function M.make_clickable(fn, text, id)
   if not _G.__willothy_handlers then
     _G.__willothy_handlers = {}
     setmetatable(_G.__willothy_handlers, {
-      __call = function(self, id)
-        return self[id]
+      __call = function(self, param_id)
+        return self[param_id]
       end,
     })
   end
-  local id = next_id()
+  id = id or next_id()
   _G.__willothy_handlers[tostring(id)] = fn
   local handler = "v:lua.__willothy_handlers'" .. id .. "'"
-  return ("%%%s@%s@%s%%X"):format(id, handler, text)
+  return ("%%%s@%s@%s%%X"):format(id, handler, text), id
 end
 
 local Range = function(start_row, start_col, end_row, end_col)
