@@ -82,7 +82,6 @@ to add to your own config :)
      │   │   ├──  float_drag.lua# float dragging
      │   │   ├──  scrolleof.lua # scroll past end of file (wip, using scrollEOF instead)
      │   │   ├──  scrollbar.lua # custom scrollbars based on noice.nvim
-     │   │   ├──  scrollbar.lua # custom scrollbars based on noice.nvim
      │   │   ├──  select.lua    # vim.ui.select powered by dropbar.nvim
      │   │   └──  code_actions.lua # dropbar-based code action menu (wip)
      │   │
