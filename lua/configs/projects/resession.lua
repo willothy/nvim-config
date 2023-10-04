@@ -75,22 +75,22 @@ resession.add_hook("post_load", function()
 end)
 
 -- show an LSP progress indicator for session save
--- local progress
--- willothy.event.on("ResessionSavePre", function()
---   progress = willothy.utils.progress.create({
---     title = "saving",
---     message = "saving session",
---     client_name = "resession",
---   })
---   progress:begin()
--- end)
---
--- willothy.event.on("ResessionSavePost", function()
---   if progress then
---     progress:finish({})
---   end
---   progress = nil
--- end)
+local progress
+willothy.event.on("ResessionSavePre", function()
+  progress = willothy.utils.progress.create({
+    title = "saving",
+    message = "saving session",
+    client_name = "resession",
+  })
+  progress:begin()
+end)
+
+willothy.event.on("ResessionSavePost", function()
+  if progress then
+    progress:finish({})
+  end
+  progress = nil
+end)
 
 local function should_reset()
   local wins = vim.api.nvim_list_wins()
