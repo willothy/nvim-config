@@ -16,7 +16,6 @@ to add to your own config :)
 ![n_plugins](https://github.com/willothy/nvim-config/assets/38540736/e2902140-76fb-4291-b1d3-2f8f5d007889)<br>
 *fastest recorded startup time with this config*
 
-
 ## Some things I'm working on in this repo
 
 - `rx.lua`: Reactive extensions for Neovim
@@ -40,9 +39,7 @@ to add to your own config :)
 │        └──  scope.lua         # scope.nvim extension
 │
 └───  willothy
-     ├──  _meta.lua             # meta info for `willothy.*` completion
      ├──  init.lua              # main config entry point
-     ├──  lazy.lua              # lazy-loaded initialization steps
      ├──  autocmds.lua
      ├──  commands.lua
      ├──  settings.lua
@@ -85,7 +82,9 @@ to add to your own config :)
      │   │   ├──  float_drag.lua# float dragging
      │   │   ├──  scrolleof.lua # scroll past end of file (wip, using scrollEOF instead)
      │   │   ├──  scrollbar.lua # custom scrollbars based on noice.nvim
-     │   │   └──  select.lua    # vim.ui.select powered by dropbar.nvim
+     │   │   ├──  scrollbar.lua # custom scrollbars based on noice.nvim
+     │   │   ├──  select.lua    # vim.ui.select powered by dropbar.nvim
+     │   │   └──  code_actions.lua # dropbar-based code action menu (wip)
      │   │
      │   └──  utils             # utilities (willothy.utils)
      │       ├──  buf.lua       # buffer utilities
