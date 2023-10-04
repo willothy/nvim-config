@@ -387,8 +387,8 @@ local opts = {
     bottom = { size = get_height },
   },
 
-  -- exit_when_last = true,
-  exit_when_last = false,
+  exit_when_last = true,
+  -- exit_when_last = false,
   close_when_all_hidden = true,
 
   wo = {
