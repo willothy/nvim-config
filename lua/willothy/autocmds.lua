@@ -61,17 +61,19 @@ local autocmds = {
     end,
   },
   {
-    "BufWinLeave",
-    callback = function(ev)
-      if vim.bo[ev.buf].filetype == "TelescopePrompt" then
-        vim.cmd("silent! stopinsert!")
-      end
-    end,
-  },
-  {
     "FileChangedShellPost",
     callback = function()
       vim.cmd("checktime")
+    end,
+  },
+  {
+    "BufLeave",
+    callback = function(ev)
+      if vim.bo[ev.buf].filetype == "lazy" then
+        require("lazy.view").view:close({})
+      elseif vim.bo[ev.buf].filetype == "TelescopePrompt" then
+        vim.api.nvim_exec2("silent! stopinsert!", {})
+      end
     end,
   },
 }
