@@ -44,6 +44,4 @@ function M.on_pre_load(data)
   vim.api.nvim_set_current_win(win)
 end
 
-function M.on_post_load(data) end
-
 return M
