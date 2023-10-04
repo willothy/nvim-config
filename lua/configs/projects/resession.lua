@@ -85,12 +85,15 @@ willothy.event.on("ResessionSavePre", function()
   progress:begin()
 end)
 
-willothy.event.on("ResessionSavePost", function()
-  if progress then
-    progress:finish({})
-  end
-  progress = nil
-end)
+willothy.event.on(
+  "ResessionSavePost",
+  vim.schedule_wrap(function()
+    if progress then
+      progress:finish({})
+    end
+    progress = nil
+  end)
+)
 
 local function should_reset()
   local wins = vim.api.nvim_list_wins()
@@ -135,7 +138,42 @@ local commands = {
   end,
 }
 
-vim.api.nvim_create_user_command("Session", function(args)
+local function complete(arg, line)
+  local res = vim.api.nvim_parse_cmd(line, {})
+  local argc = #res.args
+  local first = false
+  if argc == 0 then
+    first = true
+  end
+  if argc == 1 and not line:match("%s$") then
+    first = true
+  end
+  if first then
+    return vim
+      .iter(commands)
+      :filter(function(option)
+        return vim.startswith(option, arg)
+      end)
+      :map(function(name)
+        return name
+      end)
+      :totable()
+  elseif argc == 2 or (argc == 1 and line:match("%s$")) then
+    if res.args[1] == "load" or res.args[1] == "delete" then
+      return vim
+        .iter(resession.list())
+        :filter(function(session)
+          return vim.startswith(session, arg)
+        end)
+        :map(function(session)
+          return session
+        end)
+        :totable()
+    end
+  end
+end
+
+local function execute(args)
   args = args.fargs
   local command = args[1]
   if not command then
@@ -144,45 +182,13 @@ vim.api.nvim_create_user_command("Session", function(args)
     commands[command](unpack(args, 2))
   else
     vim.notify("Unknown command: " .. command, "warn")
-    return
   end
-end, {
+end
+
+vim.api.nvim_create_user_command("Session", execute, {
   nargs = "*",
   desc = "Manage sessions",
-  complete = function(arg, line)
-    local res = vim.api.nvim_parse_cmd(line, {})
-    local argc = #res.args
-    local first = false
-    if argc == 0 then
-      first = true
-    end
-    if argc == 1 and not line:match("%s$") then
-      first = true
-    end
-    if first then
-      return vim
-        .iter(commands)
-        :filter(function(option)
-          return vim.startswith(option, arg)
-        end)
-        :map(function(name)
-          return name
-        end)
-        :totable()
-    elseif argc == 2 or (argc == 1 and line:match("%s$")) then
-      if res.args[1] == "load" or res.args[1] == "delete" then
-        return vim
-          .iter(resession.list())
-          :filter(function(session)
-            return vim.startswith(session, arg)
-          end)
-          :map(function(session)
-            return session
-          end)
-          :totable()
-      end
-    end
-  end,
+  complete = complete,
 })
 
 if
