@@ -216,13 +216,25 @@ local function last_win_closing()
   return true
 end
 
+local function has_normal_win()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if
+      vim.api.nvim_win_get_config(win).zindex == nil
+      and require("edgy").get_win(win) == nil
+    then
+      return true
+    end
+  end
+  return false
+end
+
 local au = vim.api.nvim_create_augroup("ResessionAutosave", { clear = true })
 
 vim.api.nvim_create_autocmd("QuitPre", {
   group = au,
   callback = function()
     resession.save("last", { notify = false })
-    if last_win_closing() then
+    if has_normal_win() then
       vim.iter(vim.api.nvim_list_tabpages()):each(function(tab)
         local win = vim.api.nvim_tabpage_get_win(tab)
         vim.api.nvim_win_call(win, function()
@@ -230,7 +242,9 @@ vim.api.nvim_create_autocmd("QuitPre", {
           resession.save_tab(name, { notify = false })
         end)
       end)
-      vim.cmd("qa!")
+      if last_win_closing() then
+        vim.cmd("qa!")
+      end
     end
   end,
 })
