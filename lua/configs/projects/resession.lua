@@ -2,9 +2,9 @@ local resession = require("resession")
 
 resession.setup({
   extensions = {
-    cokeline = {
-      enable_in_tab = true,
-    },
+    -- cokeline = {
+    --   enable_in_tab = true,
+    -- },
     edgy = {
       enable_in_tab = true,
     },
@@ -208,62 +208,16 @@ then
   )
 end
 
--- local function last_win_closing(wins, nwins)
---   local curwin = vim.api.nvim_get_current_win()
---   for i = 1, nwins do
---     local win = wins[i]
---     if
---       win ~= curwin
---       and vim.api.nvim_win_is_valid(win)
---       and vim.api.nvim_win_get_config(win).zindex == nil
---       and require("edgy").get_win(win) == nil
---     then
---       return false
---     end
---   end
---   return true
--- end
---
--- local function has_normal_win(wins, nwins)
---   for i = 1, nwins do
---     local win = wins[i]
---     if
---       vim.api.nvim_win_is_valid(win)
---       and vim.api.nvim_win_get_config(win).zindex == nil
---       and require("edgy").get_win(win) == nil
---     then
---       return true
---     end
---   end
---   return false
--- end
-
 local au = vim.api.nvim_create_augroup("ResessionAutosave", { clear = true })
-
--- vim.api.nvim_create_autocmd("QuitPre", {
---   group = au,
---   callback = function()
---     resession.save("last", { notify = false })
---     local wins = vim.api.nvim_tabpage_list_wins(0)
---     local nwins = #wins
---     if has_normal_win(wins, nwins) then
---       local name = vim.fs.basename(vim.fn.getcwd(-1) --[[@as string]])
---       resession.save_tab(name, { notify = false })
---       if last_win_closing(wins, nwins) then
---         vim.api.nvim_exec2("qa!", {})
---       end
---     end
---   end,
--- })
 
 vim.api.nvim_create_autocmd("QuitPre", {
   group = au,
   callback = function()
-    resession.save("last", { notify = false })
     local curwin = vim.api.nvim_get_current_win()
-    local wins = vim.api.nvim_tabpage_list_wins(0)
+    local wins = vim.api.nvim_list_wins()
     local has_normal = false
     local is_last = true
+
     for i = 1, #wins do
       local win = wins[i]
       if
@@ -281,7 +235,7 @@ vim.api.nvim_create_autocmd("QuitPre", {
       local name = vim.fs.basename(vim.fn.getcwd(-1) --[[@as string]])
       resession.save_tab(name, { notify = false })
       if is_last then
-        vim.api.nvim_exec2("qa!", {})
+        vim.cmd("qa!")
       end
     end
   end,
