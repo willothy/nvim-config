@@ -23,6 +23,10 @@ end
 
 function M.on_pre_load(data)
   local win = vim.api.nvim_get_current_win()
+  local splitkeep = require("edgy.config").splitkeep
+  -- ensure "main" windows don't jump if edgy windows flicker
+  vim.o.splitkeep = "topline"
+  -- disable edgy animation while opening windows (TODO: does this work?)
   local animate = require("edgy.config").animate.enabled
   require("edgy.config").animate.enabled = false
   for _, wininfo in ipairs(data or {}) do
@@ -38,6 +42,7 @@ function M.on_pre_load(data)
     end
   end
   require("edgy.config").animate.enabled = animate
+  vim.o.splitkeep = splitkeep
   vim.api.nvim_set_current_win(win)
 end
 
