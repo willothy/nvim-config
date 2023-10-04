@@ -30,7 +30,10 @@ function M.on_pre_load(data)
     if f then
       local ok = pcall(f)
       if not ok then
-        vim.notify("[resession] Failed to open " .. wininfo.ft, "warn")
+        vim.notify(
+          "[resession] Failed to open " .. wininfo.ft,
+          vim.log.levels.WARN
+        )
       end
     end
   end
