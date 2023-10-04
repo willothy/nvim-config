@@ -68,8 +68,8 @@ local opts = {
   sorting = {
     priority_weight = 10,
     comparators = {
-      cmp.config.compare.scopes,
       cmp.config.compare.exact,
+      cmp.config.compare.scopes,
       cmp.config.compare.kind,
       cmp.config.compare.recently_used,
       cmp.config.compare.offset,
@@ -93,6 +93,13 @@ local opts = {
       cmp.mapping.select_prev_item(cmp_select),
       { "i", "c" }
     ),
+    ["<c-a>"] = cmp.mapping.complete({
+      config = {
+        sources = {
+          { name = "cody" },
+        },
+      },
+    }),
     ["<M-j>"] = cmp.mapping(
       cmp.mapping.select_next_item(cmp_select),
       { "i", "c" }

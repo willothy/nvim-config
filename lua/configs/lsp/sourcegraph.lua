@@ -12,10 +12,12 @@ vim.system(
       return
     end
 
+    ---@diagnostic disable-next-line: missing-fields
     require("sg").setup({
       on_attach = require("configs.lsp").lsp_attach,
       auth_strategy = { "nvim", "environment-variables" },
       download_binaries = false,
+      enable_cody = true,
     })
     require("sg.auth").set_nvim_auth({
       endpoint = "https://sourcegraph.com/",
