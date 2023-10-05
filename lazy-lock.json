@@ -68,7 +68,7 @@
   "murmur.lua": { "branch": "main", "commit": "85d3f1c3e98fa60b523abf40f4951d4ddb44fa54" },
   "neo-tree-diagnostics.nvim": { "branch": "main", "commit": "483019d251c31acd14102bc279f938f98d9a3de6" },
   "neo-tree.nvim": { "branch": "main", "commit": "7e2a3caf999e2028abb643eb0472f351b2777591" },
-  "neoconf.nvim": { "branch": "main", "commit": "466ba6f645f63f91ac84d3dd986acede5d107f39" },
+  "neoconf.nvim": { "branch": "main", "commit": "64a4f814f598717ed1e56da4e175b2513bd7c3fd" },
   "neodev.nvim": { "branch": "main", "commit": "7e1e64744bf1701a173e80c8577caeb3bf04053e" },
   "neogit": { "branch": "master", "commit": "ed99c59d7fda3ba5e2ce9a3adc0a8eb5ebfa6c8f" },
   "neotest": { "branch": "master", "commit": "1e67a504d03def3a6a1125d934cb511680f72555" },
