@@ -137,6 +137,24 @@ local opts = {
         width = get_rhs_width,
       },
     }),
+    sidebar:extend({
+      ft = "markdown.cody_history",
+      filter = function(buf, win)
+        return vim.api.nvim_win_get_config(win).zindex == nil
+      end,
+      size = {
+        height = 0.8,
+      },
+    }),
+    sidebar:extend({
+      ft = "markdown.cody_prompt",
+      filter = function(buf, win)
+        return vim.api.nvim_win_get_config(win).zindex == nil
+      end,
+      size = {
+        height = 0.2,
+      },
+    }),
   },
   left = {
     sidebar:extend({

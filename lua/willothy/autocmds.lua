@@ -67,6 +67,14 @@ local autocmds = {
     end,
   },
   {
+    "WinClosed",
+    callback = function(ev)
+      if vim.bo[ev.buf].filetype == "markdown.cody_prompt" then
+        vim.api.nvim_exec2("CodyToggle", {})
+      end
+    end,
+  },
+  {
     "BufLeave",
     callback = function(ev)
       if vim.bo[ev.buf].filetype == "lazy" then
@@ -83,6 +91,7 @@ return {
     for _, v in ipairs(autocmds) do
       local event = v[1]
       v[1] = nil
+      v.group = group
       autocmd(event, v)
     end
   end,
