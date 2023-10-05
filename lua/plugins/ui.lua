@@ -109,12 +109,11 @@ return {
   },
   -- WINDOWS --
   {
-    -- "nvim-focus/focus.nvim",
-    "willothy/focus.nvim",
+    "nvim-focus/focus.nvim",
+    -- "willothy/focus.nvim",
     dependencies = {
       "echasnovski/mini.animate",
     },
-    branch = "master",
     -- dir = "~/projects/lua/focus.nvim/",
     config = function()
       require("configs.windows.focus")
