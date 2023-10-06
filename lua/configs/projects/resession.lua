@@ -208,10 +208,8 @@ then
   )
 end
 
-local au = vim.api.nvim_create_augroup("ResessionAutosave", { clear = true })
-
 vim.api.nvim_create_autocmd("QuitPre", {
-  group = au,
+  group = vim.api.nvim_create_augroup("ResessionAutosave", { clear = true }),
   callback = function()
     local curwin = vim.api.nvim_get_current_win()
     local wins = vim.api.nvim_list_wins()
