@@ -70,6 +70,7 @@ resession.add_hook("post_load", function()
   vim.schedule(function()
     if lazy_open then
       require("lazy.view").show()
+      lazy_open = false
     end
   end)
 end)

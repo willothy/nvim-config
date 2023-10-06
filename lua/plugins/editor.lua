@@ -100,7 +100,7 @@ return {
   {
     "nacro90/numb.nvim",
     config = true,
-    event = "VeryLazy",
+    event = "CmdlineEnter",
   },
   {
     "utilyre/sentiment.nvim",
