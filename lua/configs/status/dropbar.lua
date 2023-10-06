@@ -47,10 +47,10 @@ dropbar.setup({
   general = {
     enable = enable,
     attach_events = {
-      "OptionSet",
+      -- "OptionSet",
       "BufWinEnter",
       "BufWritePost",
-      -- "FileType",
+      "FileType",
       -- "BufEnter",
       -- "TermEnter",
     },
