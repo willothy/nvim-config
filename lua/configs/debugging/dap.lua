@@ -1,4 +1,5 @@
 local dap = require("dap")
+require("overseer").patch_dap(true)
 
 dap.listeners.after.event_initialized["dapui_config"] = function()
   require("dapui").open()

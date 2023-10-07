@@ -2,9 +2,9 @@ local resession = require("resession")
 
 resession.setup({
   extensions = {
-    -- cokeline = {
-    --   enable_in_tab = true,
-    -- },
+    cokeline = {
+      enable_in_tab = true,
+    },
     edgy = {
       enable_in_tab = true,
     },

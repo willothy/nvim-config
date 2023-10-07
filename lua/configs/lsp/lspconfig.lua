@@ -85,9 +85,6 @@ require("rust-tools").setup({
 require("neodev").setup({
   lspconfig = true,
   pathStrict = true,
-  library = {
-    types = false,
-  },
 })
 lspconfig.lua_ls.setup({
   capabilities = capabilities,

@@ -3,6 +3,9 @@ require("neotest").setup({
     require("neotest-rust"),
     require("neotest-plenary"),
   },
+  consumers = {
+    overseer = require("neotest.consumers.overseer"),
+  },
   summary = {
     enabled = true,
     animated = true,

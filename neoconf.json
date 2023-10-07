@@ -3,7 +3,7 @@
     "library": {
       "enabled": true,
       "runtime": true,
-      "types": false,
+      "types": true,
       "plugins": [
         "lazy.nvim",
         "plenary.nvim",
