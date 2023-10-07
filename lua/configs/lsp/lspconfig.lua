@@ -2,9 +2,6 @@ local function mkcaps(extra)
   local capabilities = vim.lsp.protocol.make_client_capabilities()
 
   if extra then
-    -- snippets
-    capabilities.textDocument.completion.completionItem.snippetSupport = true
-
     capabilities.textDocument.foldingRange = {
       dynamicRegistration = false,
       lineFoldingOnly = true,
@@ -20,12 +17,6 @@ local function mkcaps(extra)
       ssr = true,
     }
 
-    -- enable auto-import
-    capabilities.textDocument.completion.completionItem.resolveSupport = {
-      properties = { "documentation", "detail", "additionalTextEdits" },
-    }
-
-    capabilities.offsetEncoding = "utf-8"
     capabilities.textDocument.formatting = {
       dynamicRegistration = false,
     }
