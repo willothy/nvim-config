@@ -178,11 +178,11 @@ local function execute(args)
   args = args.fargs
   local command = args[1]
   if not command then
-    vim.notify("No command specified", "warn")
+    vim.notify("No command specified", vim.log.levels.WARN)
   elseif commands[command] then
     commands[command](unpack(args, 2))
   else
-    vim.notify("Unknown command: " .. command, "warn")
+    vim.notify("Unknown command: " .. command, vim.log.levels.WARN)
   end
 end
 
