@@ -198,8 +198,6 @@ local function diff_workspace_edit(workspace_edit, offset_encoding)
 
         diff = diff
           .. string.format("diff --code-actions a/%s b/%s\n", path, path)
-        diff = diff .. string.format("--- a/%s\n", path)
-        diff = diff .. "+++ /dev/null\n"
         diff = diff .. "\n"
       elseif change.kind then
         -- do nothing
@@ -209,8 +207,6 @@ local function diff_workspace_edit(workspace_edit, offset_encoding)
 
         diff = diff
           .. string.format("diff --code-actions a/%s b/%s\n", path, path)
-        diff = diff .. string.format("--- a/%s\n", path)
-        diff = diff .. string.format("+++ b/%s\n", path)
         diff = diff
           ---@diagnostic disable-next-line: param-type-mismatch
           .. vim.trim(diff_text_document_edit(change, offset_encoding))
@@ -230,13 +226,8 @@ local function diff_workspace_edit(workspace_edit, offset_encoding)
 
       diff = diff
         .. table.concat({
-          string.format("diff --code-actions a/%s b/%s", path, path),
-          string.format("--- a/%s", path),
-          string.format("+++ b/%s", path),
           ---@diagnostic disable-next-line: param-type-mismatch
           vim.trim(diff_text_edits(changes, bufnr, offset_encoding)),
-          "",
-          "",
         }, "\n")
     end
   end
@@ -282,7 +273,7 @@ local function exec_selected_action(action_tuple, ctx)
   if not action.edit and client and supports_resolve then
     client.request("codeAction/resolve", action, function(err, resolved_action)
       if err then
-        vim.notify(err.code .. ": " .. err.message, "error")
+        vim.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
         return
       end
       apply_code_action(resolved_action, client, ctx)
@@ -344,10 +335,10 @@ local function preview_render_buf(preview_buf, edit, offset_encoding)
       vim.split(
         diff_workspace_edit(edit, offset_encoding) or "",
         "\n",
-        { trimempty = true }
+        { trimempty = false }
       )
     )
-    :skip(3)
+    -- :skip(3)
     :filter(function(line)
       return not vim.startswith(line, "@@")
     end)
@@ -494,7 +485,7 @@ M.code_actions = function(options)
     local actions = parse_client_actions(client_actions)
 
     if vim.tbl_isempty(actions) then
-      vim.notify("No code actions available", "info")
+      vim.notify("No code actions available", vim.log.levels.INFO)
       return
     end
 
