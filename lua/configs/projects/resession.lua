@@ -14,6 +14,7 @@ resession.setup({
     aerial = {
       enable_in_tab = true,
     },
+    scope = {},
   },
   autosave = {
     enabled = false,
@@ -40,14 +41,13 @@ resession.setup({
     if buftype == "help" then
       return true
     end
-    if buftype ~= "" then
+    if buftype ~= "" and buftype ~= "acwrite" then
       return false
     end
     if vim.api.nvim_buf_get_name(bufnr) == "" then
       return false
     end
     return true
-    -- return vim.bo[bufnr].buflisted
   end,
 })
 
@@ -77,23 +77,24 @@ resession.add_hook("post_load", function()
 end)
 
 -- show an LSP progress indicator for session save
-local progress
+local progress = {}
 ---@diagnostic disable-next-line: redundant-parameter
 resession.add_hook("pre_save", function(name)
-  progress = willothy.utils.progress.create({
+  local p = willothy.utils.progress.create({
     title = "saving " .. name,
     message = "saving session",
     client_name = "resession",
   })
-  progress:begin()
+  p:begin()
+  table.insert(progress, p)
 end)
 
 resession.add_hook(
   "post_save",
   vim.schedule_wrap(function()
-    if progress then
-      progress:finish({})
-      progress = nil
+    local p = table.remove(progress, 1)
+    if p then
+      p:finish({})
     end
   end)
 )
@@ -227,11 +228,20 @@ vim.api.nvim_create_autocmd("QuitPre", {
       end
     end
     if has_normal then
-      -- save all existing sessions
-      resession.save_all({ notify = false })
-      -- ensure the current tab is saved
-      local name = vim.fs.basename(vim.fn.getcwd(-1) --[[@as string]])
-      resession.save_tab(name, { notify = false })
+      local session = resession.get_current()
+      if session then
+        -- save all existing sessions
+        resession.save_all({ notify = false })
+      else
+        -- ensure that there is a session for each tab
+        vim.iter(vim.api.nvim_list_tabpages()):each(function(tabpage)
+          local win = vim.api.nvim_tabpage_get_win(tabpage)
+          vim.api.nvim_win_call(win, function()
+            local name = vim.fs.basename(vim.fn.getcwd(-1) --[[@as string]])
+            resession.save_tab(name, { notify = false })
+          end)
+        end)
+      end
       if is_last then
         vim.cmd("qa!")
       end
