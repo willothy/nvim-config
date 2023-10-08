@@ -40,7 +40,7 @@ resession.setup({
     if buftype == "help" then
       return true
     end
-    if buftype ~= "" and buftype ~= "acwrite" then
+    if buftype ~= "" then
       return false
     end
     if vim.api.nvim_buf_get_name(bufnr) == "" then
@@ -188,7 +188,10 @@ then
   resession.load(
     ---@diagnostic disable-next-line: param-type-mismatch
     vim.fs.basename(vim.fn.getcwd()),
-    { silence_errors = true, reset = true }
+    {
+      silence_errors = true,
+      reset = true,
+    }
   )
 end
 
@@ -202,42 +205,36 @@ save_timer:start(
   end)
 )
 
-vim.api.nvim_create_autocmd("VimLeavePre", {
+vim.api.nvim_create_autocmd("QuitPre", {
+  group = vim.api.nvim_create_augroup("ResessionAutosave", { clear = true }),
   callback = function()
-    require("resession").save_all({ notify = false })
+    local curwin = vim.api.nvim_get_current_win()
+    local wins = vim.api.nvim_list_wins()
+    local has_normal = false
+    local is_last = true
+
+    for i = 1, #wins do
+      local win = wins[i]
+      if
+        vim.api.nvim_win_get_config(win).zindex == nil
+        and require("edgy").get_win(win) == nil
+      then
+        has_normal = true
+        if win ~= curwin then
+          is_last = false
+          break
+        end
+      end
+    end
+    if has_normal then
+      -- save all existing sessions
+      resession.save_all({ notify = false })
+      -- ensure the current tab is saved
+      local name = vim.fs.basename(vim.fn.getcwd(-1) --[[@as string]])
+      resession.save_tab(name, { notify = false })
+      if is_last then
+        vim.cmd("qa!")
+      end
+    end
   end,
 })
-
--- vim.api.nvim_create_autocmd("QuitPre", {
---   group = vim.api.nvim_create_augroup("ResessionAutosave", { clear = true }),
---   callback = function()
---     local curwin = vim.api.nvim_get_current_win()
---     local wins = vim.api.nvim_list_wins()
---     local has_normal = false
---     local is_last = true
---
---     for i = 1, #wins do
---       local win = wins[i]
---       if
---         vim.api.nvim_win_get_config(win).zindex == nil
---         and require("edgy").get_win(win) == nil
---       then
---         has_normal = true
---         if win ~= curwin then
---           is_last = false
---           break
---         end
---       end
---     end
---     if has_normal then
---       -- save all existing sessions
---       resession.save_all({ notify = false })
---       -- ensure the current tab is saved
---       local name = vim.fs.basename(vim.fn.getcwd(-1) --[[@as string]])
---       resession.save_tab(name, { notify = false })
---       if is_last then
---         vim.cmd("qa!")
---       end
---     end
---   end,
--- })

@@ -66,9 +66,15 @@ end
 
 function M.on_save(opts)
   if opts.tabpage then
-    return save_tab(opts.tabpage)
+    return {
+      scope = "tabpage",
+      wins = save_tab(opts.tabpage),
+    }
   else
-    return save_all()
+    return {
+      scope = "global",
+      wins = save_all(),
+    }
   end
 end
 
@@ -82,20 +88,25 @@ function M.on_post_load(data)
   local restore_opts = modify_opts()
   -- call with the tabpage as the current tabpage
   local tabs = vim.api.nvim_list_tabpages()
-  for _, win_info in ipairs(data) do
+  for _, win_info in ipairs(data.wins or {}) do
     local f = loadstring(win_info.open)
-    if f and tabs[win_info.tabpage + first_tab] then
-      vim.api.nvim_win_call(
-        vim.api.nvim_tabpage_get_win(tabs[win_info.tabpage + first_tab]),
-        function()
-          if not pcall(f) then
-            vim.notify(
-              "[resession] Failed to open " .. win_info.ft,
-              vim.log.levels.WARN
-            )
-          end
+    if
+      f and (data.scope == "tabpage" or tabs[win_info.tabpage + first_tab])
+    then
+      local tab
+      if data.scope == "global" then
+        tab = tabs[win_info.tabpage + first_tab]
+      else
+        tab = 0
+      end
+      vim.api.nvim_win_call(vim.api.nvim_tabpage_get_win(tab), function()
+        if not pcall(f) then
+          vim.notify(
+            "[resession] Failed to open " .. win_info.ft,
+            vim.log.levels.WARN
+          )
         end
-      )
+      end)
     end
   end
   restore_opts()
