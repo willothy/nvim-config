@@ -77,47 +77,29 @@ end)
 
 -- show an LSP progress indicator for session save
 local progress
-willothy.event.on("ResessionSavePre", function()
+---@diagnostic disable-next-line: redundant-parameter
+resession.add_hook("pre_save", function(name)
   progress = willothy.utils.progress.create({
-    title = "saving",
+    title = "saving " .. name,
     message = "saving session",
     client_name = "resession",
   })
   progress:begin()
 end)
 
-willothy.event.on(
-  "ResessionSavePost",
+resession.add_hook(
+  "post_save",
   vim.schedule_wrap(function()
     if progress then
       progress:finish({})
+      progress = nil
     end
-    progress = nil
   end)
 )
 
-local function should_reset()
-  local wins = vim.api.nvim_list_wins()
-  for _, win in ipairs(wins) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    if
-      vim.bo[buf].buftype ~= "nofile"
-      and vim.api.nvim_win_get_config(win).relative ~= ""
-    then
-      return false
-    end
-    if vim.api.nvim_buf_get_name(buf) ~= "" then
-      return false
-    end
-  end
-  return true
-end
-
 local commands = {
   load = function(session)
-    local ok = pcall(resession.load, session, {
-      reset = should_reset(),
-    })
+    local ok = pcall(resession.load, session, {})
     if not ok then
       vim.notify("Unknown session: " .. session, "warn")
     end
@@ -129,7 +111,7 @@ local commands = {
     end
   end,
   list = function()
-    resession.load(nil, { reset = should_reset() })
+    resession.load(nil, {})
   end,
   save = function(session)
     if not session then

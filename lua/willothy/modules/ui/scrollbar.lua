@@ -145,8 +145,17 @@ function Scrollbar:update()
   })
 end
 
+local empty_buf
+local function get_or_create_buf()
+  if empty_buf and vim.api.nvim_buf_is_valid(empty_buf) then
+    return empty_buf
+  end
+  empty_buf = vim.api.nvim_create_buf(false, true)
+  return empty_buf
+end
+
 function Scrollbar:_open_win(opts)
-  local bufnr = vim.api.nvim_create_buf(false, true)
+  local bufnr = get_or_create_buf()
   local ret = {
     bufnr = bufnr,
     winnr = vim.api.nvim_open_win(bufnr, false, {
