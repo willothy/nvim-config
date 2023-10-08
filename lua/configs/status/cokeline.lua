@@ -350,7 +350,7 @@ local function harpoon_sorter()
 end
 
 local opts = {
-  show_if_buffers_are_at_least = 1,
+  show_if_buffers_are_at_least = 0,
   buffers = {
     focus_on_delete = "next",
     new_buffers_position = harpoon_sorter(),

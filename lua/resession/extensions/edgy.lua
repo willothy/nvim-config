@@ -54,14 +54,14 @@ local function modify_opts()
   vim.o.splitkeep = "topline"
   require("edgy.config").animate.enabled = false
 
-  return function()
+  return vim.schedule_wrap(function()
     -- ensure "main" windows don't jump if edgy windows flicker
     vim.o.splitkeep = splitkeep
     -- disable edgy animation while opening windows (TODO: does this work?)
     require("edgy.config").animate.enabled = animate
     -- restore the original window
     vim.api.nvim_set_current_win(curwin)
-  end
+  end)
 end
 
 function M.on_save(opts)
@@ -72,15 +72,21 @@ function M.on_save(opts)
   end
 end
 
-function M.on_pre_load(data)
+local first_tab
+
+function M.on_pre_load()
+  first_tab = #vim.api.nvim_list_tabpages() - 1
+end
+
+function M.on_post_load(data)
   local restore_opts = modify_opts()
   -- call with the tabpage as the current tabpage
   local tabs = vim.api.nvim_list_tabpages()
   for _, win_info in ipairs(data) do
     local f = loadstring(win_info.open)
-    if f and tabs[win_info.tabpage] then
+    if f and tabs[win_info.tabpage + first_tab] then
       vim.api.nvim_win_call(
-        vim.api.nvim_tabpage_get_win(tabs[win_info.tabpage]),
+        vim.api.nvim_tabpage_get_win(tabs[win_info.tabpage + first_tab]),
         function()
           if not pcall(f) then
             vim.notify(
