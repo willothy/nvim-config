@@ -20,6 +20,8 @@ local function mkcaps(extra)
     capabilities.textDocument.formatting = {
       dynamicRegistration = false,
     }
+
+    capabilities.textDocument.offsetEncoding = "utf-8"
   end
 
   ---@diagnostic disable-next-line: missing-fields
