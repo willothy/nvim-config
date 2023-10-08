@@ -170,9 +170,9 @@ Diagnostics = {
   text = function(buffer)
     return (
       buffer.diagnostics.errors ~= 0
-      and icons.diagnostics.errors .. " " .. buffer.diagnostics.errors
+      and icons.diagnostics.errors .. " " .. buffer.diagnostics.errors .. " "
     )
-      or (buffer.diagnostics.warnings ~= 0 and icons.diagnostics.warnings .. " " .. buffer.diagnostics.warnings)
+      or (buffer.diagnostics.warnings ~= 0 and icons.diagnostics.warnings .. " " .. buffer.diagnostics.warnings .. " ")
       or ""
   end,
   fg = function(buffer)
@@ -250,6 +250,17 @@ Diagnostics = {
       Diagnostics.popup:unmount()
     end
   end,
+}
+
+local Harpoon = {
+  text = function(buffer)
+    local harpoon = require("harpoon.mark").status(buffer.number) ~= ""
+    if harpoon then
+      return " "
+    end
+    return ""
+  end,
+  fg = "Comment",
 }
 
 local CloseOrUnsaved = {
@@ -376,8 +387,8 @@ local opts = {
     UniquePrefix,
     Filename,
     Space,
+    Harpoon,
     Diagnostics,
-    Space,
     CloseOrUnsaved,
     Space,
     Separator.right,
