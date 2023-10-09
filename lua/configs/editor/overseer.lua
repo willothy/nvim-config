@@ -37,14 +37,16 @@ local opts = {
   },
   task_list = {
     direction = "right",
+    win_opts = {
+      winblend = 0,
+      winhl = "FloatBorder:NormalFloat,WinBar:EdgyWinBar",
+    },
   },
 }
 
 local overseer = require("overseer")
 
 overseer.setup(opts)
--- vim.print(select(2, debug.getupvalue(overseer.setup, 4)))
--- overseer.config.setup(opts)
 
 vim.api.nvim_create_user_command("OverseerFloatLast", function()
   local tasks = overseer.list_tasks({ recent_first = true })
@@ -75,6 +77,10 @@ vim.api.nvim_create_user_command("OverseerFloat", function(args)
     border = "solid",
     noautocmd = true,
   }, true)
+  vim.api.nvim_set_hl(0, "EdgyFloatTitle", {
+    fg = willothy.hl.get("EdgyTitle", "fg"),
+    bg = willothy.hl.get("NormalFloat", "bg"),
+  })
   vim.wo[win].winhl = vim
     .iter({
       FloatBorder = "NormalFloat",
@@ -84,12 +90,13 @@ vim.api.nvim_create_user_command("OverseerFloat", function(args)
       return acc .. name .. ":" .. hl .. ","
     end)
     :sub(1, -2)
-  vim.wo[win].winbar = "%#EdgyTitle#Overseer "
-    .. willothy.fn.make_clickable(function()
-      require("overseer").run_template({
-        name = "shell",
-      })
-    end, "󰒐")
+  vim.wo[win].winbar = "%#EdgyFloatTitle#Overseer "
+    .. willothy.fn.make_clickable(
+      willothy.fn.debounce_leading(function()
+        require("overseer").run_template()
+      end, 200),
+      "󰒐"
+    )
 
   vim.keymap.set("n", "q", function()
     vim.api.nvim_win_close(vim.api.nvim_get_current_win(), true)

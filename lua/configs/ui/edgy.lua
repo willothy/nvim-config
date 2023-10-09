@@ -163,6 +163,9 @@ local opts = {
       filter = function(_buf, win)
         return vim.api.nvim_win_get_config(win).zindex == nil
       end,
+      wo = {
+        winhighlight = "WinBar:WinBar",
+      },
       open = function()
         require("overseer").open()
       end,
