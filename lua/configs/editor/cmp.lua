@@ -41,6 +41,14 @@ local format = {
   end,
 }
 
+local enabled = true
+vim.api.nvim_create_user_command("CmpToggle", function()
+  enabled = not enabled
+  require("cmp").setup({
+    enabled = enabled,
+  })
+end, {})
+
 local opts = {
   snippet = {
     expand = function(args)
@@ -55,8 +63,6 @@ local opts = {
   --   -- completion = win_config,
   -- },
   -- completion = {
-  --   keyword_pattern="",
-  --   keyword_length = 0,
   --   autocomplete = {
   --     "TextChanged",
   --     "InsertEnter",

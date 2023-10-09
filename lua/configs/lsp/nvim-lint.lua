@@ -18,7 +18,7 @@ vim.api.nvim_create_autocmd({
   group = group,
   callback = willothy.fn.debounce_trailing(function()
     lint.try_lint()
-  end, 350),
+  end, 1000),
 })
 
 vim.api.nvim_create_autocmd({

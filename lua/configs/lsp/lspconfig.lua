@@ -21,7 +21,7 @@ local function mkcaps(extra)
       dynamicRegistration = false,
     }
 
-    capabilities.textDocument.offsetEncoding = "utf-8"
+    capabilities.offsetEncoding = "utf-8"
   end
 
   ---@diagnostic disable-next-line: missing-fields
@@ -108,10 +108,12 @@ require("mason-lspconfig").setup({
     end,
     clangd = function()
       lspconfig.clangd.setup({
-        capabilities = capabilities,
+        capabilities = mkcaps(true),
         on_attach = lsp_attach,
         root_dir = require("lspconfig.util").root_pattern(".git"),
         filetypes = { "c", "cpp", "h", "hpp" },
+        offsetEncoding = { "utf-8" },
+        client_encoding = "utf-8",
       })
     end,
     taplo = function()
