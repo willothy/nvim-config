@@ -42,7 +42,8 @@ o.foldenable = true
 o.foldlevelstart = 99
 -- o.foldopen = "block,mark,search,percent,undo"
 
-o.splitkeep = "cursor"
+o.splitkeep = "screen"
+-- o.splitkeep = "cursor"
 o.smoothscroll = true
 o.mousescroll = "ver:1,hor:6"
 
