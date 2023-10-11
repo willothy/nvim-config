@@ -75,7 +75,7 @@ local autocmds = {
     end,
   },
   {
-    "BufLeave",
+    { "BufLeave", "BufWinLeave" },
     callback = function(ev)
       if vim.bo[ev.buf].filetype == "lazy" then
         require("lazy.view").view:close({})
