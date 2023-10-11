@@ -28,7 +28,7 @@
   "diagflow.nvim": { "branch": "main", "commit": "8ccfd5a9206984cfaa5225ae77e63614fd0969c8" },
   "diffview.nvim": { "branch": "main", "commit": "d38c1b5266850f77f75e006bcc26213684e1e141" },
   "dropbar.nvim": { "branch": "feat-floating-scrollbar", "commit": "6ee526f2a889018abad0419af1f0972dd728c6fa" },
-  "edgy.nvim": { "branch": "main", "commit": "e192080cec54e2952813d30e018a161bb21f4f49" },
+  "edgy.nvim": { "branch": "main", "commit": "4568f4e0c6e754ae59c5211a43e37194d057e745" },
   "fidget.nvim": { "branch": "legacy", "commit": "90c22e47be057562ee9566bad313ad42d622c1d3" },
   "flash.nvim": { "branch": "main", "commit": "6d76c5dee65181ab55cbdfb0760260e800d643f4" },
   "flatten.nvim": { "branch": "main", "commit": "6386dce660798e662084ad7acee14522c37df708" },
