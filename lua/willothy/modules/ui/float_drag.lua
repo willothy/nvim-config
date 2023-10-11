@@ -26,7 +26,7 @@ end
 function FloatDrag:drag()
   FloatDrag:step()
   local cfg = vim.api.nvim_win_get_config(self.win)
-  if cfg.relative == "" then
+  if cfg.zindex == nil then
     return
   end
 
@@ -49,7 +49,7 @@ function FloatDrag:resize()
   FloatDrag:step()
 
   local cfg = vim.api.nvim_win_get_config(self.win)
-  if cfg.relative == "" then
+  if cfg.zindex == nil then
     return
   end
 

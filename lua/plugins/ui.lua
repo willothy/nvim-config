@@ -111,6 +111,7 @@ return {
   {
     "nvim-focus/focus.nvim",
     -- "willothy/focus.nvim",
+    dir = "~/projects/lua/focus.nvim/",
     dependencies = {
       "echasnovski/mini.animate",
     },
