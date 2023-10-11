@@ -192,7 +192,7 @@ function M.count_stars(user)
     end
     if (val:length() + 2) > width then
       width = val:length() + 2
-      willothy.utils.window.update_config(win, function(conf)
+      willothy.win.update_config(win, function(conf)
         conf.width = width
       end)
     end

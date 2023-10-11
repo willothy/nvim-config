@@ -74,19 +74,19 @@ wk.register({
       "resize: golden ratio",
     },
     V = {
-      willothy.utils.window.split_right,
+      willothy.win.split_right,
       "split: right",
     },
     v = {
-      willothy.utils.window.split_left,
+      willothy.win.split_left,
       "split: left",
     },
     S = {
-      willothy.utils.window.split_below,
+      willothy.win.split_below,
       "split: below",
     },
     s = {
-      willothy.utils.window.split_above,
+      willothy.win.split_above,
       "split: above",
     },
     H = "swap: left",
@@ -95,19 +95,19 @@ wk.register({
     L = "swap: right",
     T = "move to new tab",
     f = {
-      willothy.utils.window.pick_focus,
+      willothy.win.pick_focus,
       "pick: focus",
     },
     c = {
-      willothy.utils.window.pick_create,
+      willothy.win.pick_create,
       "pick: create",
     },
     x = {
-      willothy.utils.window.pick_swap,
+      willothy.win.pick_swap,
       "pick: swap",
     },
     q = {
-      willothy.utils.window.pick_close,
+      willothy.win.pick_close,
       "pick: close",
     },
   },

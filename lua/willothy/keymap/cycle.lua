@@ -11,7 +11,7 @@ wk.register({
     end,
     "buffer",
   },
-  t = bind(willothy.utils.tabpage, "switch_by_step", -1):with_desc("tab"),
+  t = bind(willothy.tab, "switch_by_step", -1):with_desc("tab"),
   e = bind("vim.diagnostic", "goto_prev", { severity = "error" }):with_desc(
     "error"
   ),
@@ -27,7 +27,7 @@ wk.register({
     end,
     "buffer",
   },
-  t = bind(willothy.utils.tabpage, "switch_by_step", 1):with_desc("tab"),
+  t = bind(willothy.tab, "switch_by_step", 1):with_desc("tab"),
   e = bind("vim.diagnostic", "goto_next", { severity = "error" }):with_desc(
     "error"
   ),
