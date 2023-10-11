@@ -1,7 +1,6 @@
 local saved_terminal
 
 require("flatten").setup({
-  nest_if_no_args = true,
   window = {
     open = "smart",
     -- open = function(files, argv, stdin_buf_id)
@@ -35,6 +34,7 @@ require("flatten").setup({
 
     return addr
   end,
+  nest_if_no_args = true,
   one_per = {
     kitty = false,
   },
@@ -42,6 +42,10 @@ require("flatten").setup({
     should_block = function(argv)
       return vim.tbl_contains(argv, "-b")
     end,
+    -- should_nest = function(argv)
+    --   -- return vim.tbl_contains(argv, "-n")
+    --   return false
+    -- end,
     pre_open = function()
       local term = require("toggleterm.terminal")
       local id = term.get_focused_id()

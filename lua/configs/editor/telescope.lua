@@ -91,8 +91,8 @@ local bottom_pane = function(picker)
   local Layout = require("telescope.pickers.layout")
 
   local function get_configs()
-    local height = math.floor((vim.o.lines / 2) + 0.5) - 2
     local hide_preview = vim.o.columns < 80
+    local height = math.floor((vim.o.lines / 2) + 0.5) - 2
     local preview_ratio = willothy.fn.map_range(80, 150, 3, 2, vim.o.columns)
 
     local preview_width = math.floor(vim.o.columns / preview_ratio) - 2
@@ -158,15 +158,17 @@ local bottom_pane = function(picker)
       c.results.col,
       picker.results_title
     )
-    self.preview = open_win(
-      false,
-      c.preview.width,
-      c.preview.height,
-      c.preview.row,
-      c.preview.col,
-      picker.preview_title,
-      c.preview.border
-    )
+    if c.preview then
+      self.preview = open_win(
+        false,
+        c.preview.width,
+        c.preview.height,
+        c.preview.row,
+        c.preview.col,
+        picker.preview_title,
+        c.preview.border
+      )
+    end
     self.prompt = open_win(
       true,
       c.prompt.width,
@@ -201,7 +203,9 @@ local bottom_pane = function(picker)
 
   function layout:unmount()
     close_win(self.results)
-    close_win(self.preview)
+    if self.preview then
+      close_win(self.preview)
+    end
     close_win(self.prompt)
   end
 
