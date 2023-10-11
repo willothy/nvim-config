@@ -1,5 +1,27 @@
 local M = {}
 
+local WinConfig = {}
+WinConfig.__index = WinConfig
+
+function WinConfig.get(winid)
+  return setmetatable(vim.api.nvim_win_get_config(winid), WinConfig)
+end
+
+function WinConfig:with(opts)
+  for k, v in pairs(opts) do
+    self[k] = v
+  end
+  return self
+end
+
+function WinConfig:apply(winid)
+  vim.api.nvim_win_set_config(winid, self)
+end
+
+function M.get_config(winid)
+  return WinConfig.get(winid)
+end
+
 function M.pick_focus()
   local win = require("window-picker").pick_window({
     filter_rules = {

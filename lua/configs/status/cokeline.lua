@@ -252,16 +252,16 @@ Diagnostics = {
   end,
 }
 
-local Harpoon = {
-  text = function(buffer)
-    local harpoon = require("harpoon.mark").status(buffer.number) ~= ""
-    if harpoon then
-      return " "
-    end
-    return ""
-  end,
-  fg = "Comment",
-}
+-- local Harpoon = {
+--   text = function(buffer)
+--     local harpoon = require("harpoon.mark").status(buffer.number) ~= ""
+--     if harpoon then
+--       return " "
+--     end
+--     return ""
+--   end,
+--   fg = "Comment",
+-- }
 
 local CloseOrUnsaved = {
   text = function(buffer)
@@ -387,7 +387,7 @@ local opts = {
     UniquePrefix,
     Filename,
     Space,
-    Harpoon,
+    -- Harpoon,
     Diagnostics,
     CloseOrUnsaved,
     Space,

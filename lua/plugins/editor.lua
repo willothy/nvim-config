@@ -225,10 +225,12 @@ return {
   {
     -- "ThePrimeagen/harpoon",
     "willothy/harpoon", -- harpoon fork with toggleterm integration
+    -- dir = "~/projects/lua/harpoon/",
     event = "VeryLazy",
     config = function()
       require("configs.navigation.harpoon")
     end,
+    -- enabled = false,
   },
   {
     "willothy/wrangler.nvim",

@@ -41,13 +41,39 @@ local format = {
   end,
 }
 
+local main_sources = cmp.config.sources({
+  { name = "nvim_lsp" },
+  { name = "copilot", max_item_count = 2 },
+  { name = "luasnip", max_item_count = 4 },
+  { name = "buffer", max_item_count = 4 },
+  { name = "path" },
+})
+
 local enabled = true
-vim.api.nvim_create_user_command("CmpToggle", function()
-  enabled = not enabled
-  require("cmp").setup({
-    enabled = enabled,
-  })
-end, {})
+local main_enabled = true
+vim.api.nvim_create_user_command("CmpToggle", function(args)
+  if args.bang then
+    main_enabled = not main_enabled
+    if main_enabled then
+      cmp.setup({
+        sources = main_sources,
+      })
+    else
+      cmp.setup({
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+        }),
+      })
+    end
+  else
+    enabled = not enabled
+    cmp.setup({
+      enabled = enabled,
+    })
+  end
+end, {
+  bang = true,
+})
 
 local opts = {
   snippet = {
@@ -87,13 +113,7 @@ local opts = {
     },
   },
   formatting = format,
-  sources = cmp.config.sources({
-    { name = "nvim_lsp" },
-    { name = "copilot", max_item_count = 2 },
-    { name = "luasnip", max_item_count = 4 },
-    { name = "buffer", max_item_count = 4 },
-    { name = "path" },
-  }),
+  sources = main_sources,
   mapping = {
     ["<M-k>"] = cmp.mapping(
       cmp.mapping.select_prev_item(cmp_select),

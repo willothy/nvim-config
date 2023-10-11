@@ -21,6 +21,7 @@ o.undofile = true
 o.hlsearch = false
 o.incsearch = true
 o.cursorline = false
+vim.opt.cursorlineopt = "number"
 
 o.termguicolors = true
 o.modeline = false

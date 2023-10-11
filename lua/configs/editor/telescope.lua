@@ -617,7 +617,7 @@ telescope.setup({
         "*/tmp/*",
         "/home/willothy/.dotfiles/*",
       },
-      use_sqlite = true,
+      use_sqlite = false,
       show_scores = false,
       show_unindexed = true,
       db_safe_mode = false,
