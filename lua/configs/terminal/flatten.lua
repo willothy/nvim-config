@@ -36,7 +36,7 @@ require("flatten").setup({
   end,
   nest_if_no_args = true,
   one_per = {
-    kitty = false,
+    wezterm = true,
   },
   callbacks = {
     should_block = function(argv)
