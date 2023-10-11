@@ -109,9 +109,10 @@ return {
   },
   -- WINDOWS --
   {
-    "nvim-focus/focus.nvim",
-    -- "willothy/focus.nvim",
-    dir = "~/projects/lua/focus.nvim/",
+    -- "nvim-focus/focus.nvim",
+    "willothy/focus.nvim",
+    -- dir = "~/projects/lua/focus.nvim/",
+    branch = "float-config-preemptive-fix",
     dependencies = {
       "echasnovski/mini.animate",
     },
