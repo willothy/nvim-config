@@ -3,11 +3,20 @@ local M = {}
 local WinConfig = {}
 WinConfig.__index = WinConfig
 
-function WinConfig.get(winid)
-  return setmetatable(vim.api.nvim_win_get_config(winid), WinConfig)
+function WinConfig.new(opts)
+  return setmetatable(opts, WinConfig)
 end
 
-function WinConfig:with(opts)
+function WinConfig.get(winid)
+  return WinConfig.new(vim.api.nvim_win_get_config(winid))
+end
+
+function WinConfig:with(key, value)
+  self[key] = value
+  return self
+end
+
+function WinConfig:with_opts(opts)
   for k, v in pairs(opts) do
     self[k] = v
   end
@@ -111,7 +120,9 @@ function M.pick_close()
   end
   local ok, res = pcall(vim.api.nvim_win_close, win, false)
   if not ok then
-    if vim.startswith(res, "Vim:E444") then
+    if
+      vim.startswith(res --[[@as string]], "Vim:E444")
+    then
       vim.ui.select({ "Close", "Cancel" }, {
         prompt = "Close window?",
       }, function(i)
@@ -141,12 +152,13 @@ function M.iter()
 end
 
 function M.close(win)
-  vim.api.nvim_win_close(win, true)
+  if not M.is_last(win) then
+    vim.api.nvim_win_close(win, true)
+  end
 end
 
 function M.is_last(win)
-  local tabpage = vim.api.nvim_win_get_tabpage(win)
-  local layout = vim.api.nvim_tabpage_get_layout(tabpage, win)
+  local layout = vim.api.nvim_win_call(win, vim.fn.winlayout)
   return layout[1] == "leaf"
 end
 
@@ -155,10 +167,7 @@ function M.close_floats()
 end
 
 function M.close_all()
-  vim.api.nvim_tabpage_set_layout(
-    0,
-    { "leaf", vim.api.nvim_get_current_buf() }
-  )
+  vim.iter(vim.api.nvim_list_wins()):each(M.close)
 end
 
 function M.select()
