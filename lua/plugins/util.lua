@@ -3,7 +3,10 @@ vim.g.nvim_ghost_autostart = 0
 return {
   "famiu/bufdelete.nvim",
   "jbyuki/venn.nvim",
-  "willothy/micro-async.nvim",
+  {
+    "willothy/micro-async.nvim",
+    -- dir = "~/projects/lua/micro-async.nvim",
+  },
   {
     "willothy/leptos.nvim",
     event = "VeryLazy",
