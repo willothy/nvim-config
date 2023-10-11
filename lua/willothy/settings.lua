@@ -41,6 +41,10 @@ o.foldlevel = 99
 o.foldenable = true
 o.foldlevelstart = 99
 -- o.foldopen = "block,mark,search,percent,undo"
+-- o.foldopen = "block,hor,mark,percent,quickfix,search,tag,undo"
+o.foldopen = "block,mark,percent,quickfix,search,tag,undo"
+-- vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+-- vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
 
 o.splitkeep = "screen"
 -- o.splitkeep = "cursor"
