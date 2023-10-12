@@ -15,7 +15,7 @@ local function module()
       mod = require("willothy.modules." .. submodules[k])
     end
     if not setup[k] then
-      if mod.setup then
+      if type(mod) == "table" and mod.setup then
         mod.setup()
       end
       setup[k] = true
@@ -31,7 +31,7 @@ local function module()
   function m.setup()
     for k in pairs(submodules) do
       if not setup[k] then
-        if m[k].setup then
+        if type(m[k]) == "table" and m[k].setup then
           m[k].setup()
         end
         setup[k] = true
@@ -92,6 +92,8 @@ willothy.ui.float_drag = "ui.float_drag"
 willothy.ui.select = "ui.select"
 ---@module "willothy.modules.ui.code_actions"
 willothy.ui.code_actions = "ui.code_actions"
+---@module "willothy.modules.ui.foldtext"
+willothy.ui.foldtext = "ui.foldtext"
 
 willothy.hydras = module()
 ---@module "willothy.modules.hydras.git"

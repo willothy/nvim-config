@@ -23,6 +23,7 @@ return {
   -- LSP UI --
   {
     "kevinhwang91/nvim-ufo",
+    -- enabled = false,
     name = "ufo",
     dependencies = {
       "kevinhwang91/promise-async",

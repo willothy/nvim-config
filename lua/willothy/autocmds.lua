@@ -31,7 +31,10 @@ local autocmds = {
         vim.lsp.inlay_hint(bufnr, true)
       end
 
-      require("ufo").attach(bufnr)
+      local ok, ufo = pcall(require, "ufo")
+      if ok then
+        ufo.attach(bufnr)
+      end
     end,
   },
   {
