@@ -50,7 +50,7 @@ function _G.__edgy_term_title()
     end
     vim.b[buf].__dropbar_ready = true
   end
-  return _G.dropbar.get_dropbar_str():gsub(" %s+", "")
+  return _G.edgy_winbar() .. _G.dropbar.get_dropbar_str():gsub(" %s+", "")
 end
 
 local function is_float(win)
@@ -59,8 +59,9 @@ end
 
 local terminal = View.new({
   ft = "terminal",
-  title = "%{%v:lua.__edgy_term_title()%}",
+  title = "",
   wo = {
+    winbar = "%{%v:lua.__edgy_term_title()%}",
     number = false,
     relativenumber = false,
     winhighlight = "Normal:Normal",

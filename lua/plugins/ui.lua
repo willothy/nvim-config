@@ -18,6 +18,7 @@ return {
   {
     -- "folke/edgy.nvim",
     "willothy/edgy.nvim",
+    branch = "fix-edgebar-title-update",
     -- dir = "~/projects/lua/edgy.nvim",
     event = "VeryLazy",
     config = function()
