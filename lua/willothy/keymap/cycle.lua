@@ -3,11 +3,50 @@ local bind, modes = keymap.bind, keymap.modes
 
 local wk = require("which-key")
 
+local function switch_by_step(step)
+  local win = vim.api.nvim_get_current_win()
+
+  if not require("stickybuf").is_pinned(win) then
+    return require("cokeline.mappings").by_step("focus", step)
+  end
+
+  local buf = vim.api.nvim_win_get_buf(win)
+  local ft = vim.bo[buf].filetype
+
+  -- switch between buffers of a specific filetype
+  local terminals = vim
+    .iter(vim.api.nvim_list_bufs())
+    :filter(function(t)
+      return vim.bo[t].filetype == ft
+    end)
+    :enumerate()
+    :fold({
+      list = {},
+      count = 0,
+    }, function(acc, i, t)
+      acc.list[i] = t
+      acc.count = acc.count + 1
+      if t == buf then
+        acc.current = i
+      end
+      return acc
+    end)
+
+  local target = terminals.list[willothy.fn.clamp(
+    1,
+    terminals.count,
+    terminals.current + step
+  )]
+  if target then
+    vim.api.nvim_win_set_buf(win, target)
+  end
+end
+
 wk.register({
   name = "previous",
   b = {
     function()
-      require("cokeline.mappings").by_step("focus", -vim.v.count1)
+      switch_by_step(-vim.v.count1)
     end,
     "buffer",
   },
@@ -23,7 +62,7 @@ wk.register({
   name = "next",
   b = {
     function()
-      require("cokeline.mappings").by_step("focus", vim.v.count1)
+      switch_by_step(vim.v.count1)
     end,
     "buffer",
   },

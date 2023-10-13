@@ -210,4 +210,8 @@ function M.map_range(input_start, input_end, output_start, output_end, input)
   )
 end
 
+function M.clamp(min, max, value)
+  return math.min(max, math.max(min, value))
+end
+
 return M
