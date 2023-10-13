@@ -15,7 +15,7 @@ local function module()
       mod = require("willothy.modules." .. submodules[k])
     end
     if not setup[k] then
-      if type(mod) == "table" and mod.setup then
+      if type(mod) == "table" and vim.is_callable(mod.setup) then
         mod.setup()
       end
       setup[k] = true
@@ -31,7 +31,7 @@ local function module()
   function m.setup()
     for k in pairs(submodules) do
       if not setup[k] then
-        if type(m[k]) == "table" and m[k].setup then
+        if type(m[k]) == "table" and vim.is_callable(m[k].setup) then
           m[k].setup()
         end
         setup[k] = true
@@ -82,6 +82,8 @@ willothy.utils.debug = "utils.debug"
 willothy.utils.table = "utils.table"
 ---@module "willothy.modules.utils.progress"
 willothy.utils.progress = "utils.progress"
+---@module "willothy.modules.utils.templates"
+willothy.utils.templates = "utils.templates"
 
 willothy.ui = module()
 ---@module "willothy.modules.ui.scrollbar"

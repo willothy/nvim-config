@@ -11,8 +11,8 @@ local function tmp_buf(text)
   return buf
 end
 
--- local STAGE_DELAY = 1500
-local STAGE_DELAY = 10
+local STAGE_DELAY = 1500
+-- local STAGE_DELAY = 10
 
 a.void(function()
   local initial_win = vim.api.nvim_get_current_win()
@@ -92,8 +92,7 @@ a.void(function()
   })
   defer(STAGE_DELAY)
 
-  vim.cmd.FocusEqualise()
-  vim.cmd.FocusDisable()
+  require("focus").focus_equalise()
 
   vim.keymap.set("n", "<Esc>", function()
     vim.api.nvim_set_current_win(initial_win)
