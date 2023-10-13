@@ -11,9 +11,11 @@ local function tmp_buf(text)
   return buf
 end
 
-local STAGE_DELAY = 1500
+-- local STAGE_DELAY = 1500
+local STAGE_DELAY = 10
 
 a.void(function()
+  local initial_win = vim.api.nvim_get_current_win()
   local buf
   buf = tmp_buf({ "this is split 1", "a right-aligned top-level window" })
   local win = vim.api.nvim_open_win(buf, false, {
@@ -59,7 +61,7 @@ a.void(function()
     "this is split 3",
     "it is a top-level split at the top of the screen",
   })
-  vim.api.nvim_open_win(buf, false, {
+  local win3 = vim.api.nvim_open_win(buf, false, {
     split = "above",
   })
   defer(STAGE_DELAY)
@@ -88,4 +90,22 @@ a.void(function()
   vim.api.nvim_win_set_config(float, {
     split = "right",
   })
+  defer(STAGE_DELAY)
+
+  vim.cmd.FocusEqualise()
+  vim.cmd.FocusDisable()
+
+  vim.keymap.set("n", "<Esc>", function()
+    vim.api.nvim_set_current_win(initial_win)
+    for _, win in ipairs({
+      win,
+      win2,
+      win3,
+      float,
+    }) do
+      if vim.api.nvim_win_is_valid(win) then
+        vim.api.nvim_win_close(win, true)
+      end
+    end
+  end, { nowait = true })
 end)()
