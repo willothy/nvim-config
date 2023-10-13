@@ -16,8 +16,8 @@ return {
     end,
   },
   {
-    "folke/edgy.nvim",
-    -- "willothy/edgy.nvim",
+    -- "folke/edgy.nvim",
+    "willothy/edgy.nvim",
     -- dir = "~/projects/lua/edgy.nvim",
     event = "VeryLazy",
     config = function()
