@@ -35,9 +35,9 @@ local sidebar = View.new({
   },
 })
 
-function _G.__edgy_term_title()
-  local buf = vim.api.nvim_get_current_buf()
+function _G._edgywb()
   local win = vim.api.nvim_get_current_win()
+  local buf = vim.api.nvim_get_current_buf()
   local bar = _G.dropbar.bars[buf][win]
   if vim.bo[buf].bt == "terminal" and not vim.b[buf].__dropbar_ready then
     local old = bar.update_hover_hl
@@ -50,7 +50,8 @@ function _G.__edgy_term_title()
     end
     vim.b[buf].__dropbar_ready = true
   end
-  return _G.edgy_winbar() .. _G.dropbar.get_dropbar_str():gsub(" %s+", "")
+  -- _G.edgy_winbar() ..
+  return _G.dropbar.get_dropbar_str():gsub(" %s+", "")
 end
 
 local function is_float(win)
@@ -59,9 +60,9 @@ end
 
 local terminal = View.new({
   ft = "terminal",
-  title = "",
+  title = "%{%v:lua._edgywb()%}",
   wo = {
-    winbar = "%{%v:lua.__edgy_term_title()%}",
+    -- winbar = "%{%v:lua.__edgy_term_title()%}",
     number = false,
     relativenumber = false,
     winhighlight = "Normal:Normal",
