@@ -175,12 +175,9 @@ local opts = {
     sidebar:extend({
       ft = "SidebarNvim",
       title = "Sidebar",
-      open = "SidebarNvimOpen",
-    }),
-    sidebar:extend({
-      ft = "gh",
-      title = "Gists",
-      open = "GistsList",
+      open = function()
+        require("sidebar-nvim").open()
+      end,
     }),
     sidebar:extend({
       ft = "aerial",
