@@ -176,6 +176,7 @@ return {
   {
     "akinsho/toggleterm.nvim",
     cmd = "ToggleTerm",
+    dir = "~/projects/lua/toggleterm.nvim/",
     config = function()
       require("configs.terminal.toggleterm")
     end,

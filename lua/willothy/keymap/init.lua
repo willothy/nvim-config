@@ -22,6 +22,48 @@ return {
       )
     end
 
+    local bind = willothy.keymap.bind
+
+    require("which-key").register({
+      ["<leader>"] = {
+        t = {
+          name = "terminal",
+          t = bind(willothy.term.main, "toggle", willothy.term.main):with_desc(
+            "main"
+          ),
+          v = bind(willothy.term.vertical, "toggle", willothy.term.vertical):with_desc(
+            "vertical"
+          ),
+          f = bind(willothy.term.float, "toggle", willothy.term.float):with_desc(
+            "float"
+          ),
+          x = bind(willothy.term.xplr, "toggle", willothy.term.xplr):with_desc(
+            "xplr"
+          ),
+          s = bind(willothy.term, "send_to_main"):with_desc("send"),
+          o = { "<cmd>OverseerFloat<cr>", "overseer: show" },
+          r = {
+            function()
+              require("overseer").run_template()
+            end,
+            "overseer: run",
+          },
+          p = {
+            function()
+              willothy.term.py:toggle()
+            end,
+            "python",
+          },
+          l = {
+            function()
+              willothy.term.lua:toggle()
+            end,
+            "lua",
+          },
+        },
+      },
+    })
+
     require("willothy.keymap.editor")
     require("willothy.keymap.terminal")
     require("willothy.keymap.cycle")

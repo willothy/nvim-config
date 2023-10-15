@@ -103,6 +103,27 @@ function M.toggle_float()
   M.float:toggle()
 end
 
+function M.send_to_main(cmd)
+  local a = require("micro-async")
+  a.void(function()
+    cmd = coroutine.yield(vim.ui.input({
+      prompt = "$ ",
+      completion = "shellcmd",
+    }, vim.schedule_wrap(a.callback())))
+
+    if not M.main.bufnr or not vim.api.nvim_buf_is_valid(M.main.bufnr) then
+      M.main:spawn()
+      a.defer(200)
+    end
+    if type(cmd) == "string" then
+      cmd = cmd .. "\r"
+    elseif type(cmd) == "table" then
+      cmd[#cmd] = cmd[#cmd] .. "\r"
+    end
+    M.main:send(cmd)
+  end)()
+end
+
 function M.cargo_build()
   local p = willothy.utils.progress.create({
     title = "Compiling",
