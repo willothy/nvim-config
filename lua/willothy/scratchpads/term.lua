@@ -127,6 +127,8 @@ function Terminal:_resize()
     vim.api.nvim_win_get_width(self._win) - 2
   )
   ffi.C.ioctl(self._pty.master, TIOCSWINSZ, winp)
+  -- ffi.C.kill(self._child:get_pid(), 28)
+  -- self._child:kill("sigwinch")
 end
 
 function Terminal:_write(data)
@@ -188,7 +190,7 @@ function Terminal:spawn(rows, cols)
   local child, _, spawn_emsg = uv.spawn(self.cmd, {
     args = self.args,
     stdio = { slave, slave, slave },
-    detached = true,
+    -- detached = true,
   }, function()
     self:_cleanup()
   end)
@@ -196,16 +198,16 @@ function Terminal:spawn(rows, cols)
     return self:_error(spawn_emsg)
   end
 
-  ffi.C.setpgid(ffi.C.getpid(), ffi.C.getpid())
+  -- ffi.C.setpgid(ffi.C.getpid(), ffi.C.getpid())
   --
   -- ffi.C.setsid()
 
-  local TIOCSCTTY = 0x540E
+  -- local TIOCSCTTY = 0x540E
 
   -- set controlling terminal for child process,
   -- and make it not the same as vim so that
   -- vim isn't killed when the terminal is killed
-  ffi.C.ioctl(master, TIOCSCTTY, 0)
+  -- ffi.C.ioctl(master, TIOCSCTTY, 0)
 
   local buf = vim.api.nvim_create_buf(false, true)
   local chan = vim.api.nvim_open_term(buf, {

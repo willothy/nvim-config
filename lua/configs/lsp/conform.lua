@@ -28,7 +28,18 @@ local opts = {
 
 vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
 
-require("conform").setup(opts)
+local conform = require("conform")
+
+conform.setup(opts)
+
+conform.formatters.rustfmt = {
+  meta = {
+    url = "https://github.com/rust-lang/rustfmt",
+    description = "A tool for formatting rust code according to style guidelines.",
+  },
+  command = "rustfmt",
+  args = { "--emit=stdout", "--edition=2021" },
+}
 
 vim.api.nvim_create_user_command("FormatDisable", function(args)
   if args.bang then
