@@ -10,7 +10,6 @@ local opts = {
     scss = { { "prettierd", "prettier" } },
     html = { { "prettierd", "prettier" } },
     markdown = { { "markdownlint", "prettierd", "prettier" } },
-    toml = { { "prettierd", "prettier" } },
     json = { { "jq", "prettierd", "prettier" } },
     proto = { { "buf", "protolint" } },
   },

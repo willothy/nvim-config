@@ -6,7 +6,7 @@ local group =
 local autocmds = {
   {
     "LspAttach",
-    callback = function(args)
+    callback = vim.schedule_wrap(function(args)
       local bufnr = args.buf
       local client = vim.lsp.get_client_by_id(args.data.client_id)
 
@@ -35,7 +35,7 @@ local autocmds = {
       if ok then
         ufo.attach(bufnr)
       end
-    end,
+    end),
   },
   {
     "BufWritePost",
