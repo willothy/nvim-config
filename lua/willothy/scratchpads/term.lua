@@ -4,6 +4,7 @@ local ffi = require("ffi")
 
 if not _G.__defined_openpty then
   ffi.cdef([[
+    typedef int pid_t;
     struct winsize {
       unsigned short ws_row;
       unsigned short ws_col;
@@ -12,6 +13,9 @@ if not _G.__defined_openpty then
     };
     int openpty(int *amaster, int* aslave, char *name, void *termp, const struct winsize *winp);
     int ioctl(int fd, unsigned long request, ...);
+    pid_t setsid(void);
+    int setpgid(pid_t pid, pid_t pgid);
+    int getpid(void);
   ]])
 end
 _G.__defined_openpty = true
@@ -51,6 +55,16 @@ local function get_shell()
   return shell
 end
 
+local id = 0
+local function next_id()
+  id = id + 1
+  return id
+end
+
+local terminals = setmetatable({}, {
+  __mode = "v",
+})
+
 ---@class Willothy.Terminal: Willothy.Terminal.Options
 ---@field _proxy userdata
 ---@field _pty { master: integer, slave: integer }
@@ -60,6 +74,7 @@ end
 ---@field _channel integer
 ---@field _buf integer
 ---@field _win integer
+---@field _id integer
 local Terminal = {}
 Terminal.cmd = get_shell()
 
@@ -74,6 +89,8 @@ function Terminal:new(opts)
   self.__index = self
   local term = setmetatable(opts, self)
 
+  term._id = next_id()
+
   local proxy = newproxy(true)
   -- ensure that the terminal is closed when the proxy is collected
   getmetatable(proxy).__gc = function()
@@ -82,7 +99,13 @@ function Terminal:new(opts)
 
   term._proxy = proxy
 
+  terminals[term._id] = term
+
   return term
+end
+
+function Terminal.terminals()
+  return terminals
 end
 
 ---@param e any
@@ -122,7 +145,8 @@ function Terminal:_cleanup()
 
   -- cleanup pipe
   if self._pipe and not self._pipe:is_closing() then
-    self._pipe:close()
+    self._pipe:read_stop()
+    self._pipe:shutdown()
   end
   self._pipe = nil
 
@@ -164,12 +188,24 @@ function Terminal:spawn(rows, cols)
   local child, _, spawn_emsg = uv.spawn(self.cmd, {
     args = self.args,
     stdio = { slave, slave, slave },
+    detached = true,
   }, function()
     self:_cleanup()
   end)
   if not child then
     return self:_error(spawn_emsg)
   end
+
+  ffi.C.setpgid(ffi.C.getpid(), ffi.C.getpid())
+  --
+  -- ffi.C.setsid()
+
+  local TIOCSCTTY = 0x540E
+
+  -- set controlling terminal for child process,
+  -- and make it not the same as vim so that
+  -- vim isn't killed when the terminal is killed
+  ffi.C.ioctl(master, TIOCSCTTY, 0)
 
   local buf = vim.api.nvim_create_buf(false, true)
   local chan = vim.api.nvim_open_term(buf, {
@@ -186,6 +222,7 @@ function Terminal:spawn(rows, cols)
   end))
 
   vim.bo[buf].filetype = "terminal"
+  vim.api.nvim_buf_set_name(buf, "terminal-" .. self._id)
 
   vim.api.nvim_create_autocmd({ "BufDelete", "BufUnload", "BufWipeout" }, {
     once = true,

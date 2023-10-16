@@ -70,14 +70,6 @@ local autocmds = {
     end,
   },
   {
-    "WinClosed",
-    callback = function(ev)
-      if vim.bo[ev.buf].filetype == "markdown.cody_prompt" then
-        vim.api.nvim_exec2("CodyToggle", {})
-      end
-    end,
-  },
-  {
     { "BufLeave", "BufWinLeave" },
     callback = function(ev)
       if vim.bo[ev.buf].filetype == "lazy" then
