@@ -7,11 +7,11 @@ return {
     "willothy/micro-async.nvim",
     -- dir = "~/projects/lua/micro-async.nvim",
   },
-  {
-    "willothy/nvim-rterm",
-    dir = "~/projects/rust/nvim-rterm/",
-    event = "VeryLazy",
-  },
+  -- {
+  --   "willothy/nvim-rterm",
+  --   dir = "~/projects/rust/nvim-rterm/",
+  --   event = "VeryLazy",
+  -- },
   {
     "willothy/leptos.nvim",
     event = "VeryLazy",
