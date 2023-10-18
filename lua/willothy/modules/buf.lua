@@ -73,4 +73,51 @@ function M.format_embedded_lua(bufnr)
   end)
 end
 
+---@class Willothy.Buffer
+local Buffer = {}
+
+local handles = {}
+
+function Buffer.new(bufnr)
+  if not vim.api.nvim_buf_is_valid(bufnr) then
+    return
+  end
+  if handles[bufnr] then
+    return handles[bufnr]
+  end
+
+  local handle = { id = bufnr }
+
+  setmetatable(handle, {
+    __index = function(self, k)
+      if vim.api["nvim_buf_" .. k] then
+        return function(_, ...)
+          if vim.api.nvim_buf_is_valid(self.id) then
+            return vim.api["nvim_buf_" .. k](self.id, ...)
+          end
+        end
+      end
+    end,
+    __newindex = function() end, -- Don't allow new keys
+  })
+
+  vim.api.nvim_buf_attach(bufnr, false, {
+    on_detach = function()
+      handles[bufnr] = nil
+      return true
+    end,
+    -- prevent on_detach from being called on reload
+    on_reload = function() end,
+  })
+  handles[bufnr] = handle
+
+  return handle
+end
+
+function Buffer.current()
+  return Buffer.new(vim.api.nvim_get_current_buf())
+end
+
+M.Buffer = Buffer
+
 return M
