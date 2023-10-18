@@ -101,17 +101,11 @@ local Location = {
   AB(Separator.Left),
   B(Space),
   B({
-    update = {
-      "BufEnter",
-      "BufNew",
-      "CursorMoved",
-      "CursorMovedI",
-      callback = function(self)
-        self.line = vim.fn.line(".")
-        self.col = vim.fn.col(".")
-        self.maxline = vim.fn.line("$")
-      end,
-    },
+    update = function(self)
+      self.line = vim.fn.line(".")
+      self.col = vim.fn.col(".")
+      self.maxline = vim.fn.line("$")
+    end,
     provider = function(self)
       if not self.line then
         return ""
@@ -769,6 +763,15 @@ willothy.event.on({
   "ColorScheme",
 }, function()
   willothy.event.emit("UpdateHeirlineComponents")
+end)
+
+willothy.event.on({
+  "BufEnter",
+  "BufNew",
+  "CursorMoved",
+  "CursorMovedI",
+}, function()
+  willothy.event.emit("UpdateHeirlinePosition")
 end)
 
 willothy.event.on("ColorScheme", function()
