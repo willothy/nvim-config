@@ -57,7 +57,7 @@
   "marks.nvim": { "branch": "master", "commit": "266f03ebdf68857db0a548e85daff465c2e764ae" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "e7b64c11035aa924f87385b72145e0ccf68a7e0a" },
   "mason.nvim": { "branch": "main", "commit": "cd7835b15f5a4204fc37e0aa739347472121a54c" },
-  "micro-async.nvim": { "branch": "main", "commit": "ec6849403ca5b37b7b6d68afcb7586a3cbf7e6f4" },
+  "micro-async.nvim": { "branch": "main", "commit": "7bb8550dd234b4eb6934ca63693bc835994dcc54" },
   "mini.animate": { "branch": "main", "commit": "6e6f2ee99fec91985d3817bfc74fbb4a0aff1c44" },
   "mini.files": { "branch": "main", "commit": "f928a0775d6f6d7cd85c45c6b5baeb25743d204e" },
   "mini.indentscope": { "branch": "main", "commit": "cbc07203ca8faae952ca373c1f6cc5881ce97af0" },
