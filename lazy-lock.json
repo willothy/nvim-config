@@ -138,7 +138,7 @@
   "toggleterm.nvim": { "branch": "main", "commit": "c80844fd52ba76f48fabf83e2b9f9b93273f418d" },
   "tree-sitter-just": { "branch": "main", "commit": "4e5f5f3ff37b12a1bbf664eb3966b3019e924594" },
   "trouble.nvim": { "branch": "fix-fillchars", "commit": "f3543803f57bfdf29a9ce424e6ca5aa2382e3402" },
-  "ufo": { "branch": "main", "commit": "f7eea53e88456403212df074b9aa3148a3908435" },
+  "ufo": { "branch": "main", "commit": "ebbab711d909d5f675e38ad489765bd22bd2c6b3" },
   "undotree": { "branch": "master", "commit": "0e11ba7325efbbb3f3bebe06213afa3e7ec75131" },
   "venn.nvim": { "branch": "main", "commit": "c114563960b8fb1197695d42798d1f3e7190b798" },
   "wezterm.nvim": { "branch": "main", "commit": "1e10db8f29fb68e871e337b2b18331806f5586b8" },
