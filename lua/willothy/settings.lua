@@ -47,7 +47,7 @@ o.foldopen = "block,mark,percent,quickfix,search,tag,undo"
 -- vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 -- vim.opt.foldtext = "v:lua.willothy.ui.foldtext()"
 
-o.splitkeep = "screen"
+o.splitkeep = "topline"
 -- o.splitkeep = "cursor"
 o.smoothscroll = true
 o.mousescroll = "ver:1,hor:6"

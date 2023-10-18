@@ -62,11 +62,11 @@ willothy.player = "player"
 willothy.term = "terminals"
 ---@module "willothy.modules.event"
 willothy.event = "event"
----@module "willothy.modules.window"
+---@module "willothy.modules.win"
 willothy.win = "win"
 ---@module "willothy.modules.buf"
 willothy.buf = "buf"
----@module "willothy.modules.tabpage"
+---@module "willothy.modules.tab"
 willothy.tab = "tab"
 
 willothy.utils = module()
