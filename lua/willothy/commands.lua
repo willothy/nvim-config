@@ -102,6 +102,14 @@ local commands = {
   Bd = {
     function()
       require("bufdelete").bufdelete(0, true)
+      if
+        vim.api.nvim_buf_get_name(0) == ""
+        and vim.api.nvim_buf_line_count(0) <= 1
+        and vim.api.nvim_buf_get_lines(0, 0, -1, false)[1] == ""
+      then
+        vim.bo.buflisted = false
+        vim.bo.bufhidden = "wipe"
+      end
     end,
     desc = "Close the current buffer",
   },
@@ -114,6 +122,14 @@ local commands = {
         end)
         :totable()
       require("bufdelete").bufdelete(bufs, true)
+      if
+        vim.api.nvim_buf_get_name(0) == ""
+        and vim.api.nvim_buf_line_count(0) <= 1
+        and vim.api.nvim_buf_get_lines(0, 0, -1, false)[1] == ""
+      then
+        vim.bo.buflisted = false
+        vim.bo.bufhidden = "wipe"
+      end
     end,
     desc = "Close all buffers",
   },
