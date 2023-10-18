@@ -5,7 +5,7 @@ return {
   "jbyuki/venn.nvim",
   {
     "willothy/micro-async.nvim",
-    dir = "~/projects/lua/micro-async.nvim",
+    -- dir = "~/projects/lua/micro-async.nvim",
   },
   -- {
   --   "willothy/nvim-rterm",
