@@ -1,3 +1,30 @@
+-- NOTE: You cannot use upvalues in the functions used to open
+-- windows, since they cannot be serialized.
+--
+-- Example edgy config:
+-- ```lua
+-- -- If you want to require a module, you must do it inside the function.
+-- -- This will result in an error when loading, as `t` is an upvalue and
+-- -- will not be valid when the function is loaded from session storage.
+-- -- local t = require("toggleterm.terminal")
+--
+-- require("edgy").setup({
+--   bottom = {
+--     {
+--       ft = "terminal",
+--       open = function()
+--         -- this is the correct way to require a module when
+--         -- the function will be saved / restored.
+--         local t = require("toggleterm.terminal")
+--         local term = t.get_or_create_term(0)
+--         if not term:is_open() then
+--           term:open()
+--         end
+--       end,
+--     },
+--   },
+-- })
+-- ```
 local M = {}
 
 ---@param winid integer
