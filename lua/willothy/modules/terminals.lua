@@ -47,6 +47,7 @@ M.float = Terminal:extend({
 M.main = Terminal:extend({
   display_name = "main",
   direction = "horizontal",
+  -- cmd = "tmux new -A -s nvim-main",
 })
 
 M.vertical = Terminal:extend({
