@@ -61,6 +61,12 @@ M.xplr = Terminal:extend({
   direction = "float",
 })
 
+M.yazi = Terminal:extend({
+  display_name = "yazi",
+  cmd = "yazi",
+  direction = "vertical",
+})
+
 M.py = Terminal:extend({
   display_name = "python",
   cmd = "python3",

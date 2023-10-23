@@ -88,6 +88,8 @@ willothy.utils.templates = "utils.templates"
 willothy.ui = module()
 ---@module "willothy.modules.ui.scrollbar"
 willothy.ui.scrollbar = "ui.scrollbar"
+---@module "willothy.modules.ui.scrolleof"
+willothy.ui.scrolleof = "ui.scrolleof"
 ---@module "willothy.modules.ui.float_drag"
 willothy.ui.float_drag = "ui.float_drag"
 ---@module "willothy.modules.ui.select"

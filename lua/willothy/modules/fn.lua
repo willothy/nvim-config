@@ -214,4 +214,35 @@ function M.clamp(min, max, value)
   return math.min(max, math.max(min, value))
 end
 
+function M.interpolate(start, finish, t)
+  return start + (finish - start) * t
+end
+
+function M.animate(start, finish, callback, opts)
+  opts = opts or {}
+  local duration = opts.duration or 500
+  local fps = opts.fps or 60
+  local start_time = vim.loop.now()
+  local timer = vim.loop.new_timer()
+
+  local interval = 1000 / fps
+  timer:start(10, interval, function()
+    local elapsed = vim.loop.now() - start_time
+    local t = M.clamp(0, 1, elapsed / duration)
+    local v = M.interpolate(start, finish, t)
+    callback(v)
+    if t == 1 and not timer:is_closing() then
+      timer:stop()
+      timer:close()
+    end
+  end)
+
+  return function()
+    if not timer:is_closing() then
+      timer:stop()
+      timer:close()
+    end
+  end
+end
+
 return M

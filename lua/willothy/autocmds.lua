@@ -4,8 +4,7 @@ local group =
   vim.api.nvim_create_augroup("willothy.autocmds", { clear = true })
 
 local autocmds = {
-  {
-    "LspAttach",
+  LspAttach = {
     callback = vim.schedule_wrap(function(args)
       local bufnr = args.buf
       local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -37,14 +36,12 @@ local autocmds = {
       end
     end),
   },
-  {
-    "BufWritePost",
+  BufWritePost = {
     callback = function()
       require("mini.trailspace").trim()
     end,
   },
-  {
-    "FileType",
+  FileType = {
     callback = function(ev)
       if vim.bo[ev.buf].buftype ~= "" then
         vim.api.nvim_buf_call(ev.buf, require("mini.trailspace").unhighlight)
@@ -63,14 +60,21 @@ local autocmds = {
       end
     end,
   },
-  {
-    "FileChangedShellPost",
+  FileChangedShellPost = {
     callback = function()
       vim.cmd("checktime")
     end,
   },
-  {
-    { "BufLeave", "BufWinLeave" },
+  TermLeave = {
+    callback = vim.schedule_wrap(function(ev)
+      -- local curwin = vim.api.nvim_get_current_win()
+      -- local buf = vim.api.nvim_win_get_buf(curwin)
+      -- if buf == ev.buf then
+      --   vim.api.nvim_win_set_cursor(curwin, { 1, 0 })
+      -- end
+    end),
+  },
+  [{ "TermOpen", "TermEnter" }] = {
     callback = function(ev)
       if vim.bo[ev.buf].filetype == "lazy" then
         require("lazy.view").view:close({})
@@ -83,9 +87,7 @@ local autocmds = {
 
 return {
   setup = function()
-    for _, v in ipairs(autocmds) do
-      local event = v[1]
-      v[1] = nil
+    for event, v in pairs(autocmds) do
       v.group = group
       autocmd(event, v)
     end

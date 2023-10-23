@@ -40,6 +40,9 @@ return {
           x = bind(willothy.term.xplr, "toggle", willothy.term.xplr):with_desc(
             "xplr"
           ),
+          y = bind(willothy.term.yazi, "toggle", willothy.term.yazi):with_desc(
+            "yazi"
+          ),
           s = bind(willothy.term, "send_to_main"):with_desc("send"),
           o = { "<cmd>OverseerFloat<cr>", "overseer: show" },
           r = {

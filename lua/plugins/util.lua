@@ -139,9 +139,4 @@ return {
     config = true,
     event = "VeryLazy",
   },
-  {
-    "Aasim-A/scrollEOF.nvim",
-    config = true,
-    event = "VeryLazy",
-  },
 }
