@@ -245,4 +245,142 @@ function M.animate(start, finish, callback, opts)
   end
 end
 
+local function min(a, b, c)
+  local min_val = a
+
+  if b < min_val then
+    min_val = b
+  end
+  if c < min_val then
+    min_val = c
+  end
+
+  return min_val
+end
+
+---Taken from telescope.nvim
+---@param s1 string
+---@param s2 string
+---@return number distance
+function M.str_distance(s1, s2)
+  if s1 == s2 then
+    return 0
+  end
+  if s1:len() == 0 then
+    return s2:len()
+  end
+  if s2:len() == 0 then
+    return s1:len()
+  end
+  if s1:len() < s2:len() then
+    s1, s2 = s2, s1
+  end
+
+  local t = {}
+  for i = 1, #s1 + 1 do
+    t[i] = { i - 1 }
+  end
+
+  for i = 1, #s2 + 1 do
+    t[1][i] = i - 1
+  end
+
+  local cost
+  for i = 2, #s1 + 1 do
+    for j = 2, #s2 + 1 do
+      cost = (s1:sub(i - 1, i - 1) == s2:sub(j - 1, j - 1) and 0) or 1
+      t[i][j] = min(t[i - 1][j] + 1, t[i][j - 1] + 1, t[i - 1][j - 1] + cost)
+    end
+  end
+
+  return t[#s1 + 1][#s2 + 1]
+end
+
+---@class Willothy.CommandOpts.Subcommand
+---@field complete nil|fun(arg: string, line: string): string[]
+---@field execute string|fun(...: string)
+
+---@class Willothy.CommandOpts: vim.api.keyset.user_command
+---@field subcommands table<string, Willothy.CommandOpts.Subcommand>?
+---@field command string|fun()?
+
+---@param name string
+---@param opts Willothy.CommandOpts
+function M.create_command(name, opts)
+  if not opts then
+    return
+  end
+  local command = opts.command
+  opts.command = nil
+
+  local subcommands = opts.subcommands
+  opts.subcommands = nil
+  if subcommands then
+    opts.nargs = "*"
+
+    local names = vim.tbl_keys(subcommands) --[[ @as string[] ]]
+
+    function opts.complete(arg, line)
+      local res = vim.api.nvim_parse_cmd(line, {})
+      local argc = #res.args
+      local first = false
+      if argc == 0 then
+        first = true
+      end
+      if argc == 1 and not line:match("%s$") then
+        first = true
+      end
+      if first then
+        local options = vim
+          .iter(names)
+          :filter(function(option)
+            return vim.startswith(option, arg)
+          end)
+          :totable()
+        return options
+      elseif argc == 2 or (argc == 1 and line:match("%s$")) then
+        local argval = vim.trim(res.args[1])
+        if subcommands[argval] and subcommands[argval].complete then
+          return subcommands[argval].complete(arg, line)
+        end
+      end
+    end
+
+    local execute = function(args)
+      args = args.fargs
+      local cmd = args[1]
+      local function wrap(f, ...)
+        local ok, e = pcall(f, ...)
+        if not ok then
+          vim.notify(e, vim.log.levels.WARN)
+        end
+      end
+      if not cmd then
+        if command then
+          if type(command) == "function" then
+            wrap(command, args)
+          else
+            vim.api.nvim_exec2(command, { output = false })
+          end
+        else
+          vim.notify("No subcommand specified", vim.log.levels.WARN)
+        end
+      elseif subcommands[cmd] then
+        if type(subcommands[cmd].execute) == "function" then
+          wrap(subcommands[cmd].execute, unpack(args, 2))
+        elseif type(subcommands[cmd].execute) == "string" then
+          ---@diagnostic disable-next-line: param-type-mismatch
+          vim.api.nvim_exec2(subcommands[cmd].execute, {})
+        end
+      else
+        vim.notify("Unknown subcommand " .. cmd, vim.log.levels.WARN)
+      end
+    end
+
+    vim.api.nvim_create_user_command(name, execute, opts)
+    return
+  end
+  vim.api.nvim_create_user_command(name, command, opts)
+end
+
 return M

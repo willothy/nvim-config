@@ -100,81 +100,60 @@ resession.add_hook(
   end)
 )
 
-local commands = {
-  load = function(session)
-    local ok = pcall(resession.load, session, {})
-    if not ok then
-      vim.notify("Unknown session: " .. session, "warn")
-    end
-  end,
-  delete = function(session)
-    local ok = pcall(resession.delete, session)
-    if not ok then
-      vim.notify("Unknown session: " .. session, "warn")
-    end
-  end,
-  list = function()
-    resession.load(nil, {})
-  end,
-  save = function(session)
-    if not session then
-      return resession.save_all({ notify = false })
-    end
-    resession.save(session)
-  end,
-}
+local function complete_session_name(arg, line)
+  local obj = vim.api.nvim_parse_cmd(line, {})
+  if #obj.args > 1 then
+    return {}
+  end
+  local names = vim
+    .iter(resession.list())
+    :filter(function(session)
+      return vim.startswith(session, arg)
+    end)
+    :map(function(session)
+      return session
+    end)
+    :totable()
 
-local function complete(arg, line)
-  local res = vim.api.nvim_parse_cmd(line, {})
-  local argc = #res.args
-  local first = false
-  if argc == 0 then
-    first = true
-  end
-  if argc == 1 and not line:match("%s$") then
-    first = true
-  end
-  if first then
-    return vim
-      .iter(commands)
-      :filter(function(option)
-        return vim.startswith(option, arg)
-      end)
-      :map(function(name)
-        return name
-      end)
-      :totable()
-  elseif argc == 2 or (argc == 1 and line:match("%s$")) then
-    if res.args[1] == "load" or res.args[1] == "delete" then
-      return vim
-        .iter(resession.list())
-        :filter(function(session)
-          return vim.startswith(session, arg)
-        end)
-        :map(function(session)
-          return session
-        end)
-        :totable()
-    end
-  end
+  return names
 end
 
-local function execute(args)
-  args = args.fargs
-  local command = args[1]
-  if not command then
-    vim.notify("No command specified", vim.log.levels.WARN)
-  elseif commands[command] then
-    commands[command](unpack(args, 2))
-  else
-    vim.notify("Unknown command: " .. command, vim.log.levels.WARN)
-  end
-end
-
-vim.api.nvim_create_user_command("Session", execute, {
-  nargs = "*",
+willothy.fn.create_command("Session", {
   desc = "Manage sessions",
-  complete = complete,
+  subcommands = {
+    load = {
+      complete = complete_session_name,
+      execute = function(session)
+        local ok = pcall(resession.load, session, {})
+        if not ok then
+          vim.notify("Unknown session: " .. session, "warn")
+        end
+      end,
+    },
+    delete = {
+      complete = complete_session_name,
+      execute = function(session)
+        local ok = pcall(resession.delete, session)
+        if not ok then
+          vim.notify("Unknown session: " .. session, "warn")
+        end
+      end,
+    },
+    save = {
+      complete = complete_session_name,
+      execute = function(session)
+        if not session then
+          return resession.save_all({ notify = false })
+        end
+        resession.save(session)
+      end,
+    },
+    list = {
+      execute = function()
+        resession.load(nil, {})
+      end,
+    },
+  },
 })
 
 if
