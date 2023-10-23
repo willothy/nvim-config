@@ -68,6 +68,7 @@ end)
 
 resession.add_hook("post_load", function()
   vim.o.showtabline = 2
+  willothy.ui.scrolleof.check()
   vim.schedule(function()
     if lazy_open then
       require("lazy.view").show()

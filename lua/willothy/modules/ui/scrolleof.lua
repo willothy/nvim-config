@@ -27,16 +27,19 @@ local function folded_lines_between(lnum1, lnum2)
 end
 
 local cancel
+local disabled_ft = {
+  terminal = true,
+}
 local function check_eof_scrolloff(animate)
-  if vim.bo.buftype ~= "" then
-    return
+  if cancel then
+    cancel()
+    cancel = nil
   end
   if disabled then
     return
   end
-  if cancel then
-    cancel()
-    cancel = nil
+  if disabled_ft[vim.bo.filetype] or vim.bo.buftype ~= "" then
+    return
   end
 
   local win = vim.api.nvim_get_current_win()
@@ -64,29 +67,26 @@ local function check_eof_scrolloff(animate)
     visual_distance_to_eof < scrolloff
     and scrolloff_line_count + visual_distance_to_eof < scrolloff
   then
+    local goal = win_top_line
+      + scrolloff
+      - (scrolloff_line_count + visual_distance_to_eof)
+    local diff = math.abs(goal - win_top_line)
     if animate then
-      local goal = win_top_line
-        + scrolloff
-        - (scrolloff_line_count + visual_distance_to_eof)
       cancel = willothy.fn.animate(
         win_top_line,
         goal,
         vim.schedule_wrap(function(top)
-          vim.api.nvim_win_call(win, function()
+          if win == vim.api.nvim_get_current_win() then
             vim.fn.winrestview({ topline = math.floor(top) })
-          end)
+          end
         end),
         {
           fps = 60,
-          duration = 400,
+          duration = diff * 30,
         }
       )
     else
-      vim.fn.winrestview({
-        topline = win_view.topline
-          + scrolloff
-          - (scrolloff_line_count + visual_distance_to_eof),
-      })
+      vim.fn.winrestview({ topline = goal })
     end
   end
 end
@@ -104,18 +104,8 @@ M.toggle = function()
 end
 
 M.setup = function()
-  local disabled_ft = {
-    "terminal",
-  }
-
   local scrollEOF_group =
     vim.api.nvim_create_augroup("ScrollEOF", { clear = true })
-  vim.api.nvim_create_autocmd("FileType", {
-    group = scrollEOF_group,
-    callback = function()
-      disabled = disabled_ft[vim.bo.filetype] ~= nil or vim.bo.buftype ~= ""
-    end,
-  })
 
   vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
     group = scrollEOF_group,
@@ -126,5 +116,7 @@ M.setup = function()
 
   check_eof_scrolloff(true)
 end
+
+M.check = check_eof_scrolloff
 
 return M
