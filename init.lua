@@ -5,8 +5,7 @@ vim.g.maplocalleader = ","
 
 local lazy_path = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
-local conf_path = vim.fn.stdpath("config")
----@cast conf_path string
+local conf_path = vim.fn.stdpath("config") --[[@as string]]
 
 vim.opt.rtp:prepend(lazy_path)
 
@@ -18,7 +17,7 @@ vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
   callback = function()
     vim.o.shada = shada
-    pcall(vim.api.nvim_exec2, "rshada", {})
+    pcall(vim.cmd.rshada, { bang = true })
   end,
 })
 
@@ -51,6 +50,13 @@ require("lazy").setup({
     main = "willothy.keymap",
     dir = conf_path,
     event = "VeryLazy",
+    config = true,
+  },
+  {
+    name = "willothy.settings",
+    main = "willothy.settings",
+    dir = conf_path,
+    event = "UiEnter",
     config = true,
   },
 }, {

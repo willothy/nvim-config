@@ -115,8 +115,6 @@ willothy.hydras.buffers = "hydras.buffers"
 ---@module "willothy.modules.hydras.swap"
 willothy.hydras.swap = "hydras.swap"
 
-require("willothy.settings")
-
 return {
   setup = function()
     willothy.fs.hijack_netrw()
