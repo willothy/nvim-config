@@ -20,8 +20,6 @@ local has_words_before = function()
     and next_char ~= "]"
 end
 
-local luasnip = require("luasnip")
-
 local icons = willothy.icons
 
 local format = {
@@ -44,7 +42,6 @@ local format = {
 local main_sources = cmp.config.sources({
   { name = "nvim_lsp", max_item_count = 40 },
   { name = "copilot", max_item_count = 2 },
-  { name = "luasnip", max_item_count = 4 },
   { name = "buffer", max_item_count = 4 },
   { name = "path" },
 })
@@ -78,22 +75,12 @@ end, {
 local opts = {
   snippet = {
     expand = function(args)
-      luasnip.lsp_expand(args.body)
+      vim.snippet.expand(args.body)
     end,
   },
   experimental = {
     ghost_text = true,
   },
-  -- window = {
-  --   documentation = win_config,
-  --   -- completion = win_config,
-  -- },
-  -- completion = {
-  --   autocomplete = {
-  --     "TextChanged",
-  --     "InsertEnter",
-  --   },
-  -- },
   view = {
     entries = { name = "custom", selection_order = "near_cursor" },
   },
@@ -136,32 +123,32 @@ local opts = {
     ["<C-PageDown>"] = cmp.mapping(cmp.mapping.scroll_docs(5), { "i", "c" }),
     ["<C-Space>"] = cmp.mapping(function()
       cmp.complete()
-    end),
+    end, { "i", "c" }),
     ["<C-e>"] = cmp.mapping(function()
       local suggestion = require("copilot.suggestion")
+      if vim.snippet.active() then
+        vim.snippet.exit()
+      end
       if cmp.visible() then
         cmp.abort()
       elseif suggestion.is_visible() then
         suggestion.dismiss()
       end
     end, { "i", "c" }),
-    ["<C-CR>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.confirm({ select = true })
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() and not vim.snippet.active() then
+        cmp.select_prev_item()
+      elseif vim.snippet.jumpable(-1) then
+        vim.snippet.jump(-1)
       else
         fallback()
       end
     end, { "i", "c" }),
-    -- ["<CR>"] = cmp.mapping(function(fallback) fallback() end, { "i", "c" }),
     ["<Tab>"] = cmp.mapping(function(_fallback)
-      -- local suggestion = require("copilot.suggestion")
-      -- if suggestion.is_visible() then
-      --   suggestion.accept()
-      -- else
-      if cmp.visible() then
+      if cmp.visible() and not vim.snippet.active() then
         cmp.confirm({ select = true })
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
+      elseif vim.snippet.jumpable(1) then
+        vim.snippet.jump(1)
       elseif has_words_before() then
         cmp.complete()
       else

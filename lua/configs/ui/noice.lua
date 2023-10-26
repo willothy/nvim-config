@@ -112,7 +112,6 @@ require("noice").setup({
       auto_open = {
         enabled = true,
         trigger = true,
-        luasnip = true,
         throttle = 50,
       },
       opts = {},

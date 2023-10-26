@@ -126,13 +126,9 @@ return {
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lsp",
       "dmitmel/cmp-cmdline-history",
-      "saadparwaiz1/cmp_luasnip",
       "rcarriga/cmp-dap",
       "zbirenbaum/copilot-cmp",
       "petertriho/cmp-git",
-
-      -- Snippets
-      "L3MON4D3/LuaSnip",
     },
     event = { "CmdlineEnter", "InsertEnter" },
     config = function()
