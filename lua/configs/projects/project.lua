@@ -5,7 +5,7 @@ require("project_nvim").setup({
   },
   patterns = {
     ".git",
-    "Cargo.toml",
+    -- "Cargo.toml",
     "Makefile",
     "package.json",
   },
