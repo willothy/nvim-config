@@ -20,48 +20,55 @@ M.browsers = {
 
 M.browser = M.browsers.telescope
 
-function M.hijack_netrw()
-  local netrw_bufname
+function M.hijack_dir_buf(buf)
+  if vim.bo[buf].buftype ~= "" then
+    return
+  end
 
+  local bufnr = buf
+  local bufname = vim.api.nvim_buf_get_name(bufnr)
+  local stat = vim.F.ok_or_nil(pcall(vim.uv.fs_stat, bufname))
+  if not stat or stat.type ~= "directory" then
+    return
+  end
+
+  -- ensure no buffers remain with the directory name
+  require("bufdelete").bufdelete(bufnr)
+
+  vim.schedule(function()
+    M.browse(bufname)
+  end)
+end
+
+function M.hijack_netrw()
   pcall(vim.api.nvim_clear_autocmds, { group = "FileExplorer" })
+
   vim.api.nvim_create_autocmd("BufNew", {
     group = vim.api.nvim_create_augroup(
       "willothy.file-browsers",
       { clear = true }
     ),
     pattern = "*",
-    callback = function()
-      vim.schedule(function()
-        if vim.bo[0].filetype == "netrw" then
-          return
-        end
-        local bufname = vim.api.nvim_buf_get_name(0)
-        if vim.fn.isdirectory(bufname) == 0 then
-          _, netrw_bufname = pcall(vim.fn.expand, "#:p:h")
-          return
-        end
-
-        -- prevents reopening of file-browser if exiting without selecting a file
-        if netrw_bufname == bufname then
-          netrw_bufname = nil
-          return
-        else
-          netrw_bufname = bufname
-        end
-
-        local bufnr = vim.api.nvim_get_current_buf()
-        vim.api.nvim_set_option_value("bufhidden", "wipe", {
-          buf = bufnr,
-        })
-
-        M.browse(vim.fn.expand("%:p:h"))
-
-        -- ensure no buffers remain with the directory name
-        require("bufdelete").bufwipeout(bufnr)
-      end)
+    callback = function(ev)
+      M.hijack_dir_buf(ev.buf)
     end,
-    desc = "telescope-file-browser.nvim replacement for netrw",
+    desc = "Hijack netrw with switchable file browser",
   })
+
+  local last_win
+  local n_wins = vim
+    .iter(vim.api.nvim_list_wins())
+    :filter(function(win)
+      return vim.api.nvim_win_get_config(win).zindex == nil
+    end)
+    :fold(0, function(acc, win)
+      last_win = last_win or win
+      return acc + 1
+    end)
+  if vim.fn.argc() == 1 and n_wins == 1 then
+    local buf = vim.api.nvim_win_get_buf(last_win)
+    M.hijack_dir_buf(buf)
+  end
 end
 
 M.set_browser = function()

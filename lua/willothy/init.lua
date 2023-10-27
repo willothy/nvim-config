@@ -119,8 +119,7 @@ return {
   setup = function()
     willothy.fs.hijack_netrw()
 
-    vim.api.nvim_create_autocmd("User", {
-      pattern = "VeryLazy",
+    vim.api.nvim_create_autocmd("UiEnter", {
       once = true,
       callback = function()
         -- setup ui
