@@ -9,9 +9,6 @@ local separators = {
   right = icons.blocks.left[4],
 }
 
-local close_icon_normal = icons.actions.close
-local close_icon_hovered = icons.actions.close_box
-
 local SidebarOpen = {
   text = function(buffer)
     local open = require("cokeline.sidebar").get_win("left") and true or false
@@ -30,6 +27,7 @@ local SidebarOpen = {
     require("edgy").toggle("left")
   end,
 }
+
 local Space = {
   text = " ",
   truncation = { priority = 1 },
@@ -267,10 +265,10 @@ local CloseOrUnsaved = {
   text = function(buffer)
     if buffer.is_hovered then
       return buffer.is_modified and (icons.misc.modified .. " ")
-        or (close_icon_hovered .. " ")
+        or (icons.actions.close_round .. " ")
     else
       return buffer.is_modified and (icons.misc.modified .. " ")
-        or (close_icon_normal .. " ") -- icons.actions.close
+        or (icons.actions.close .. " ")
     end
   end,
   fg = "TabLine",

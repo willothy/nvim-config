@@ -105,10 +105,9 @@ Icons.dap = {
 
 Icons.actions = {
   close_hexagon = "󰅜",
-  close2 = "⌧",
   close_round = "󰅙",
   close_outline = "󰅚",
-  close = "🞫",
+  close = "󰅖",
   close_box = "󰅗",
 }
 

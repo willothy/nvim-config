@@ -15,7 +15,6 @@ trouble.setup({
   auto_close = false,
   track_cursor = true,
   padding = false,
-  indent_lines = false,
   use_diagnostic_signs = true,
 })
 
