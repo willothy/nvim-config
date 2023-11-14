@@ -34,7 +34,6 @@ return {
   },
   {
     "j-hui/fidget.nvim",
-    branch = "legacy",
     config = function()
       require("configs.lsp.fidget")
     end,

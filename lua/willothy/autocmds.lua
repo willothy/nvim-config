@@ -28,7 +28,7 @@ local autocmds = {
       end
 
       if client.supports_method("textDocument/inlayHint") then
-        vim.lsp.inlay_hint(bufnr, true)
+        vim.lsp.inlay_hint.enable(bufnr)
       end
 
       local ok, ufo = pcall(require, "ufo")
