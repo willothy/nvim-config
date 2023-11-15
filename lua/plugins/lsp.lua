@@ -34,6 +34,7 @@ return {
   },
   {
     "j-hui/fidget.nvim",
+    -- dir = "~/projects/lua/fidget.nvim/",
     config = function()
       require("configs.lsp.fidget")
     end,
