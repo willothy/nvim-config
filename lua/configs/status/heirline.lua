@@ -101,11 +101,15 @@ local Location = {
   AB(Separator.Left),
   B(Space),
   B({
-    update = function(self)
-      self.line = vim.fn.line(".")
-      self.col = vim.fn.col(".")
-      self.maxline = vim.fn.line("$")
-    end,
+    update = {
+      "User",
+      pattern = { "UpdateHeirlinePosition", "UpdateHeirlineComponents" },
+      callback = function(self)
+        self.line = vim.fn.line(".")
+        self.col = vim.fn.col(".")
+        self.maxline = vim.fn.line("$")
+      end,
+    },
     provider = function(self)
       if not self.line then
         return ""
