@@ -68,6 +68,8 @@ willothy.win = "win"
 willothy.buf = "buf"
 ---@module "willothy.modules.tab"
 willothy.tab = "tab"
+---@module "willothy.modules.str"
+willothy.str = "str"
 
 willothy.utils = module()
 ---@module "willothy.modules.utils.cursor"

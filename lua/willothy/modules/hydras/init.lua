@@ -1,7 +1,7 @@
 local M = {}
 
 --- Lazy-load hydras on body keys, and add the body as a group
---- in which-key
+--- in which-key. Also sets up the HydraEnter and HydraLeave user autocmds.
 M.Hydra = function(config)
   local on_enter = function(f)
     return function(...)
