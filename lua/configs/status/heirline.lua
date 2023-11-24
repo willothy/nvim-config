@@ -103,7 +103,10 @@ local Location = {
   B({
     update = {
       "User",
-      pattern = { "UpdateHeirlinePosition", "UpdateHeirlineComponents" },
+      pattern = {
+        "UpdateHeirlinePosition",
+        "UpdateHeirlineComponents",
+      },
       callback = function(self)
         self.line = vim.fn.line(".")
         self.col = vim.fn.col(".")
@@ -112,7 +115,7 @@ local Location = {
     },
     provider = function(self)
       if not self.line then
-        return ""
+        self.update.callback(self)
       end
       return math.floor((self.line / self.maxline) * 100)
         .. "%%/"
