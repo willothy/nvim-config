@@ -1,6 +1,9 @@
-# nvim-config
+<div align="center">
+  <h1>nvim-config</h1>
+  <p>My personal Neovim config</p>
+</div>
 
-My personal Neovim config. I would not recommend using this - It's setup for me,
+I would not recommend using this - It's setup for me,
 I cannot guarantee that it will work for you, and I will not fix issues that
 do not occur on my computers. However, feel free to copy paste snippets
 to add to your own config :)
@@ -18,7 +21,7 @@ to add to your own config :)
 
 ## Some things I'm working on in this repo
 
-- `rx.lua`: Reactive extensions for Neovim
+- `rx.lua`: Reactive extensions for Neovim (very WIP, kinda abandoned)
   - [x] signals and effects
   - [x] automatic dependency tracking
   - [ ] automatic cleanup (wip)
@@ -26,3 +29,8 @@ to add to your own config :)
 - `player.lua`: Playerctl UI for Neovim
   - [x] playerctl wrapper
   - [ ] nui UI (wip)
+- Custom UI elements
+  - Simple floating scrollbars
+  - `ui.select` based on [`dropbar.nvim`](https://github.com/Bekaboo/dropbar.nvim)
+  - Code action menu with preview, also based on dropbar.nvim
+  - Featureful statusline and tabline/bufferline
