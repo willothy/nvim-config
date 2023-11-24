@@ -333,9 +333,10 @@ return {
   },
   {
     "linrongbin16/gitlinker.nvim",
-    config = function()
-      require("configs.git.gitlinker")
-    end,
+    opts = {
+      message = true,
+    },
+    cmd = "GitLink",
   },
   {
     "echasnovski/mini.trailspace",

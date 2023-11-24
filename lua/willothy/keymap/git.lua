@@ -26,8 +26,21 @@ wk.register({
   s = neogit.status,
   B = {
     function()
+      local cursorline = vim.api.nvim_win_get_cursor(0)[1]
+      local lstart, lend
+      local mode = vim.api.nvim_get_mode().mode
+      if mode == "v" or mode == "V" then
+        local vstart = vim.fn.line("v") or cursorline
+        lstart = math.min(vstart, cursorline)
+        lend = math.max(vstart, cursorline)
+      else
+        lstart, lend = cursorline, cursorline
+      end
       require("gitlinker").link({
+        router = require("gitlinker.routers").github_browse,
         action = require("gitlinker.actions").system,
+        lstart = lstart,
+        lend = lend,
       })
     end,
     "open in browser",
