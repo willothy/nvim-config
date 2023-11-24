@@ -258,6 +258,33 @@ local function min(a, b, c)
   return min_val
 end
 
+function M.visual_range()
+  local cursorline, cursorcol = unpack(vim.api.nvim_win_get_cursor(0))
+  cursorcol = cursorcol + 1
+  local mode = vim.api.nvim_get_mode().mode
+  if mode ~= "v" and mode ~= "V" and mode ~= "\22" then
+    return cursorline, cursorline, cursorcol, cursorcol
+  end
+
+  local vstart = vim.fn.line("v") or cursorline
+  local vstart_col = vim.fn.col("v")
+
+  if vstart > cursorline then
+    vstart, cursorline = cursorline, vstart
+    vstart_col, cursorcol = cursorcol, vstart_col
+  end
+
+  if mode == "V" then
+    cursorcol = vim.fn.col("$") - 1
+    vstart_col = 1
+  end
+
+  return math.min(vstart, cursorline),
+    math.max(vstart, cursorline),
+    vstart_col,
+    cursorcol
+end
+
 ---Taken from telescope.nvim
 ---@param s1 string
 ---@param s2 string
