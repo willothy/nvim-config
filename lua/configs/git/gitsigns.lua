@@ -1,4 +1,5 @@
 local bar = willothy.icons.git.signs.bar
+
 require("gitsigns").setup({
   signs = {
     untracked = { text = bar },

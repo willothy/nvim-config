@@ -11,9 +11,10 @@ require("statuscol").setup({
     {
       sign = {
         name = { "GitSigns*" },
+        text = { ".*" },
         maxwidth = 1,
-        colwidth = 1,
         minwidth = 1,
+        colwidth = 2,
       },
       click = "v:lua.ScSa",
       condition = {
@@ -22,12 +23,15 @@ require("statuscol").setup({
     },
     {
       sign = {
-        name = { ".*" },
+        name = { "Dap*", "Diagnostic*", ".*" },
         maxwidth = 1,
-        colwidth = 2,
+        minwidth = 1,
+        colwidth = 1,
       },
       click = "v:lua.ScSa",
       condition = {
+        is_normal_buf,
+        is_normal_buf,
         is_normal_buf,
       },
     },
