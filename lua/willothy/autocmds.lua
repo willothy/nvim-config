@@ -64,6 +64,14 @@ local autocmds = {
     end,
   },
   {
+    { "BufRead", "BufNewFile" },
+    pattern = { "*.rasi" },
+    callback = function(ev)
+      local buf = ev.buf
+      vim.bo[buf].filetype = "rasi"
+    end,
+  },
+  {
     "FileChangedShellPost",
     callback = function()
       vim.cmd("checktime")
