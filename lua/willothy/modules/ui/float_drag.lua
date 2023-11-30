@@ -1,11 +1,3 @@
-local KeyCode = {
-  Move = vim.keycode("<LeftDrag>"),
-  Resize = vim.keycode("<M-LeftDrag>"),
-  LeftRelease = vim.keycode("<LeftRelease>"),
-  RightRelease = vim.keycode("<RightRelease>"),
-  MiddleRelease = vim.keycode("<MiddleRelease>"),
-}
-
 local FloatDrag = {}
 
 function FloatDrag:step()
@@ -75,6 +67,17 @@ function FloatDrag:reset()
 end
 
 function FloatDrag.setup(opts)
+  if not vim.keycode then
+    return {}
+  end
+
+  local KeyCode = {
+    Move = vim.keycode("<LeftDrag>"),
+    Resize = vim.keycode("<M-LeftDrag>"),
+    LeftRelease = vim.keycode("<LeftRelease>"),
+    RightRelease = vim.keycode("<RightRelease>"),
+    MiddleRelease = vim.keycode("<MiddleRelease>"),
+  }
   opts = opts or {}
   if opts.resize then
     KeyCode.Resize = vim.keycode(opts.resize)

@@ -115,12 +115,10 @@ local commands = {
   },
   Bda = {
     function()
-      local bufs = vim
-        .iter(vim.fn.getbufinfo({ buflisted = 1 }))
-        :map(function(buf)
-          return buf.bufnr
-        end)
-        :totable()
+      local bufs = {}
+      for _, buf in ipairs(vim.fn.getbufinfo({ buflisted = 1 })) do
+        table.insert(bufs, buf.bufnr)
+      end
       require("bufdelete").bufdelete(bufs, true)
       if
         vim.api.nvim_buf_get_name(0) == ""
@@ -178,7 +176,7 @@ local commands = {
 
 return {
   setup = function()
-    vim.iter(commands):each(function(name, cmd)
+    for name, cmd in pairs(commands) do
       vim.api.nvim_create_user_command(name, cmd[1], {
         buffer = cmd.buffer,
         nargs = cmd.nargs,
@@ -194,6 +192,6 @@ return {
         register = cmd.register,
         keepscript = cmd.keepscript,
       })
-    end)
+    end
   end,
 }

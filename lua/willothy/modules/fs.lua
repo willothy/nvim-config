@@ -26,8 +26,9 @@ function M.hijack_dir_buf(buf)
   end
 
   local bufnr = buf
+  local uv = vim.uv or vim.loop
   local bufname = vim.api.nvim_buf_get_name(bufnr)
-  local stat = vim.F.ok_or_nil(pcall(vim.uv.fs_stat, bufname))
+  local stat = vim.F.ok_or_nil(pcall(uv.fs_stat, bufname))
   if not stat or stat.type ~= "directory" then
     return
   end
@@ -56,15 +57,13 @@ function M.hijack_netrw()
   })
 
   local last_win
-  local n_wins = vim
-    .iter(vim.api.nvim_list_wins())
-    :filter(function(win)
-      return vim.api.nvim_win_get_config(win).zindex == nil
-    end)
-    :fold(0, function(acc, win)
+  local n_wins = 0
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_config(win).zindex == nil then
+      n_wins = n_wins + 1
       last_win = last_win or win
-      return acc + 1
-    end)
+    end
+  end
   if vim.fn.argc() == 1 and n_wins == 1 then
     local buf = vim.api.nvim_win_get_buf(last_win)
     M.hijack_dir_buf(buf)
@@ -74,12 +73,10 @@ end
 M.set_browser = function()
   local a = require("micro-async")
   a.void(function()
-    local options = vim
-      .iter(M.browsers)
-      :map(function(name, _)
-        return name
-      end)
-      :totable()
+    local options = {}
+    for browser in pairs(M.browsers) do
+      table.insert(options, browser)
+    end
     local ok, item = a.wrap(vim.ui.select, 3)(options, {
       prompt = "Browsers",
     })

@@ -39,18 +39,14 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-vim
-  .iter(vim.api.nvim_list_wins())
-  :filter(function(win)
-    return vim.api.nvim_win_get_config(win).zindex == nil
-  end)
-  :map(function(win)
-    return vim.api.nvim_win_get_buf(win), win
-  end)
-  :filter(should_disable)
-  :each(function(buf)
+for _, win in ipairs(vim.api.nvim_list_wins()) do
+  local buf = vim.api.nvim_win_get_buf(win)
+  if
+    vim.api.nvim_win_get_config(win).zindex == nil and should_disable(buf, win)
+  then
     vim.b[buf].focus_disable = true
-  end)
+  end
+end
 vim.schedule(function()
   focus.setup({
     ui = {

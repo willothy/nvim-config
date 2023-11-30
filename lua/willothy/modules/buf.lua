@@ -62,7 +62,8 @@ function M.format_embedded_lua(bufnr)
     end)
     :totable()
 
-  vim.iter(changes):rev():each(function(change)
+  for i = #changes, 1, -1 do
+    local change = changes[i]
     vim.api.nvim_buf_set_lines(
       bufnr,
       change.start,
@@ -70,7 +71,7 @@ function M.format_embedded_lua(bufnr)
       false,
       change.formatted
     )
-  end)
+  end
 end
 
 return M

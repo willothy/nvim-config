@@ -266,22 +266,20 @@ function M.on(event, callback, opts)
   end
 
   local usercmds = {}
-  local autocmds = vim
-    .iter(event)
-    :map(function(evt)
-      if M.autocmd[evt] then
-        return evt
-      else
-        table.insert(usercmds, event)
-      end
-    end)
-    :totable()
+  local autocmds = {}
+  for _, evt in ipairs(event) do
+    if M.autocmd[evt] then
+      table.insert(autocmds, evt)
+    else
+      table.insert(usercmds, event)
+    end
+  end
 
   opts.callback = callback
   opts.group = opts.group
     or vim.api.nvim_create_augroup(tostring(next_id()), { clear = true })
 
-  vim.iter(usercmds):each(function(evt)
+  for _, evt in ipairs(usercmds) do
     vim.api.nvim_create_autocmd(
       "User",
       vim.tbl_deep_extend("keep", {
@@ -290,7 +288,7 @@ function M.on(event, callback, opts)
         group = opts.group,
       }, opts)
     )
-  end)
+  end
 
   if #autocmds > 0 then
     vim.api.nvim_create_autocmd(autocmds, opts)
@@ -306,9 +304,9 @@ function M.on_key(pseudokey, callback)
   if on_key_ns == nil then
     on_key_ns = vim.on_key(function(key)
       if on_key_callbacks[key] then
-        vim.iter(on_key_callbacks[key]):each(function(cb)
+        for _, cb in ipairs(on_key_callbacks[key]) do
           cb(pseudokey)
-        end)
+        end
       end
     end)
   end

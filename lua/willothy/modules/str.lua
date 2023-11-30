@@ -71,7 +71,11 @@ function M.pad_lines(lines, len, char)
     return line
   end
 
-  return vim.iter.map(pad, lines)
+  local padded = {}
+  for _, line in ipairs(lines) do
+    table.insert(padded, pad(line))
+  end
+  return padded
 end
 
 return M

@@ -358,12 +358,12 @@ function M.create_command(name, opts)
         first = true
       end
       if first then
-        local options = vim
-          .iter(names)
-          :filter(function(option)
-            return vim.startswith(option, arg)
-          end)
-          :totable()
+        local options = {}
+        for _, option in ipairs(names) do
+          if vim.startswith(option, arg) then
+            table.insert(options, option)
+          end
+        end
         return options
       elseif argc == 2 or (argc == 1 and line:match("%s$")) then
         local argval = vim.trim(res.args[1])

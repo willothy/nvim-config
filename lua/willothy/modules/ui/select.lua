@@ -100,15 +100,11 @@ function M.ui_select(items, opts, on_choice)
     math.max(math.floor(vim.o.columns / 2), math.floor(vim.o.columns - 30))
   )
 
-  local height = math.min(
-    12,
-    math.max(
-      vim.iter(entries):fold(0, function(acc, entry)
-        return acc + (entry.virt_text and 2 or 1)
-      end),
-      3
-    )
-  )
+  local height_unclamped = 0
+  for _, entry in ipairs(entries) do
+    height_unclamped = height_unclamped + (entry.virt_text and 2 or 1)
+  end
+  local height = math.min(12, math.max(height_unclamped, 3))
 
   local menu = dropbar_menu_t:new({
     entries = entries,

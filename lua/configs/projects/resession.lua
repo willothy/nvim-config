@@ -81,13 +81,14 @@ end)
 local progress = {}
 ---@diagnostic disable-next-line: redundant-parameter
 resession.add_hook("pre_save", function(name)
-  local p = willothy.utils.progress.create({
-    title = "saving " .. name,
-    message = "saving session",
-    client_name = "resession",
-  })
-  p:begin()
-  table.insert(progress, p)
+  table.insert(
+    progress,
+    willothy.utils.progress.create({
+      title = name,
+      message = "saving session",
+      client_name = "resession",
+    })
+  )
 end)
 
 resession.add_hook(
@@ -95,7 +96,9 @@ resession.add_hook(
   vim.schedule_wrap(function()
     local p = table.remove(progress, 1)
     if p then
-      p:finish({})
+      vim.defer_fn(function()
+        p:finish()
+      end, 1000)
     end
   end)
 )
@@ -105,15 +108,12 @@ local function complete_session_name(arg, line)
   if #obj.args > 1 then
     return {}
   end
-  local names = vim
-    .iter(resession.list())
-    :filter(function(session)
-      return vim.startswith(session, arg)
-    end)
-    :map(function(session)
-      return session
-    end)
-    :totable()
+  local names = {}
+  for _, session in ipairs(resession.list()) do
+    if vim.startswith(session, arg) then
+      table.insert(names, session)
+    end
+  end
 
   return names
 end
@@ -176,8 +176,10 @@ then
   )
 end
 
+local uv = vim.uv or vim.loop
+
 local SAVE_INTERVAL = 60000
-local save_timer = vim.uv.new_timer()
+local save_timer = uv.new_timer()
 save_timer:start(
   SAVE_INTERVAL,
   SAVE_INTERVAL,
@@ -214,13 +216,13 @@ vim.api.nvim_create_autocmd("QuitPre", {
         resession.save_all({ notify = false })
       else
         -- ensure that there is a session for each tab
-        vim.iter(vim.api.nvim_list_tabpages()):each(function(tabpage)
+        for _, tabpage in ipairs(vim.api.nvim_list_tabpages()) do
           local win = vim.api.nvim_tabpage_get_win(tabpage)
           vim.api.nvim_win_call(win, function()
             local name = vim.fs.basename(vim.fn.getcwd(-1) --[[@as string]])
             resession.save_tab(name, { notify = false })
           end)
-        end)
+        end
       end
       if is_last then
         vim.cmd("qa!")

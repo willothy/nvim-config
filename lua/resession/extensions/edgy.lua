@@ -50,27 +50,26 @@ end
 
 ---@param tabpage integer
 local function save_tab(tabpage)
-  return vim
-    .iter(vim.api.nvim_tabpage_list_wins(tabpage))
-    :map(save_win)
-    :fold({}, function(acc, win_info)
-      if win_info then
-        table.insert(acc, win_info)
-      end
-      return acc
-    end)
+  local wins = {}
+
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tabpage)) do
+    local info = save_win(win)
+    if info then
+      table.insert(wins, win)
+    end
+  end
+
+  return wins
 end
 
 local function save_all()
-  return vim
-    .iter(vim.api.nvim_list_tabpages())
-    :map(save_tab)
-    :fold({}, function(acc, tab_info)
-      if tab_info then
-        vim.list_extend(acc, tab_info)
-      end
-      return acc
-    end)
+  local wins = {}
+
+  for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
+    vim.list_extend(wins, save_tab(tab))
+  end
+
+  return wins
 end
 
 local function modify_opts()

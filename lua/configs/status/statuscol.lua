@@ -86,15 +86,11 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("User", {
   pattern = "ResessionLoadPost",
   callback = function()
-    vim
-      .iter(vim.api.nvim_list_wins())
-      :filter(function(w)
-        local buf = vim.api.nvim_win_get_buf(w)
-        return vim.bo[buf].buftype == ""
-      end)
-      :each(function(win)
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if vim.bo[vim.api.nvim_win_get_buf(win)].buftype == "" then
         vim.wo[win].stc = "%!v:lua.StatusCol()"
-      end)
+      end
+    end
   end,
 })
 

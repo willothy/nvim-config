@@ -167,7 +167,9 @@ function M.close_floats()
 end
 
 function M.close_all()
-  vim.iter(vim.api.nvim_list_wins()):each(M.close)
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    M.close(win)
+  end
 end
 
 function M.select()

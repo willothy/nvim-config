@@ -353,11 +353,14 @@ local Git = (
       callback = function(self)
         if
           package.loaded["edgy"]
-          and vim
-            .iter(require("edgy.editor").list_wins().main)
-            :find(function(win)
-              return win == vim.api.nvim_get_current_win()
-            end)
+          and (function()
+            for _, win in ipairs(require("edgy.editor").list_wins().main) do
+              if win == vim.api.nvim_get_current_win() then
+                return true
+              end
+            end
+            return false
+          end)()
         then
           self.buf = vim.api.nvim_get_current_buf()
           self:fetch()

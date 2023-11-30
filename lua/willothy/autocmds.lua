@@ -27,7 +27,10 @@ local autocmds = {
         })
       end
 
-      if client.supports_method("textDocument/inlayHint") then
+      if
+        vim.lsp.inlay_hint
+        and client.supports_method("textDocument/inlayHint")
+      then
         vim.lsp.inlay_hint.enable(bufnr)
       end
 

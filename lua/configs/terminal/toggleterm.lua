@@ -32,12 +32,16 @@ require("toggleterm").setup({
             acc[v] = v
             return acc
           end)
-        local target = vim
-          .iter(terms)
-          :filter(function(t)
-            return win_bufs[t] == nil
-          end)
-          :next() or vim.iter(terms):next()
+
+        local target
+        for _, t in ipairs(terms) do
+          -- fall back to the first term if no hidden terms are found
+          target = target or t
+          if win_bufs[t] == nil then
+            target = t -- use the first hidden term if found
+            break
+          end
+        end
 
         if win and target and vim.api.nvim_buf_is_valid(target) then
           vim.api.nvim_win_set_buf(win, target)

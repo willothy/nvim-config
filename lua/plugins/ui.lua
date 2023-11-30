@@ -195,6 +195,7 @@ return {
   {
     -- "Bekaboo/dropbar.nvim",
     "willothy/dropbar.nvim",
+    cond = false,
     priority = 100,
     branch = "feat-floating-scrollbar",
     -- dir = "~/projects/lua/dropbar.nvim/",
@@ -205,6 +206,7 @@ return {
   },
   {
     -- "luukvbaal/statuscol.nvim",
+    -- branch = "0.10",
     "willothy/statuscol.nvim", -- use my fork
     -- dir = "~/projects/lua/statuscol.nvim/",
     priority = 100,

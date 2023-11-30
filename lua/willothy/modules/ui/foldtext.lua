@@ -52,9 +52,9 @@ return function()
       end
     end)
 
-  vim.iter(ts_fold_vt):skip(last_found):each(function(c)
-    table.insert(merged_vt, c)
-  end)
+  for i = last_found + 1, #ts_fold_vt do
+    table.insert(merged_vt, ts_fold_vt[i])
+  end
 
   return merged_vt
 end

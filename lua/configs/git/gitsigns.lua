@@ -11,4 +11,5 @@ require("gitsigns").setup({
   },
   trouble = true,
   signcolumn = true,
+  _extmark_signs = false,
 })

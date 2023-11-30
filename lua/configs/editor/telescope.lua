@@ -662,4 +662,6 @@ local extensions = {
   -- "bookmarks",
 }
 
-vim.iter(extensions):each(telescope.load_extension)
+for _, ext in ipairs(extensions) do
+  telescope.load_extension(ext)
+end

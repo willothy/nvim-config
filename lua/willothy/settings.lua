@@ -52,7 +52,12 @@ function M.setup()
 
   o.splitkeep = "topline"
   -- o.splitkeep = "cursor"
-  o.smoothscroll = true
+
+  -- Pcall to avoid errors on older versions of nvim
+  pcall(function()
+    o.smoothscroll = true
+  end)
+
   o.mousescroll = "ver:1,hor:6"
 
   o.tabstop = 2
