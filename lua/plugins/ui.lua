@@ -195,7 +195,6 @@ return {
   {
     -- "Bekaboo/dropbar.nvim",
     "willothy/dropbar.nvim",
-    cond = false,
     priority = 100,
     branch = "feat-floating-scrollbar",
     -- dir = "~/projects/lua/dropbar.nvim/",
