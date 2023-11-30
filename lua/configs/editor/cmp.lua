@@ -42,6 +42,7 @@ local format = {
 local main_sources = cmp.config.sources({
   { name = "nvim_lsp", max_item_count = 40 },
   { name = "copilot", max_item_count = 2 },
+  { name = "cody" },
   { name = "buffer", max_item_count = 4 },
   { name = "path" },
 })
@@ -106,13 +107,6 @@ local opts = {
       cmp.mapping.select_prev_item(cmp_select),
       { "i", "c" }
     ),
-    ["<c-a>"] = cmp.mapping.complete({
-      config = {
-        sources = {
-          { name = "cody" },
-        },
-      },
-    }),
     ["<M-j>"] = cmp.mapping(
       cmp.mapping.select_next_item(cmp_select),
       { "i", "c" }
