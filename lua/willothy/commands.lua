@@ -116,8 +116,10 @@ local commands = {
   Bda = {
     function()
       local bufs = {}
-      for _, buf in ipairs(vim.fn.getbufinfo({ buflisted = 1 })) do
-        table.insert(bufs, buf.bufnr)
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.bo[buf].buflisted then
+          table.insert(bufs, buf)
+        end
       end
       require("bufdelete").bufdelete(bufs, true)
       if
