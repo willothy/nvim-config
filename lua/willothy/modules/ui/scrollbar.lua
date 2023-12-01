@@ -182,16 +182,19 @@ local ScrollBarManager = {
 }
 
 function ScrollBarManager.update()
-  local old = {}
-  for win in pairs(ScrollBarManager.bars) do
-    old[win] = true
-  end
-  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-    local winbuf = vim.api.nvim_win_get_buf(win)
-    local valid = vim.bo[winbuf].filetype ~= "noice"
-      and vim.bo[winbuf].buftype == ""
-      and vim.api.nvim_win_get_config(win).zindex == nil
-    if valid then
+  local old = vim.iter(ScrollBarManager.bars):fold({}, function(acc, winnr)
+    acc[winnr] = true
+    return acc
+  end)
+  vim
+    .iter(vim.api.nvim_tabpage_list_wins(0))
+    :filter(function(win)
+      local winbuf = vim.api.nvim_win_get_buf(win)
+      return vim.bo[winbuf].filetype ~= "noice"
+        and vim.bo[winbuf].buftype == ""
+        and vim.api.nvim_win_get_config(win).zindex == nil
+    end)
+    :each(function(win)
       if not ScrollBarManager.bars[win] then
         ScrollBarManager.bars[win] = Scrollbar:new(
           vim.tbl_deep_extend(
@@ -204,14 +207,13 @@ function ScrollBarManager.update()
       end
       old[win] = nil
       ScrollBarManager.bars[win]:update()
-    end
-  end
-  for w in pairs(old) do
+    end)
+  vim.iter(old):each(function(w)
     if ScrollBarManager.bars[w] then
       ScrollBarManager.bars[w]:unmount()
       ScrollBarManager.bars[w] = nil
     end
-  end
+  end)
 end
 
 function ScrollBarManager.setup(opts)
