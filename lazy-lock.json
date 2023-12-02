@@ -108,7 +108,7 @@
   "refactoring.nvim": { "branch": "master", "commit": "156532476deb10b1b2a32cb38e1078b3f9951c42" },
   "resession.nvim": { "branch": "master", "commit": "b0107dc2cec1f24cf5a90a794a652eb66178ad8e" },
   "rust-tools.nvim": { "branch": "master", "commit": "6d83e43d6490d6e782d9456bca3dde01930095f6" },
-  "savior.nvim": { "branch": "main", "commit": "f11adaba3b98e44ad7812819cb7a6757432b51d2" },
+  "savior.nvim": { "branch": "fidget", "commit": "6eb22d76a2bf850e004cd276c89c331659857911" },
   "scope.nvim": { "branch": "main", "commit": "cd27af77ad61a7199af5c28d27013fb956eb0e3e" },
   "sentiment.nvim": { "branch": "main", "commit": "ecde8d877881bb78fdb90060c0991e76770dbdbc" },
   "sg.nvim": { "branch": "master", "commit": "41378567217097a3d78b624c9f11d29436381e99" },

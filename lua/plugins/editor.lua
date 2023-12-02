@@ -169,6 +169,7 @@ return {
   },
   {
     "willothy/savior.nvim",
+    branch = "fidget",
     config = true,
     event = { "InsertEnter", "TextChanged" },
   },
