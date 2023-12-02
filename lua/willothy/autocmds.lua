@@ -90,6 +90,14 @@ local autocmds = {
       end
     end,
   },
+  {
+    "InsertLeave",
+    callback = function()
+      if vim.snippet.active() then
+        vim.snippet.exit()
+      end
+    end,
+  },
 }
 
 return {
