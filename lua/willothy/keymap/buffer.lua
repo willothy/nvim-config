@@ -31,11 +31,7 @@ wk.register({
   },
   s = {
     function()
-      if vim.v.count == 0 then
-        require("dropbar.api").pick()
-      else
-        require("dropbar.api").pick(vim.v.count)
-      end
+      require("dropbar.api").pick(vim.v.count ~= 0 and vim.v.count)
     end,
     "dropbar: open",
   },
