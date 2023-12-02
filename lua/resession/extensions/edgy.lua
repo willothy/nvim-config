@@ -55,7 +55,7 @@ local function save_tab(tabpage)
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tabpage)) do
     local info = save_win(win)
     if info then
-      table.insert(wins, win)
+      table.insert(wins, info)
     end
   end
 
