@@ -278,17 +278,17 @@ local opts = {
       end,
       size = { height = get_height },
     }),
-    {
-      ft = "help",
-      filter = function(buf, win)
-        return vim.bo[buf].buftype == "help"
-          and vim.api.nvim_win_get_config(win).zindex == nil
-      end,
-      open = function()
-        vim.cmd.help()
-      end,
-      size = { height = 0.4 },
-    },
+    -- {
+    --   ft = "help",
+    --   filter = function(buf, win)
+    --     return vim.bo[buf].buftype == "help"
+    --       and vim.api.nvim_win_get_config(win).zindex == nil
+    --   end,
+    --   open = function()
+    --     vim.cmd.help()
+    --   end,
+    --   size = { height = 0.4 },
+    -- },
     bottom:extend({
       ft = "dapui_console",
       title = "Debug Console",
