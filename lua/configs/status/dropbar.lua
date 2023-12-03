@@ -98,7 +98,10 @@ dropbar.setup({
     quick_navigation = true,
     win_configs = {},
     scrollbar = {
-      floating = true,
+      -- enabled=false,
+      sbar = {
+        enabled = false,
+      },
     },
   },
   fzf = {
