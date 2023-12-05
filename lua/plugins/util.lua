@@ -2,7 +2,7 @@ vim.g.nvim_ghost_autostart = 0
 
 return {
   "famiu/bufdelete.nvim",
-  "jbyuki/venn.nvim",
+  { "jbyuki/venn.nvim", cmd = "VBox" },
   {
     "willothy/micro-async.nvim",
     -- dir = "~/projects/lua/micro-async.nvim",
@@ -101,7 +101,7 @@ return {
   },
   {
     "neph-iap/easycolor.nvim",
-    opts = { ui = { border = "single" } },
+    opts = { ui = { border = "solid" } },
     cmd = "EasyColor",
   },
   {

@@ -35,7 +35,7 @@ local disabled = {
   "help",
   "terminal",
 }
-vim.api.nvim_create_autocmd("FileType", {
+vim.api.nvim_create_autocmd({ "FileType", "BufNew" }, {
   pattern = "*",
   callback = function()
     if disabled[vim.bo.filetype] ~= nil or vim.bo.buftype ~= "" then
