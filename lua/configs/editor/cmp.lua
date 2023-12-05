@@ -145,6 +145,24 @@ local opts = {
         vim.snippet.jump(1)
       elseif has_words_before() then
         cmp.complete()
+      elseif vim.api.nvim_win_get_cursor(0)[2] == 0 then
+        -- smart indent like VSCode - indent to the correct level when
+        -- pressing tab at the beginning of a line.
+        local row = vim.api.nvim_win_get_cursor(0)[1]
+
+        local ts = require("nvim-treesitter.indent")
+        ts.attach(vim.api.nvim_win_get_buf(0))
+        local indent = ts.get_indent(row)
+
+        local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
+        local line_len = vim.fn.strcharlen(line)
+        if line_len < indent then
+          vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
+            line .. string.rep(" ", indent - line_len),
+          })
+        end
+
+        vim.api.nvim_win_set_cursor(0, { row, indent })
       else
         require("tabout").tabout()
         -- _fallback()

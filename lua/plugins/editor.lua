@@ -143,6 +143,11 @@ return {
     end,
     cmd = "MiniFiles",
   },
+  {
+    "echasnovski/mini.visits",
+    config = true,
+    event = "VeryLazy",
+  },
   -- SESSIONS / PROJECTS --
   {
     "stevearc/resession.nvim",

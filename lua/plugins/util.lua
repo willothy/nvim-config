@@ -35,6 +35,11 @@ return {
     cmd = { "UndotreeToggle", "UndotreeShow" },
   },
   {
+    "FredeEB/tardis.nvim",
+    config = true,
+    cmd = "Tardis",
+  },
+  {
     "ecthelionvi/NeoComposer.nvim",
     event = "VeryLazy",
     config = function()
@@ -95,9 +100,9 @@ return {
     event = "VeryLazy",
   },
   {
-    "ziontee113/color-picker.nvim",
-    config = true,
-    cmd = "PickColor",
+    "neph-iap/easycolor.nvim",
+    opts = { ui = { border = "single" } },
+    cmd = "EasyColor",
   },
   {
     "krady21/compiler-explorer.nvim",
