@@ -356,4 +356,9 @@ return {
     },
     event = "TermOpen",
   },
+  {
+    "LhKipp/nvim-nu",
+    config = true,
+    ft = "nu",
+  },
 }
