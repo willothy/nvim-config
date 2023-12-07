@@ -96,6 +96,10 @@ local autocmds = {
       if vim.snippet.active() then
         vim.snippet.exit()
       end
+      local cmp = require("cmp")
+      if cmp.visible() then
+        cmp.close()
+      end
     end,
   },
 }
