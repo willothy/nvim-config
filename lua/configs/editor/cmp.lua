@@ -138,22 +138,22 @@ local opts = {
         fallback()
       end
     end, { "i", "c" }),
-    ["<Tab>"] = cmp.mapping(function(_fallback)
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+      local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
+      local ts = require("nvim-treesitter.indent")
+      local indent = ts.get_indent(row)
+
       if cmp.visible() and not vim.snippet.active() then
         cmp.confirm({ select = true })
       elseif vim.snippet.jumpable(1) then
         vim.snippet.jump(1)
       elseif has_words_before() then
         cmp.complete()
-      elseif vim.api.nvim_win_get_cursor(0)[2] == 0 then
+      elseif col == 0 then
         -- smart indent like VSCode - indent to the correct level when
         -- pressing tab at the beginning of a line.
-        local row = vim.api.nvim_win_get_cursor(0)[1]
 
-        local ts = require("nvim-treesitter.indent")
-        local indent = ts.get_indent(row)
-
-        local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
         local line_len = vim.fn.strcharlen(line)
         if line_len < indent then
           vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
@@ -162,31 +162,44 @@ local opts = {
         end
 
         vim.api.nvim_win_set_cursor(0, { row, indent })
-      else
+      -- elseif vim.fn.col("^") == col then
+      elseif col >= indent then
         require("tabout").tabout()
-        -- _fallback()
+      else
+        fallback()
       end
     end, { "i", "c" }),
     ["<BS>"] = cmp.mapping(function(fallback)
       local row, col = unpack(vim.api.nvim_win_get_cursor(0))
       local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
-      local line_len = vim.fn.strcharlen(line)
 
       local ts = require("nvim-treesitter.indent")
       local indent = ts.get_indent(row) or 0
 
       if
-        line_len > indent
-        and col > indent
-        and vim.fn
-            .strcharpart(line, indent - 1, col - indent - 1)
-            :gsub("%s+", "")
-          == ""
+        vim.fn.strcharpart(line, indent - 1, col - indent - 1):gsub("%s+", "")
+        == ""
       then
-        vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
-          vim.fn.strcharpart(line, 0, indent) .. vim.fn.strcharpart(line, col),
-        })
-        vim.api.nvim_win_set_cursor(0, { row, indent })
+        if col > indent then
+          vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
+            vim.fn.strcharpart(line, 0, indent)
+              .. vim.fn.strcharpart(line, col),
+          })
+          vim.api.nvim_win_set_cursor(0, { row, indent })
+        else
+          local prev_indent = ts.get_indent(row - 1) or 0
+          local prev_line =
+            vim.api.nvim_buf_get_lines(0, row - 2, row - 1, true)[1]
+          if vim.trim(prev_line) == "" then
+            vim.api.nvim_buf_set_lines(0, row - 2, row, true, {
+              vim.fn.strcharpart(line, 0, prev_indent)
+                .. vim.fn.strcharpart(line, col),
+            })
+            vim.api.nvim_win_set_cursor(0, { row - 1, prev_indent })
+          else
+            fallback()
+          end
+        end
       else
         fallback()
       end
