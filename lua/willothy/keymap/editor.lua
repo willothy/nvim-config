@@ -113,12 +113,16 @@ wk.register({
   ["<F1>"] = bind("cokeline.mappings", "pick", "focus"):with_desc(
     "pick buffer"
   ),
-  ["<C-e>"] = bind("harpoon.ui", "toggle_quick_menu"):with_desc(
-    "harpoon: marks"
-  ),
-  ["<C-c>"] = bind("harpoon.cmd-ui", "toggle_quick_menu"):with_desc(
-    "harpoon: commands"
-  ),
+  ["<C-e>"] = bind(function()
+    local harpoon = require("harpoon")
+    local list = harpoon:list()
+    require("harpoon").ui:toggle_quick_menu(list)
+  end):with_desc("harpoon: marks"),
+  ["<C-c>"] = bind(function()
+    local harpoon = require("harpoon")
+    local list = harpoon:list("commands")
+    harpoon.ui:toggle_quick_menu(list)
+  end):with_desc("harpoon: commands"),
   ["<M-k>"] = bind("moveline", "up"):with_desc("move: up"),
   ["<M-j>"] = bind("moveline", "down"):with_desc("move: down"),
   ["<C-s>"] = bind(function()
@@ -143,7 +147,9 @@ wk.register({
   name = "marks",
   d = bind("marks", "delete"):with_desc("delete mark"),
   m = bind("reach", "marks"),
-  h = bind("harpoon.mark", "toggle_file"):with_desc("harpoon: toggle mark"),
+  h = bind(function()
+    require("harpoon"):list():append()
+  end):with_desc("harpoon: toggle mark"),
 }, { mode = modes.non_editing, prefix = "<leader>m" })
 
 wk.register({

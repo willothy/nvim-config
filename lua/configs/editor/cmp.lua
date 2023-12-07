@@ -185,25 +185,35 @@ local opts = {
         vim.fn.strcharpart(line, indent - 1, col - indent - 1):gsub("%s+", "")
         == ""
       then
-        if col > indent then
+        if indent > 0 and col > indent then
+          local new_line = vim.fn.strcharpart(line, 0, indent)
+            .. vim.fn.strcharpart(line, col)
           vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
-            vim.fn.strcharpart(line, 0, indent)
-              .. vim.fn.strcharpart(line, col),
+            new_line,
           })
-          vim.api.nvim_win_set_cursor(0, { row, indent })
-        elseif row > 1 then
+          vim.api.nvim_win_set_cursor(
+            0,
+            { row, math.min(indent, vim.fn.strcharlen(new_line)) }
+          )
+        elseif
+          row > 1
+          and vim.trim(
+              vim.api.nvim_buf_get_lines(0, row - 2, row - 1, true)[1] or ""
+            )
+            == ""
+        then
           local prev_indent = ts.get_indent(row - 1) or 0
-          local prev_line =
-            vim.api.nvim_buf_get_lines(0, row - 2, row - 1, true)[1]
-          if vim.trim(prev_line or "") == "" then
-            vim.api.nvim_buf_set_lines(0, row - 2, row, true, {
-              vim.fn.strcharpart(line, 0, prev_indent)
-                .. vim.fn.strcharpart(line, col),
-            })
-            vim.api.nvim_win_set_cursor(0, { row - 1, prev_indent })
-          else
-            fallback()
-          end
+          local new_line = vim.fn.strcharpart(line, 0, prev_indent)
+            .. vim.fn.strcharpart(line, col)
+          vim.api.nvim_buf_set_lines(0, row - 2, row, true, {
+            new_line,
+          })
+          vim.api.nvim_win_set_cursor(0, {
+            row - 1,
+            math.max(0, math.min(prev_indent, vim.fn.strcharlen(new_line))),
+          })
+        else
+          fallback()
         end
       else
         fallback()

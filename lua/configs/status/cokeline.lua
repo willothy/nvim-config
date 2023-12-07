@@ -252,10 +252,10 @@ Diagnostics = {
 
 local Harpoon = {
   text = function(buffer)
-    local harpoon = require("harpoon.mark").status(buffer.number) ~= ""
-    if harpoon then
-      return " "
-    end
+    -- local harpoon = require("harpoon.mark").status(buffer.number) ~= ""
+    -- if harpoon then
+    --   return " "
+    -- end
     return ""
   end,
   fg = "Comment",
@@ -316,9 +316,10 @@ local function harpoon_sorter()
   local setup = false
 
   local function marknum(buf, force)
+    local harpoon = require("harpoon")
     local b = cache[buf.number]
     if b == nil or force then
-      b = require("harpoon.mark").get_index_of(buf.path)
+      b = harpoon:list():get_by_display(buf.path)
       cache[buf.number] = b
     end
     return b
@@ -335,7 +336,11 @@ local function harpoon_sorter()
     if not has_harpoon then
       return a._valid_index < b._valid_index
     elseif not setup then
-      require("harpoon.mark").on("changed", function()
+      ---@diagnostic disable-next-line: missing-parameter
+      require("harpoon").listeners:add_listener(function(evt)
+        if evt == "SELECT" then
+          return
+        end
         for _, buf in ipairs(require("cokeline.buffers").get_visible()) do
           cache[buf.number] = marknum(buf, true)
         end

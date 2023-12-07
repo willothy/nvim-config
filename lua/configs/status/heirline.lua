@@ -303,16 +303,17 @@ local Harpoon = {
       "UpdateHeirlineComponents",
     },
     callback = function(self)
-      local harpoon = require("harpoon.mark")
-      self.current = harpoon.get_current_index()
-      if not self._init then
-        self.nfiles = harpoon.get_length()
-        harpoon.on("changed", function()
-          self.nfiles = harpoon.get_length()
-          willothy.event.emit("UpdateHeirlineComponents")
-        end)
-        self._init = true
-      end
+      -- if not package.loaded["harpoon"] then return end
+      -- local harpoon = require("harpoon.mark")
+      -- self.current = harpoon.get_current_index()
+      -- if not self._init then
+      --   self.nfiles = harpoon.get_length()
+      --   harpoon.on("changed", function()
+      --     self.nfiles = harpoon.get_length()
+      --     willothy.event.emit("UpdateHeirlineComponents")
+      --   end)
+      --   self._init = true
+      -- end
     end,
   },
 }
