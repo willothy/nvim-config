@@ -83,10 +83,12 @@ local progress = {}
 resession.add_hook("pre_save", function(name)
   table.insert(
     progress,
-    willothy.utils.progress.create({
+    require("fidget.progress.handle").create({
       title = name,
       message = "saving session",
-      client_name = "resession",
+      lsp_client = {
+        name = "resession",
+      },
     })
   )
 end)

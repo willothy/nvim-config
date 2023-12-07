@@ -82,8 +82,6 @@ willothy.utils.plugins = "utils.plugins"
 willothy.utils.debug = "utils.debug"
 ---@module "willothy.modules.utils.table"
 willothy.utils.table = "utils.table"
----@module "willothy.modules.utils.progress"
-willothy.utils.progress = "utils.progress"
 ---@module "willothy.modules.utils.templates"
 willothy.utils.templates = "utils.templates"
 

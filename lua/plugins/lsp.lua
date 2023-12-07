@@ -33,10 +33,7 @@ return {
     },
   },
   {
-    "willothy/fidget.nvim",
-    branch = "feat-progress-api",
-    -- "j-hui/fidget.nvim",
-    dir = "~/projects/lua/fidget.nvim/",
+    "j-hui/fidget.nvim",
     config = function()
       require("configs.lsp.fidget")
     end,

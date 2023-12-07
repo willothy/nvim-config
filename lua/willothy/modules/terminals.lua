@@ -132,9 +132,11 @@ function M.send_to_main(cmd)
 end
 
 function M.cargo_build()
-  local p = willothy.utils.progress.create({
+  local p = require("fidget.progress.handle").create({
     title = "Compiling",
-    client = "cargo",
+    lsp_client = {
+      client = "cargo",
+    },
   })
   p:begin()
   vim.system(
