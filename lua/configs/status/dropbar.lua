@@ -99,9 +99,7 @@ dropbar.setup({
     win_configs = {},
     scrollbar = {
       -- enabled=false,
-      sbar = {
-        enabled = false,
-      },
+      background = false,
     },
   },
   fzf = {
