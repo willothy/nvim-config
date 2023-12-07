@@ -151,7 +151,6 @@ local opts = {
         local row = vim.api.nvim_win_get_cursor(0)[1]
 
         local ts = require("nvim-treesitter.indent")
-        ts.attach(vim.api.nvim_win_get_buf(0))
         local indent = ts.get_indent(row)
 
         local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
@@ -168,6 +167,30 @@ local opts = {
         -- _fallback()
       end
     end, { "i", "c" }),
+    ["<BS>"] = cmp.mapping(function(fallback)
+      local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+      local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
+      local line_len = vim.fn.strcharlen(line)
+
+      local ts = require("nvim-treesitter.indent")
+      local indent = ts.get_indent(row) or 0
+
+      if
+        line_len > indent
+        and col > indent
+        and vim.fn
+            .strcharpart(line, indent - 1, col - indent - 1)
+            :gsub("%s+", "")
+          == ""
+      then
+        vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
+          vim.fn.strcharpart(line, 0, indent) .. vim.fn.strcharpart(line, col),
+        })
+        vim.api.nvim_win_set_cursor(0, { row, indent })
+      else
+        fallback()
+      end
+    end, { "i" }),
   },
 }
 
@@ -175,6 +198,7 @@ require("copilot_cmp").setup()
 cmp.setup(opts)
 
 local pairs_cmp = require("nvim-autopairs.completion.cmp")
+
 local ts_utils = require("nvim-treesitter.ts_utils")
 local ts_node_func_parens_disabled = {
   -- don't create autopairs for
