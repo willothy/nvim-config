@@ -218,11 +218,11 @@ wk.register({
     fmt("gput"),
   },
   ["]y"] = {
-    "<Plug>(YankyCycleForward)",
+    "<Plug>(YankyNextEntry)",
     fmt("yanky: cycle", true),
   },
   ["[y"] = {
-    "<Plug>(YankyCycleBackward)",
+    "<Plug>(YankyPreviousEntry)",
     fmt("yanky: cycle"),
   },
 }, { mode = { "n", "x", "v", "o" } })

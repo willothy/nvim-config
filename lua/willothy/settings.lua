@@ -83,6 +83,8 @@ function M.setup()
     foldclose = icons.fold.closed,
     foldopen = icons.fold.open,
   }
+
+  vim.o.clipboard = "unnamedplus"
 end
 
 return M

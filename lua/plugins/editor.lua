@@ -84,7 +84,7 @@ return {
   -- DEFAULT FEATURE EXTENSIONS --
   {
     "gbprod/yanky.nvim",
-    commit = "590a713b0372485f595eea36e7e3ab2069946794",
+    -- commit = "590a713b0372485f595eea36e7e3ab2069946794",
     event = "VeryLazy",
     config = function()
       require("configs.editor.yanky")
