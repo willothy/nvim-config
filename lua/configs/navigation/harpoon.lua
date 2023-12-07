@@ -33,36 +33,23 @@ vim.api.nvim_create_autocmd("VimResized", {
   end,
 })
 
-local listeners = harpoon.listeners
-local event = require("harpoon.listeners").event_names
+local fidget = require("fidget")
 
-listeners:add_listener(function(evt)
-  vim.notify(evt)
-end)
+local function notify(event, cx)
+  fidget.progress.handle.create({
+    lsp_client = {
+      name = "harpoon",
+    },
+    title = event,
+    message = vim.fs.basename(cx.list:display()[cx.idx]),
+    level = vim.log.levels.ERROR,
+  })
+end
 
--- listeners:add_listener(event.ADD, function(...)
---   vim.notify(vim.inspect({ ... }), vim.log.levels.INFO, {
---     title = "ADD",
---   })
--- end)
---
--- listeners:add_listener(event.SELECT, function(...)
---   vim.notify(vim.inspect({ ... }), vim.log.levels.INFO, {
---     title = "SELECT",
---   })
--- end)
---
--- listeners:add_listener(event.REMOVE, function(...)
---   vim.notify(vim.inspect({ ... }), vim.log.levels.INFO, {
---     title = "REMOVE",
---   })
--- end)
-
--- harpoon.setup({
---   menu = {
---     borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
---   },
---   global_settings = {
---     enter_on_sendcmd = true,
---   },
--- })
+harpoon.listeners:add_listener(function(ev, cx)
+  if ev == "ADD" then
+    notify("added", cx)
+  elseif ev == "REMOVE" then
+    notify("removed", cx)
+  end
+end, "")

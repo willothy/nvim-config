@@ -9,7 +9,7 @@ function M.create(config)
 
   config.done = false
 
-  return require("fidget.progress").create(config)
+  return require("fidget.progress").handle.create(config)
 end
 
 -- -- Show progress in Wezterm tab bar

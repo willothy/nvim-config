@@ -148,7 +148,8 @@ wk.register({
   d = bind("marks", "delete"):with_desc("delete mark"),
   m = bind("reach", "marks"),
   h = bind(function()
-    require("harpoon"):list():append()
+    local list = require("harpoon"):list()
+    return list:remove() or list:append()
   end):with_desc("harpoon: toggle mark"),
 }, { mode = modes.non_editing, prefix = "<leader>m" })
 

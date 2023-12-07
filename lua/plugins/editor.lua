@@ -234,8 +234,8 @@ return {
   {
     -- "ThePrimeagen/harpoon",
     "willothy/harpoon", -- harpoon fork with toggleterm integration
-    -- branch = "harpoon2",
-    dir = "~/projects/lua/harpoon/",
+    branch = "harpoon2",
+    -- dir = "~/projects/lua/harpoon/",
     event = "VeryLazy",
     config = function()
       require("configs.navigation.harpoon")
