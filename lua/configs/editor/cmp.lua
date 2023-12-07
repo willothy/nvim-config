@@ -171,6 +171,11 @@ local opts = {
     end, { "i", "c" }),
     ["<BS>"] = cmp.mapping(function(fallback)
       local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+
+      if row == 1 and col == 0 then
+        return
+      end
+
       local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
 
       local ts = require("nvim-treesitter.indent")
