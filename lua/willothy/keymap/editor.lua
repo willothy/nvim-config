@@ -120,7 +120,7 @@ wk.register({
   end):with_desc("harpoon: marks"),
   ["<C-c>"] = bind(function()
     local harpoon = require("harpoon")
-    local list = harpoon:list("commands")
+    local list = harpoon:list("terminals")
     harpoon.ui:toggle_quick_menu(list)
   end):with_desc("harpoon: commands"),
   ["<M-k>"] = bind("moveline", "up"):with_desc("move: up"),
@@ -149,7 +149,10 @@ wk.register({
   m = bind("reach", "marks"),
   h = bind(function()
     local list = require("harpoon"):list()
-    return list:remove() or list:append()
+
+    if list:length() == list:append():length() then
+      list:remove()
+    end
   end):with_desc("harpoon: toggle mark"),
 }, { mode = modes.non_editing, prefix = "<leader>m" })
 

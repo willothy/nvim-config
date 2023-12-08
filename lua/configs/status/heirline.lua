@@ -303,6 +303,9 @@ local Harpoon = {
       "UpdateHeirlineComponents",
     },
     callback = function(self)
+      local harpoon = require("harpoon"):list()
+      local buf = vim.api.nvim_buf_get_name(0)
+      self.current = harpoon:get_by_display()
       -- if not package.loaded["harpoon"] then return end
       -- local harpoon = require("harpoon.mark")
       -- self.current = harpoon.get_current_index()

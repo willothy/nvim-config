@@ -56,6 +56,9 @@ wk.register({
   ),
   m = bind("marks", "prev"):with_desc("mark"),
   d = bind("vim.diagnostic", "goto_prev"):with_desc("diagnostic"),
+  ["["] = bind(function()
+    require("harpoon"):list():prev()
+  end):with_desc("harpoon mark"),
 }, { mode = modes.normal, prefix = "[" })
 
 wk.register({
@@ -72,4 +75,7 @@ wk.register({
   ),
   m = bind("marks", "next"):with_desc("mark"),
   d = bind("vim.diagnostic", "goto_next"):with_desc("diagnostic"),
+  ["]"] = bind(function()
+    require("harpoon"):list():next()
+  end):with_desc("harpoon mark"),
 }, { mode = modes.normal, prefix = "]" })
