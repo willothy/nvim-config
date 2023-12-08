@@ -14,9 +14,9 @@ harpoon:setup({
   settings = {
     save_on_toggle = true,
     border_chars = { " ", " ", " ", " ", " ", " ", " ", " " },
-    -- key = function()
-    --   return vim.uv.cwd() --[[@as string]]
-    -- end,
+    key = function()
+      return vim.uv.cwd() --[[@as string]]
+    end,
     ui_fallback_width = 500,
     ui_width_ratio = ui_width_ratio(),
   },
@@ -52,4 +52,7 @@ harpoon.listeners:add_listener(function(ev, cx)
   elseif ev == "REMOVE" then
     notify("removed", cx)
   end
+  vim.schedule(function()
+    require("harpoon"):sync()
+  end)
 end, "")
