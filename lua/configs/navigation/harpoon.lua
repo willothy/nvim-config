@@ -33,15 +33,22 @@ vim.api.nvim_create_autocmd("VimResized", {
   end,
 })
 
+local Path = require("plenary.path")
 local fidget = require("fidget")
 
 local function notify(event, cx)
+  local path = Path:new(cx.item.value) --[[@as Path]]
+
+  local display = path:make_relative(vim.uv.cwd())
+    or path:make_relative(vim.env.HOME)
+    or path:normalize()
+
   fidget.progress.handle.create({
     lsp_client = {
       name = "harpoon",
     },
     title = event,
-    message = vim.fs.basename(cx.list:display()[cx.idx]),
+    message = display,
     level = vim.log.levels.ERROR,
   })
 end
