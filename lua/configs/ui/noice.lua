@@ -174,31 +174,31 @@ require("noice").setup({
   },
 })
 
-local quiet = {
-  ["lazy.nvim"] = true,
-}
-
-local levels = {
-  [vim.log.levels.DEBUG] = "debug",
-  [vim.log.levels.INFO] = "info",
-  [vim.log.levels.WARN] = "warn",
-  [vim.log.levels.ERROR] = "error",
-  [vim.log.levels.TRACE] = "fatal",
-}
-
-local notify = vim.notify
----@diagnostic disable-next-line: duplicate-set-field
-vim.notify = function(msg, level, opts)
-  if quiet[opts.title] then
-    require("fidget").progress.handle.create({
-      title = levels[level],
-      msg = vim.split(msg, "\n")[1],
-      level = level,
-      lsp_client = {
-        name = opts.title,
-      },
-    })
-    return
-  end
-  notify(msg, level, opts or {})
-end
+-- local quiet = {
+--   ["lazy.nvim"] = true,
+-- }
+--
+-- local levels = {
+--   [vim.log.levels.DEBUG] = "debug",
+--   [vim.log.levels.INFO] = "info",
+--   [vim.log.levels.WARN] = "warn",
+--   [vim.log.levels.ERROR] = "error",
+--   [vim.log.levels.TRACE] = "fatal",
+-- }
+-- local notify = vim.notify
+-- ---@diagnostic disable-next-line: duplicate-set-field
+-- vim.notify = function(msg, level, opts)
+--   opts = opts or {}
+--   if opts.title and quiet[opts.title] then
+--     require("fidget").progress.handle.create({
+--       title = levels[level],
+--       msg = vim.split(msg, "\n")[1],
+--       level = level,
+--       lsp_client = {
+--         name = opts.title,
+--       },
+--     })
+--     return
+--   end
+--   notify(msg, level, opts)
+-- end

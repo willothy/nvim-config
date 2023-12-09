@@ -341,13 +341,12 @@ local function harpoon_sorter()
     -- I'm mainly using it to avoid loading harpoon on UiEnter.
     local has_harpoon = package.loaded["harpoon"] ~= nil
     if not has_harpoon then
+      ---@diagnostic disable-next-line: undefined-field
       return a._valid_index < b._valid_index
     elseif not setup then
-      local refresh = vim.schedule_wrap(function()
-        for _, buf in ipairs(require("cokeline.buffers").get_visible()) do
-          cache[buf.number] = marknum(buf, true)
-        end
-      end)
+      local refresh = function()
+        cache = {}
+      end
       ---@diagnostic disable-next-line: missing-parameter
       require("harpoon").listeners:add_listener("ADD", refresh)
       require("harpoon").listeners:add_listener("REMOVE", refresh)
@@ -363,7 +362,9 @@ local function harpoon_sorter()
     elseif mb and not ma then
       return false
     elseif ma == nil and mb == nil then
+      ---@diagnostic disable-next-line: undefined-field
       ma = a._valid_index
+      ---@diagnostic disable-next-line: undefined-field
       mb = b._valid_index
     end
     return ma < mb
