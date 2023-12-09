@@ -105,19 +105,15 @@ resession.add_hook(
   end)
 )
 
+local Trie = willothy.str.Trie
+
 local function complete_session_name(arg, line)
   local obj = vim.api.nvim_parse_cmd(line, {})
   if #obj.args > 1 then
     return {}
   end
-  local names = {}
-  for _, session in ipairs(resession.list()) do
-    if vim.startswith(session, arg) then
-      table.insert(names, session)
-    end
-  end
 
-  return names
+  return Trie.from_iter(resession.list()):matches(arg)
 end
 
 willothy.fn.create_command("Session", {

@@ -347,25 +347,15 @@ function M.create_command(name, opts)
 
     local names = vim.tbl_keys(subcommands) --[[ @as string[] ]]
 
+    local trie = willothy.str.Trie.from_iter(names)
+
     function opts.complete(arg, line)
       local res = vim.api.nvim_parse_cmd(line, {})
       local argc = #res.args
-      local first = false
-      if argc == 0 then
-        first = true
-      end
-      if argc == 1 and not line:match("%s$") then
-        first = true
-      end
-      if first then
-        local options = {}
-        for _, option in ipairs(names) do
-          if vim.startswith(option, arg) then
-            table.insert(options, option)
-          end
-        end
-        return options
-      elseif argc == 2 or (argc == 1 and line:match("%s$")) then
+
+      if argc <= 1 and not line:match("%s$") then
+        return trie:matches(arg)
+      else
         local argval = vim.trim(res.args[1])
         if subcommands[argval] and subcommands[argval].complete then
           return subcommands[argval].complete(arg, line)
