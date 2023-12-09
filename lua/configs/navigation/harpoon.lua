@@ -12,15 +12,20 @@ end
 
 harpoon:setup({
   settings = {
-    save_on_toggle = true,
-    save_on_change = true,
+    save_on_toggle = false,
+    sync_on_ui_close = true,
+    -- save_on_change = true,
     border_chars = { " ", " ", " ", " ", " ", " ", " ", " " },
     key = function()
       return vim.uv.cwd() --[[@as string]]
     end,
     ui_fallback_width = 500,
     ui_width_ratio = ui_width_ratio(),
+    debug = true,
   },
+  -- ["terminals"] = {
+  --
+  -- }
 })
 
 vim.api.nvim_create_autocmd("VimResized", {
@@ -38,6 +43,13 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "harpoon" },
   group = vim.api.nvim_create_augroup("harpoon_ui_save", { clear = true }),
   callback = function(ev)
+    vim.keymap.set("n", "<C-v>", function()
+      harpoon.ui:select_menu_item({ vsplit = true })
+    end, { buffer = ev.buf })
+    vim.keymap.set("n", "<C-s>", function()
+      harpoon.ui:select_menu_item({ split = true })
+    end, { buffer = ev.buf })
+
     vim.api.nvim_create_autocmd("TextChanged", {
       buffer = ev.buf,
       callback = function()
@@ -72,7 +84,5 @@ harpoon.listeners:add_listener(function(ev, cx)
     notify("added", cx)
   elseif ev == "REMOVE" then
     notify("removed", cx)
-  elseif ev == "MOVE" then
-    notify("moved", cx)
   end
 end, "")

@@ -174,7 +174,6 @@ return {
   },
   {
     "willothy/savior.nvim",
-    branch = "fidget",
     config = true,
     event = { "InsertEnter", "TextChanged" },
   },
@@ -232,9 +231,9 @@ return {
     event = "VeryLazy",
   },
   {
-    -- "ThePrimeagen/harpoon",
-    "willothy/harpoon", -- harpoon fork with toggleterm integration
-    branch = "combined",
+    "ThePrimeagen/harpoon",
+    -- "willothy/harpoon",
+    branch = "harpoon2",
     -- dir = "~/projects/lua/harpoon/",
     event = "VeryLazy",
     config = function()
