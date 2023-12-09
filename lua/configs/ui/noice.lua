@@ -154,7 +154,7 @@ require("noice").setup({
     view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
   },
   notify = {
-    enabled = false,
+    enabled = true,
   },
   routes = {
     {

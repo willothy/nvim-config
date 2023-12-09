@@ -105,15 +105,13 @@ resession.add_hook(
   end)
 )
 
-local Trie = willothy.str.Trie
-
 local function complete_session_name(arg, line)
   local obj = vim.api.nvim_parse_cmd(line, {})
   if #obj.args > 1 then
     return {}
   end
 
-  return Trie.from_iter(resession.list()):matches(arg)
+  return require("types.trie").from_iter(resession.list()):matches(arg)
 end
 
 willothy.fn.create_command("Session", {

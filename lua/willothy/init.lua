@@ -43,6 +43,7 @@ local function module()
 end
 
 ---@diagnostic disable: assign-type-mismatch
+---@module "willothy.modules"
 willothy = module()
 ---@module "willothy.modules.fs"
 willothy.fs = "fs"
@@ -71,6 +72,7 @@ willothy.tab = "tab"
 ---@module "willothy.modules.str"
 willothy.str = "str"
 
+---@module "willothy.modules.utils"
 willothy.utils = module()
 ---@module "willothy.modules.utils.cursor"
 willothy.utils.cursor = "utils.cursor"
@@ -85,6 +87,7 @@ willothy.utils.table = "utils.table"
 ---@module "willothy.modules.utils.templates"
 willothy.utils.templates = "utils.templates"
 
+---@module "willothy.modules.ui"
 willothy.ui = module()
 ---@module "willothy.modules.ui.scrollbar"
 willothy.ui.scrollbar = "ui.scrollbar"
@@ -99,6 +102,7 @@ willothy.ui.code_actions = "ui.code_actions"
 ---@module "willothy.modules.ui.foldtext"
 willothy.ui.foldtext = "ui.foldtext"
 
+---@module "willothy.modules.hydras"
 willothy.hydras = module()
 ---@module "willothy.modules.hydras.git"
 willothy.hydras.git = "hydras.git"
