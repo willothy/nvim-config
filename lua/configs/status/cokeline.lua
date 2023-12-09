@@ -319,8 +319,15 @@ local function harpoon_sorter()
     local harpoon = require("harpoon")
     local b = cache[buf.number]
     if b == nil or force then
-      b = harpoon:list():get_by_display(buf.path)
-      cache[buf.number] = b
+      local path =
+        require("plenary.path"):new(buf.path):make_relative(vim.uv.cwd())
+      for i, mark in ipairs(harpoon:list():display()) do
+        if mark == path then
+          b = i
+          cache[buf.number] = b
+          break
+        end
+      end
     end
     return b
   end
@@ -336,15 +343,15 @@ local function harpoon_sorter()
     if not has_harpoon then
       return a._valid_index < b._valid_index
     elseif not setup then
-      ---@diagnostic disable-next-line: missing-parameter
-      require("harpoon").listeners:add_listener(function(evt)
-        if evt == "SELECT" then
-          return
-        end
+      local refresh = vim.schedule_wrap(function()
         for _, buf in ipairs(require("cokeline.buffers").get_visible()) do
           cache[buf.number] = marknum(buf, true)
         end
       end)
+      ---@diagnostic disable-next-line: missing-parameter
+      require("harpoon").listeners:add_listener("ADD", refresh)
+      require("harpoon").listeners:add_listener("REMOVE", refresh)
+      require("harpoon").listeners:add_listener("MOVE", refresh)
       setup = true
     end
     -- switch the a and b._valid_index to place non-harpoon buffers on the left

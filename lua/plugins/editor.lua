@@ -234,7 +234,7 @@ return {
   {
     -- "ThePrimeagen/harpoon",
     "willothy/harpoon", -- harpoon fork with toggleterm integration
-    branch = "fix-ui",
+    branch = "combined",
     -- dir = "~/projects/lua/harpoon/",
     event = "VeryLazy",
     config = function()

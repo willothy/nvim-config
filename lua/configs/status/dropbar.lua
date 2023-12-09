@@ -91,6 +91,7 @@ dropbar.setup({
     },
   },
   menu = {
+    -- ui_select = true,
     keymaps = {
       q = close,
       ["<Esc>"] = close,

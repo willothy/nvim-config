@@ -123,6 +123,14 @@ wk.register({
     local list = harpoon:list("terminals")
     harpoon.ui:toggle_quick_menu(list)
   end):with_desc("harpoon: commands"),
+  ["<C-a>"] = bind(function()
+    local harpoon = require("harpoon")
+    local list = harpoon:list()
+
+    if list:length() == list:append():length() then
+      list:remove()
+    end
+  end):with_desc("harpoon: toggle file"),
   ["<M-k>"] = bind("moveline", "up"):with_desc("move: up"),
   ["<M-j>"] = bind("moveline", "down"):with_desc("move: down"),
   ["<C-s>"] = bind(function()
