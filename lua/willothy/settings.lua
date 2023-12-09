@@ -85,6 +85,20 @@ function M.setup()
   }
 
   vim.o.clipboard = "unnamedplus"
+
+  -- Wezterm doesn't support OSC 52 yet :(
+  --
+  -- vim.g.clipboard = {
+  --   name = "OSC 52",
+  --   copy = {
+  --     ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+  --     ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+  --   },
+  --   paste = {
+  --     ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+  --     ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+  --   },
+  -- }
 end
 
 return M
