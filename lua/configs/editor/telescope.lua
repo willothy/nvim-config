@@ -1,41 +1,5 @@
 local telescope = require("telescope")
 
-local function get_filename(path)
-  local start, _ = path:find("[%w%s!-={-|]+[_%.].+")
-  return path:sub(start, #path)
-end
-
-local function add_to_harpoon(prompt_bufnr)
-  local fb_utils = require("telescope._extensions.file_browser.utils")
-  local files = fb_utils.get_selected_files(prompt_bufnr) -- get selected files
-  if #files == 0 then
-    print("No files selected")
-    return
-  end
-  local mark = require("harpoon.mark")
-  for _, file in ipairs(files) do
-    mark.toggle_file(file.filename)
-  end
-  if #files == 1 then
-    local path = files[0] ~= nil and files[0].filename
-      or files[1] ~= nil and files[1].filename
-      or nil
-    local message = path ~= nil and get_filename(path) or "1 file"
-    print("Added " .. message .. " to harpoon")
-  elseif #files > 1 then
-    print("Added " .. #files .. " files to harpoon")
-  end
-end
-
-local function create_and_add_to_harpoon(prompt_bufnr)
-  local fb_actions = telescope.extensions.file_browser.actions
-  local path = fb_actions.create(prompt_bufnr)
-  if path ~= nil then
-    require("harpoon.mark").toggle_file(path)
-    print("Added " .. get_filename(path) .. " to harpoon")
-  end
-end
-
 local open_win = function(enter, width, height, row, col, title, border)
   -- local has_title = type(title) == "string" or type(title) == "table"
   -- if not has_title then
@@ -564,6 +528,50 @@ local function open_with_trouble(prompt_bufnr)
   actions.close(prompt_bufnr)
   vim.cmd.stopinsert({ bang = true })
   require("trouble").open("telescope")
+end
+
+local function get_filename(path)
+  local start, _ = path:find("[%w%s!-={-|]+[_%.].+")
+  return path:sub(start, #path)
+end
+
+local function add_to_harpoon(prompt_bufnr)
+  local fb_utils = require("telescope._extensions.file_browser.utils")
+  local action_state = require("telescope.actions.state")
+  local actions = require("telescope.actions")
+
+  local picker = action_state.get_current_picker(prompt_bufnr)
+
+  local multi_selection = picker:get_multi_selection()
+
+  local iter
+  if #multi_selection > 0 then
+    iter = vim.iter(multi_selection)
+  else
+    iter = vim.iter({ picker:get_selection() })
+  end
+
+  local list = require("harpoon"):list()
+
+  for file in iter do
+    if file.filename and file.filename ~= "" then
+      list:append(file.filename)
+    else
+      vim.notify(
+        "No filename found for " .. vim.inspect(file),
+        vim.log.levlels.ERROR,
+        {}
+      )
+    end
+  end
+end
+
+local function create_and_add_to_harpoon(prompt_bufnr)
+  local fb_actions = telescope.extensions.file_browser.actions
+  local path = fb_actions.create(prompt_bufnr)
+  if path ~= nil then
+    require("harpoon"):list():append(path)
+  end
 end
 
 telescope.setup({

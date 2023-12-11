@@ -109,6 +109,7 @@ local commands = {
       then
         vim.bo.buflisted = false
         vim.bo.bufhidden = "wipe"
+        -- vim.bo.buftype = ""
       end
     end,
     desc = "Close the current buffer",
@@ -129,6 +130,7 @@ local commands = {
       then
         vim.bo.buflisted = false
         vim.bo.bufhidden = "wipe"
+        -- vim.bo.buftype = ""
       end
     end,
     desc = "Close all buffers",

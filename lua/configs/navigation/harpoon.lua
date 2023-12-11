@@ -87,25 +87,16 @@ local function notify(event, cx)
   })
 end
 
-harpoon.listeners:add_listener(function(ev, cx)
+local updater = function(ev, cx)
   if ev == "ADD" then
     notify("added", cx)
   elseif ev == "REMOVE" then
     notify("removed", cx)
   end
-end, "")
-vim.api.nvim_create_autocmd("User", {
-  pattern = "HarpoonAdd",
-  callback = function(ev)
-    vim.print(ev)
-    notify("added", ev.data)
-  end,
-})
+end
 
-vim.api.nvim_create_autocmd("User", {
-  pattern = "HarpoonRemove",
-  callback = function(ev)
-    vim.print(ev)
-    notify("removed", ev.data)
-  end,
-})
+harpoon.listeners:add_listener(updater)
+
+vim.api.nvim_create_user_command("HDetach", function()
+  harpoon.listeners:remove_listener(updater)
+end, {})

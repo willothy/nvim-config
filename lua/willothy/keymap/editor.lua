@@ -116,12 +116,18 @@ wk.register({
   ["<C-e>"] = bind(function()
     local harpoon = require("harpoon")
     local list = harpoon:list()
-    require("harpoon").ui:toggle_quick_menu(list)
+    require("harpoon").ui:toggle_quick_menu(list, {
+      border = "solid",
+      title_pos = "center",
+    })
   end):with_desc("harpoon: marks"),
   ["<C-c>"] = bind(function()
     local harpoon = require("harpoon")
     local list = harpoon:list("terminals")
-    harpoon.ui:toggle_quick_menu(list)
+    harpoon.ui:toggle_quick_menu(list, {
+      border = "solid",
+      title_pos = "center",
+    })
   end):with_desc("harpoon: commands"),
   ["<C-a>"] = bind(function()
     local harpoon = require("harpoon")

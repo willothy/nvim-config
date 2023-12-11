@@ -188,6 +188,7 @@ return {
   },
   {
     "willothy/flatten.nvim",
+    dir = "~/projects/lua/flatten/",
     cond = true,
     lazy = false,
     priority = 1000,
@@ -234,7 +235,7 @@ return {
     "ThePrimeagen/harpoon",
     -- "willothy/harpoon",
     branch = "harpoon2",
-    -- dir = "~/projects/lua/harpoon/",
+    dir = "~/projects/lua/harpoon/",
     event = "VeryLazy",
     config = function()
       require("configs.navigation.harpoon")

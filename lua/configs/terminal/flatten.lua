@@ -1,8 +1,10 @@
+---@type Terminal?
 local saved_terminal
 
 require("flatten").setup({
   window = {
     open = "smart",
+    -- open = "alternate",
     -- open = function(files, argv, stdin_buf_id)
     --
     -- end,
@@ -69,7 +71,7 @@ require("flatten").setup({
           buffer = bufnr,
           once = true,
           callback = vim.schedule_wrap(function()
-            vim.api.nvim_buf_delete(bufnr, {})
+            require("bufdelete").bufdelete(bufnr, true)
           end),
         })
       end
