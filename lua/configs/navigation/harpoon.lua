@@ -16,11 +16,14 @@ harpoon:setup({
     sync_on_ui_close = true,
     -- save_on_change = true,
     border_chars = { " ", " ", " ", " ", " ", " ", " ", " " },
+    ui = {
+      border = { " ", " ", " ", " ", " ", " ", " ", " " },
+      falback_width = 100,
+      width_ratio = ui_width_ratio(),
+    },
     key = function()
       return vim.uv.cwd() --[[@as string]]
     end,
-    ui_fallback_width = 500,
-    ui_width_ratio = ui_width_ratio(),
     debug = true,
   },
   -- ["terminals"] = {
@@ -33,7 +36,9 @@ vim.api.nvim_create_autocmd("VimResized", {
   callback = function()
     harpoon:setup({
       settings = {
-        ui_width_raio = ui_width_ratio(),
+        ui = {
+          width_ratio = ui_width_ratio(),
+        },
       },
     })
   end,
@@ -52,9 +57,12 @@ vim.api.nvim_create_autocmd("FileType", {
 
     vim.api.nvim_create_autocmd("TextChanged", {
       buffer = ev.buf,
-      callback = function()
-        harpoon.ui:save()
-      end,
+      callback = willothy.fn.debounce_leading(
+        vim.schedule_wrap(function()
+          harpoon.ui:save()
+        end),
+        1000
+      ),
     })
   end,
 })
@@ -86,3 +94,18 @@ harpoon.listeners:add_listener(function(ev, cx)
     notify("removed", cx)
   end
 end, "")
+vim.api.nvim_create_autocmd("User", {
+  pattern = "HarpoonAdd",
+  callback = function(ev)
+    vim.print(ev)
+    notify("added", ev.data)
+  end,
+})
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "HarpoonRemove",
+  callback = function(ev)
+    vim.print(ev)
+    notify("removed", ev.data)
+  end,
+})

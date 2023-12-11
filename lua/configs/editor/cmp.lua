@@ -150,19 +150,24 @@ local opts = {
         vim.snippet.jump(1)
       elseif has_words_before() then
         cmp.complete()
-      elseif col == 0 then
+      -- elseif col == 0 then
+      elseif col < indent and line:sub(1, col):gsub("^%s+", "") == "" then
         -- smart indent like VSCode - indent to the correct level when
         -- pressing tab at the beginning of a line.
 
-        local line_len = vim.fn.strcharlen(line)
-        if line_len < indent then
-          vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
-            line .. string.rep(" ", indent - line_len),
-          })
-        end
+        vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
+          string.rep(" ", indent - 1) .. line:sub(col),
+        })
 
-        vim.api.nvim_win_set_cursor(0, { row, indent })
-      -- elseif vim.fn.col("^") == col then
+        vim.api.nvim_win_set_cursor(0, { row, math.max(0, indent) })
+
+        local client =
+          vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })[1]
+        local ctx = {}
+        ctx.client_id = client.id
+        ctx.bufnr = vim.api.nvim_get_current_buf()
+
+        vim.lsp.inlay_hint.on_refresh(nil, nil, ctx, nil)
       elseif col >= indent then
         require("tabout").tabout()
       else
@@ -208,6 +213,7 @@ local opts = {
           vim.api.nvim_buf_set_lines(0, row - 2, row, true, {
             new_line,
           })
+
           vim.api.nvim_win_set_cursor(0, {
             row - 1,
             math.max(0, math.min(prev_indent, vim.fn.strcharlen(new_line))),

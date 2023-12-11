@@ -495,6 +495,11 @@ local function mouse_move(prompt_bufnr)
   end
 end
 
+-- the way Telescope gets function names is stupid so we have to use weird names
+local function Open_with_Trouble(...)
+  require("trouble.providers.telescope").smart_open_with_trouble(...)
+end
+
 telescope.setup({
   pickers = {},
   defaults = {
@@ -536,6 +541,7 @@ telescope.setup({
           type = "action",
           opts = { expr = true },
         },
+        ["<C-t>"] = { Open_with_Trouble, type = "action" },
       },
       n = {
         ["<MouseMove>"] = {
@@ -563,6 +569,7 @@ telescope.setup({
           type = "action",
           opts = { expr = true },
         },
+        ["<C-t>"] = { Open_with_Trouble, type = "action" },
       },
     },
   },
