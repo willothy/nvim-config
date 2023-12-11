@@ -135,6 +135,7 @@
   "term-edit.nvim": { "branch": "master", "commit": "e04f69d5828c6e6a4d81c34f75f18762fad50372" },
   "todo-comments.nvim": { "branch": "main", "commit": "4a6737a8d70fe1ac55c64dfa47fcb189ca431872" },
   "toggleterm.nvim": { "branch": "main", "commit": "cbd041d91b90cd3c02df03fe6133208888f8e008" },
+  "trailblazer.nvim": { "branch": "main", "commit": "674bb6254a376a234d0d243366224122fc064eab" },
   "tree-sitter-just": { "branch": "main", "commit": "4e5f5f3ff37b12a1bbf664eb3966b3019e924594" },
   "trouble.nvim": { "branch": "fix-fillchars", "commit": "44261353272405c49c9e7250dd4b4add368e4eda" },
   "ufo": { "branch": "main", "commit": "9fa77fb7e4365a053a5303b773aaf5eaf806d1f4" },

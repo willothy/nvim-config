@@ -222,7 +222,7 @@ return {
   --   config = function()
   --     require("configs.navigation.trailblazer")
   --   end,
-  --   -- event = "VeryLazy",
+  --   event = "VeryLazy",
   -- },
   {
     "folke/flash.nvim",

@@ -1,8 +1,15 @@
 require("crates").setup({
+  src = {
+    cmp = {
+      enabled = true,
+    },
+  },
   null_ls = {
     enabled = true,
     name = "crates.nvim",
   },
 })
----@diagnostic disable-next-line: missing-fields
+
+-- require("creates.src.cmp").setup()
+
 require("cmp").setup.buffer({ sources = { { name = "crates" } } })
