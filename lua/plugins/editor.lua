@@ -362,4 +362,11 @@ return {
     config = true,
     ft = "nu",
   },
+  {
+    "tris203/hawtkeys.nvim",
+    branch = "cache-maps",
+    -- commit = "5507afe0f4312ca99d0a637a822c62dca438d2c6",
+    config = true,
+    event = "VeryLazy",
+  },
 }

@@ -26,9 +26,60 @@ harpoon:setup({
     end,
     debug = true,
   },
-  -- ["terminals"] = {
-  --
-  -- }
+  ["terminals"] = {
+    -- encode = function() end,
+    prepopulate = function()
+      return {
+        {
+          value = "echo 'hello'",
+        },
+      }
+    end,
+    display = function(item)
+      return item.value
+    end,
+    add = function(item)
+      return { value = item }
+    end,
+    select = function(list_item, list, option)
+      -- WOAH, IS THIS HTMX LEVEL XSS ATTACK??
+    end,
+  },
+  -- Setting up custom behavior for a list named "cmd"
+  ["cmd"] = {
+    -- When you call list:append() this function is called and the return
+    -- value will be put in the list at the end.
+    --
+    -- which means same behavior for prepend except where in the list the
+    -- return value is added
+    --
+    -- @param possible_value string only passed in when you alter the ui manual
+    add = function(possible_value)
+      -- get the current line idx
+      local idx = vim.fn.line(".")
+
+      -- read the current line
+      local cmd = vim.api.nvim_buf_get_lines(0, idx - 1, idx, false)[1]
+      if cmd == nil then
+        return nil
+      end
+
+      return {
+        value = cmd,
+        context = {},
+      }
+    end,
+
+    --- This function gets invoked with the options being passed in from
+    --- list:select(index, <...options...>)
+    --- @param list_item {value: any, context: any}
+    --- @param list { ... }
+    --- @param option any
+    select = function(list_item, list, option)
+      -- WOAH, IS THIS HTMX LEVEL XSS ATTACK??
+      vim.cmd(list_item.value)
+    end,
+  },
 })
 
 vim.api.nvim_create_autocmd("VimResized", {
@@ -92,11 +143,14 @@ local updater = function(ev, cx)
     notify("added", cx)
   elseif ev == "REMOVE" then
     notify("removed", cx)
+  elseif ev == "UI_CREATE" then
+    -- vim.api.nvim_win_set_config(cx.win_id, {
+    --   title_pos = "center",
+    --   footer_pos = "center",
+    --   footer = harpoon.ui.active_list and harpoon.ui.active_list.name,
+    -- })
   end
 end
 
+---@diagnostic disable-next-line: missing-parameter
 harpoon.listeners:add_listener(updater)
-
-vim.api.nvim_create_user_command("HDetach", function()
-  harpoon.listeners:remove_listener(updater)
-end, {})
