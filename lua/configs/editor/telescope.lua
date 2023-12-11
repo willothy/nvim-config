@@ -495,9 +495,75 @@ local function mouse_move(prompt_bufnr)
   end
 end
 
--- the way Telescope gets function names is stupid so we have to use weird names
-local function Open_with_Trouble(...)
-  require("trouble.providers.telescope").smart_open_with_trouble(...)
+local function convert_telescope_entry(item)
+  local path
+  if item.Path and not item.filename then
+    -- item.filename = item[1]:gsub(item.cwd, "")
+    item.filename = item.Path:normalize(item.cwd)
+    path = item.Path
+    item.Path = nil
+  end
+
+  path = path or require("plenary.path"):new(item.filename)
+
+  if path:is_dir() then
+    return
+  end
+
+  local row = (item.lnum or 1) - 1
+  local col = (item.col or 1) - 1
+
+  if not item.bufnr then
+    local fname = path:absolute()
+    if vim.fn.filereadable(fname) == 0 then
+      return
+    end
+    item.bufnr = vim.fn.bufnr(fname, true)
+  end
+
+  local pitem = {
+    row = row,
+    col = col,
+    message = item.text,
+    severity = 0,
+    range = {
+      start = { line = row, character = col },
+      ["end"] = { line = row, character = -1 },
+    },
+  }
+
+  return require("trouble.util").process_item(pitem, item.bufnr)
+end
+
+-- fixes trouble with telescope-file-browser
+local function open_with_trouble(prompt_bufnr)
+  local action_state = require("telescope.actions.state")
+  local actions = require("telescope.actions")
+
+  local picker = action_state.get_current_picker(prompt_bufnr)
+
+  require("trouble.providers.telescope").results = {}
+  local results = require("trouble.providers.telescope").results
+
+  local multi_selection = picker:get_multi_selection()
+
+  local iter
+  if #multi_selection > 0 then
+    iter = vim.iter(multi_selection)
+  else
+    iter = picker.manager:iter()
+  end
+
+  for item in iter do
+    local result = convert_telescope_entry(item)
+    if result then
+      table.insert(results, result)
+    end
+  end
+
+  actions.close(prompt_bufnr)
+  vim.cmd.stopinsert({ bang = true })
+  require("trouble").open("telescope")
 end
 
 telescope.setup({
@@ -541,7 +607,7 @@ telescope.setup({
           type = "action",
           opts = { expr = true },
         },
-        ["<C-t>"] = { Open_with_Trouble, type = "action" },
+        ["<C-t>"] = { open_with_trouble, type = "action" },
       },
       n = {
         ["<MouseMove>"] = {
@@ -569,7 +635,7 @@ telescope.setup({
           type = "action",
           opts = { expr = true },
         },
-        ["<C-t>"] = { Open_with_Trouble, type = "action" },
+        ["<C-t>"] = { open_with_trouble, type = "action" },
       },
     },
   },
@@ -579,10 +645,20 @@ telescope.setup({
         ["i"] = {
           ["<C-a>"] = add_to_harpoon,
           ["<C-n>"] = create_and_add_to_harpoon,
+          ["<C-t>"] = {
+            open_with_trouble,
+            type = "action",
+            desc = "Open with Trouble",
+          },
         },
         ["n"] = {
           ["c"] = create_and_add_to_harpoon,
           ["<C-a>"] = add_to_harpoon,
+          ["<C-t>"] = {
+            open_with_trouble,
+            type = "action",
+            desc = "Open with Trouble",
+          },
         },
       },
       sorting_strategy = "ascending",
