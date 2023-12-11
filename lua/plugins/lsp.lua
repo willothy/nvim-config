@@ -106,7 +106,7 @@ return {
     config = function()
       require("configs.lsp.nvim-lint")
     end,
-    event = "VeryLazy",
+    event = "DiagnosticChanged",
   },
   {
     "dgagn/diagflow.nvim",
@@ -114,7 +114,7 @@ return {
     config = function()
       require("configs.lsp.diagflow")
     end,
-    event = "DiagnosticChanged",
+    event = "VeryLazy",
   },
   -- COMPLETION --
   {
