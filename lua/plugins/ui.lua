@@ -202,11 +202,7 @@ return {
     event = "UiEnter",
   },
   {
-    -- "luukvbaal/statuscol.nvim",
-    -- branch = "0.10",
-    "willothy/statuscol.nvim", -- use my fork
-    -- dir = "~/projects/lua/statuscol.nvim/",
-    priority = 100,
+    "luukvbaal/statuscol.nvim",
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },
