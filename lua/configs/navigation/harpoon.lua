@@ -13,18 +13,11 @@ end
 harpoon:setup({
   settings = {
     save_on_toggle = true,
-    sync_on_ui_close = true,
+    -- sync_on_ui_close = true,
     -- save_on_change = true,
-    border_chars = { " ", " ", " ", " ", " ", " ", " ", " " },
-    ui = {
-      border = { " ", " ", " ", " ", " ", " ", " ", " " },
-      falback_width = 100,
-      width_ratio = ui_width_ratio(),
-    },
     key = function()
       return vim.uv.cwd() --[[@as string]]
     end,
-    debug = true,
   },
   default = {
     prepopulate = function()
@@ -39,11 +32,16 @@ harpoon:setup({
         end)
         :map(function(_, path)
           local p = Path:new(path):make_relative(cwd)
+          local buf = vim.fn.bufnr(p, false)
+          local row, col = 1, 1
+          if buf then
+            row, col = unpack(vim.api.nvim_buf_get_mark(buf, '"'))
+          end
           return {
             value = p,
             context = {
-              row = 1,
-              col = 1,
+              row = row,
+              col = col,
             },
           }
         end)
@@ -106,27 +104,26 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "harpoon" },
   group = vim.api.nvim_create_augroup("harpoon_ui_save", { clear = true }),
   callback = function(ev)
-    vim.keymap.set("n", "<C-v>", function()
-      harpoon.ui:select_menu_item({ vsplit = true })
-    end, { buffer = ev.buf })
-    vim.keymap.set("n", "<C-s>", function()
-      harpoon.ui:select_menu_item({ split = true })
-    end, { buffer = ev.buf })
 
-    vim.api.nvim_create_autocmd("TextChanged", {
-      buffer = ev.buf,
-      callback = willothy.fn.debounce_leading(
-        vim.schedule_wrap(function()
-          harpoon.ui:save()
-        end),
-        1000
-      ),
-    })
+    -- vim.api.nvim_create_autocmd("TextChanged", {
+    --   buffer = ev.buf,
+    --   callback = willothy.fn.debounce_leading(
+    --     vim.schedule_wrap(function()
+    --       harpoon.ui:save()
+    --     end),
+    --     1000
+    --   ),
+    -- })
   end,
 })
 
 local Path = require("plenary.path")
 local fidget = require("fidget")
+
+local titles = {
+  ADD = "added",
+  REMOVE = "removed",
+}
 
 local function notify(event, cx)
   local path = Path:new(cx.item.value) --[[@as Path]]
@@ -139,30 +136,19 @@ local function notify(event, cx)
     lsp_client = {
       name = "harpoon",
     },
-    title = event,
+    title = titles[event],
     message = display,
     level = vim.log.levels.ERROR,
   })
 end
 
-local updater = function(ev, cx)
-  if ev == "ADD" then
-    notify("added", cx)
-  elseif ev == "REMOVE" then
-    notify("removed", cx)
-  elseif ev == "UI_CREATE" then
-    vim.schedule(function()
-      local config = vim.api.nvim_win_get_config(cx.win_id)
-      local footer = harpoon.ui.active_list and harpoon.ui.active_list.name
-      config = vim.tbl_extend("force", config, {
-        title_pos = "center",
-        footer_pos = footer ~= nil and "center" or nil,
-        footer = footer,
-      })
-      vim.api.nvim_win_set_config(cx.win_id, config)
-    end)
-  end
-end
-
----@diagnostic disable-next-line: missing-parameter
-harpoon.listeners:add_listener(updater)
+harpoon.listeners:add_listener("ADD", notify)
+harpoon.listeners:add_listener("REMOVE", notify)
+harpoon.listeners:add_listener("UI_CREATE", function(_, cx)
+  vim.keymap.set("n", "<C-v>", function()
+    harpoon.ui:select_menu_item({ vsplit = true })
+  end, { buffer = cx.bufnr })
+  vim.keymap.set("n", "<C-s>", function()
+    harpoon.ui:select_menu_item({ split = true })
+  end, { buffer = cx.bufnr })
+end)

@@ -186,6 +186,7 @@ save_timer:start(
 
 vim.api.nvim_create_autocmd("QuitPre", {
   group = vim.api.nvim_create_augroup("ResessionAutosave", { clear = true }),
+  nested = true,
   callback = function()
     local curwin = vim.api.nvim_get_current_win()
     local wins = vim.api.nvim_list_wins()
@@ -221,6 +222,7 @@ vim.api.nvim_create_autocmd("QuitPre", {
         end
       end
       if is_last then
+        require("harpoon"):sync()
         vim.schedule(function()
           vim.o.eventignore = ""
           vim.cmd.qa()
