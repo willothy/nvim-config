@@ -12,7 +12,7 @@ end
 
 harpoon:setup({
   settings = {
-    save_on_toggle = false,
+    save_on_toggle = true,
     sync_on_ui_close = true,
     -- save_on_change = true,
     border_chars = { " ", " ", " ", " ", " ", " ", " ", " " },
@@ -26,27 +26,34 @@ harpoon:setup({
     end,
     debug = true,
   },
-  ["terminals"] = {
-    -- encode = function() end,
+  default = {
     prepopulate = function()
-      return {
-        {
-          value = "echo 'hello'",
-        },
-      }
-    end,
-    display = function(item)
-      return item.value
-    end,
-    add = function(item)
-      return { value = item }
-    end,
-    select = function(list_item, list, option)
-      -- WOAH, IS THIS HTMX LEVEL XSS ATTACK??
+      local Path = require("plenary.path")
+      local cwd = vim.uv.cwd()
+      local limit = 3
+      return vim
+        .iter(require("mini.visits").list_paths())
+        :enumerate()
+        :filter(function(i)
+          return i <= limit
+        end)
+        :map(function(_, path)
+          local p = Path:new(path):make_relative(cwd)
+          return {
+            value = p,
+            context = {
+              row = 1,
+              col = 1,
+            },
+          }
+        end)
+        :totable()
     end,
   },
+  ["terminals"] = {},
   -- Setting up custom behavior for a list named "cmd"
   ["cmd"] = {
+    encode = false,
     -- When you call list:append() this function is called and the return
     -- value will be put in the list at the end.
     --
@@ -144,11 +151,16 @@ local updater = function(ev, cx)
   elseif ev == "REMOVE" then
     notify("removed", cx)
   elseif ev == "UI_CREATE" then
-    -- vim.api.nvim_win_set_config(cx.win_id, {
-    --   title_pos = "center",
-    --   footer_pos = "center",
-    --   footer = harpoon.ui.active_list and harpoon.ui.active_list.name,
-    -- })
+    vim.schedule(function()
+      local config = vim.api.nvim_win_get_config(cx.win_id)
+      local footer = harpoon.ui.active_list and harpoon.ui.active_list.name
+      config = vim.tbl_extend("force", config, {
+        title_pos = "center",
+        footer_pos = footer ~= nil and "center" or nil,
+        footer = footer,
+      })
+      vim.api.nvim_win_set_config(cx.win_id, config)
+    end)
   end
 end
 

@@ -221,7 +221,10 @@ vim.api.nvim_create_autocmd("QuitPre", {
         end
       end
       if is_last then
-        vim.cmd("qa!")
+        vim.schedule(function()
+          vim.o.eventignore = ""
+          vim.cmd.qa()
+        end)
       end
     end
   end,

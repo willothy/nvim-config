@@ -188,8 +188,8 @@ return {
   },
   {
     "willothy/flatten.nvim",
-    dir = "~/projects/lua/flatten/",
-    cond = true,
+    -- dir = "~/projects/lua/flatten/",
+    -- cond = true,
     lazy = false,
     priority = 1000,
     config = function()
@@ -232,9 +232,10 @@ return {
     event = "VeryLazy",
   },
   {
-    "ThePrimeagen/harpoon",
-    -- "willothy/harpoon",
-    branch = "harpoon2",
+    -- "ThePrimeagen/harpoon",
+    -- branch = "harpoon2",
+    "willothy/harpoon",
+    branch = "combined",
     -- dir = "~/projects/lua/harpoon/",
     event = "VeryLazy",
     config = function()
@@ -365,8 +366,18 @@ return {
   {
     "tris203/hawtkeys.nvim",
     branch = "cache-maps",
+    opts = {
+      keymap = "<leader>vh",
+    },
     -- commit = "5507afe0f4312ca99d0a637a822c62dca438d2c6",
-    config = true,
+    event = "VeryLazy",
+  },
+  {
+    "echasnovski/mini.clue",
+    enabled = false,
+    config = function()
+      require("configs.editor.miniclue")
+    end,
     event = "VeryLazy",
   },
 }
