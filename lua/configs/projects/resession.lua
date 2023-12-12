@@ -155,32 +155,76 @@ willothy.fn.create_command("Session", {
 if
   -- Only load the session if nvim was started with no args
   vim.fn.argc(-1) == 0
-  -- Don't load in nested sessions
-  and not require("flatten").is_guest()
   -- Don't load when running build scripts
   and vim.tbl_contains(vim.v.argv, "-l") == false
   -- Don't load if manually disabled
   and not vim.g.nosession
 then
-  resession.load(
-    ---@diagnostic disable-next-line: param-type-mismatch
-    vim.fs.basename(vim.fn.getcwd()),
-    {
-      silence_errors = true,
-      reset = true,
-    }
-  )
+  local empty = true
+  -- Don't load in nested sessions
+  if not require("flatten").is_guest() then
+    resession.load(
+      ---@diagnostic disable-next-line: param-type-mismatch
+      vim.fs.basename(vim.fn.getcwd()),
+      {
+        silence_errors = true,
+        reset = true,
+      }
+    )
+  end
+
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if
+      vim.bo[buf].buftype == ""
+      and vim.bo[buf].buflisted
+      and vim.api.nvim_buf_get_name(buf) ~= ""
+    then
+      empty = false
+      break
+    end
+  end
+  if empty then
+    local curbuf = vim.api.nvim_get_current_buf()
+    if
+      vim.bo[curbuf].buflisted and vim.api.nvim_buf_get_name(curbuf) == ""
+    then
+      vim.bo[curbuf].buflisted = false
+    end
+    require("alpha").start()
+    vim.schedule(function()
+      if vim.bo[vim.api.nvim_win_get_buf(0)].filetype == "alpha" then
+        vim.wo[0].number = false
+        vim.wo[0].relativenumber = false
+      end
+    end)
+  end
 end
 
 local uv = vim.uv or vim.loop
 
+-- autosave once per minute
 local SAVE_INTERVAL = 60000
 local save_timer = uv.new_timer()
 save_timer:start(
   SAVE_INTERVAL,
   SAVE_INTERVAL,
   vim.schedule_wrap(function()
-    resession.save_all({ notify = false })
+    -- only save if there are non-gitcommit buffers
+    local only_commit = true
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if
+        vim.bo[buf].buftype == ""
+        and vim.bo[buf].buflisted
+        and vim.bo[buf].filetype ~= "gitcommit"
+      then
+        only_commit = false
+        break
+      end
+    end
+    if not only_commit then
+      resession.save_all({ notify = false })
+    end
   end)
 )
 
@@ -207,18 +251,35 @@ vim.api.nvim_create_autocmd("QuitPre", {
       end
     end
     if has_normal then
-      local session = resession.get_current()
-      if session then
-        -- save all existing sessions
-        resession.save_all({ notify = false })
-      else
-        -- ensure that there is a session for each tab
-        for _, tabpage in ipairs(vim.api.nvim_list_tabpages()) do
-          local win = vim.api.nvim_tabpage_get_win(tabpage)
-          vim.api.nvim_win_call(win, function()
-            local name = vim.fs.basename(vim.fn.getcwd(-1) --[[@as string]])
-            resession.save_tab(name, { notify = false })
-          end)
+      -- don't save a session if it's just a git commit so that
+      -- running `git commit` from cmdline outside of nvim and
+      -- opening the commit message in editor doesn't overwrite
+      -- the project's session.
+      local only_commit = true
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if
+          vim.bo[buf].buftype == ""
+          and vim.bo[buf].buflisted
+          and vim.bo[buf].filetype ~= "gitcommit"
+        then
+          only_commit = false
+          break
+        end
+      end
+      if not only_commit then
+        local session = resession.get_current()
+        if session then
+          -- save all existing sessions
+          resession.save_all({ notify = false })
+        else
+          -- ensure that there is a session for each tab
+          for _, tabpage in ipairs(vim.api.nvim_list_tabpages()) do
+            local win = vim.api.nvim_tabpage_get_win(tabpage)
+            vim.api.nvim_win_call(win, function()
+              local name = vim.fs.basename(vim.fn.getcwd(-1) --[[@as string]])
+              resession.save_tab(name, { notify = false })
+            end)
+          end
         end
       end
       if is_last then
