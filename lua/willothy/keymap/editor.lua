@@ -116,7 +116,15 @@ wk.register({
   ["<C-e>"] = bind(function()
     local harpoon = require("harpoon")
     local list = harpoon:list()
+    local width_ratio = 0.45
+    if vim.o.columns > 130 then
+      width_ratio = 0.35
+    elseif vim.o.columns < 100 then
+      width_ratio = 0.55
+    end
+
     require("harpoon").ui:toggle_quick_menu(list, {
+      ui_width_ratio = width_ratio,
       border = "solid",
       title_pos = "center",
     })
@@ -124,7 +132,14 @@ wk.register({
   ["<C-c>"] = bind(function()
     local harpoon = require("harpoon")
     local list = harpoon:list("terminals")
+    local width_ratio = 0.45
+    if vim.o.columns > 130 then
+      width_ratio = 0.35
+    elseif vim.o.columns < 100 then
+      width_ratio = 0.55
+    end
     harpoon.ui:toggle_quick_menu(list, {
+      ui_width_ratio = width_ratio,
       border = "solid",
       title_pos = "center",
     })

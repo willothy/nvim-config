@@ -1,15 +1,5 @@
 local harpoon = require("harpoon")
 
-local function ui_width_ratio()
-  if vim.o.columns > 130 then
-    return 0.35
-  elseif vim.o.columns < 100 then
-    return 0.55
-  end
-
-  return 0.45
-end
-
 harpoon:setup({
   settings = {
     save_on_toggle = true,
@@ -51,20 +41,6 @@ harpoon:setup({
         :totable()
     end,
   },
-  ["terminals"] = {},
-})
-
-vim.api.nvim_create_autocmd("VimResized", {
-  group = vim.api.nvim_create_augroup("harpoon_ui_resize", { clear = true }),
-  callback = function()
-    harpoon:setup({
-      settings = {
-        ui = {
-          width_ratio = ui_width_ratio(),
-        },
-      },
-    })
-  end,
 })
 
 local Path = require("plenary.path")
