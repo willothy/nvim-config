@@ -222,6 +222,16 @@ return {
       require("configs.status.incline")
     end,
   },
+  {
+    "goolord/alpha-nvim",
+    dependencies = {
+      "stevearc/resession.nvim",
+    },
+    config = function()
+      require("configs.status.alpha")
+    end,
+    event = "VeryLazy",
+  },
   -- COLORS --
   {
     "willothy/minimus",
