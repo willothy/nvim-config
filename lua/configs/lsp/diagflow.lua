@@ -7,7 +7,7 @@ local opts = {
   show_sign = true,
   update_event = {
     "DiagnosticChanged",
-    "BufReadPost",
+    -- "BufReadPost",
     "TextChanged",
     "BufEnter",
   },
