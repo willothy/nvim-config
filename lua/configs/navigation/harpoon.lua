@@ -1,5 +1,113 @@
 local harpoon = require("harpoon")
 
+local tmux = {
+  automated = true,
+  encode = false,
+  prepopulate = function()
+    local out = vim.system({ "tmux", "list-sessions" }, { text = true }):wait()
+    if out.code ~= 0 then
+      return {}
+    end
+    local sessions = out.stdout or ""
+    local lines = {}
+    for s in sessions:gmatch("[^\r\n]+") do
+      table.insert(lines, { value = s, context = { row = 1, col = 1 } })
+    end
+    return lines
+  end,
+  select = function(list_item, list, option)
+    local sessionName = string.match(list_item.value, "([^:]+)")
+    vim.system(
+      { "tmux", "switch-client", "-t", sessionName },
+      {},
+      function() end
+    )
+  end,
+  remove = function(list_item, _list)
+    local sessionName = string.match(list_item.value, "([^:]+)")
+    vim.system(
+      { "tmux", "kill-session", "-t", sessionName },
+      {},
+      function() end
+    )
+  end,
+}
+
+local terminals = {
+  automated = true,
+  encode = false,
+  prepopulate = function()
+    local bufs = vim.api.nvim_list_bufs()
+    return vim
+      .iter(bufs)
+      :filter(function(buf)
+        return vim.bo[buf].buftype == "terminal"
+      end)
+      :map(function(buf)
+        return {
+          value = vim.api.nvim_buf_get_name(buf),
+          context = {
+            bufnr = buf,
+          },
+        }
+      end)
+      :totable()
+  end,
+  remove = function(list_item, list)
+    if vim.api.nvim_buf_is_valid(list_item.context.bufnr) then
+      require("bufdelete").bufdelete(list_item.context.bufnr, true)
+    end
+  end,
+  select = function(list_item, _list, _opts)
+    local wins = vim.api.nvim_tabpage_list_wins(0)
+
+    -- jump to existing window containing the buffer
+    for _, win in ipairs(wins) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      if buf == list_item.context.bufnr then
+        vim.api.nvim_set_current_win(win)
+        return
+      end
+    end
+
+    -- switch to the buffer if no window was found
+    vim.api.nvim_set_current_buf(list_item.context.bufnr)
+  end,
+}
+
+local files = {
+  prepopulate = function()
+    local Path = require("plenary.path")
+    local cwd = vim.uv.cwd()
+    local limit = 3
+    return vim
+      .iter(require("mini.visits").list_paths())
+      :enumerate()
+      :filter(function(i)
+        return i <= limit
+      end)
+      :map(function(_, path)
+        local p = Path:new(path):make_relative(cwd)
+        local buf = vim.fn.bufnr(p, false)
+        local row, col = 1, 1
+        if buf and vim.api.nvim_buf_is_valid(buf) then
+          if not vim.api.nvim_buf_is_loaded(buf) then
+            vim.fn.bufload(buf)
+          end
+          row, col = unpack(vim.api.nvim_buf_get_mark(buf, '"'))
+        end
+        return {
+          value = p,
+          context = {
+            row = row,
+            col = col,
+          },
+        }
+      end)
+      :totable()
+  end,
+}
+
 harpoon:setup({
   settings = {
     save_on_toggle = true,
@@ -9,38 +117,10 @@ harpoon:setup({
       return vim.uv.cwd() --[[@as string]]
     end,
   },
-  default = {
-    prepopulate = function()
-      local Path = require("plenary.path")
-      local cwd = vim.uv.cwd()
-      local limit = 3
-      return vim
-        .iter(require("mini.visits").list_paths())
-        :enumerate()
-        :filter(function(i)
-          return i <= limit
-        end)
-        :map(function(_, path)
-          local p = Path:new(path):make_relative(cwd)
-          local buf = vim.fn.bufnr(p, false)
-          local row, col = 1, 1
-          if buf and vim.api.nvim_buf_is_valid(buf) then
-            if not vim.api.nvim_buf_is_loaded(buf) then
-              vim.fn.bufload(buf)
-            end
-            row, col = unpack(vim.api.nvim_buf_get_mark(buf, '"'))
-          end
-          return {
-            value = p,
-            context = {
-              row = row,
-              col = col,
-            },
-          }
-        end)
-        :totable()
-    end,
-  },
+  tmux = tmux,
+  terminals = terminals,
+  files = files,
+  default = {},
 })
 
 local Path = require("plenary.path")

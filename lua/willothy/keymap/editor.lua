@@ -115,7 +115,7 @@ wk.register({
   ),
   ["<C-e>"] = bind(function()
     local harpoon = require("harpoon")
-    local list = harpoon:list()
+    local list = harpoon:list("files")
     local width_ratio = 0.45
     if vim.o.columns > 130 then
       width_ratio = 0.35
@@ -144,9 +144,24 @@ wk.register({
       title_pos = "center",
     })
   end):with_desc("harpoon: commands"),
+  ["<C-t>"] = bind(function()
+    local harpoon = require("harpoon")
+    local list = harpoon:list("tmux")
+    local width_ratio = 0.45
+    if vim.o.columns > 130 then
+      width_ratio = 0.35
+    elseif vim.o.columns < 100 then
+      width_ratio = 0.55
+    end
+    harpoon.ui:toggle_quick_menu(list, {
+      ui_width_ratio = width_ratio,
+      border = "solid",
+      title_pos = "center",
+    })
+  end):with_desc("harpoon: tmux sessions"),
   ["<C-a>"] = bind(function()
     local harpoon = require("harpoon")
-    local list = harpoon:list()
+    local list = harpoon:list("files")
 
     if list:length() == list:append():length() then
       list:remove()
@@ -177,7 +192,7 @@ wk.register({
   d = bind("marks", "delete"):with_desc("delete mark"),
   m = bind("reach", "marks"),
   h = bind(function()
-    local list = require("harpoon"):list()
+    local list = require("harpoon"):list("files")
 
     if list:length() == list:append():length() then
       list:remove()
