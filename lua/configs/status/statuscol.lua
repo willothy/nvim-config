@@ -2,6 +2,7 @@ local builtin = require("statuscol.builtin")
 
 local function is_normal_buf(args)
   local buf = vim.api.nvim_win_get_buf(args.win)
+
   return vim.bo[buf].buftype == ""
 end
 
@@ -11,29 +12,26 @@ require("statuscol").setup({
     {
       sign = {
         name = { "GitSigns*" },
-        text = { ".*" },
+        namespace = { "gitsigns*" },
         maxwidth = 1,
         minwidth = 1,
         colwidth = 2,
       },
       click = "v:lua.ScSa",
-      condition = {
-        is_normal_buf,
-      },
+      condition = { is_normal_buf },
     },
     {
       sign = {
-        name = { "Dap*", "Diagnostic*", ".*" },
+        -- "Dap*", "Diagnostic*"
+        name = { ".*" },
+        -- "Dap*", "Diagnostic*"
+        namespace = { ".*" },
         maxwidth = 1,
         minwidth = 1,
-        colwidth = 1,
+        colwidth = 2,
       },
       click = "v:lua.ScSa",
-      condition = {
-        is_normal_buf,
-        is_normal_buf,
-        is_normal_buf,
-      },
+      condition = { is_normal_buf },
     },
     {
       text = { builtin.lnumfunc },

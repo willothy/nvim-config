@@ -23,13 +23,15 @@ return {
   -- LSP UI --
   {
     "kevinhwang91/nvim-ufo",
-    -- enabled = false,
+    enabled = false,
     name = "ufo",
     dependencies = {
       "kevinhwang91/promise-async",
     },
+    event = "VeryLazy",
     opts = {
-      fold_virt_text_handler = vim.F.if_nil,
+      close_fold_kinds = {},
+      -- fold_virt_text_handler = vim.F.if_nil,
     },
   },
   {
