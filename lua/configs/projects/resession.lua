@@ -70,6 +70,8 @@ resession.add_hook("post_load", function()
   vim.o.showtabline = 2
   willothy.ui.scrolleof.check()
   vim.schedule(function()
+    -- Fixes lazy freaking out when a session is loaded and there are
+    -- auto-installs being run.
     if lazy_open then
       require("lazy.view").show()
       lazy_open = false
@@ -111,9 +113,11 @@ local function complete_session_name(arg, line)
     return {}
   end
 
+  -- Extra completion filtering with tries because why not
   return require("types.trie").from_iter(resession.list()):matches(arg)
 end
 
+-- Session management commands
 willothy.fn.create_command("Session", {
   desc = "Manage sessions",
   subcommands = {
@@ -159,46 +163,18 @@ if
   and vim.tbl_contains(vim.v.argv, "-l") == false
   -- Don't load if manually disabled
   and not vim.g.nosession
+  -- Don't load in nested sessions
+  and not require("flatten").is_guest()
 then
   local empty = true
-  -- Don't load in nested sessions
-  if not require("flatten").is_guest() then
-    resession.load(
-      ---@diagnostic disable-next-line: param-type-mismatch
-      vim.fs.basename(vim.fn.getcwd()),
-      {
-        silence_errors = true,
-        reset = true,
-      }
-    )
-  end
-
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    if
-      vim.bo[buf].buftype == ""
-      and vim.bo[buf].buflisted
-      and vim.api.nvim_buf_get_name(buf) ~= ""
-    then
-      empty = false
-      break
-    end
-  end
-  if empty then
-    local curbuf = vim.api.nvim_get_current_buf()
-    if
-      vim.bo[curbuf].buflisted and vim.api.nvim_buf_get_name(curbuf) == ""
-    then
-      vim.bo[curbuf].buflisted = false
-    end
-    require("alpha").start()
-    vim.schedule(function()
-      if vim.bo[vim.api.nvim_win_get_buf(0)].filetype == "alpha" then
-        vim.wo[0].number = false
-        vim.wo[0].relativenumber = false
-      end
-    end)
-  end
+  resession.load(
+    ---@diagnostic disable-next-line: param-type-mismatch
+    vim.fs.basename(vim.fn.getcwd()),
+    {
+      silence_errors = true,
+      reset = true,
+    }
+  )
 end
 
 local uv = vim.uv or vim.loop
@@ -211,6 +187,9 @@ save_timer:start(
   SAVE_INTERVAL,
   vim.schedule_wrap(function()
     -- only save if there are non-gitcommit buffers
+    -- so that running `git commit` from cmdline outside of nvim
+    -- and opening the commit message in editor doesn't overwrite
+    -- the project's session.
     local only_commit = true
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
       if
@@ -228,6 +207,8 @@ save_timer:start(
   end)
 )
 
+-- Cursed QuitPre autocmd that saves the session before closing windows containing
+-- non-normal buffers, so that the main layout is properly saved.
 vim.api.nvim_create_autocmd("QuitPre", {
   group = vim.api.nvim_create_augroup("ResessionAutosave", { clear = true }),
   nested = true,

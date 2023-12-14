@@ -147,12 +147,6 @@ local commands = {
     end,
     desc = "Detach the Lua REPL from the current buffer",
   },
-  MiniFiles = {
-    function()
-      require("mini.files").open()
-    end,
-    desc = "Toggle mini.files",
-  },
   Scratch = {
     function(args)
       local f = vim.fn.tempname()
@@ -187,14 +181,13 @@ return {
         bar = cmd.bar,
         bang = cmd.bang,
         complete = cmd.complete,
-        force = cmd.force,
         preview = cmd.preview,
         desc = cmd.desc,
         range = cmd.range,
         count = cmd.count,
         addr = cmd.addr,
         register = cmd.register,
-        keepscript = cmd.keepscript,
+        force = cmd.force,
       })
     end
   end,

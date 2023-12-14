@@ -76,7 +76,8 @@ return {
       "SourcegraphSearch",
       "SourcegraphLink",
     },
-    build = "nvim -l build/init.lua",
+    event = "VeryLazy",
+    -- build = "nvim -l build/init.lua",
   },
   {
     -- "simrat39/rust-tools.nvim",

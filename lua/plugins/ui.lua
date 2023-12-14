@@ -226,7 +226,7 @@ return {
     config = function()
       require("configs.status.alpha")
     end,
-    event = "VeryLazy",
+    cmd = "Alpha",
   },
   -- COLORS --
   {

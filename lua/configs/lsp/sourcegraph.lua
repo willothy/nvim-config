@@ -19,6 +19,7 @@ vim.system(
       download_binaries = false,
       enable_cody = true,
     })
+
     require("sg.auth").set_nvim_auth({
       endpoint = "https://sourcegraph.com/",
       token = trim(out),
