@@ -398,21 +398,32 @@ local Git = (
     },
     static = {
       fetch = function(self)
-        if not self.buf then
-          self.status_dict = vim.b.gitsigns_status_dict or self.status_dict
-          return
+        if self.buf then
+          self.status_dict = vim.b[self.buf].gitsigns_status_dict
+        else
+          self.status_dict = vim.b.gitsigns_status_dict
         end
-        self.status_dict = vim.b[self.buf].gitsigns_status_dict
+        -- get head one of these two ways, since both can be inconsistent
+        -- at times and I want to show the branch even if I can't show
+        -- diff information
+        local heads = {
+          self.status_dict and self.status_dict.head,
+          vim.g.gitsigns_head,
+        }
         if
           not self.head
           or (
-            self.status_dict ~= nil
-            and self.status_dict.head ~= nil
-            and vim.trim(self.status_dict.head) ~= ""
-            and self.status_dict.head ~= self.head
+            (heads[1] and heads[1] ~= "" and heads[1] ~= self.head)
+            or (heads[2] and heads[2] ~= "" and heads[2] ~= self.head)
           )
         then
-          self.head = self.status_dict.head
+          if heads[1] and heads[1] ~= "" then
+            self.head = heads[1]
+          elseif heads[2] and heads[2] ~= "" then
+            self.head = heads[2]
+          else
+            self.head = nil
+          end
         end
       end,
       added = function(self)
