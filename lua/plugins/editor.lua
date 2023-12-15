@@ -235,7 +235,7 @@ return {
     -- "ThePrimeagen/harpoon",
     -- branch = "harpoon2",
     "willothy/harpoon",
-    branch = "combined",
+    branch = "combined-ext",
     -- dir = "~/projects/lua/harpoon/",
     event = "VeryLazy",
     config = function()

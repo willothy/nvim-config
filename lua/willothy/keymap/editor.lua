@@ -127,6 +127,7 @@ wk.register({
       ui_width_ratio = width_ratio,
       border = "solid",
       title_pos = "center",
+      footer_pos = "center",
     })
   end):with_desc("harpoon: marks"),
   ["<C-c>"] = bind(function()
@@ -142,6 +143,7 @@ wk.register({
       ui_width_ratio = width_ratio,
       border = "solid",
       title_pos = "center",
+      footer_pos = "center",
     })
   end):with_desc("harpoon: commands"),
   ["<C-t>"] = bind(function()
@@ -157,6 +159,7 @@ wk.register({
       ui_width_ratio = width_ratio,
       border = "solid",
       title_pos = "center",
+      footer_pos = "center",
     })
   end):with_desc("harpoon: tmux sessions"),
   ["<C-a>"] = bind(function()

@@ -291,8 +291,22 @@ local Harpoon = {
   on_click = {
     callback = function()
       local buf = vim.api.nvim_buf_get_name(0)
-      require("harpoon.mark").toggle_file(buf)
-      require("harpoon").save()
+      local path = require("plenary.path"):new(buf)
+      local list = require("harpoon"):list("files")
+
+      local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+
+      local item = {
+        value = path:make_relative(vim.uv.cwd()),
+        context = {
+          row = row,
+          col = col,
+        },
+      }
+
+      if list:length() == list:append(item):length() then
+        list:remove(item)
+      end
     end,
     name = "__heirline_harpoon_click",
   },
@@ -303,20 +317,32 @@ local Harpoon = {
       "UpdateHeirlineComponents",
     },
     callback = function(self)
-      local harpoon = require("harpoon"):list()
-      local buf = vim.api.nvim_buf_get_name(0)
-      self.current = harpoon:get_by_display()
-      -- if not package.loaded["harpoon"] then return end
-      -- local harpoon = require("harpoon.mark")
-      -- self.current = harpoon.get_current_index()
-      -- if not self._init then
-      --   self.nfiles = harpoon.get_length()
-      --   harpoon.on("changed", function()
-      --     self.nfiles = harpoon.get_length()
-      --     willothy.event.emit("UpdateHeirlineComponents")
-      --   end)
-      --   self._init = true
-      -- end
+      local harpoon = require("harpoon")
+      local list = harpoon:list("files")
+      local buf = require("plenary.path")
+        :new(vim.api.nvim_buf_get_name(0))
+        :make_relative(vim.uv.cwd())
+      local idx
+      local items = list:display()
+      for i, v in ipairs(items) do
+        if v == buf then
+          idx = i
+          break
+        end
+      end
+      self.current = idx
+      self.nfiles = list:length()
+      if not self._init then
+        local update = vim.schedule_wrap(function()
+          willothy.event.emit("UpdateHeirlineComponents")
+        end)
+        harpoon:extend({
+          ADD = update,
+          REMOVE = update,
+          REORDER = update,
+        })
+        self._init = true
+      end
     end,
   },
 }
@@ -353,61 +379,68 @@ local Git = (
   C({
     update = {
       "User",
-      pattern = { "UpdateHeirlineComponents" },
+      pattern = {
+        "UpdateHeirlineComponents",
+        "GitSignsAttach",
+        "GitSignsUpdate",
+      },
       callback = function(self)
+        local curwin = vim.api.nvim_get_current_win()
         if
-          package.loaded["edgy"]
-          and (function()
-            for _, win in ipairs(require("edgy.editor").list_wins().main) do
-              if win == vim.api.nvim_get_current_win() then
-                return true
-              end
-            end
-            return false
-          end)()
+          vim.iter(require("edgy.editor").list_wins().main):find(function(win)
+            return win == curwin
+          end) ~= nil
         then
           self.buf = vim.api.nvim_get_current_buf()
           self:fetch()
         end
       end,
     },
-    condition = function(self)
-      return (
-        self.buf
-        and vim.api.nvim_buf_is_valid(self.buf)
-        and (
-          vim.b[self.buf].gitsigns_head or vim.b[self.buf].gitsigns_status_dict
-        )
-      )
-        or vim.b.gitsigns_head
-        or vim.b.gitsigns_status_dict
-    end,
     static = {
       fetch = function(self)
-        self.status_dict = vim.b.gitsigns_status_dict
+        if not self.buf then
+          self.status_dict = vim.b.gitsigns_status_dict or self.status_dict
+          return
+        end
+        self.status_dict = vim.b[self.buf].gitsigns_status_dict
+        if
+          not self.head
+          or (
+            self.status_dict ~= nil
+            and self.status_dict.head ~= nil
+            and vim.trim(self.status_dict.head) ~= ""
+            and self.status_dict.head ~= self.head
+          )
+        then
+          self.head = self.status_dict.head
+        end
       end,
       added = function(self)
         return self.status_dict and self.status_dict.added or 0
       end,
       removed = function(self)
+        if not self.status_dict then
+          self:fetch()
+        end
         return self.status_dict and self.status_dict.removed or 0
       end,
       modified = function(self)
+        if not self.status_dict then
+          self:fetch()
+        end
         return self.status_dict and self.status_dict.changed or 0
       end,
     },
     {
       provider = function(self)
-        local head = self.status_dict.head
+        local head = self.head
         if not head or head == "" then
-          head = "<empty>"
+          return ""
         end
         return string.format("%s %s", icons.git.branch, head)
       end,
       condition = function(self)
-        return self.status_dict
-          and self.status_dict.head
-          and self.status_dict.head ~= ""
+        return self.head ~= nil
       end,
       hl = { fg = p.cool_gray },
       Space,
@@ -419,7 +452,6 @@ local Git = (
       condition = function(self)
         return self:added() > 0
       end,
-      -- hl = "DiffAdd",
       hl = { fg = p.pale_turquoise },
       Space,
     },
@@ -775,6 +807,7 @@ willothy.event.on({
   "TermEnter",
   "LspAttach",
   "ColorScheme",
+  "VeryLazy",
 }, function()
   willothy.event.emit("UpdateHeirlineComponents")
 end)
@@ -793,6 +826,3 @@ willothy.event.on("ColorScheme", function()
     statusline = C(StatusLine),
   })
 end)
--- vim.schedule(function()
---   willothy.event.emit("UpdateHeirlineComponents")
--- end)

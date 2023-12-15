@@ -166,7 +166,6 @@ if
   -- Don't load in nested sessions
   and not require("flatten").is_guest()
 then
-  local empty = true
   resession.load(
     ---@diagnostic disable-next-line: param-type-mismatch
     vim.fs.basename(vim.fn.getcwd()),

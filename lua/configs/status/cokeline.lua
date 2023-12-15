@@ -321,7 +321,7 @@ local function harpoon_sorter()
     if b == nil or force then
       local path =
         require("plenary.path"):new(buf.path):make_relative(vim.uv.cwd())
-      for i, mark in ipairs(harpoon:list():display()) do
+      for i, mark in ipairs(harpoon:list("files"):display()) do
         if mark == path then
           b = i
           cache[buf.number] = b
@@ -332,8 +332,6 @@ local function harpoon_sorter()
     return b
   end
 
-  ---@param a Buffer
-  ---@param b Buffer
   -- Use this in `config.buffers.new_buffers_position`
   return function(a, b)
     -- Only run this if harpoon is loaded, otherwise just use the default sorting.
@@ -347,10 +345,11 @@ local function harpoon_sorter()
       local refresh = function()
         cache = {}
       end
-      ---@diagnostic disable-next-line: missing-parameter
-      require("harpoon").listeners:add_listener("ADD", refresh)
-      require("harpoon").listeners:add_listener("REMOVE", refresh)
-      require("harpoon").listeners:add_listener("MOVE", refresh)
+      require("harpoon"):extend({
+        ADD = refresh,
+        REMOVE = refresh,
+        REORDER = refresh,
+      })
       setup = true
     end
     -- switch the a and b._valid_index to place non-harpoon buffers on the left
