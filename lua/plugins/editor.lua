@@ -365,7 +365,7 @@ return {
   },
   {
     "tris203/hawtkeys.nvim",
-    -- branch = "cache-maps",
+    branch = "tsOpt",
     opts = {
       keymap = "<leader>vh",
     },
