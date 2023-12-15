@@ -365,11 +365,10 @@ return {
   },
   {
     "tris203/hawtkeys.nvim",
-    branch = "tsOpt",
+    -- branch = "tsOpt",
     opts = {
       keymap = "<leader>vh",
     },
-    -- commit = "5507afe0f4312ca99d0a637a822c62dca438d2c6",
     event = "VeryLazy",
   },
   {
