@@ -2,6 +2,7 @@ vim.loader.enable()
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
+vim.g.colors_name = "minimus"
 
 local lazy_path = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
