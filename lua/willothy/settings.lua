@@ -14,6 +14,7 @@ function M.setup()
   o.wrap = false
   o.number = true
   o.relativenumber = true
+  o.autoread = true
   o.showtabline = 2
   o.laststatus = 3
 
