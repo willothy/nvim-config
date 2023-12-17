@@ -194,7 +194,9 @@ local function hide()
   end
 end
 
-return {
-  show = show,
-  hide = hide,
-}
+local M = {}
+
+M.show = show
+M.hide = hide
+
+return M

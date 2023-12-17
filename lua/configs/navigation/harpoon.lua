@@ -138,6 +138,10 @@ local function notify(event, cx)
   if not cx then
     return
   end
+
+  if cx.list and cx.list.config.automated then
+    return
+  end
   local path = Path:new(cx.item.value) --[[@as Path]]
 
   local display = path:make_relative(vim.uv.cwd())

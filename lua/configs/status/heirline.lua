@@ -101,7 +101,7 @@ local Mode = {
 
 local Location = {
   AB(Separator.Left),
-  B(Space),
+  -- B(Space),
   B({
     update = {
       "User",
@@ -110,21 +110,22 @@ local Location = {
         "UpdateHeirlineComponents",
       },
       callback = function(self)
-        self.line = vim.fn.line(".")
-        self.col = vim.fn.col(".")
-        self.maxline = vim.fn.line("$")
+        self.pos = vim.api.nvim_win_get_cursor(0)
       end,
     },
     provider = function(self)
-      if not self.line then
+      if not self.pos then
         self.update.callback(self)
       end
-      return math.floor((self.line / self.maxline) * 100)
-        .. "%%/"
-        .. string.format("%d:%d", self.maxline, self.col)
+      local pad_to = 8
+      local str = string.format("%d:%d", self.pos[1], self.pos[2])
+      local len = vim.fn.strcharlen(str)
+      local pad = pad_to - len
+      local left = math.floor(pad / 2)
+      local right = math.ceil(pad / 2)
+      return string.rep(" ", left) .. str .. string.rep(" ", right)
     end,
   }),
-  B(Space),
   AB(Separator.Right),
 }
 

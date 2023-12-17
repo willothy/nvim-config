@@ -178,9 +178,11 @@ local function is_empty()
   return true
 end
 
+local argc = vim.fn.argc(-1)
+
 if
   -- Only load the session if nvim was started with no args
-  vim.fn.argc(-1) == 0
+  argc == 0
   -- Don't load when running build scripts
   and vim.tbl_contains(vim.v.argv, "-l") == false
   -- Don't load if manually disabled
@@ -197,10 +199,10 @@ then
     }
   )
   if is_empty() then
-    willothy.ui.intro.show()
+    require("willothy.modules.ui.intro").show()
   end
-elseif is_empty() then
-  willothy.ui.intro.show()
+elseif argc == 0 and is_empty() then
+  require("willothy.modules.ui.intro").show()
 end
 
 local uv = vim.uv or vim.loop
