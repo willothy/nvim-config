@@ -241,7 +241,7 @@ return {
     "rktjmp/lush.nvim",
     cmd = "Lushify",
   },
-  {
-    "folke/tokyonight.nvim",
-  },
+  "folke/tokyonight.nvim",
+  "yorickpeterse/nvim-grey",
+  "rebelot/kanagawa.nvim",
 }

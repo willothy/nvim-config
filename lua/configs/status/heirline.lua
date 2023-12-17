@@ -1,7 +1,6 @@
 local p = require("minimus").hex
 local icons = willothy.icons
 
-local conditions = require("heirline.conditions")
 local get_hex = willothy.hl.get
 
 local AB = function(self)
@@ -20,7 +19,7 @@ local B = function(self)
   local o = vim.deepcopy(self)
   o.hl = function()
     return {
-      fg = get_hex("Normal", "fg"),
+      fg = get_hex("StatusLine", "fg"),
       bg = get_hex("TabLine", "bg"),
     }
   end
@@ -30,7 +29,10 @@ end
 local C = function(self)
   local o = vim.deepcopy(self)
   o.hl = function()
-    return { fg = get_hex("TabLine", "fg"), bg = p.none }
+    return {
+      fg = get_hex("StatusLine", "fg"),
+      bg = get_hex("StatusLine", "bg"),
+    }
   end
   return o
 end
@@ -441,15 +443,9 @@ local Git = (
         return self.status_dict and self.status_dict.added or 0
       end,
       removed = function(self)
-        if not self.status_dict then
-          self:fetch()
-        end
         return self.status_dict and self.status_dict.removed or 0
       end,
       modified = function(self)
-        if not self.status_dict then
-          self:fetch()
-        end
         return self.status_dict and self.status_dict.changed or 0
       end,
     },

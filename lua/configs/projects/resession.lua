@@ -156,6 +156,28 @@ willothy.fn.create_command("Session", {
   },
 })
 
+local function is_empty()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if
+      vim.bo[buf].buftype == ""
+      and vim.bo[buf].buflisted
+      and vim.api.nvim_buf_get_name(buf) ~= ""
+    then
+      return false
+    end
+  end
+  local n_splits = 0
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_config(win).zindex == nil then
+      n_splits = n_splits + 1
+      if n_splits > 1 then
+        return false
+      end
+    end
+  end
+  return true
+end
+
 if
   -- Only load the session if nvim was started with no args
   vim.fn.argc(-1) == 0
@@ -174,6 +196,11 @@ then
       reset = true,
     }
   )
+  if is_empty() then
+    willothy.ui.intro.show()
+  end
+elseif is_empty() then
+  willothy.ui.intro.show()
 end
 
 local uv = vim.uv or vim.loop
