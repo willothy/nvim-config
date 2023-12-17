@@ -101,7 +101,7 @@ local Mode = {
 
 local Location = {
   AB(Separator.Left),
-  -- B(Space),
+  B(Space),
   B({
     update = {
       "User",
@@ -117,15 +117,10 @@ local Location = {
       if not self.pos then
         self.update.callback(self)
       end
-      local pad_to = 8
-      local str = string.format("%d:%d", self.pos[1], self.pos[2])
-      local len = vim.fn.strcharlen(str)
-      local pad = pad_to - len
-      local left = math.floor(pad / 2)
-      local right = math.ceil(pad / 2)
-      return string.rep(" ", left) .. str .. string.rep(" ", right)
+      return string.format("%d:%d", self.pos[1], self.pos[2])
     end,
   }),
+  B(Space),
   AB(Separator.Right),
 }
 

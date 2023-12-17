@@ -1,5 +1,14 @@
+local cached_hl = {}
+vim.api.nvim_create_autocmd("ColorScheme", {
+  pattern = "*",
+  callback = function()
+    vim.api.nvim_set_hl(0, "IndentScope", cached_hl)
+  end,
+})
+
 require("ibl").setup({
   indent = {
+    -- highlight = "IndentScope",
     highlight = "IndentScope",
     char = "▏",
   },
@@ -7,6 +16,12 @@ require("ibl").setup({
     highlight = "IndentScope",
   },
   scope = { enabled = false },
+})
+
+cached_hl = vim.api.nvim_get_hl(0, {
+  name = "IndentScope",
+  link = false,
+  create = false,
 })
 
 require("mini.indentscope").setup({
