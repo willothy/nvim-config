@@ -41,6 +41,9 @@ return {
   },
   {
     "ecthelionvi/NeoComposer.nvim",
+    dependencies = {
+      "kkharji/sqlite.lua",
+    },
     event = "VeryLazy",
     config = function()
       require("configs.editor.neocomposer")

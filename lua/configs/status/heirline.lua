@@ -385,20 +385,31 @@ local Git = (
         "GitSignsUpdate",
       },
       callback = function(self)
-        local curwin = vim.api.nvim_get_current_win()
-        if
-          vim.iter(require("edgy.editor").list_wins().main):find(function(win)
-            return win == curwin
-          end) ~= nil
-        then
-          self.buf = vim.api.nvim_get_current_buf()
+        if self:update_buf() then
           self:fetch()
         end
       end,
     },
     static = {
+      update_buf = function(self)
+        local curwin = vim.api.nvim_get_current_win()
+        local main_wins = require("edgy.editor").list_wins().main or {}
+        if
+          vim.iter(main_wins):find(function(win)
+            return win == curwin
+          end) ~= nil
+        then
+          self.buf = vim.api.nvim_get_current_buf()
+          return true
+        else
+          self.buf = nil
+        end
+      end,
       fetch = function(self)
-        if self.buf then
+        if self.buf and not vim.api.nvim_buf_is_valid(self.buf) then
+          self:update_buf()
+        end
+        if self.buf and vim.api.nvim_buf_is_valid(self.buf) then
           self.status_dict = vim.b[self.buf].gitsigns_status_dict
         else
           self.status_dict = vim.b.gitsigns_status_dict

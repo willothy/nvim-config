@@ -175,20 +175,27 @@ wk.register({
   ["<C-s>"] = bind(function()
     vim.cmd.write()
   end):with_desc("save"),
-  -- macros
-  ["<C-q>"] = bind("NeoComposer.ui", "toggle_macro_menu"):with_desc(
-    "macro: open menu"
-  ),
-  Q = bind("NeoComposer.macro", "toggle_play_macro"):with_desc("macro: play"),
-  q = bind("NeoComposer.macro", "toggle_record"):with_desc("macro: record"),
-  cq = bind("NeoComposer.macro", "halt_macro"):with_desc("macro: stop"),
-  ["<C-n>"] = bind("NeoComposer.ui", "cycle_next"):with_desc(
-    "macro: cycle next"
-  ),
-  ["<C-p>"] = bind("NeoComposer.ui", "cycle_prev"):with_desc(
-    "macro: cycle prev"
-  ),
 }, { mode = modes.non_editing })
+
+vim.keymap.set("n", "<C-q>", function()
+  require("NeoComposer.ui").toggle_macro_menu()
+end, { silent = true, noremap = true, desc = "macro: open menu" })
+vim.keymap.set({ "n", "x" }, "Q", function()
+  require("NeoComposer.macro").toggle_play_macro()
+end, { silent = true, noremap = true, desc = "macro: play" })
+vim.keymap.set({ "n", "x" }, "q", function()
+  require("NeoComposer.macro").toggle_record()
+end, { silent = true, noremap = true, desc = "macro: record" })
+vim.keymap.set("n", "cq", function()
+  require("NeoComposer.macro").halt_macro()
+end, { silent = true, noremap = true, desc = "macro: stop" })
+
+-- vim.keymap.set("n", "<C-n>", function()
+--   require("NeoComposer.ui").cycle_next()
+-- end, { silent = true, noremap = true, desc = "macro: cycle next" })
+-- vim.keymap.set("n", "<C-p>", function()
+--   require("NeoComposer.ui").cycle_prev()
+-- end, { silent = true, noremap = true, desc = "macro: cycle prev" })
 
 wk.register({
   name = "marks",
