@@ -1,52 +1,65 @@
 local keymap = willothy.keymap
 local bind, modes = keymap.bind, keymap.modes
 
-local objects = {
-  w = "word",
-  W = "WORD",
-  ['"'] = 'string: ""',
-  ["'"] = "string: ''",
-  ["`"] = "string: ``",
-  ["{"] = "block { }",
-  ["}"] = "block { }",
-  B = "block { }",
-  ["<lt>"] = "block <>",
-  [">"] = "block <>",
-  ["["] = "block [",
-  ["]"] = "block [",
-  ["("] = "block (",
-  [")"] = "block (",
-  b = "block ( )",
-  P = "paragraph",
-  a = { name = "around" },
-  i = { name = "inside" },
-  s = "sentence",
-  F = "function",
-  p = "paragraph",
-  d = {
-    function()
-      require("various-textobjs").diagnostic()
-    end,
-    "diagnostic",
-  },
-  f = {
-    function()
-      require("nvim-treesitter.textobjects.select").select_textobject(
-        "@field",
-        "field",
-        "v"
-      )
-    end,
-    "field",
-  },
-  e = "expression",
-}
+local function ai_textobjs(ai)
+  return {
+    w = "word",
+    ['"'] = 'string: ""',
+    ["'"] = "string: ''",
+    ["`"] = "string: ``",
+    ["{"] = "block { }",
+    ["}"] = "block { }",
+    B = "block { }",
+    ["<lt>"] = "block <>",
+    [">"] = "block <>",
+    ["["] = "block [",
+    ["]"] = "block [",
+    ["("] = "block (",
+    [")"] = "block (",
+    b = "block ( )",
+    P = "paragraph",
+    a = { name = "around" },
+    i = { name = "inside" },
+    s = "sentence",
+    F = "function",
+    p = "paragraph",
+    u = {
+      function()
+        require("various-textobjs").url(ai)
+      end,
+      "url",
+    },
+    W = {
+      function()
+        require("various-textobjs").subword(ai)
+      end,
+      "subword",
+    },
+    d = {
+      function()
+        require("various-textobjs").diagnostic()
+      end,
+      "diagnostic",
+    },
+    f = {
+      function()
+        require("nvim-treesitter.textobjects.select").select_textobject(
+          "@field",
+          "field",
+          "v"
+        )
+      end,
+      "field",
+    },
+    e = "expression",
+  }
+end
 
 local wk = require("which-key")
 
 wk.register({
-  i = objects,
-  a = objects,
+  i = ai_textobjs("inner"),
+  a = ai_textobjs("outer"),
 }, { mode = { "o", "v" } })
 
 wk.register({
