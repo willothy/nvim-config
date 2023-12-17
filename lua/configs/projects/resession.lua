@@ -262,17 +262,20 @@ vim.api.nvim_create_autocmd("QuitPre", {
       -- running `git commit` from cmdline outside of nvim and
       -- opening the commit message in editor doesn't overwrite
       -- the project's session.
+      -- I should refactor this though it's a mess
       local only_commit = true
-      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if
-          vim.bo[buf].buftype == ""
-          and vim.bo[buf].buflisted
-          and vim.bo[buf].filetype ~= "gitcommit"
-        then
+      local nothing_else = true
+      local buflist = vim.iter(vim.api.nvim_list_bufs()):filter(function(buf)
+        return vim.bo[buf].buftype == "" and vim.bo[buf].buflisted
+      end)
+      for buf in buflist do
+        nothing_else = false
+        if vim.bo[buf].filetype ~= "gitcommit" then
           only_commit = false
           break
         end
       end
+      only_commit = only_commit and not nothing_else
       if not only_commit then
         local session = resession.get_current()
         if session then
