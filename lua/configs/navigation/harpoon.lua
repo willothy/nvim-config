@@ -112,6 +112,8 @@ local files = {
   end,
 }
 
+require("harpoon.config").DEFAULT_LIST = "files"
+
 harpoon:setup({
   settings = {
     save_on_toggle = true,

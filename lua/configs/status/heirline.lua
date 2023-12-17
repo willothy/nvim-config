@@ -317,6 +317,7 @@ local Harpoon = {
     callback = function(self)
       local harpoon = require("harpoon")
       local list = harpoon:list("files")
+
       local buf = require("plenary.path")
         :new(vim.api.nvim_buf_get_name(0))
         :make_relative(vim.uv.cwd())

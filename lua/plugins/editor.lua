@@ -280,6 +280,7 @@ return {
     config = function()
       require("configs.editor.reach")
     end,
+    cmd = "ReachOpen",
   },
   {
     "SUSTech-data/wildfire.nvim",
