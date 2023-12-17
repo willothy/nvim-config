@@ -230,6 +230,15 @@ return {
   },
   -- COLORS --
   {
+    "willothy/nvim-colorizer.lua",
+    config = function()
+      require("colorizer").setup({}, {
+        mode = "extmark",
+      })
+    end,
+    cmd = "ColorizerToggle",
+  },
+  {
     "willothy/minimus",
     priority = 100,
     config = function()
