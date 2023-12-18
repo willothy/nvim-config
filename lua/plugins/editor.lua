@@ -323,7 +323,11 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     config = function()
-      require("configs.git.gitsigns")
+      -- sometimes this errors on first load even though
+      -- everything is fine
+      pcall(function()
+        require("configs.git.gitsigns")
+      end)
     end,
     event = "VeryLazy",
   },

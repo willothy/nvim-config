@@ -43,6 +43,17 @@ return {
       require("configs.ui.notify")
     end,
   },
+  {
+    "3rd/image.nvim",
+    config = true,
+    init = function()
+      package.path = package.path
+        .. ";"
+        .. "/usr/share/lua/5.1/?/init.lua;"
+        .. ";"
+        .. "/usr/share/lua/5.1/?.lua;"
+    end,
+  },
   -- SCOPE / CURSORWORD --
   {
     "echasnovski/mini.indentscope",
@@ -110,14 +121,12 @@ return {
   },
   -- WINDOWS --
   {
-    -- "nvim-focus/focus.nvim",
-    "willothy/focus.nvim",
-    -- dir = "~/projects/lua/focus.nvim/",
-    branch = "float-config-preemptive-fix",
+    "nvim-focus/focus.nvim",
+    -- "willothy/focus.nvim",
+    -- branch = "float-config-preemptive-fix",
     dependencies = {
       "echasnovski/mini.animate",
     },
-    -- dir = "~/projects/lua/focus.nvim/",
     config = function()
       require("configs.windows.focus")
     end,
@@ -255,6 +264,15 @@ return {
     "rktjmp/lush.nvim",
     cmd = "Lushify",
   },
+  {
+    "echasnovski/mini.colors",
+    config = true,
+  },
+  {
+    "echasnovski/mini.hues",
+    config = true,
+  },
+  "projekt0n/github-nvim-theme",
   "folke/tokyonight.nvim",
   "yorickpeterse/nvim-grey",
   "rebelot/kanagawa.nvim",
