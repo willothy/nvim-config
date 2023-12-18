@@ -231,9 +231,14 @@ return {
   -- COLORS --
   {
     "willothy/nvim-colorizer.lua",
+    -- dir = "~/projects/lua/nvim-colorizer.lua/",
     config = function()
-      require("colorizer").setup({}, {
-        mode = "extmark",
+      require("colorizer").setup({
+        user_default_options = {
+          mode = "inline",
+          names = false,
+          virtualtext = "■ ",
+        },
       })
     end,
     cmd = "ColorizerToggle",
