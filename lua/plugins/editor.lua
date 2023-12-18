@@ -81,6 +81,18 @@ return {
     config = true,
     event = "VeryLazy",
   },
+  {
+    "nvim-neorg/neorg",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    build = ":Neorg sync-parsers",
+    cmd = "Neorg",
+    ft = "norg",
+    config = function()
+      require("configs.editor.neorg")
+    end,
+  },
   -- DEFAULT FEATURE EXTENSIONS --
   {
     "gbprod/yanky.nvim",
@@ -367,9 +379,8 @@ return {
   {
     "tris203/hawtkeys.nvim",
     -- branch = "tsOpt",
-    opts = {
-      keymap = "<leader>vh",
-    },
+    -- dir = "~/projects/lua/hawtkeys.nvim/",
+    opts = {},
     event = "VeryLazy",
   },
   {

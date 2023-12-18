@@ -175,6 +175,7 @@ require("noice").setup({
           { find = "%d+L, %d+B written$" },
           { find = "^%d+ change[s]?; before #%d+" },
           { find = "^%d+ change[s]?; after #%d+" },
+          { find = "^%-%-No lines in buffer%-%-$" },
         },
       },
       view = "mini",
