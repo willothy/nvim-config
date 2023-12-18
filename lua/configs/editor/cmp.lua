@@ -336,3 +336,13 @@ require("cmp").setup.filetype("OverseerForm", {
     { name = "overseer" },
   },
 })
+
+require("cmp").setup.filetype("norg", {
+  sources = {
+    { name = "neorg" },
+    { name = "copilot", max_item_count = 2 },
+    { name = "cody" },
+    { name = "buffer", max_item_count = 4 },
+    { name = "path" },
+  },
+})

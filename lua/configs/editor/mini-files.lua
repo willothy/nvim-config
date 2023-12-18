@@ -63,8 +63,10 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
-vim.api.nvim_create_user_command("MiniFiles", function()
-  require("mini.files").open()
+vim.api.nvim_create_user_command("MiniFiles", function(args)
+  local path = args.fargs[1]
+  require("mini.files").open(path)
 end, {
-  desc = "Toggle mini.files",
+  desc = "Open mini.files",
+  nargs = "?",
 })
