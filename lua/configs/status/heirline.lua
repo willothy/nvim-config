@@ -277,8 +277,16 @@ local Harpoon = {
       local harpoon = require("harpoon")
       local list = harpoon:list("files")
 
+      local bufnr = 0
+      if vim.bo.filetype == "harpoon" then
+        -- keep current harpoon file while menu is open
+        -- since the alternate file will be the buffer open
+        -- in the previous window
+        bufnr = vim.fn.bufnr("#") --[[@as integer]]
+      end
+
       local buf = require("plenary.path")
-        :new(vim.api.nvim_buf_get_name(0))
+        :new(vim.api.nvim_buf_get_name(bufnr))
         :make_relative(vim.uv.cwd())
       local idx
       local items = list:display()
@@ -291,13 +299,14 @@ local Harpoon = {
       self.current = idx
       self.nfiles = list:length()
       if not self._init then
-        local update = vim.schedule_wrap(function()
+        local update = function()
           willothy.event.emit("UpdateHeirlineComponents")
-        end)
+        end
         harpoon:extend({
           ADD = update,
           REMOVE = update,
           REORDER = update,
+          UI_CREATE = update,
         })
         self._init = true
       end
