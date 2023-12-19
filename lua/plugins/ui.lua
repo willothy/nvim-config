@@ -255,6 +255,7 @@ return {
   {
     "willothy/minimus",
     priority = 100,
+    -- dir = "~/projects/lua/minimus/",
     config = function()
       vim.api.nvim_exec2("colorscheme minimus", {})
     end,

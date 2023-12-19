@@ -78,7 +78,7 @@ local Mode = {
     hl = function()
       local col = willothy.utils.mode.get_color()
       return {
-        fg = get_hex("TabLineSel", "fg"),
+        fg = "#0f0f0f",
         bg = col.fg,
       }
     end,
@@ -112,7 +112,7 @@ local Location = {
     hl = function()
       local col = willothy.utils.mode.get_color()
       return {
-        fg = get_hex("TabLineSel", "fg"),
+        fg = get_hex("StatusLine", "bg"),
         bg = col.fg,
       }
     end,

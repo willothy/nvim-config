@@ -33,33 +33,6 @@ local Space = {
   truncation = { priority = 1 },
 }
 
-local Separator = {
-  left = {
-    text = separators.left,
-    fg = function(cx)
-      if cx.is_focused or cx.buf_hovered or cx.tab_hovered then
-        return require("cokeline.hlgroups").get_hl_attr("TabLineSel", "bg")
-      else
-        return "Comment"
-      end
-    end,
-    bg = function(cx)
-      return (cx.buf_hovered or cx.tab_hovered) and "TabLineSel" or "TabLine"
-    end,
-  },
-  right = {
-    text = function(buffer)
-      if buffer.is_last then
-        return separators.right
-      else
-        return ""
-      end
-    end,
-    fg = "TabLine",
-    bg = "none",
-  },
-}
-
 local Devicon = {
   text = function(buffer)
     if mappings.is_picking_focus() or mappings.is_picking_close() then
@@ -132,10 +105,10 @@ local Filename = {
     elseif buffer.diagnostics.infos ~= 0 then
       return "DiagnosticInfo"
     else
-      return "TabLine"
+      return buffer.is_focused and "TabLineSel" or "TabLine"
     end
   end,
-  bg = "TabLine",
+  -- bg = "TabLine",
   truncation = {
     priority = 2,
     direction = "right",
@@ -376,11 +349,21 @@ local opts = {
       return buffer.is_focused and "TabLineSel" or "TabLine"
     end,
     bg = function(buffer)
-      return buffer.is_focused and "TabLine" or "TabLine"
+      return buffer.is_focused and "TabLineSel" or "TabLine"
     end,
   },
   components = {
-    Separator.left,
+    {
+      text = function(buffer)
+        return buffer.is_focused and separators.left or "⎸"
+      end,
+      fg = function(buffer)
+        return buffer.is_focused and "Directory" or "#2b3243" -- TODO: use hlgroup
+      end,
+      bg = function(buffer)
+        return buffer.is_focused and "TabLineSel" or "TabLine"
+      end,
+    },
     Space,
     Devicon,
     UniquePrefix,
@@ -389,7 +372,15 @@ local opts = {
     Diagnostics,
     CloseOrUnsaved,
     Space,
-    Separator.right,
+    {
+      text = function(buffer)
+        return buffer.is_last and "⎹" or ""
+      end,
+      fg = "#2b3243", -- TODO: use hlgroup
+      bg = function(buffer)
+        return buffer.is_focused and "TabLineSel" or "TabLine"
+      end,
+    },
     Padding,
   },
   rhs = {
@@ -403,9 +394,14 @@ local opts = {
     components = {
       {
         text = function(tab)
-          return tab.is_first and separators.left or ""
+          return (tab.is_active or tab.is_hovered) and separators.left or "⎸"
         end,
-        fg = "TabLine",
+        fg = function(tab)
+          return tab.is_active and "Directory" or "#2b3243"
+        end,
+        bg = function(tab)
+          return tab.is_focused and "TabLineSel" or "TabLine"
+        end,
       },
       {
         text = function(tab)
@@ -418,14 +414,14 @@ local opts = {
         bg = "TabLine",
       },
       {
-        text = icons.blocks.right.half,
+        text = function(tab)
+          return tab.is_last and "⎹" or ""
+        end,
         fg = function(tab)
-          return (tab.tab_hovered or tab.is_active)
-              and require("cokeline.hlgroups").get_hl_attr("TabLineSel", "bg")
-            or require("cokeline.hlgroups").get_hl_attr("Comment", "fg")
+          return tab.is_focused and "Directory" or "#2b3243"
         end,
         bg = function(tab)
-          return tab.tab_hovered and "TabLineSel" or "TabLine"
+          return tab.is_focused and "TabLineSel" or "TabLine"
         end,
       },
     },
