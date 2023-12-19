@@ -1,8 +1,9 @@
 local Hydra = require("willothy.modules.hydras").Hydra
 local diagram = Hydra({
   name = "Draw Diagram",
+  stl_name = "D󰏘",
   hint = [[
- Arrow^^^^^^   Select region with <C-v> 
+ Arrow^^^^^^   Select region with <C-v>
  ^ ^ _K_ ^ ^   _f_: surround it with box
  _H_ ^ ^ _L_
  ^ ^ _J_ ^ ^                      _<Esc>_

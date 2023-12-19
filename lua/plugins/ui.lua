@@ -267,6 +267,7 @@ return {
   {
     "echasnovski/mini.colors",
     config = true,
+    cmd = "Colorscheme",
   },
   {
     "echasnovski/mini.hues",

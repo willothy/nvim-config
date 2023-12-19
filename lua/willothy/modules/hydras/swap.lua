@@ -112,7 +112,7 @@ local hint = [[
  _k_: next    _K_: next     _S_: sort rev.
  _j_: prev    _J_: prev     _r_: reverse
 
- _<Tab>_: switch query 
+ _<Tab>_: switch query
  _<Enter>_: edit query
  _<Esc>_, _q_: quit
 ]]
@@ -121,6 +121,7 @@ return Hydra({
   name = "Swap",
   mode = "n",
   body = "gs",
+  stl_name = "S󰅩",
   hint = hint,
   heads = {
     {

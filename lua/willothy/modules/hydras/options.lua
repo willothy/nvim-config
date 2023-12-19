@@ -17,6 +17,7 @@ local hint = [[
 return Hydra({
   name = "Options",
   hint = hint,
+  stl_name = "O",
   config = {
     -- color = "amaranth",
     color = "pink",

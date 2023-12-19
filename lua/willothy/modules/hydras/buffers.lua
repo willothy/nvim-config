@@ -4,10 +4,11 @@ return Hydra({
   name = "Buffers",
   body = "<leader>bh",
   shortname = "hydra",
+  stl_name = "B󰈮",
   mode = "n",
   hint = [[
   focus     ^^move      ^^other
-  --------  ^^--------  ^^------------- 
+  --------  ^^--------  ^^-------------
   _h_: prev   _H_: prev   _p_: pin/unpin
   _l_: next   _L_: next   _c_: close
 

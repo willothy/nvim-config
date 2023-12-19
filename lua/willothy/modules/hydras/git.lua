@@ -12,6 +12,7 @@ local Git = Hydra({
   name = "Git",
   shortname = "hydra",
   hint = git_hydra_hint,
+  stl_name = "G󰊢",
   config = {
     color = "pink",
     invoke_on_body = true,

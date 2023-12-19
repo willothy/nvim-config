@@ -3,13 +3,13 @@ local icons = willothy.icons
 
 local get_hex = willothy.hl.get
 
-local AB = function(self)
+local A = function(self)
   local o = vim.deepcopy(self)
   o.hl = function()
     local col = willothy.utils.mode.get_color()
     return {
       fg = col.fg,
-      bg = get_hex("TabLine", "bg"),
+      bg = col.fg,
     }
   end
   return o
@@ -20,42 +20,31 @@ local B = function(self)
   o.hl = function()
     return {
       fg = get_hex("StatusLine", "fg"),
-      bg = get_hex("TabLine", "bg"),
-    }
-  end
-  return o
-end
-
-local C = function(self)
-  local o = vim.deepcopy(self)
-  o.hl = function()
-    return {
-      fg = get_hex("StatusLine", "fg"),
       bg = get_hex("StatusLine", "bg"),
     }
   end
   return o
 end
 
-local transformed = {}
----@param path string?
----@return string
-local function make_cwd(path)
-  local cwd = path or vim.fn.getcwd(-1)
-  if not cwd then
-    return ""
-  end
-
-  if transformed[cwd] then
-    return transformed[cwd]
-  end
-
-  local rel = vim.fn.fnamemodify(cwd, ":~")
-  local short = vim.fn.pathshorten(rel, 3)
-  ---@cast short string
-  transformed[cwd] = short
-  return short
-end
+-- local transformed = {}
+-- ---@param path string?
+-- ---@return string
+-- local function make_cwd(path)
+--   local cwd = path or vim.fn.getcwd(-1)
+--   if not cwd then
+--     return ""
+--   end
+--
+--   if transformed[cwd] then
+--     return transformed[cwd]
+--   end
+--
+--   local rel = vim.fn.fnamemodify(cwd, ":~")
+--   local short = vim.fn.pathshorten(rel, 3)
+--   ---@cast short string
+--   transformed[cwd] = short
+--   return short
+-- end
 
 local Separator = {
   Left = {
@@ -81,10 +70,17 @@ local Space = setmetatable({
 })
 
 local Mode = {
-  AB(Separator.Left),
-  B({
+  A(Separator.Left),
+  {
     provider = function()
-      return willothy.utils.mode.get_name()
+      return willothy.utils.mode.get_short_name()
+    end,
+    hl = function()
+      local col = willothy.utils.mode.get_color()
+      return {
+        fg = get_hex("TabLineSel", "fg"),
+        bg = col.fg,
+      }
     end,
     update = {
       "User",
@@ -95,82 +91,45 @@ local Mode = {
         "HydraLeave",
       },
     },
-  }),
-  AB(Separator.Right),
+  },
+  A(Separator.Right),
 }
 
 local Location = {
-  AB(Separator.Left),
-  B(Space),
-  B({
+  A(Separator.Left),
+  -- B(Space),
+  {
     update = {
       "User",
       pattern = {
-        "UpdateHeirlinePosition",
+        "UpdateHeirlineLocation",
         "UpdateHeirlineComponents",
       },
       callback = function(self)
         self.pos = vim.api.nvim_win_get_cursor(0)
       end,
     },
+    hl = function()
+      local col = willothy.utils.mode.get_color()
+      return {
+        fg = get_hex("TabLineSel", "fg"),
+        bg = col.fg,
+      }
+    end,
     provider = function(self)
       if not self.pos then
         self.update.callback(self)
       end
-      return string.format("%d:%d", self.pos[1], self.pos[2])
+      return string.format("%03d:%02d", self.pos[1], self.pos[2])
     end,
-  }),
-  B(Space),
-  AB(Separator.Right),
+  },
+  -- B(Space),
+  A(Separator.Right),
 }
-
-local copilot_init = false
--- selene: allow(unused_variable)
-local Copilot = (
-  C({
-    init = vim.schedule_wrap(function(self)
-      self.ready = false
-
-      if not copilot_init then
-        copilot_init = true
-        return
-      elseif not self.ready then
-        require("copilot.api").register_status_notification_handler(
-          function(data)
-            self.status = data or {}
-            if self.status.status == nil or self.status.status == "" then
-              self.status.status = "InProgress"
-            end
-          end
-        )
-        self.ready = true
-      end
-
-      self.status = {
-        status = "Normal",
-      }
-    end),
-    provider = function(self)
-      if not self.ready then
-        return ""
-      end
-      local icon = icons.git.copilot_err
-      if self.status.status == "InProgress" then
-        icon = require("noice.util.spinners").spin("dots") or "\\"
-      elseif self.status.status == "Warning" then
-        icon = icons.git.copilot_warn
-      elseif self.status.status == "Normal" then
-        icon = icons.git.copilot
-      end
-
-      return icon .. " "
-    end,
-  })
-)
 
 local Env = function(var)
   return (
-    C({
+    B({
       provider = function(self)
         if not self.val then
           self.val = os.getenv(var)
@@ -195,7 +154,7 @@ local Env = function(var)
 end
 
 local Filetype = (
-  C({
+  B({
     provider = function(_self)
       return vim.bo.filetype ~= "" and vim.bo.filetype
         or vim.fn.fnamemodify(string.lower(vim.api.nvim_buf_get_name(0)), ":t")
@@ -347,7 +306,7 @@ local Harpoon = {
 }
 
 local Recording = (
-  C({
+  B({
     provider = function(self)
       return self.status or ""
     end,
@@ -375,7 +334,7 @@ local Recording = (
 )
 
 local Git = (
-  C({
+  B({
     update = {
       "User",
       pattern = {
@@ -495,24 +454,6 @@ local Git = (
   })
 )
 
-local WorkDir = (
-  C({
-    provider = function()
-      return make_cwd()
-    end,
-    on_click = {
-      callback = function()
-        willothy.fs.browse(vim.fn.getcwd(-1))
-      end,
-      name = "__heirline_workdir_click",
-    },
-    update = {
-      "User",
-      pattern = "UpdateHeirlineComponents",
-    },
-  })
-)
-
 local Sesh = Env("SESH_NAME")
 
 local DAPMessages = {
@@ -526,150 +467,134 @@ local DAPMessages = {
   Space,
 }
 
-local SessionName = {
-  condition = function(self)
-    if package.loaded.resession and not self.m then
-      self.m = require("resession")
-    end
-    return self.m and (self.m.get_current() or self.m.is_loading()) or false
-  end,
-  provider = function(self)
-    local name = self.m.get_current()
-    if name and name:match("/") then
-      name = vim.fn.fnamemodify(name, ":~")
-    end
-    return make_cwd(name) or require("noice.util.spinners").spin("dots9")
-  end,
-}
+---@diagnostic disable-next-line: unused-local
+-- selene: allow(unused_variable)
+-- local SignColumn = {
+--   provider = "%2.2s",
+-- }
 
 ---@diagnostic disable-next-line: unused-local
 -- selene: allow(unused_variable)
-local SignColumn = {
-  provider = "%2.2s",
-}
+-- local NumberColumn = {
+--   provider = "%=%{v:relnum?v:relnum:v:lnum}",
+--   hl = function(self)
+--     if
+--       vim.v.relnum == 0
+--       and self.winnr
+--         == vim.api.nvim_win_get_number(tonumber(vim.g.actual_curwin) or 0)
+--     then
+--       return "CurrentMode"
+--     else
+--       return "LineNr"
+--     end
+--   end,
+-- }
 
----@diagnostic disable-next-line: unused-local
--- selene: allow(unused_variable)
-local NumberColumn = {
-  provider = "%=%{v:relnum?v:relnum:v:lnum}",
-  hl = function(self)
-    if
-      vim.v.relnum == 0
-      and self.winnr
-        == vim.api.nvim_win_get_number(tonumber(vim.g.actual_curwin) or 0)
-    then
-      return "CurrentMode"
-    else
-      return "LineNr"
-    end
-  end,
-}
-
-local ffi = require("ffi")
-
--- Get direct fold information from Neovim
-ffi.cdef([[
-	typedef struct {} Error;
-	typedef struct {} win_T;
-	typedef struct {
-		int start;  // line number where deepest fold starts
-		int level;  // fold level, when zero other fields are N/A
-		int llevel; // lowest level that starts in v:lnum
-		int lines;  // number of lines from v:lnum to end of closed fold
-	} foldinfo_T;
-	foldinfo_T fold_info(win_T* wp, int lnum);
-	win_T *find_window_by_handle(int Window, Error *err);
-	int compute_foldcolumn(win_T *wp, int col);
-]])
-
----@diagnostic disable-next-line: unused-local
--- selene: allow(unused_variable)
-local FoldColumn = {
-  fallthrough = false,
-  init = function(self)
-    local wp = ffi.C.find_window_by_handle(0, ffi.new("Error")) -- get window handler
-    self.width = ffi.C.compute_foldcolumn(wp, 0) -- get foldcolumn width
-    -- get fold info of current line
-    self.foldinfo = self.width > 0 and ffi.C.fold_info(wp, vim.v.lnum)
-      or { start = 0, level = 0, llevel = 0, lines = 0 }
-    self.closed = self.foldinfo.lines > 0
-  end,
-  static = {
-    foldopen = icons.fold.open,
-    foldclosed = icons.fold.closed,
-    foldsep = " ",
-  },
-  {
-    provider = function(self)
-      return self.foldopen .. " "
-    end,
-    condition = function(self)
-      local first_level = self.foldinfo.level
-        - self.width
-        - (self.closed and 1 or 0)
-        + 1
-      if first_level < 1 then
-        first_level = 1
-      end
-      return self.foldinfo.start == vim.v.lnum
-        and first_level + 1 > self.foldinfo.llevel
-    end,
-    on_click = {
-      callback = function()
-        vim.print("close click")
-        local mouse = vim.fn.getmousepos()
-        if not mouse then
-          return
-        end
-        local curwin = vim.api.nvim_get_current_win()
-        local cursor = vim.api.nvim_win_get_cursor(curwin)
-        vim.api.nvim_set_current_win(mouse.winid)
-        vim.api.nvim_win_set_cursor(mouse.winid, { mouse.line, 0 })
-
-        vim.cmd("normal! zc")
-
-        vim.api.nvim_set_current_win(curwin)
-        vim.api.nvim_win_set_cursor(curwin, cursor)
-      end,
-      name = "__heirline_fold_close_click",
-    },
-  },
-  {
-    provider = function(self)
-      return self.foldclosed .. " "
-    end,
-    condition = function(self)
-      return self.foldinfo.lines > 0
-    end,
-    on_click = {
-      callback = function()
-        vim.print("open click")
-        local mouse = vim.fn.getmousepos()
-        if not mouse then
-          return
-        end
-        local curwin = vim.api.nvim_get_current_win()
-        local cursor = vim.api.nvim_win_get_cursor(curwin)
-        vim.api.nvim_set_current_win(mouse.winid)
-        vim.api.nvim_win_set_cursor(mouse.winid, { mouse.line, 0 })
-
-        vim.cmd("normal! zo")
-
-        vim.api.nvim_set_current_win(curwin)
-        vim.api.nvim_win_set_cursor(curwin, cursor)
-      end,
-      name = "__heirline_fold_open_click",
-    },
-  },
-  {
-    provider = function(self)
-      return self.foldsep .. " "
-    end,
-  },
-}
+-- local ffi = require("ffi")
+--
+-- -- Get direct fold information from Neovim
+-- ffi.cdef([[
+-- 	typedef struct {} Error;
+-- 	typedef struct {} win_T;
+-- 	typedef struct {
+-- 		int start;  // line number where deepest fold starts
+-- 		int level;  // fold level, when zero other fields are N/A
+-- 		int llevel; // lowest level that starts in v:lnum
+-- 		int lines;  // number of lines from v:lnum to end of closed fold
+-- 	} foldinfo_T;
+-- 	foldinfo_T fold_info(win_T* wp, int lnum);
+-- 	win_T *find_window_by_handle(int Window, Error *err);
+-- 	int compute_foldcolumn(win_T *wp, int col);
+-- ]])
+--
+-- ---@diagnostic disable-next-line: unused-local
+-- -- selene: allow(unused_variable)
+-- local FoldColumn = {
+--   fallthrough = false,
+--   init = function(self)
+--     local wp = ffi.C.find_window_by_handle(0, ffi.new("Error")) -- get window handler
+--     self.width = ffi.C.compute_foldcolumn(wp, 0) -- get foldcolumn width
+--     -- get fold info of current line
+--     self.foldinfo = self.width > 0 and ffi.C.fold_info(wp, vim.v.lnum)
+--       or { start = 0, level = 0, llevel = 0, lines = 0 }
+--     self.closed = self.foldinfo.lines > 0
+--   end,
+--   static = {
+--     foldopen = icons.fold.open,
+--     foldclosed = icons.fold.closed,
+--     foldsep = " ",
+--   },
+--   {
+--     provider = function(self)
+--       return self.foldopen .. " "
+--     end,
+--     condition = function(self)
+--       local first_level = self.foldinfo.level
+--         - self.width
+--         - (self.closed and 1 or 0)
+--         + 1
+--       if first_level < 1 then
+--         first_level = 1
+--       end
+--       return self.foldinfo.start == vim.v.lnum
+--         and first_level + 1 > self.foldinfo.llevel
+--     end,
+--     on_click = {
+--       callback = function()
+--         vim.print("close click")
+--         local mouse = vim.fn.getmousepos()
+--         if not mouse then
+--           return
+--         end
+--         local curwin = vim.api.nvim_get_current_win()
+--         local cursor = vim.api.nvim_win_get_cursor(curwin)
+--         vim.api.nvim_set_current_win(mouse.winid)
+--         vim.api.nvim_win_set_cursor(mouse.winid, { mouse.line, 0 })
+--
+--         vim.cmd("normal! zc")
+--
+--         vim.api.nvim_set_current_win(curwin)
+--         vim.api.nvim_win_set_cursor(curwin, cursor)
+--       end,
+--       name = "__heirline_fold_close_click",
+--     },
+--   },
+--   {
+--     provider = function(self)
+--       return self.foldclosed .. " "
+--     end,
+--     condition = function(self)
+--       return self.foldinfo.lines > 0
+--     end,
+--     on_click = {
+--       callback = function()
+--         vim.print("open click")
+--         local mouse = vim.fn.getmousepos()
+--         if not mouse then
+--           return
+--         end
+--         local curwin = vim.api.nvim_get_current_win()
+--         local cursor = vim.api.nvim_win_get_cursor(curwin)
+--         vim.api.nvim_set_current_win(mouse.winid)
+--         vim.api.nvim_win_set_cursor(mouse.winid, { mouse.line, 0 })
+--
+--         vim.cmd("normal! zo")
+--
+--         vim.api.nvim_set_current_win(curwin)
+--         vim.api.nvim_win_set_cursor(curwin, cursor)
+--       end,
+--       name = "__heirline_fold_open_click",
+--     },
+--   },
+--   {
+--     provider = function(self)
+--       return self.foldsep .. " "
+--     end,
+--   },
+-- }
 
 local Overseer = {
-  condition = function(self)
+  condition = function()
     return package.loaded["overseer"] ~= nil
   end,
   init = function(self)
@@ -679,10 +604,10 @@ local Overseer = {
   end,
   static = {
     symbols = {
-      ["FAILURE"] = "  ",
-      ["CANCELED"] = "  ",
-      ["SUCCESS"] = "  ",
-      ["RUNNING"] = " 省",
+      ["FAILURE"] = " 󰲼 ",
+      ["CANCELED"] = " 󱄊 ",
+      ["SUCCESS"] = " 󰦕 ",
+      ["RUNNING"] = " 󰦖 ", --" 省",
     },
     colors = {
       ["FAILURE"] = "OverseerFAILURE",
@@ -718,10 +643,8 @@ local Overseer = {
   },
 }
 
-local Truncate = { provider = "%<" }
-
 local function Center(group)
-  return C({
+  return B({
     Align,
     group,
     Align,
@@ -729,7 +652,7 @@ local function Center(group)
 end
 
 local function Right(group)
-  return C({
+  return B({
     -- {
     --   provider = function()
     --     local len = vim.fn.strcharlen(make_cwd())
@@ -752,7 +675,7 @@ local function Right(group)
 end
 
 local Left = function(group)
-  return C({
+  return B({
     -- {
     --   provider = function()
     --     local len = vim.fn.strcharlen(make_cwd())
@@ -823,6 +746,8 @@ willothy.event.on({
   "LspAttach",
   "ColorScheme",
   "VeryLazy",
+  "HydraEnter",
+  "HydraLeave",
 }, function()
   willothy.event.emit("UpdateHeirlineComponents")
 end)
@@ -833,11 +758,11 @@ willothy.event.on({
   "CursorMoved",
   "CursorMovedI",
 }, function()
-  willothy.event.emit("UpdateHeirlinePosition")
+  willothy.event.emit("UpdateHeirlineLocation")
 end)
 
 willothy.event.on("ColorScheme", function()
   require("heirline").setup({
-    statusline = C(StatusLine),
+    statusline = B(StatusLine),
   })
 end)

@@ -14,6 +14,7 @@ _<Esc>_, _q_: close
 local config = {
   hint = hint,
   name = "Telescope",
+  stl_name = "T󰭎",
   config = {
     color = "blue",
     invoke_on_body = true,

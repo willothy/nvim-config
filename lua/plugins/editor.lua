@@ -3,7 +3,7 @@ return {
   "folke/neoconf.nvim",
   "kkharji/sqlite.lua",
   "nvim-lua/plenary.nvim",
-  "anuvyklack/hydra.nvim",
+  "nvim-island/hydra.nvim", -- "anuvyklack/hydra.nvim"
   -- COMMANDS --
   {
     "smjonas/live-command.nvim",

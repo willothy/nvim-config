@@ -25,7 +25,7 @@ require("statuscol").setup({
         -- "Dap*", "Diagnostic*"
         name = { ".*" },
         -- "Dap*", "Diagnostic*"
-        namespace = { ".*" },
+        namespace = { "Diagnostic*", ".*" },
         maxwidth = 1,
         minwidth = 1,
         colwidth = 2,

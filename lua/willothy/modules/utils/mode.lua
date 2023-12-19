@@ -19,6 +19,47 @@ local mode_names = {
   ["nt"] = "Normal",
 }
 
+
+-- stylua: ignore start
+local mode_short_names = {
+  ['n']      = 'NO',
+  ['no']     = 'OP',
+  ['nov']    = 'OC',
+  ['noV']    = 'OL',
+  ['no\x16'] = 'OB',
+  ['\x16']   = 'VB',
+  ['niI']    = 'IN',
+  ['niR']    = 'RE',
+  ['niV']    = 'RV',
+  ['nt']     = 'NT',
+  ['ntT']    = 'TM',
+  ['v']      = 'VI',
+  ['vs']     = 'VI',
+  ['V']      = 'VL',
+  ['Vs']     = 'VL',
+  ['\x16s']  = 'VB',
+  ['s']      = 'SE',
+  ['S']      = 'SL',
+  ['\x13']   = 'SB',
+  ['i']      = 'IN',
+  ['ic']     = 'IC',
+  ['ix']     = 'IX',
+  ['R']      = 'RE',
+  ['Rc']     = 'RC',
+  ['Rx']     = 'RX',
+  ['Rv']     = 'RV',
+  ['Rvc']    = 'RC',
+  ['Rvx']    = 'RX',
+  ['c']      = 'CO',
+  ['cv']     = 'CV',
+  ['r']      = 'PR',
+  ['rm']     = 'PM',
+  ['r?']     = 'P?',
+  ['!']      = 'SH',
+  ['t']      = 'TE',
+}
+-- stylua: ignore end
+
 function M.get_color(evt)
   evt = evt or ""
 
@@ -65,7 +106,6 @@ function M.get_color(evt)
     hl.sp = hex(hl.sp)
   end
   return hl
-  -- return willothy.hl.hl(hl)
 end
 
 function M.get_name()
@@ -77,23 +117,16 @@ function M.get_name()
   end
 end
 
--- function M.setup()
---   local function update_mode(ev)
---     local hl = M.get_color(ev.file)
---     api.nvim_set_hl(0, "CursorLineNr", hl)
---   end
---   update_mode({})
---
---   local group = api.nvim_create_augroup("Modenr", { clear = true })
---   api.nvim_create_autocmd({ "ModeChanged" }, {
---     group = group,
---     callback = update_mode,
---   })
---   api.nvim_create_autocmd("User", {
---     pattern = { "HydraEnter", "HydraLeave" },
---     group = group,
---     callback = update_mode,
---   })
--- end
+function M.get_short_name()
+  local hydra = package.loaded.hydra and require("hydra.statusline")
+  if hydra and hydra.is_active() then
+    if _G.Hydra and _G.Hydra.config.stl_name then
+      return _G.Hydra.config.stl_name
+    end
+    return hydra.get_name()
+  else
+    return mode_short_names[api.nvim_get_mode().mode] or "NO"
+  end
+end
 
 return M

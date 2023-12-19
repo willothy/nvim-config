@@ -21,7 +21,8 @@ local function mkcaps(extra)
       dynamicRegistration = false,
     }
 
-    capabilities.offsetEncoding = "utf-8"
+    capabilities.general.positionEncodings = { "utf-8" }
+    -- capabilities.offsetEncoding = "utf-8"
   end
 
   ---@diagnostic disable-next-line: missing-fields
@@ -202,7 +203,14 @@ sign({
 vim.diagnostic.config({
   underline = true,
   -- virtual_lines = true,
-  signs = true,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
+      [vim.diagnostic.severity.WARN] = icons.diagnostics.Warn,
+      [vim.diagnostic.severity.INFO] = icons.diagnostics.Info,
+      [vim.diagnostic.severity.HINT] = icons.diagnostics.Hint,
+    },
+  },
   severity_sort = true,
   float = {
     header = setmetatable({}, {

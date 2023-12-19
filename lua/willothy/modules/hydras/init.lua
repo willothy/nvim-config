@@ -5,12 +5,12 @@ local M = {}
 M.Hydra = function(config)
   local on_enter = function(f)
     return function(...)
-      if f then
-        f(...)
-      end
       vim.api.nvim_exec_autocmds("User", {
         pattern = "HydraEnter",
       })
+      if f then
+        f(...)
+      end
     end
   end
   local on_exit = function(f)
@@ -40,6 +40,7 @@ M.Hydra = function(config)
     }, { mode = config.mode })
   end
   this = require("hydra")(config)
+  this.config.stl_name = config.stl_name
   return this
 end
 

@@ -5,7 +5,7 @@ local cmd = require("hydra.keymap-util").cmd
 local window_hint = [[
  ^^^^^^^^^^^^     Move      ^^    Size   ^^   ^^     Split
  ^^^^^^^^^^^^-------------  ^^-----------^^   ^^---------------
- ^ ^ _k_ ^ ^  ^ ^ _K_ ^ ^   ^   _<C-k>_   ^   _s_: horizontally 
+ ^ ^ _k_ ^ ^  ^ ^ _K_ ^ ^   ^   _<C-k>_   ^   _s_: horizontally
  _h_ ^ ^ _l_  _H_ ^ ^ _L_   _<C-h>_ _<C-l>_   _v_: vertically
  ^ ^ _j_ ^ ^  ^ ^ _J_ ^ ^   ^   _<C-j>_   ^   _q_: close
  focus^^^^^^  ^swap ^^^^^   ^_=_: equalize^   _z_: maximize
@@ -16,6 +16,7 @@ local window_hint = [[
 return Hydra({
   name = "Windows",
   shortname = "hydra",
+  stl_name = "W󰖲",
   hint = window_hint,
   config = {
     color = "pink",
