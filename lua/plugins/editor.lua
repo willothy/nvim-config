@@ -382,6 +382,7 @@ return {
   },
   {
     "tris203/hawtkeys.nvim",
+    -- branch = "experimentalTreeMapping",
     -- branch = "tsOpt",
     -- dir = "~/projects/lua/hawtkeys.nvim/",
     opts = {},
