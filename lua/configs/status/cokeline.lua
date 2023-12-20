@@ -253,29 +253,29 @@ local Padding = {
   fg = "none",
 }
 
-local Debug = {
-  text = function()
-    if package.loaded["dap"] and require("dap").session() then
-      return string.format(" %s ", icons.dap.action.stop)
-    end
-    return string.format(" %s ", icons.dap.action.start)
-  end,
-  bg = "TabLineFill",
-  fg = function(cx)
-    return cx.is_hovered and p.lemon_chiffon or p.blue
-  end,
-  on_click = function(_id, _clicks, button, _modifiers, _buffer)
-    if button == "l" then
-      if require("dap").session() then
-        require("dap").terminate()
-      else
-        require("configs.debugging").launch()
-      end
-    else
-      vim.cmd("Greyjoy")
-    end
-  end,
-}
+-- local Debug = {
+--   text = function()
+--     if package.loaded["dap"] and require("dap").session() then
+--       return string.format(" %s ", icons.dap.action.stop)
+--     end
+--     return string.format(" %s ", icons.dap.action.start)
+--   end,
+--   bg = "TabLineFill",
+--   fg = function(cx)
+--     return cx.is_hovered and p.lemon_chiffon or p.blue
+--   end,
+--   on_click = function(_id, _clicks, button, _modifiers, _buffer)
+--     if button == "l" then
+--       if require("dap").session() then
+--         require("dap").terminate()
+--       else
+--         require("configs.debugging").launch()
+--       end
+--     else
+--       vim.cmd("Greyjoy")
+--     end
+--   end,
+-- }
 
 local function harpoon_sorter()
   local cache = {}
@@ -386,9 +386,7 @@ local opts = {
     },
     -- Padding,
   },
-  rhs = {
-    Debug,
-  },
+  rhs = false,
   mappings = {
     disable_mouse = false,
   },
