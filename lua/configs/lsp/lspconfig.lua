@@ -23,7 +23,7 @@ local function mkcaps(extra)
 
     capabilities.general.positionEncodings = { "utf-8" }
 
-    -- capabilities.offsetEncoding = "utf-8"
+    capabilities.offsetEncoding = "utf-8"
   end
 
   ---@diagnostic disable-next-line: missing-fields

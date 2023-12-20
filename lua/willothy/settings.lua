@@ -45,10 +45,8 @@ function M.setup()
   o.foldlevelstart = 99
   o.foldenable = true
   vim.opt.foldmethod = "expr"
-  -- vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-  vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
   vim.opt.foldexpr = "v:lua.willothy.ui.foldexpr()"
-  -- vim.opt.foldtext = "v:lua.willothy.ui.foldtext()"
+  vim.opt.foldtext = "v:lua.willothy.ui.foldtext()"
 
   o.splitkeep = "topline"
   -- o.splitkeep = "cursor"
