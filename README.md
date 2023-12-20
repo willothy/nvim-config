@@ -21,6 +21,16 @@ to add to your own config :)
 
 ## Some things I'm working on in this repo
 
+- Custom UI elements
+  - Simple floating scrollbars for split windows
+  - Custom foldexpr and foldtext
+    - Shows both the last line of the fold
+    - Preserves extmarks / inlay hints
+    - TODO: Preserves semantic token highlights
+  - Code action menu with preview, based on dropbar.nvim
+  - Featureful bars and lines based on heirline, dropbar.nvim, and nvim-cokeline
+  - `ui.select` based on [`dropbar.nvim`](https://github.com/Bekaboo/dropbar.nvim)
+    - This has now been merged into `dropbar.nvim`, so ignore the impl in this repo and use that instead :)
 - `rx.lua`: Reactive extensions for Neovim (very WIP, kinda abandoned)
   - [x] signals and effects
   - [x] automatic dependency tracking
@@ -29,8 +39,3 @@ to add to your own config :)
 - `player.lua`: Playerctl UI for Neovim
   - [x] playerctl wrapper
   - [ ] nui UI (wip)
-- Custom UI elements
-  - Simple floating scrollbars
-  - `ui.select` based on [`dropbar.nvim`](https://github.com/Bekaboo/dropbar.nvim)
-  - Code action menu with preview, also based on dropbar.nvim
-  - Featureful statusline and tabline/bufferline
