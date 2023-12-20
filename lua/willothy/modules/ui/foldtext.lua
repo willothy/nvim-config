@@ -1,6 +1,6 @@
 -- Author: Willothy
 --
--- Virtual text preserving treesitter foldtext, similar to nvim-ufo
+-- Treesitter-based foldtext that preserves inlay hints / extmarks
 
 return function()
   local foldstart = vim.v.foldstart
@@ -34,6 +34,7 @@ return function()
       local virt_text = mark[4].virt_text
       local col_start = mark[3]
       local cur_width = 0
+      -- TODO: preserve LSP semantic highlighting
       for i, res_chunk in ipairs(ts_fold_vt) do
         cur_width = cur_width + #res_chunk[1]
         if cur_width >= col_start then

@@ -22,19 +22,6 @@ return {
   },
   -- LSP UI --
   {
-    "kevinhwang91/nvim-ufo",
-    enabled = false,
-    name = "ufo",
-    dependencies = {
-      "kevinhwang91/promise-async",
-    },
-    event = "VeryLazy",
-    opts = {
-      close_fold_kinds = {},
-      -- fold_virt_text_handler = vim.F.if_nil,
-    },
-  },
-  {
     "j-hui/fidget.nvim",
     config = function()
       require("configs.lsp.fidget")

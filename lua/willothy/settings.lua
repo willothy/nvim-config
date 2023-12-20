@@ -38,27 +38,21 @@ function M.setup()
   o.mousetime = 200
   o.mousemoveevent = true
 
-  o.conceallevel = 2
+  -- o.conceallevel = 2
 
   o.foldcolumn = "1"
   o.foldlevel = 99
-  o.foldenable = true
   o.foldlevelstart = 99
-  o.foldmethod = "manual"
-  -- o.foldopen = "block,mark,search,percent,undo"
-  -- o.foldopen = "block,hor,mark,percent,quickfix,search,tag,undo"
-  -- o.foldopen = "block,mark,percent,quickfix,search,tag,undo"
-  -- vim.opt.foldmethod = "expr"
-  vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+  o.foldenable = true
+  vim.opt.foldmethod = "expr"
+  vim.opt.foldexpr = "v:lua.willothy.ui.foldexpr()"
   vim.opt.foldtext = "v:lua.willothy.ui.foldtext()"
 
   o.splitkeep = "topline"
   -- o.splitkeep = "cursor"
 
   -- Pcall to avoid errors on older versions of nvim
-  pcall(function()
-    o.smoothscroll = true
-  end)
+  o.smoothscroll = true
 
   o.mousescroll = "ver:1,hor:6"
 

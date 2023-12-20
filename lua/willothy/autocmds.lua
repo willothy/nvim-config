@@ -6,7 +6,7 @@ local group =
 local autocmds = {
   {
     "LspAttach",
-    callback = vim.schedule_wrap(function(args)
+    callback = function(args)
       local bufnr = args.buf
       local client = vim.lsp.get_client_by_id(args.data.client_id)
 
@@ -33,12 +33,7 @@ local autocmds = {
       then
         vim.lsp.inlay_hint.enable(bufnr)
       end
-
-      -- local ok, ufo = pcall(require, "ufo")
-      -- if ok then
-      --   ufo.attach(bufnr)
-      -- end
-    end),
+    end,
   },
   {
     "BufWritePost",

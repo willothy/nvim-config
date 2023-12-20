@@ -101,6 +101,8 @@ willothy.ui.select = "ui.select"
 willothy.ui.code_actions = "ui.code_actions"
 ---@module "willothy.modules.ui.foldtext"
 willothy.ui.foldtext = "ui.foldtext"
+---@module "willothy.modules.ui.foldexpr"
+willothy.ui.foldexpr = "ui.foldexpr"
 ---@module "willothy.modules.ui.intro"
 willothy.ui.intro = "ui.intro"
 

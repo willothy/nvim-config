@@ -384,7 +384,7 @@ local opts = {
         return buffer.is_focused and "TabLineSel" or "TabLine"
       end,
     },
-    -- Padding,
+    Padding,
   },
   rhs = false,
   mappings = {
