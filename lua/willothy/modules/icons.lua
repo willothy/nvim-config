@@ -111,6 +111,29 @@ Icons.actions = {
   close_box = "󰅗",
 }
 
+Icons.menu = {
+  actions = {
+    outline = {
+      left = "󰨂",
+      right = "󰨃",
+      up = "󰚷",
+      down = "󰚶",
+      swap = "󰩥",
+      filter = "󱃦",
+    },
+    filled = {
+      up = "󰍠",
+      down = "󰍝",
+      left = "󰍞",
+      right = "󰍟",
+      swap = "󰩤",
+      filter = "󱃥",
+    },
+  },
+  hamburger = "󰍜",
+  hamburger_open = "󰮫",
+}
+
 Icons.fold = {
   open = "",
   closed = "",

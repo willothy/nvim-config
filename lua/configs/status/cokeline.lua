@@ -13,7 +13,11 @@ local SidebarOpen = {
   text = function(buffer)
     local open = require("cokeline.sidebar").get_win("left") and true or false
     if (open and buffer.is_readonly) or (buffer.is_first and not open) then
-      return string.format(" %s ", open and "󰨂" or "󰨃")
+      return string.format(
+        " %s ",
+        open and icons.menu.actions.outline.left
+          or icons.menu.actions.outline.right
+      )
     end
     return ""
   end,
@@ -323,9 +327,7 @@ local function harpoon_sorter()
     elseif mb and not ma then
       return false
     elseif ma == nil and mb == nil then
-      ---@diagnostic disable-next-line: undefined-field
       ma = a._valid_index
-      ---@diagnostic disable-next-line: undefined-field
       mb = b._valid_index
     end
     return ma < mb
@@ -355,7 +357,8 @@ local opts = {
   components = {
     {
       text = function(buffer)
-        return buffer.is_focused and separators.left or "⎸"
+        return buffer.is_focused and separators.left
+          or icons.separators.bar.left
       end,
       fg = function(buffer)
         return buffer.is_focused and "Directory" or "#2b3243" -- TODO: use hlgroup
@@ -371,17 +374,17 @@ local opts = {
     Space,
     Diagnostics,
     CloseOrUnsaved,
-    Space,
+    -- Space,
     {
       text = function(buffer)
-        return buffer.is_last and "⎹" or ""
+        return buffer.is_last and icons.separators.bar.right or ""
       end,
       fg = "#2b3243", -- TODO: use hlgroup
       bg = function(buffer)
         return buffer.is_focused and "TabLineSel" or "TabLine"
       end,
     },
-    Padding,
+    -- Padding,
   },
   rhs = {
     Debug,
