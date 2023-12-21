@@ -64,14 +64,14 @@ return {
   },
   {
     "lukas-reineke/headlines.nvim",
+    ft = "markdown",
     config = function()
       require("configs.editor.headlines")
     end,
-    event = "VeryLazy",
   },
   {
     "jmbuhr/otter.nvim",
-    event = "VeryLazy",
+    ft = "markdown",
     config = function()
       require("configs.editor.otter")
     end,
