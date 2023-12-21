@@ -92,6 +92,7 @@ require("lazy").setup({
         "tutor",
         "zipPlugin",
         "man",
+        "osc52", -- Wezterm doesn't support osc52 yet
       },
     },
   },

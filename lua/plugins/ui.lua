@@ -45,14 +45,17 @@ return {
   },
   {
     "3rd/image.nvim",
-    config = true,
-    init = function()
+    event = "VeryLazy",
+    config = function()
       package.path = package.path
         .. ";"
         .. "/usr/share/lua/5.1/?/init.lua;"
         .. ";"
         .. "/usr/share/lua/5.1/?.lua;"
+      require("image").setup({})
     end,
+    -- init = function()
+    -- end,
   },
   -- SCOPE / CURSORWORD --
   {

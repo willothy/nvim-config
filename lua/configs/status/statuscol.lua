@@ -48,12 +48,7 @@ require("statuscol").setup({
       text = { builtin.lnumfunc, " " },
       condition = {
         function(args)
-          if (_G.i or 0) < 3 then
-            vim.print(args)
-            _G.i = (_G.i or 0) + 1
-          end
-          return args.relnum ~= 0
-            or (args.win ~= vim.api.nvim_get_current_win())
+          return args.relnum ~= 0 or args.win ~= vim.api.nvim_get_current_win()
         end,
         is_normal_buf,
       },
