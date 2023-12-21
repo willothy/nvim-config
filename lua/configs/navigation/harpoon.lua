@@ -197,6 +197,10 @@ harpoon:extend({
   ADD = handler("ADD"),
   REMOVE = handler("REMOVE"),
   UI_CREATE = function(cx)
+    local win = cx.win_id
+    vim.wo[win].cursorline = true
+    vim.wo[win].signcolumn = "no"
+
     vim.keymap.set("n", "<C-v>", function()
       harpoon.ui:select_menu_item({ vsplit = true })
     end, { buffer = cx.bufnr })

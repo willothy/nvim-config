@@ -31,7 +31,7 @@ require("statuscol").setup({
         colwidth = 2,
       },
       click = "v:lua.ScSa",
-      condition = { is_normal_buf },
+      condition = { is_normal_buf, is_normal_buf },
     },
     {
       text = { builtin.lnumfunc },
@@ -48,7 +48,11 @@ require("statuscol").setup({
       text = { builtin.lnumfunc, " " },
       condition = {
         function(args)
-          return (args.relnum ~= 0)
+          if (_G.i or 0) < 3 then
+            vim.print(args)
+            _G.i = (_G.i or 0) + 1
+          end
+          return args.relnum ~= 0
             or (args.win ~= vim.api.nvim_get_current_win())
         end,
         is_normal_buf,
