@@ -42,7 +42,7 @@
   "greyjoy.nvim": { "branch": "main", "commit": "187bf534f906cfa3d47024d9d7c0eec99c148a00" },
   "guess-indent.nvim": { "branch": "main", "commit": "b8ae749fce17aa4c267eec80a6984130b94f80b2" },
   "harpoon": { "branch": "combined-ext", "commit": "18bf8ed0c0d14b6342a93f12e8ca0e1a875f82b1" },
-  "hawtkeys.nvim": { "branch": "main", "commit": "683e163909dba3247775f581d9897c540d8245b1" },
+  "hawtkeys.nvim": { "branch": "main", "commit": "eccd881d10a1b9f12383ea6e64adc63c4ad5da18" },
   "headlines.nvim": { "branch": "master", "commit": "e3d7bfdf40e41a020d966d35f8b48d75b90367d2" },
   "heirline.nvim": { "branch": "master", "commit": "170e1b1fd7c11db00e46d802165fb277db601ae7" },
   "highlight-undo.nvim": { "branch": "main", "commit": "50a6884a8476be04ecce8f1c4ed692c5000ef0a1" },
