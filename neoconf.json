@@ -11,6 +11,7 @@
         // "telescope.nvim",
         // "nvim-cokeline",
         "lazy.nvim",
+        "fidget.nvim",
         "plenary.nvim",
         "edgy.nvim",
         "nvim-treesitter",
