@@ -9,6 +9,13 @@ local separators = {
   right = icons.blocks.left[4],
 }
 
+local groups = {
+  bg = "TabLine",
+  bg_active = "TabLine",
+  bg_fill = "TabLineFill",
+  hl_active = "TabLineSel",
+}
+
 local SidebarOpen = {
   text = function(buffer)
     local open = require("cokeline.sidebar").get_win("left") and true or false
@@ -22,10 +29,10 @@ local SidebarOpen = {
     return ""
   end,
   fg = function(cx)
-    return cx.is_hovered and "TabLineSel" or "TabLine"
+    return cx.is_hovered and groups.bg_active or groups.bg
   end,
   bg = function(cx)
-    return cx.is_hovered and "TabLineSel" or "TabLine"
+    return cx.is_hovered and groups.bg_active or groups.bg
   end,
   on_click = function()
     require("edgy").toggle("left")
@@ -64,9 +71,9 @@ local UniquePrefix = {
   end,
   fg = function(buffer)
     if buffer.is_focused then
-      return require("cokeline.hlgroups").get_hl_attr("TabLineSel", "bg")
+      return require("cokeline.hlgroups").get_hl_attr(groups.bg_active, "bg")
     else
-      return "TabLine"
+      return groups.bg
     end
   end,
   truncation = {
@@ -86,7 +93,7 @@ local Filename = {
   end,
   sp = function(buffer)
     --[[ if buffer.is_focused then
-          return "TabLine"
+          return groups.bg
         else ]]
     if buffer.diagnostics.errors ~= 0 then
       return "DiagnosticError"
@@ -95,12 +102,12 @@ local Filename = {
     elseif buffer.diagnostics.infos ~= 0 then
       return "DiagnosticInfo"
     else
-      return "TabLine"
+      return groups.bg
     end
   end,
   fg = function(buffer)
     --[[ if buffer.is_focused then
-          return "TabLine"
+          return groups.bg
         else ]]
     if buffer.diagnostics.errors ~= 0 then
       return "DiagnosticError"
@@ -109,10 +116,10 @@ local Filename = {
     elseif buffer.diagnostics.infos ~= 0 then
       return "DiagnosticInfo"
     else
-      return buffer.is_focused and "TabLineSel" or "TabLine"
+      return buffer.is_focused and groups.bg_active or groups.bg
     end
   end,
-  -- bg = "TabLine",
+  -- bg = groups.bg,
   truncation = {
     priority = 2,
     direction = "right",
@@ -156,7 +163,7 @@ Diagnostics = {
       or nil
   end,
   bg = function(buffer)
-    return buffer.is_focused and "TabLineSel" or "TabLine"
+    return buffer.is_focused and groups.bg_active or groups.bg
   end,
   truncation = { priority = 1 },
   on_click = function(_id, _clicks, _button, _modifiers, buffer)
@@ -239,7 +246,7 @@ local CloseOrUnsaved = {
         or (icons.actions.close .. " ")
     end
   end,
-  fg = "TabLine",
+  fg = groups.bg,
   bold = true,
   truncation = { priority = 1 },
   on_click = function(_, _, _, _, buffer)
@@ -248,12 +255,10 @@ local CloseOrUnsaved = {
 }
 
 local Padding = {
-  text = function(buffer)
-    return buffer.is_last and " " or ""
+  text = function(cx)
+    return cx.is_first and " " or ""
   end,
-  bg = "TabLineFill",
-  -- bg = "#1d202f",
-  fg = "none",
+  highlight = "TabLineFill",
 }
 
 -- local Debug = {
@@ -351,10 +356,10 @@ local opts = {
   },
   default_hl = {
     fg = function(buffer)
-      return buffer.is_focused and "TabLineSel" or "TabLine"
+      return buffer.is_focused and groups.bg_active or groups.bg
     end,
     bg = function(buffer)
-      return buffer.is_focused and "TabLineSel" or "TabLine"
+      return buffer.is_focused and groups.bg_active or groups.bg
     end,
   },
   components = {
@@ -367,7 +372,7 @@ local opts = {
         return buffer.is_focused and "Directory" or "#2b3243" -- TODO: use hlgroup
       end,
       bg = function(buffer)
-        return buffer.is_focused and "TabLineSel" or "TabLine"
+        return buffer.is_focused and groups.bg_active or groups.bg
       end,
     },
     Space,
@@ -384,10 +389,9 @@ local opts = {
       end,
       fg = "#2b3243", -- TODO: use hlgroup
       bg = function(buffer)
-        return buffer.is_focused and "TabLineSel" or "TabLine"
+        return buffer.is_focused and groups.bg_active or groups.bg
       end,
     },
-    Padding,
   },
   rhs = false,
   mappings = {
@@ -396,6 +400,7 @@ local opts = {
   tabs = {
     placement = "right",
     components = {
+      Padding,
       {
         text = function(tab)
           return (tab.is_active or tab.is_hovered) and separators.left or "⎸"
@@ -404,7 +409,7 @@ local opts = {
           return tab.is_active and "Directory" or "#2b3243"
         end,
         bg = function(tab)
-          return tab.is_focused and "TabLineSel" or "TabLine"
+          return tab.is_focused and groups.bg_active or groups.bg
         end,
       },
       {
@@ -414,8 +419,8 @@ local opts = {
             vim.fn.fnamemodify(vim.fn.getcwd(-1, tab.index or 1), ":t")
           )
         end,
-        fg = "TabLine",
-        bg = "TabLine",
+        fg = groups.bg,
+        bg = groups.bg,
       },
       {
         text = function(tab)
@@ -425,7 +430,7 @@ local opts = {
           return tab.is_focused and "Directory" or "#2b3243"
         end,
         bg = function(tab)
-          return tab.is_focused and "TabLineSel" or "TabLine"
+          return tab.is_focused and groups.bg_active or groups.bg
         end,
       },
     },
@@ -435,7 +440,7 @@ local opts = {
     components = {
       {
         text = separators.left,
-        highlight = "TabLine",
+        highlight = groups.bg,
       },
       {
         text = function()
@@ -444,7 +449,7 @@ local opts = {
             math.max(0, require("cokeline.sidebar").get_width("left") - 4)
           )
         end,
-        bg = "TabLine",
+        bg = groups.bg,
       },
       SidebarOpen,
     },

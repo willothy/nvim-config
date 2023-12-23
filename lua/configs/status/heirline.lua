@@ -771,7 +771,6 @@ willothy.event.on({
 end)
 
 willothy.event.on("ColorScheme", function()
-  require("heirline").setup({
-    statusline = B(StatusLine),
-  })
+  require("heirline.highlights").reset_highlights()
+  require("heirline.highlights").clear_colors()
 end)
