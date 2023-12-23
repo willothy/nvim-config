@@ -155,7 +155,9 @@ Diagnostics = {
       or (buffer.diagnostics.warnings ~= 0 and "DiagnosticWarn")
       or nil
   end,
-  bg = "TabLine",
+  bg = function(buffer)
+    return buffer.is_focused and "TabLineSel" or "TabLine"
+  end,
   truncation = { priority = 1 },
   on_click = function(_id, _clicks, _button, _modifiers, buffer)
     local trouble = require("trouble")
