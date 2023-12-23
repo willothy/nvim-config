@@ -66,9 +66,9 @@ return function()
         }
       )
       -- ensure priority sort (buf_get_extmarks returns "traversal order")
-      table.sort(extmarks, function(a, b)
-        return a[4].priority < b[4].priority
-      end)
+      -- table.sort(extmarks, function(a, b)
+      --   return a[4].priority > b[4].priority
+      -- end)
       local extmark_hl = extmarks[1]
 
       local text = line:sub(start_col + 1, end_col)

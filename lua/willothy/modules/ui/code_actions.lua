@@ -317,7 +317,7 @@ end
 
 local function format_item(item)
   local title = item[2].title:gsub("\r\n", "\\r\\n")
-  return title:gsub("\n%s+", ""):gsub("\n", "\\n")
+  return ({ title:gsub("\n%s+", ""):gsub("\n", "\\n") })[1]
 end
 
 local function preview_create_buf(curbuf, symbol)

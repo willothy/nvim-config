@@ -5,7 +5,7 @@ return {
   "nvim-lua/plenary.nvim",
   {
     -- "anuvyklack/hydra.nvim"
-    "nvim-island/hydra.nvim",
+    "nvimtools/hydra.nvim",
   },
   -- COMMANDS --
   {

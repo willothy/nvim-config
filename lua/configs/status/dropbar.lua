@@ -116,6 +116,8 @@ dropbar.setup({
   },
 })
 
+vim.ui.select = require("dropbar.utils.menu").select
+
 -- willothy.event.on("ResessionLoadPost", function()
 --   vim
 --     .iter(vim.api.nvim_list_wins())
