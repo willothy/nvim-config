@@ -54,8 +54,6 @@ return {
         .. "/usr/share/lua/5.1/?.lua;"
       require("image").setup({})
     end,
-    -- init = function()
-    -- end,
   },
   -- SCOPE / CURSORWORD --
   {

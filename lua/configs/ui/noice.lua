@@ -11,7 +11,6 @@ local border_style = {
 
 local require = require("noice.util.lazy")
 
-local NuiView = require("noice.view.nui")
 local Util = require("noice.util")
 local View = require("noice.view")
 
@@ -24,7 +23,7 @@ local defaults = { timeout = 5000 }
 ---@field active table<number, NoiceMessage>
 ---@field super NoiceView
 ---@field handles table<number, ProgressHandle>
----@field timers table<number, vim.loop.Timer>
+---@field timers table<number, uv_timer_t>
 ---@diagnostic disable-next-line: undefined-field
 local FidgetView = View:extend("MiniView")
 

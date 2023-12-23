@@ -80,6 +80,4 @@ notify.setup({
   render = "compact",
   timeout = 5000,
   stages = anim(Dir.TOP_DOWN),
-  -- top_down = false,
-  -- background_color = "#ffffff",
 })

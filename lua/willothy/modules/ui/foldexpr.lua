@@ -11,6 +11,10 @@ for i = 1, 5 do
   end
 end
 
+---TODO: I think I just need to write my own foldfunc that shows the last line...
+---
+---This works for things that end with 'end', but not for tables.
+
 ---@param lnum? integer
 ---@return string
 return function(lnum)
