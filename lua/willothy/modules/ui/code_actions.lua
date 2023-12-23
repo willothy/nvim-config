@@ -445,9 +445,16 @@ local function preview_item(symbol, item, bufnr)
       item[2].edit,
       vim.lsp.util._get_offset_encoding(bufnr)
     )
-    ---@diagnostic disable-next-line: inject-field
-    symbol.entry.menu.preview_win =
-      preview_open_win(symbol, preview_buf, max_line_len)
+    if
+      symbol.entry.menu.preview_win
+      and vim.api.nvim_win_is_valid(symbol.entry.menu.preview_win)
+    then
+      vim.api.nvim_win_set_buf(symbol.entry.menu.preview_win, preview_buf)
+    else
+      ---@diagnostic disable-next-line: inject-field
+      symbol.entry.menu.preview_win =
+        preview_open_win(symbol, preview_buf, max_line_len)
+    end
   end
 end
 
@@ -485,7 +492,7 @@ M.code_actions = function(options)
     local actions = parse_client_actions(client_actions)
 
     if vim.tbl_isempty(actions) then
-      vim.notify("No code actions available", vim.log.levels.INFO)
+      vim.notify("No code actions available", vim.log.levels.INFO, {})
       return
     end
 
@@ -496,7 +503,7 @@ M.code_actions = function(options)
       preview = function(self, item)
         preview_item(self, item, bufnr)
       end,
-      preview_restore_view = preview_restore_view,
+      preview_close = preview_restore_view,
     })
 
     exec_selected_action(selection, context)
