@@ -252,6 +252,7 @@ local Padding = {
     return buffer.is_last and " " or ""
   end,
   bg = "TabLineFill",
+  -- bg = "#1d202f",
   fg = "none",
 }
 
