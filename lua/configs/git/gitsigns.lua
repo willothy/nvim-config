@@ -1,6 +1,14 @@
 local bar = willothy.icons.git.signs.bar
 
-require("gitsigns").setup({
+local gitsigns = require("gitsigns")
+
+local git = require("gitsigns.git")
+local _set_version = git._set_version
+git._set_version = function(version)
+  pcall(_set_version, version)
+end
+
+gitsigns.setup({
   signs = {
     untracked = { text = bar },
     add = { text = bar },
