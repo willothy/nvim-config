@@ -186,10 +186,11 @@ return {
   -- STATUS --
   {
     "willothy/nvim-cokeline",
-    -- branch = "incremental-truncate",
     -- dir = "~/projects/lua/cokeline/",
+    -- branch = "incremental-truncate",
     config = function()
-      require("configs.status.cokeline")
+      -- todo
+      require("configs.status.cokeline") --
     end,
     priority = 100,
     event = "UiEnter",

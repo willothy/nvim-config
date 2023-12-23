@@ -445,8 +445,7 @@ local Git = (
       condition = function(self)
         return self:removed() > 0
       end,
-      -- hl = { fg = p.red },
-      hl = "DiffDelete",
+      hl = { fg = p.red },
       Space,
     },
     {
@@ -456,8 +455,7 @@ local Git = (
       condition = function(self)
         return self:modified() > 0
       end,
-      -- hl = { fg = p.lemon_chiffon },
-      hl = "DiffChange",
+      hl = { fg = p.lemon_chiffon },
       Space,
     },
   })
