@@ -19,7 +19,6 @@ local mode_names = {
   ["nt"] = "Normal",
 }
 
-
 -- stylua: ignore start
 local mode_short_names = {
   ['n']      = 'NO',
@@ -60,6 +59,8 @@ local mode_short_names = {
 }
 -- stylua: ignore end
 
+local cache = {}
+
 function M.get_color(evt)
   evt = evt or ""
 
@@ -83,29 +84,13 @@ function M.get_color(evt)
     hl = mode .. "Mode"
   end
 
-  local function hex(rgb)
-    if type(rgb) == "string" then
-      return rgb
-    end
-    local bit = require("bit")
-    local r = bit.rshift(bit.band(rgb, 0xff0000), 16)
-    local g = bit.rshift(bit.band(rgb, 0x00ff00), 8)
-    local b = bit.band(rgb, 0x0000ff)
-
-    return ("#%02x%02x%02x"):format(r, g, b)
+  if cache[hl] then
+    return cache[hl]
   end
 
-  hl = vim.api.nvim_get_hl(0, { name = hl })
-  if hl.fg then
-    hl.fg = hex(hl.fg)
-  end
-  if hl.bg then
-    hl.bg = hex(hl.bg)
-  end
-  if hl.sp then
-    hl.sp = hex(hl.sp)
-  end
-  return hl
+  cache[hl] = vim.api.nvim_get_hl(0, { name = hl, link = false })
+
+  return cache[hl]
 end
 
 function M.get_name()
@@ -127,6 +112,44 @@ function M.get_short_name()
   else
     return mode_short_names[api.nvim_get_mode().mode] or "NO"
   end
+end
+
+local function update_mode(ev)
+  local hl = M.get_color(ev and ev.file)
+  vim.api.nvim_set_hl(0, "CurrentMode", hl)
+end
+
+local function highlight()
+  cache = {}
+  local p = require("minimus").hex
+  vim.api.nvim_set_hl(0, "HydraBorder", { link = "CurrentMode" })
+  vim.api.nvim_set_hl(0, "NormalMode", { fg = p.turquoise })
+  vim.api.nvim_set_hl(0, "InsertMode", { fg = p.pale_azure })
+  vim.api.nvim_set_hl(0, "VisualMode", { fg = p.lemon_chiffon })
+  vim.api.nvim_set_hl(0, "ReplaceMode", { fg = p.lavender_pink })
+  vim.api.nvim_set_hl(0, "TerminalMode", { fg = p.peach })
+  vim.api.nvim_set_hl(0, "CommandMode", { fg = p.peach })
+end
+
+function M.setup()
+  local group = vim.api.nvim_create_augroup("willothy/mode", { clear = true })
+
+  highlight()
+  update_mode({})
+
+  vim.api.nvim_create_autocmd({ "ModeChanged" }, {
+    group = group,
+    callback = update_mode,
+  })
+  vim.api.nvim_create_autocmd("User", {
+    pattern = { "HydraEnter", "HydraLeave" },
+    group = group,
+    callback = update_mode,
+  })
+  vim.api.nvim_create_autocmd("ColorScheme", {
+    group = group,
+    callback = highlight,
+  })
 end
 
 return M

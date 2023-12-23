@@ -6,7 +6,7 @@ local get_hex = willothy.hl.get
 local A = function(self)
   local o = vim.deepcopy(self)
   o.hl = function()
-    local col = willothy.utils.mode.get_color()
+    local col = willothy.ui.mode.get_color()
     return {
       fg = col.fg,
       bg = col.fg,
@@ -73,10 +73,10 @@ local Mode = {
   A(Separator.Left),
   {
     provider = function()
-      return willothy.utils.mode.get_short_name()
+      return willothy.ui.mode.get_short_name()
     end,
     hl = function()
-      local col = willothy.utils.mode.get_color()
+      local col = willothy.ui.mode.get_color()
       return {
         fg = "#0f0f0f",
         bg = col.fg,
@@ -110,7 +110,7 @@ local Location = {
       end,
     },
     hl = function()
-      local col = willothy.utils.mode.get_color()
+      local col = willothy.ui.mode.get_color()
       return {
         fg = get_hex("StatusLine", "bg"),
         bg = col.fg,

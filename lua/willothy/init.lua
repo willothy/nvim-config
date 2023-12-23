@@ -76,8 +76,6 @@ willothy.str = "str"
 willothy.utils = module()
 ---@module "willothy.modules.utils.cursor"
 willothy.utils.cursor = "utils.cursor"
----@module "willothy.modules.utils.mode"
-willothy.utils.mode = "utils.mode"
 ---@module "willothy.modules.utils.plugins"
 willothy.utils.plugins = "utils.plugins"
 ---@module "willothy.modules.utils.debug"
@@ -105,6 +103,8 @@ willothy.ui.foldtext = "ui.foldtext"
 willothy.ui.foldexpr = "ui.foldexpr"
 ---@module "willothy.modules.ui.intro"
 willothy.ui.intro = "ui.intro"
+---@module "willothy.modules.ui.mode"
+willothy.ui.mode = "ui.mode"
 
 ---@module "willothy.modules.hydras"
 willothy.hydras = module()
