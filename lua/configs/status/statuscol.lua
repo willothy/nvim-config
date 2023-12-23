@@ -34,24 +34,7 @@ require("statuscol").setup({
       condition = { is_normal_buf, is_normal_buf },
     },
     {
-      text = { builtin.lnumfunc },
-      condition = {
-        function(args)
-          return args.relnum == 0
-            and args.win == vim.api.nvim_get_current_win()
-        end,
-      },
-      hl = "CurrentMode",
-      click = "v:lua.ScLa",
-    },
-    {
       text = { builtin.lnumfunc, " " },
-      condition = {
-        function(args)
-          return args.relnum ~= 0 or args.win ~= vim.api.nvim_get_current_win()
-        end,
-        is_normal_buf,
-      },
       click = "v:lua.ScLa",
     },
     {

@@ -20,7 +20,6 @@ local function ai_textobjs(ai)
     P = "paragraph",
     a = { name = "around" },
     i = { name = "inside" },
-    s = "sentence",
     F = "function",
     p = "paragraph",
     u = {
@@ -29,7 +28,7 @@ local function ai_textobjs(ai)
       end,
       "url",
     },
-    W = {
+    s = {
       function()
         require("various-textobjs").subword(ai)
       end,

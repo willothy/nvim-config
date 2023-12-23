@@ -129,6 +129,8 @@ local function highlight()
   vim.api.nvim_set_hl(0, "TerminalMode", { fg = p.peach })
   vim.api.nvim_set_hl(0, "CommandMode", { fg = p.peach })
 
+  vim.api.nvim_set_hl(0, "CursorLineNr", { link = "CurrentMode" })
+
   -- lifted these from Hydra since they're being set in a plugin file, which we don't load
   -- because it's not loaded on an event with lazy
   vim.api.nvim_set_hl(0, "HydraRed", { fg = "#ff5733", bold = true })

@@ -243,7 +243,6 @@ local Harpoon = {
     condition = function(self)
       return self.nfiles ~= nil and self.nfiles > 0
     end,
-    Space,
   },
   on_click = {
     callback = function()
@@ -474,132 +473,6 @@ local DAPMessages = {
   Space,
 }
 
----@diagnostic disable-next-line: unused-local
--- selene: allow(unused_variable)
--- local SignColumn = {
---   provider = "%2.2s",
--- }
-
----@diagnostic disable-next-line: unused-local
--- selene: allow(unused_variable)
--- local NumberColumn = {
---   provider = "%=%{v:relnum?v:relnum:v:lnum}",
---   hl = function(self)
---     if
---       vim.v.relnum == 0
---       and self.winnr
---         == vim.api.nvim_win_get_number(tonumber(vim.g.actual_curwin) or 0)
---     then
---       return "CurrentMode"
---     else
---       return "LineNr"
---     end
---   end,
--- }
-
--- local ffi = require("ffi")
---
--- -- Get direct fold information from Neovim
--- ffi.cdef([[
--- 	typedef struct {} Error;
--- 	typedef struct {} win_T;
--- 	typedef struct {
--- 		int start;  // line number where deepest fold starts
--- 		int level;  // fold level, when zero other fields are N/A
--- 		int llevel; // lowest level that starts in v:lnum
--- 		int lines;  // number of lines from v:lnum to end of closed fold
--- 	} foldinfo_T;
--- 	foldinfo_T fold_info(win_T* wp, int lnum);
--- 	win_T *find_window_by_handle(int Window, Error *err);
--- 	int compute_foldcolumn(win_T *wp, int col);
--- ]])
---
--- ---@diagnostic disable-next-line: unused-local
--- -- selene: allow(unused_variable)
--- local FoldColumn = {
---   fallthrough = false,
---   init = function(self)
---     local wp = ffi.C.find_window_by_handle(0, ffi.new("Error")) -- get window handler
---     self.width = ffi.C.compute_foldcolumn(wp, 0) -- get foldcolumn width
---     -- get fold info of current line
---     self.foldinfo = self.width > 0 and ffi.C.fold_info(wp, vim.v.lnum)
---       or { start = 0, level = 0, llevel = 0, lines = 0 }
---     self.closed = self.foldinfo.lines > 0
---   end,
---   static = {
---     foldopen = icons.fold.open,
---     foldclosed = icons.fold.closed,
---     foldsep = " ",
---   },
---   {
---     provider = function(self)
---       return self.foldopen .. " "
---     end,
---     condition = function(self)
---       local first_level = self.foldinfo.level
---         - self.width
---         - (self.closed and 1 or 0)
---         + 1
---       if first_level < 1 then
---         first_level = 1
---       end
---       return self.foldinfo.start == vim.v.lnum
---         and first_level + 1 > self.foldinfo.llevel
---     end,
---     on_click = {
---       callback = function()
---         vim.print("close click")
---         local mouse = vim.fn.getmousepos()
---         if not mouse then
---           return
---         end
---         local curwin = vim.api.nvim_get_current_win()
---         local cursor = vim.api.nvim_win_get_cursor(curwin)
---         vim.api.nvim_set_current_win(mouse.winid)
---         vim.api.nvim_win_set_cursor(mouse.winid, { mouse.line, 0 })
---
---         vim.cmd("normal! zc")
---
---         vim.api.nvim_set_current_win(curwin)
---         vim.api.nvim_win_set_cursor(curwin, cursor)
---       end,
---       name = "__heirline_fold_close_click",
---     },
---   },
---   {
---     provider = function(self)
---       return self.foldclosed .. " "
---     end,
---     condition = function(self)
---       return self.foldinfo.lines > 0
---     end,
---     on_click = {
---       callback = function()
---         vim.print("open click")
---         local mouse = vim.fn.getmousepos()
---         if not mouse then
---           return
---         end
---         local curwin = vim.api.nvim_get_current_win()
---         local cursor = vim.api.nvim_win_get_cursor(curwin)
---         vim.api.nvim_set_current_win(mouse.winid)
---         vim.api.nvim_win_set_cursor(mouse.winid, { mouse.line, 0 })
---
---         vim.cmd("normal! zo")
---
---         vim.api.nvim_set_current_win(curwin)
---         vim.api.nvim_win_set_cursor(curwin, cursor)
---       end,
---       name = "__heirline_fold_open_click",
---     },
---   },
---   {
---     provider = function(self)
---       return self.foldsep .. " "
---     end,
---   },
--- }
-
 local Overseer = {
   condition = function()
     return package.loaded["overseer"] ~= nil
@@ -650,96 +523,27 @@ local Overseer = {
   },
 }
 
-local function Center(group)
-  return B({
-    Align,
-    group,
-    Align,
-  })
-end
-
-local function Right(group)
-  return B({
-    -- {
-    --   provider = function()
-    --     local len = vim.fn.strcharlen(make_cwd())
-    --     local size = math.floor(vim.o.columns / 2) - math.floor(len / 2)
-    --     return "%"
-    --       .. size - 1
-    --       .. "."
-    --       .. size --
-    --       .. "("
-    --   end,
-    -- },
-    -- {
-    --   provider = "%(",
-    -- },
-    group,
-    -- {
-    --   provider = "%)",
-    -- },
-  })
-end
-
-local Left = function(group)
-  return B({
-    -- {
-    --   provider = function()
-    --     local len = vim.fn.strcharlen(make_cwd())
-    --     local size = math.floor(vim.o.columns / 2) - math.floor(len / 2)
-    --     return "%-" .. size - 1 .. "("
-    --     -- return "%-1("
-    --     -- return "%1("
-    --   end,
-    -- },
-    -- {
-    --   provider = "%-(",
-    -- },
-    group,
-    -- {
-    --   provider = "%)",
-    -- },
-    -- Truncate,
-  })
-end
-
 local StatusLine = {
-  Left({
+  {
     Mode,
     Space,
     Git,
     Harpoon,
     Overseer,
-  }),
-  Center({
-    {
-      fallthrough = false,
-      -- SessionName,
-      -- WorkDir,
-    },
-  }),
-  Right({
+  },
+  Align,
+  {
     DAPMessages,
     Recording,
     Devicon,
     Filetype,
     Sesh,
     Location,
-  }),
+  },
 }
-
--- local StatusColumn = {
---   SignColumn,
---   NumberColumn,
---   Space,
---   FoldColumn,
---   Space,
--- }
 
 require("heirline").setup({
   statusline = StatusLine,
-  -- statuscolumn = {}
-  -- statuscolumn = StatusColumn,
 })
 
 willothy.event.on({

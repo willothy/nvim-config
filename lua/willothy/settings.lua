@@ -24,7 +24,7 @@ function M.setup()
 
   o.hlsearch = false
   o.incsearch = true
-  o.cursorline = false
+  o.cursorline = true
   vim.opt.cursorlineopt = "number"
 
   o.termguicolors = true

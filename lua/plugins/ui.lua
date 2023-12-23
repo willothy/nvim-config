@@ -189,8 +189,7 @@ return {
     -- dir = "~/projects/lua/cokeline/",
     -- branch = "incremental-truncate",
     config = function()
-      -- todo
-      require("configs.status.cokeline") --
+      require("configs.status.cokeline")
     end,
     priority = 100,
     event = "UiEnter",
