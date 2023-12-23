@@ -122,13 +122,23 @@ end
 local function highlight()
   cache = {}
   local p = require("minimus").hex
-  vim.api.nvim_set_hl(0, "HydraBorder", { link = "CurrentMode" })
   vim.api.nvim_set_hl(0, "NormalMode", { fg = p.turquoise })
   vim.api.nvim_set_hl(0, "InsertMode", { fg = p.pale_azure })
   vim.api.nvim_set_hl(0, "VisualMode", { fg = p.lemon_chiffon })
   vim.api.nvim_set_hl(0, "ReplaceMode", { fg = p.lavender_pink })
   vim.api.nvim_set_hl(0, "TerminalMode", { fg = p.peach })
   vim.api.nvim_set_hl(0, "CommandMode", { fg = p.peach })
+
+  -- lifted these from Hydra since they're being set in a plugin file, which we don't load
+  -- because it's not loaded on an event with lazy
+  vim.api.nvim_set_hl(0, "HydraRed", { fg = "#ff5733", bold = true })
+  vim.api.nvim_set_hl(0, "HydraBlue", { fg = "#5ebcf6", bold = true })
+  vim.api.nvim_set_hl(0, "HydraAmaranth", { fg = "#ff1757", bold = true })
+  vim.api.nvim_set_hl(0, "HydraTeal", { fg = "#00a1a1", bold = true })
+  vim.api.nvim_set_hl(0, "HydraPink", { fg = "#ff55de", bold = true })
+
+  vim.api.nvim_set_hl(0, "HydraHint", { link = "NormalFloat" })
+  vim.api.nvim_set_hl(0, "HydraBorder", { link = "CurrentMode" })
 end
 
 function M.setup()
