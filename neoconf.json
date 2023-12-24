@@ -22,6 +22,7 @@
         "nui.nvim",
         "bufdelete.nvim",
         "mini.files",
+        "mini.colors",
         "harpoon",
         "sqlite.lua",
         "resession.nvim",

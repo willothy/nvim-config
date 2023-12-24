@@ -19,7 +19,9 @@ local autocmd
 ---@field width integer?
 ---@field offset integer?
 
-local function show()
+local M = {}
+
+function M.show()
   if winid and vim.api.nvim_win_is_valid(winid) then
     return
   end
@@ -169,20 +171,11 @@ local function show()
   }, {
     once = true,
     group = augroup,
-    callback = function()
-      if vim.api.nvim_win_is_valid(winid) then
-        vim.api.nvim_win_close(winid, true)
-        winid = nil
-      end
-      if autocmd then
-        vim.api.nvim_del_autocmd(autocmd)
-        autocmd = nil
-      end
-    end,
+    callback = M.hide,
   })
 end
 
-local function hide()
+function M.hide()
   if winid and vim.api.nvim_win_is_valid(winid) then
     vim.api.nvim_win_close(winid, true)
   end
@@ -193,10 +186,5 @@ local function hide()
     autocmd = nil
   end
 end
-
-local M = {}
-
-M.show = show
-M.hide = hide
 
 return M
