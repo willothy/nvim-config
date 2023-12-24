@@ -1,7 +1,6 @@
 local icons = willothy.icons
 local ns = vim.api.nvim_create_namespace("cokeline_diagnostics")
 
-local p = require("minimus").hex
 local mappings = require("cokeline.mappings")
 
 local separators = {
@@ -69,13 +68,7 @@ local UniquePrefix = {
   text = function(buffer)
     return buffer.unique_prefix
   end,
-  fg = function(buffer)
-    if buffer.is_focused then
-      return require("cokeline.hlgroups").get_hl_attr(groups.bg_active, "bg")
-    else
-      return groups.bg
-    end
-  end,
+  fg = groups.bg_active,
   truncation = {
     priority = 3,
     direction = "left",
