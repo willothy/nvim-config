@@ -132,8 +132,6 @@ return {
         willothy.ui.setup()
         willothy.hydras.setup()
 
-        vim.cmd.colorscheme("minimus")
-
         -- Inform vim how to enable undercurl in wezterm
         vim.api.nvim_exec2(
           [[

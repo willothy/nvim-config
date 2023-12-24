@@ -18,12 +18,20 @@ return {
   {
     -- "folke/edgy.nvim",
     "willothy/edgy.nvim",
-    -- branch = "fix-edgebar-title-update",
-    -- dir = "~/projects/lua/edgy.nvim",
     event = "VeryLazy",
     config = function()
       require("configs.ui.edgy")
     end,
+  },
+  {
+    "folke/zen-mode.nvim",
+    opts = {
+      on_open = function(win)
+        vim.wo[win].fillchars = vim.go.fillchars
+        vim.wo[win].winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"
+      end,
+    },
+    cmd = "ZenMode",
   },
   {
     "folke/noice.nvim",
@@ -256,6 +264,10 @@ return {
   {
     "willothy/minimus",
     priority = 100,
+    config = function()
+      vim.cmd.colorscheme("minimus")
+    end,
+    event = "UiEnter",
     -- dir = "~/projects/lua/minimus/",
   },
   {
