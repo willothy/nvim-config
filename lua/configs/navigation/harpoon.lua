@@ -150,7 +150,7 @@ local function notify(event, cx)
     or path:make_relative(vim.env.HOME)
     or path:normalize()
 
-  fidget.progress.handle.create({
+  local handle = fidget.progress.handle.create({
     lsp_client = {
       name = "harpoon",
     },
@@ -158,6 +158,10 @@ local function notify(event, cx)
     message = display,
     level = vim.log.levels.ERROR,
   })
+
+  vim.defer_fn(function()
+    handle:finish()
+  end, 500)
 end
 
 local function handler(evt)
