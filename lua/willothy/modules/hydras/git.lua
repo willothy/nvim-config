@@ -1,19 +1,17 @@
-local Hydra = require("willothy.modules.hydras").Hydra
-
 local git_hydra_hint = [[
  _J_: next hunk   _s_: stage hunk        _d_: show deleted   _b_: blame line
- _K_: prev hunk   _u_: undo last stage   _p_: preview hunk   _B_: blame show full 
+ _K_: prev hunk   _u_: undo last stage   _p_: preview hunk   _B_: blame show full
  ^ ^              _S_: stage buffer      ^ ^                 _/_: show base file
  ^
  ^ ^              _<Enter>_: Neogit           _q_, _<Esc>_: exit
 ]]
 
-local Git = Hydra({
+local Git = require("hydra")({
   name = "Git",
-  shortname = "hydra",
   hint = git_hydra_hint,
-  stl_name = "G󰊢",
+  short_name = "G󰊢",
   config = {
+    desc = "hydra",
     color = "pink",
     invoke_on_body = true,
     hint = {

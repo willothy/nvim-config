@@ -1,10 +1,7 @@
-local Hydra = require("willothy.modules.hydras").Hydra
-
-return Hydra({
+return require("hydra")({
   name = "Buffers",
   body = "<leader>bh",
-  shortname = "hydra",
-  stl_name = "B󰈮",
+  short_name = "B󰈮",
   mode = "n",
   hint = [[
   focus     ^^move      ^^other

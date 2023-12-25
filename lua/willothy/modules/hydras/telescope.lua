@@ -1,5 +1,4 @@
 local telescope = willothy.fn.telescope
-local Hydra = require("willothy.modules.hydras").Hydra
 
 local hint = [[
 _s_: live grep  _f_: find files
@@ -11,11 +10,12 @@ _<Enter>_: pickers
 _<Esc>_, _q_: close
 ]]
 
-local config = {
+return require("hydra")({
   hint = hint,
   name = "Telescope",
-  stl_name = "T󰭎",
+  short_name = "T󰭎",
   config = {
+    desc = "telescope",
     color = "blue",
     invoke_on_body = true,
     hint = {
@@ -64,6 +64,4 @@ local config = {
     },
     { "q", nil, { exit = true, nowait = true, desc = "close" } },
   },
-}
-
-return Hydra(config)
+})

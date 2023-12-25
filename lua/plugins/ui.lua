@@ -231,6 +231,7 @@ return {
   },
   {
     "willothy/incline.nvim",
+    branch = "dev",
     event = "VeryLazy",
     config = function()
       require("configs.status.incline")

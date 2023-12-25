@@ -1,4 +1,3 @@
-local Hydra = require("willothy.modules.hydras").Hydra
 local pcmd = require("hydra.keymap-util").pcmd
 local cmd = require("hydra.keymap-util").cmd
 
@@ -13,12 +12,12 @@ local window_hint = [[
  _b_: choose buffer
 ]]
 
-return Hydra({
+return require("hydra")({
   name = "Windows",
-  shortname = "hydra",
-  stl_name = "W󰖲",
+  short_name = "W󰖲",
   hint = window_hint,
   config = {
+    desc = "hydra",
     color = "pink",
     invoke_on_body = true,
     hint = {

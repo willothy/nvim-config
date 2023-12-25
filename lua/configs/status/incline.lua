@@ -127,9 +127,3 @@ require("incline").setup({
     return buffer
   end,
 })
-vim.schedule(function()
-  -- hacky force refresh for incline
-  vim.api.nvim_exec_autocmds("BufRead", {
-    buffer = vim.api.nvim_get_current_buf(),
-  })
-end)

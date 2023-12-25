@@ -1,5 +1,3 @@
-local Hydra = require("willothy.modules.hydras").Hydra
-
 local hint = [[
   ^ ^        Options
   ^
@@ -14,11 +12,12 @@ local hint = [[
        ^^^^                _<Esc>_
 ]]
 
-return Hydra({
+return require("hydra")({
   name = "Options",
   hint = hint,
-  stl_name = "O",
+  short_name = "O",
   config = {
+    desc = "options",
     -- color = "amaranth",
     color = "pink",
     invoke_on_body = true,

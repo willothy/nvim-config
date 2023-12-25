@@ -1,5 +1,3 @@
-local Hydra = require("willothy.modules.hydras").Hydra
-
 local shared = require("nvim-treesitter.textobjects.shared")
 local swap = require("nvim-treesitter.textobjects.swap")
 local ts_utils = require("nvim-treesitter.ts_utils")
@@ -117,12 +115,41 @@ local hint = [[
  _<Esc>_, _q_: quit
 ]]
 
-return Hydra({
+return require("hydra")({
   name = "Swap",
   mode = "n",
   body = "gs",
-  stl_name = "S󰅩",
   hint = hint,
+  short_name = "S󰅩",
+  config = {
+    hint = {
+      border = "single",
+      position = "bottom-left",
+      funcs = {
+        query = function()
+          return query_string
+        end,
+      },
+    },
+    invoke_on_body = true,
+    on_enter = function()
+      local _, range, _ = shared.textobject_at_point(query_string)
+      if not range then
+        return
+      end
+
+      update_highlight(range)
+    end,
+    on_key = function()
+      local _, range, _ = shared.textobject_at_point(query_string)
+      if not range then
+        return
+      end
+
+      update_highlight(range)
+    end,
+    on_exit = clear_highlight,
+  },
   heads = {
     {
       "j",
@@ -195,34 +222,5 @@ return Hydra({
     },
     { "<Esc>", nil, { exit = true } },
     { "q", nil, { exit = true } },
-  },
-  config = {
-    hint = {
-      border = "single",
-      position = "bottom-left",
-      funcs = {
-        query = function()
-          return query_string
-        end,
-      },
-    },
-    invoke_on_body = true,
-    on_enter = function()
-      local _, range, _ = shared.textobject_at_point(query_string)
-      if not range then
-        return
-      end
-
-      update_highlight(range)
-    end,
-    on_key = function()
-      local _, range, _ = shared.textobject_at_point(query_string)
-      if not range then
-        return
-      end
-
-      update_highlight(range)
-    end,
-    on_exit = clear_highlight,
   },
 })

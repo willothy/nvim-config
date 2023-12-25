@@ -4,8 +4,10 @@ return {
   "kkharji/sqlite.lua",
   "nvim-lua/plenary.nvim",
   {
-    -- "anuvyklack/hydra.nvim"
-    "nvimtools/hydra.nvim",
+    -- "anuvyklack/hydra.nvim" -- original author
+    -- "nvimtools/hydra.nvim", -- active fork
+    "willothy/hydra.nvim",
+    -- dir = "~/projects/lua/hydra.nvim/",
   },
   -- COMMANDS --
   {

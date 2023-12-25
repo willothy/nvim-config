@@ -105,8 +105,8 @@ end
 function M.get_short_name()
   local hydra = package.loaded.hydra and require("hydra.statusline")
   if hydra and hydra.is_active() then
-    if _G["Hydra"] and _G["Hydra"].config.stl_name then
-      return _G["Hydra"].config.stl_name
+    if _G["Hydra"] and _G["Hydra"].short_name then
+      return _G["Hydra"].short_name
     end
     return hydra.get_name()
   else
