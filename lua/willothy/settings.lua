@@ -44,6 +44,8 @@ function M.setup()
   o.foldlevel = 99
   o.foldlevelstart = 99
   o.foldenable = true
+  -- o.foldopen = "block,hor,mark,percent,quickfix,search,tag,undo"
+  o.foldopen = "block,mark,percent,quickfix,search,tag,undo"
   vim.opt.foldmethod = "expr"
   vim.opt.foldexpr = "v:lua.willothy.ui.foldexpr()"
   vim.opt.foldtext = "v:lua.willothy.ui.foldtext()"
