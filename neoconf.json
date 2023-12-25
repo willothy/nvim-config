@@ -11,6 +11,7 @@
         // "telescope.nvim",
         // "nvim-cokeline",
         "lazy.nvim",
+        "nio",
         "fidget.nvim",
         "plenary.nvim",
         "edgy.nvim",
@@ -58,7 +59,7 @@
           ],
           "globals": [
             "vim",
-            "willothy",
+            "willothy"
           ]
         },
         "format": {

@@ -11,6 +11,7 @@ return {
   },
   {
     "nvim-neotest/neotest",
+    branch = "feat/use-external-nio",
     config = function()
       require("configs.editor.neotest")
     end,

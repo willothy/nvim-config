@@ -4,6 +4,10 @@ return {
   "kkharji/sqlite.lua",
   "nvim-lua/plenary.nvim",
   {
+    "nvim-neotest/nvim-nio",
+    name = "nio",
+  },
+  {
     -- "anuvyklack/hydra.nvim" -- original author
     -- "nvimtools/hydra.nvim", -- active fork
     "willothy/hydra.nvim",
