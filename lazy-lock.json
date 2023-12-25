@@ -46,7 +46,7 @@
   "headlines.nvim": { "branch": "master", "commit": "e3d7bfdf40e41a020d966d35f8b48d75b90367d2" },
   "heirline.nvim": { "branch": "master", "commit": "170e1b1fd7c11db00e46d802165fb277db601ae7" },
   "highlight-undo.nvim": { "branch": "main", "commit": "50a6884a8476be04ecce8f1c4ed692c5000ef0a1" },
-  "hydra.nvim": { "branch": "main", "commit": "d4aabbb4fcb01aae741a45813390a9fa85f804e5" },
+  "hydra.nvim": { "branch": "main", "commit": "4aaafff1217a872a4ec51bb0ca2b66af60e330b9" },
   "image.nvim": { "branch": "master", "commit": "4d1dd5ddc63b37e5af303af0a3a8ed752d43a95c" },
   "inc-rename.nvim": { "branch": "main", "commit": "e346532860e1896b1085815e854ed14e2f066a2c" },
   "incline.nvim": { "branch": "dev", "commit": "348e5b613c0d76a10929e0b26c5272dde16e1a43" },

@@ -145,7 +145,7 @@ function M.setup()
   local group = vim.api.nvim_create_augroup("willothy/mode", { clear = true })
 
   highlight()
-  update_mode({})
+  update_mode()
 
   vim.api.nvim_create_autocmd({ "ModeChanged" }, {
     group = group,
@@ -158,7 +158,10 @@ function M.setup()
   })
   vim.api.nvim_create_autocmd("ColorScheme", {
     group = group,
-    callback = highlight,
+    callback = function()
+      highlight()
+      update_mode()
+    end,
   })
 end
 

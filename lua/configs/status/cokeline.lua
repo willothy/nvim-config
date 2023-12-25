@@ -429,7 +429,13 @@ local opts = {
     },
   },
   sidebar = {
-    filetype = { "SidebarNvim", "neo-tree", "edgy", "aerial", "OverseerList" },
+    filetype = {
+      "SidebarNvim",
+      "neo-tree",
+      "edgy",
+      "aerial",
+      "OverseerList",
+    },
     components = {
       {
         text = separators.left,
