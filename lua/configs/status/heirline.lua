@@ -298,13 +298,14 @@ local Harpoon = {
       self.current = idx
       self.nfiles = list:length()
       if not self._init then
-        local update = vim.schedule_wrap(function()
+        local update = function()
           willothy.event.emit("UpdateHeirlineComponents")
-        end)
+        end
+        local schedule = vim.schedule_wrap(update)
         harpoon:extend({
-          ADD = update,
-          REMOVE = update,
-          REORDER = update,
+          ADD = schedule,
+          REMOVE = schedule,
+          REORDER = schedule,
           UI_CREATE = update,
         })
         self._init = true
