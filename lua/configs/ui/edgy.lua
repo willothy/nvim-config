@@ -128,7 +128,10 @@ local opts = {
       open = function()
         willothy.term.vertical:open()
       end,
-      filter = function(buf)
+      filter = function(buf, win)
+        if not terminal.filter(buf, win) then
+          return false
+        end
         local term = require("toggleterm.terminal").find(function(term)
           return term.bufnr == buf
         end)
@@ -269,7 +272,10 @@ local opts = {
       open = function()
         willothy.term.main:open()
       end,
-      filter = function(buf)
+      filter = function(buf, win)
+        if not terminal.filter(buf, win) then
+          return false
+        end
         local term = require("toggleterm.terminal").find(function(term)
           return term.bufnr == buf
         end)
