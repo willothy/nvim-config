@@ -97,10 +97,12 @@ dropbar.setup({
       ["<Esc>"] = close,
     },
     quick_navigation = true,
-    win_configs = {},
     scrollbar = {
       -- enabled=false,
       background = false,
+    },
+    win_configs = {
+      -- border = { " " },
     },
   },
   fzf = {

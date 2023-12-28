@@ -392,6 +392,11 @@ return {
     event = "VeryLazy",
   },
   {
+    "tris203/precognition.nvim",
+    opts = {},
+    -- dir = "~/projects/lua/precognition.nvim/",
+  },
+  {
     "echasnovski/mini.clue",
     enabled = false,
     config = function()
