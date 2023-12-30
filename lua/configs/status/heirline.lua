@@ -573,6 +573,7 @@ willothy.event.on({
   "ModeChanged",
   "HydraEnter",
   "HydraLeave",
+  "BufEnter",
 }, function()
   willothy.event.emit("UpdateHeirlineComponents")
 end)
@@ -581,10 +582,8 @@ willothy.event.on(
   {
     "BufLeave",
     "DirChanged",
-    "BufEnter",
     "WinEnter",
     "TermLeave",
-    "BufEnter",
     "TermEnter",
     "LspAttach",
     "ColorScheme",
