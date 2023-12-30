@@ -1,42 +1,20 @@
--- adapted from https://github.com/Aasim-A/scrollEOF/nvim
-
--- TODO: fix this it is kinda inconsistent in hsplits
+-- Allows scrolloff to be applied when scrolling past the end of a file.
+--
+-- Hijacks wo:scrolloff, and sets it to min(scrolloff, winheight / 2)
+-- to ensure that scroll is always consistent between windows of different sizes.
+--
+-- This will be updated with the window, and the original scrolloff value can be
+-- found in `vim.wo[winid].original_scrolloff`.
 
 local M = {}
 
 local disabled = false
 
----Counts the number of folded lines between two line numbers
----@param lnum1 number
----@param lnum2 number
----@return number
-local function folded_lines_between(lnum1, lnum2)
-  local next_fold_end_ln = -1
-  local folded_lines = 0
-
-  for ln = lnum1, lnum2, 1 do
-    if ln > next_fold_end_ln then -- skip folded lines we already added to the count
-      next_fold_end_ln = vim.fn.foldclosedend(ln) or -1
-      local is_folded_line = next_fold_end_ln ~= -1
-      if is_folded_line then
-        local fold_size = next_fold_end_ln - ln
-        folded_lines = folded_lines + fold_size
-      end
-    end
-  end
-
-  return folded_lines
-end
-
-local cancel
 local disabled_ft = {
   terminal = true,
 }
-local function check_eof_scrolloff(animate)
-  if cancel then
-    cancel()
-    cancel = nil
-  end
+local last_win, last_line
+local function check_eof_scrolloff()
   if disabled then
     return
   end
@@ -45,51 +23,51 @@ local function check_eof_scrolloff(animate)
   end
 
   local win = vim.api.nvim_get_current_win()
-  local win_view = vim.fn.winsaveview()
-  local win_height = vim.api.nvim_win_get_height(win)
-  local last_line = vim.fn.line("$")
-  local win_last_line = vim.fn.line("w$")
+  local cursor_line = vim.api.nvim_win_get_cursor(win)[1]
 
-  if not win_view or not last_line or not win_last_line then
+  -- Don't do anything if we've only moved horizontally
+  if
+    last_win ~= nil
+    and last_line ~= nil
+    and last_win == win
+    and last_line == cursor_line
+  then
     return
   end
 
-  local scrolloff = vim.o.scrolloff
-  local cur_line = win_view.lnum
-  local win_top_line = win_view.topline
-  local visual_distance_to_eof = last_line
-    - cur_line
-    - folded_lines_between(cur_line, last_line)
-  local visual_last_line_in_win = win_last_line
-    - folded_lines_between(win_top_line, win_last_line)
-  local scrolloff_line_count = win_height
-    - (visual_last_line_in_win - win_top_line + 1)
+  local view = vim.fn.winsaveview()
+  if not view then
+    return
+  end
 
-  if
-    visual_distance_to_eof < scrolloff
-    and scrolloff_line_count + visual_distance_to_eof < scrolloff
-  then
-    local goal = win_top_line
-      + scrolloff
-      - (scrolloff_line_count + visual_distance_to_eof)
-    local diff = math.abs(goal - win_top_line)
-    if animate then
-      cancel = willothy.fn.animate(
-        win_top_line,
-        goal,
-        vim.schedule_wrap(function(top)
-          if win == vim.api.nvim_get_current_win() then
-            vim.fn.winrestview({ topline = math.floor(top) })
-          end
-        end),
-        {
-          fps = 60,
-          duration = diff * 30,
-        }
-      )
-    else
-      vim.fn.winrestview({ topline = goal })
+  last_win = win
+  last_line = cursor_line
+
+  local win_cur_line = vim.fn.winline()
+  local win_height = vim.fn.winheight(0)
+  local scrolloff
+  if vim.w[0].original_scrolloff then
+    scrolloff = vim.w[0].original_scrolloff
+  else
+    scrolloff = vim.wo[0].scrolloff
+  end
+  scrolloff = math.min(scrolloff, math.floor(win_height / 2))
+  if vim.wo[0].scrolloff ~= scrolloff then
+    if vim.w[0].original_scrolloff == nil then
+      vim.w[0].original_scrolloff = vim.wo[0].scrolloff
     end
+    vim.wo[0].scrolloff = scrolloff
+  end
+  local visual_distance_to_eof = win_height - win_cur_line
+
+  if visual_distance_to_eof < scrolloff then
+    local goal = view.topline + scrolloff - visual_distance_to_eof
+    view.topline = goal
+    vim.fn.winrestview(view)
+  elseif win_cur_line < scrolloff then
+    local goal = view.topline - (scrolloff - win_cur_line)
+    view.topline = goal
+    vim.fn.winrestview(view)
   end
 end
 
@@ -116,7 +94,7 @@ M.setup = function()
     end,
   })
 
-  check_eof_scrolloff(true)
+  check_eof_scrolloff()
 end
 
 M.check = check_eof_scrolloff
