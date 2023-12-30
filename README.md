@@ -29,7 +29,7 @@ to add to your own config :)
   - Custom foldexpr and foldtext
     - Shows both the last line of the fold
     - Preserves extmarks / inlay hints
-    - TODO: Preserves semantic token highlights
+    - Preserves semantic token highlights
   - Code action menu with preview, based on dropbar.nvim
   - Featureful bars and lines based on heirline, dropbar.nvim, and nvim-cokeline
   - `ui.select` based on [`dropbar.nvim`](https://github.com/Bekaboo/dropbar.nvim)
