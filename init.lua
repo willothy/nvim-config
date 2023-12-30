@@ -1,8 +1,8 @@
+-- This may be done automatically in the future (see https://github.com/neovim/neovim/pull/24044)
 vim.loader.enable()
 
 vim.g.mapleader = " "
-vim.g.maplocalleader = ","
-vim.g.colors_name = "minimus"
+vim.g.maplocalleader = "," -- TODO: I don't use this much. I should.
 
 local lazy_path = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 

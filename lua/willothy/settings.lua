@@ -2,6 +2,7 @@ local M = {}
 
 function M.setup()
   local o = vim.o
+  local opt = vim.opt
   local icons = willothy.icons
 
   o.cmdheight = 0
@@ -25,13 +26,13 @@ function M.setup()
   o.hlsearch = false
   o.incsearch = true
   o.cursorline = true
-  vim.opt.cursorlineopt = "number"
+  o.cursorlineopt = "number"
 
   o.termguicolors = true
   o.modeline = false
 
-  vim.o.timeout = true
-  vim.o.timeoutlen = 250
+  o.timeout = true
+  o.timeoutlen = 250
 
   o.updatetime = 500
   o.mousemodel = "extend"
@@ -46,9 +47,9 @@ function M.setup()
   o.foldenable = true
   -- o.foldopen = "block,hor,mark,percent,quickfix,search,tag,undo"
   o.foldopen = "block,mark,percent,quickfix,search,tag,undo"
-  vim.opt.foldmethod = "expr"
-  vim.opt.foldexpr = "v:lua.willothy.ui.foldexpr()"
-  vim.opt.foldtext = "v:lua.willothy.ui.foldtext()"
+  o.foldmethod = "expr"
+  o.foldexpr = "v:lua.willothy.ui.foldexpr()"
+  o.foldtext = "v:lua.willothy.ui.foldtext()"
 
   o.splitkeep = "topline"
   -- o.splitkeep = "cursor"
@@ -65,7 +66,7 @@ function M.setup()
 
   -- o.indentkeys = o.indentkeys .. ",!0\t"
 
-  vim.opt.fillchars = {
+  opt.fillchars = {
     horiz = "─",
     horizup = "┴",
     horizdown = "┬",

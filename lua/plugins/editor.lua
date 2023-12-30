@@ -101,6 +101,7 @@ return {
     config = function()
       require("configs.editor.neorg")
     end,
+    enabled = false, -- TODO: investigate startup performance
   },
   -- DEFAULT FEATURE EXTENSIONS --
   {

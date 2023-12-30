@@ -8,6 +8,9 @@ I cannot guarantee that it will work for you, and I will not fix issues that
 do not occur on my computers. However, feel free to copy paste snippets
 to add to your own config :)
 
+> **Note**<br>
+> Requires Neovim Nightly
+
 ## Bloated AND Blazingly Fast™
 
 - Over 150 plugins

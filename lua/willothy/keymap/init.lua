@@ -11,6 +11,10 @@ local disable = {
   "<4-RightMouse>",
 }
 
+-- TODO: rewrite all of the keymaps
+--
+-- this section of config is incredibly messy
+
 return {
   setup = function()
     for _, v in ipairs(disable) do

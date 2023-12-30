@@ -1,5 +1,6 @@
 local M = {}
 
+-- TODO: this sucks. never works. use which-key or hawtkeys for this.
 function M.find(mode, lhs)
   local map = vim.api.nvim_get_keymap(mode)
   vim.list_extend(map, vim.api.nvim_buf_get_keymap(0, mode))
@@ -57,6 +58,8 @@ M.modes = setmetatable({
   end,
 })
 
+-- This is terrible I don't know why I wrote this.
+-- FIXME: get rid of this asap just write mappings normally
 local Binding = {}
 Binding.__index = Binding
 Binding.__call = function(self, ...)

@@ -77,7 +77,6 @@
   "neoconf.nvim": { "branch": "main", "commit": "64437787dba70fce50dad7bfbb97d184c5bc340f" },
   "neodev.nvim": { "branch": "main", "commit": "8526ce7de23e04735827a4e3f78ff634880181c5" },
   "neogit": { "branch": "master", "commit": "3718664bb62e89930f0c3c836188c2a4f44fa119" },
-  "neorg": { "branch": "main", "commit": "a489e7c4f9d7edb3caa04250d07bb6c6a5b9b890" },
   "neotest": { "branch": "feat/use-external-nio", "commit": "39bb0f5fa9955c512c7e4a937ffc0a5d00207d34" },
   "neotest-plenary": { "branch": "master", "commit": "dcaf5ed67a9e28a246e9783319e5aa6c9ea1c584" },
   "neotest-rust": { "branch": "main", "commit": "48c1e146ed0eb775fef6aca75903baf3cedadc01" },

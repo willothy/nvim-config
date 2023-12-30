@@ -1,5 +1,7 @@
 -- adapted from https://github.com/Aasim-A/scrollEOF/nvim
 
+-- TODO: fix this it is kinda inconsistent in hsplits
+
 local M = {}
 
 local disabled = false

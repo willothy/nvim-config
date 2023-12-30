@@ -42,6 +42,8 @@ local function module()
   return setmetatable(m, mt)
 end
 
+-- TODO: modules should just load automatically,
+
 ---@diagnostic disable: assign-type-mismatch
 ---@module "willothy.modules"
 willothy = module()
