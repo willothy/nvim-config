@@ -155,13 +155,35 @@ end
 
 local Filetype = (
   B({
-    provider = function(_self)
-      return vim.bo.filetype ~= "" and vim.bo.filetype
-        or vim.fn.fnamemodify(string.lower(vim.api.nvim_buf_get_name(0)), ":t")
+    provider = function(self)
+      return self.val or ""
     end,
+    condition = function()
+      return vim.bo.filetype ~= "" or vim.api.nvim_buf_get_name(0) ~= ""
+    end,
+    static = {
+      buftypes = {
+        [""] = true,
+        ["terminal"] = true,
+      },
+    },
     update = {
-      "BufEnter",
-      "OptionSet",
+      -- "BufEnter",
+      -- "OptionSet",
+      "User",
+      pattern = {
+        "UpdateHeirlineComponents",
+      },
+      callback = function(self)
+        if not self.buftypes[vim.bo.buftype] then
+          return
+        end
+        self.val = vim.bo.filetype ~= "" and vim.bo.filetype
+          or vim.fn.fnamemodify(
+            string.lower(vim.api.nvim_buf_get_name(0)),
+            ":t"
+          )
+      end,
     },
     Space,
   })
@@ -174,15 +196,24 @@ local Devicon = {
   hl = function(self)
     return { fg = self.icon_color }
   end,
-  condition = function()
+  condition = function(self)
     return package.loaded["nvim-web-devicons"] ~= nil
   end,
   static = {
-    fetch = function(self)
-      -- if self.ft == vim.bo.filetype then
-      --   return
-      -- end
-      -- self.icon = nil
+    buftypes = {
+      [""] = true,
+      ["terminal"] = true,
+    },
+  },
+  update = {
+    "User",
+    pattern = {
+      "UpdateHeirlineComponents",
+    },
+    callback = function(self)
+      if not self.buftypes[vim.bo.buftype] then
+        return
+      end
       local filename = vim.fn.expand("%")
       local extension = vim.fn.fnamemodify(filename, ":e")
       local devicons = require("nvim-web-devicons")
@@ -193,15 +224,6 @@ local Devicon = {
           { default = false }
         )
       end
-    end,
-  },
-  update = {
-    "User",
-    pattern = {
-      "UpdateHeirlineComponents",
-    },
-    callback = function(self)
-      self:fetch()
     end,
   },
   Space,
@@ -548,21 +570,30 @@ require("heirline").setup({
 })
 
 willothy.event.on({
-  "DirChanged",
   "ModeChanged",
-  "BufEnter",
-  "WinEnter",
-  "TermLeave",
-  "BufEnter",
-  "TermEnter",
-  "LspAttach",
-  "ColorScheme",
-  "VeryLazy",
   "HydraEnter",
   "HydraLeave",
 }, function()
   willothy.event.emit("UpdateHeirlineComponents")
 end)
+
+willothy.event.on(
+  {
+    "BufLeave",
+    "DirChanged",
+    "BufEnter",
+    "WinEnter",
+    "TermLeave",
+    "BufEnter",
+    "TermEnter",
+    "LspAttach",
+    "ColorScheme",
+    "VeryLazy",
+  },
+  vim.schedule_wrap(willothy.fn.throttle(function()
+    willothy.event.emit("UpdateHeirlineComponents")
+  end, 250))
+)
 
 willothy.event.on({
   "BufEnter",
