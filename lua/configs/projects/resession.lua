@@ -68,8 +68,8 @@ end)
 
 resession.add_hook("post_load", function()
   vim.o.showtabline = 2
-  willothy.ui.scrolleof.check()
   vim.schedule(function()
+    willothy.ui.scrolleof.check()
     -- Fixes lazy freaking out when a session is loaded and there are
     -- auto-installs being run.
     if lazy_open then
