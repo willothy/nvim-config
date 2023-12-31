@@ -12,3 +12,10 @@ require("smart-splits").setup({
     "WinEnter",
   },
 })
+
+vim.api.nvim_create_autocmd("VimLeavePre", {
+  group = vim.api.nvim_create_augroup("willothy/smart-splits", {}),
+  callback = function()
+    require("wezterm").set_user_var("IS_NVIM", false)
+  end,
+})
