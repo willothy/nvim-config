@@ -42,7 +42,7 @@ local function switch_by_step(step)
   end
 end
 
-wk.register({
+local previous = {
   name = "previous",
   b = {
     function()
@@ -59,9 +59,9 @@ wk.register({
   ["["] = bind(function()
     require("harpoon"):list("files"):prev()
   end):with_desc("harpoon mark"),
-}, { mode = modes.normal, prefix = "[" })
+}
 
-wk.register({
+local next = {
   name = "next",
   b = {
     function()
@@ -78,4 +78,10 @@ wk.register({
   ["]"] = bind(function()
     require("harpoon"):list("files"):next()
   end):with_desc("harpoon mark"),
-}, { mode = modes.normal, prefix = "]" })
+}
+
+wk.register(previous, { mode = modes.normal, prefix = "<leader>h" })
+wk.register(previous, { mode = modes.normal, prefix = "[" })
+
+wk.register(next, { mode = modes.normal, prefix = "<leader>l" })
+wk.register(next, { mode = modes.normal, prefix = "]" })
