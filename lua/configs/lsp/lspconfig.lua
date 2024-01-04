@@ -263,3 +263,13 @@ vim.diagnostic.config({
   -- end,
   -- },
 })
+
+if
+  vim.iter(vim.api.nvim_list_bufs()):any(function(buf)
+    return vim.bo[buf].buftype == ""
+  end)
+then
+  vim.defer_fn(function()
+    vim.cmd.LspStart()
+  end, 250)
+end
