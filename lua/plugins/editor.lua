@@ -254,10 +254,10 @@ return {
     event = "VeryLazy",
   },
   {
-    -- "ThePrimeagen/harpoon",
-    -- branch = "harpoon2",
-    "willothy/harpoon",
-    branch = "combined-ext",
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    -- "willothy/harpoon",
+    -- branch = "combined-ext",
     -- dir = "~/projects/lua/harpoon/",
     event = "VeryLazy",
     config = function()

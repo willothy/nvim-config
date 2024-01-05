@@ -19,7 +19,7 @@ local tmux = {
       cb(lines)
     end)
   end,
-  select = function(list_item, list, option)
+  select = function(list_item, _list, _option)
     local sessionName = string.match(list_item.value, "([^:]+)")
     vim.system(
       { "tmux", "switch-client", "-t", sessionName },
@@ -57,7 +57,7 @@ local terminals = {
       end)
       :totable()
   end,
-  remove = function(list_item, list)
+  remove = function(list_item, _list)
     if vim.api.nvim_buf_is_valid(list_item.context.bufnr) then
       require("bufdelete").bufdelete(list_item.context.bufnr, true)
     end
@@ -177,19 +177,24 @@ local function prepopulate(list)
     -- async via callback, or sync via return value
     local sync_items =
       ---@diagnostic disable-next-line: undefined-field
-      list.config.prepopulate(vim.schedule_wrap(function(items)
-        for _, item in ipairs(items or {}) do
+      list.config.prepopulate(function(items)
+        if type(items) ~= "table" then
+          return
+        end
+        for _, item in ipairs(items) do
           list:append(item)
         end
         -- if ui is open, buffer needs to be updated
         -- so that items aren't removed immediately after being added
-        local ui_buf = harpoon.ui.bufnr
-        if ui_buf and vim.api.nvim_buf_is_valid(ui_buf) then
-          local lines = list:display()
-          vim.api.nvim_buf_set_lines(ui_buf, 0, -1, false, lines)
-        end
-      end))
-    if sync_items then
+        vim.schedule(function()
+          local ui_buf = harpoon.ui.bufnr
+          if ui_buf and vim.api.nvim_buf_is_valid(ui_buf) then
+            local lines = list:display()
+            vim.api.nvim_buf_set_lines(ui_buf, 0, -1, false, lines)
+          end
+        end)
+      end)
+    if sync_items and type(sync_items) == "table" then
       for _, item in ipairs(sync_items) do
         list:append(item)
       end
@@ -204,6 +209,12 @@ harpoon:extend({
     local win = cx.win_id
     vim.wo[win].cursorline = true
     vim.wo[win].signcolumn = "no"
+
+    willothy.win.update_config(win, function(config)
+      config.footer = harpoon.ui.active_list.name
+      config.footer_pos = "center"
+      return config
+    end)
 
     vim.keymap.set("n", "<C-v>", function()
       harpoon.ui:select_menu_item({ vsplit = true })

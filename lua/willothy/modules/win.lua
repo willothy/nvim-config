@@ -302,7 +302,7 @@ function M.open(buf, config, enter)
 end
 
 ---@param win integer,
----@param fn fun(conf: vim.api.keyset.float_config)
+---@param fn fun(conf: vim.api.keyset.float_config): vim.api.keyset.float_config?
 function M.update_config(win, fn)
   local config = vim.api.nvim_win_get_config(win)
   local res = fn(config)
