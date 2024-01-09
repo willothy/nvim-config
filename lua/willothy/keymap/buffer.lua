@@ -53,4 +53,16 @@ wk.register({
     end,
     "delete",
   },
+  n = {
+    function()
+      require("cokeline.mappings").by_step("focus", 1)
+    end,
+    "next",
+  },
+  p = {
+    function()
+      require("cokeline.mappings").by_step("focus", -1)
+    end,
+    "prev",
+  },
 }, { mode = modes.non_editing, prefix = "<leader>b" })
