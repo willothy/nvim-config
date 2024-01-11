@@ -77,6 +77,55 @@ wk.register({
       vim.lsp.buf.definition,
       "lsp: definitions",
     },
+    h = {
+      -- function()
+      --   -- local Path = require("plenary.path")
+      --   local filetypes = {
+      --     "c",
+      --     "cpp",
+      --     "cc",
+      --     "cxx",
+      --     "h",
+      --     "hpp",
+      --     "hxx",
+      --   }
+      --   if
+      --     not filetypes[vim.api.nvim_get_option_value("filetype", {
+      --       buf = 0,
+      --     })]
+      --   then
+      --     return
+      --   end
+      --   local bufname = vim.api.nvim_buf_get_name(0)
+      --   local function is_header(path)
+      --     return path:match(".*%.h$") ~= nil
+      --       or path:match(".*%.hpp$") ~= nil
+      --       or path:match(".*%.hxx$") ~= nil
+      --   end
+      --   local matches = vim.fs.find(function(name)
+      --     if is_header(bufname) then
+      --       return not is_header(name)
+      --     else
+      --       return is_header(name)
+      --     end
+      --   end, {
+      --     path = vim.uv.cwd(),
+      --     upward = false,
+      --     type = "file",
+      --   })
+      --   if matches[1] then
+      --     local bufnr = vim.fn.bufnr(matches[1], true)
+      --     if bufnr and bufnr ~= -1 then
+      --       if not vim.api.nvim_buf_is_loaded(bufnr) then
+      --         vim.fn.bufload(bufnr)
+      --       end
+      --       vim.api.nvim_set_current_buf(bufnr)
+      --     end
+      --   end
+      -- end,
+      ":ClangdSwitchSourceHeader<CR>",
+      "header / source",
+    },
   },
   H = { "^", "start of line" },
   L = { "$", "end of line" },

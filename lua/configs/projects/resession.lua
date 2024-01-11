@@ -237,10 +237,18 @@ save_timer:start(
 
 -- Cursed QuitPre autocmd that saves the session before closing windows containing
 -- non-normal buffers, so that the main layout is properly saved.
+local group =
+  vim.api.nvim_create_augroup("willothy/ResessionAutosave", { clear = true })
+local quitting = false
 vim.api.nvim_create_autocmd("QuitPre", {
-  group = vim.api.nvim_create_augroup("ResessionAutosave", { clear = true }),
-  nested = true,
+  group = group,
+  -- pattern = "*",
+  -- nested = true,
   callback = function()
+    if quitting then
+      return
+    end
+
     local curwin = vim.api.nvim_get_current_win()
     local wins = vim.api.nvim_list_wins()
     local has_normal = false
@@ -295,8 +303,12 @@ vim.api.nvim_create_autocmd("QuitPre", {
         end
       end
       if is_last then
-        require("harpoon"):sync()
+        quitting = true
+        -- require("harpoon"):sync()
+        -- require("wezterm").set_user_var("IS_NVIM", "")
+
         vim.schedule(function()
+          vim.api.nvim_exec_autocmds("VimLeavePre", {})
           vim.o.eventignore = ""
           vim.cmd.qa()
         end)
