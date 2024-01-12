@@ -210,6 +210,7 @@ return {
   },
   {
     "willothy/flatten.nvim",
+    branch = "guest-data",
     -- dir = "~/projects/lua/flatten/",
     -- cond = true,
     lazy = false,

@@ -1,5 +1,6 @@
 ---@type Terminal?
 local saved_terminal
+local saved_pane
 
 require("flatten").setup({
   window = {
@@ -48,10 +49,24 @@ require("flatten").setup({
     --   -- return vim.tbl_contains(argv, "-n")
     --   return false
     -- end,
-    pre_open = function()
+    guest_data = function()
+      return {
+        pane = require("wezterm").get_current_pane(),
+      }
+    end,
+    pre_open = function(data)
       local term = require("toggleterm.terminal")
       local id = term.get_focused_id()
       saved_terminal = term.get(id)
+
+      local pane = data.pane
+      if not pane then
+        return
+      end
+      pane = tonumber(pane)
+      if pane then
+        saved_pane = pane
+      end
     end,
     post_open = function(bufnr, winnr, ft, is_blocking, is_diff)
       if is_blocking and saved_terminal then
@@ -61,7 +76,12 @@ require("flatten").setup({
         -- If it's a normal file, just switch to its window
         vim.api.nvim_set_current_win(winnr)
         -- If it's not in the current wezterm pane, switch to that pane.
-        require("wezterm").switch_pane.id(tonumber(os.getenv("WEZTERM_PANE")))
+        local wezterm = require("wezterm")
+
+        local pane = wezterm.get_current_pane()
+        if pane then
+          require("wezterm").switch_pane.id(pane)
+        end
       end
 
       -- If the file is a git commit, create one-shot autocmd to delete its buffer on write
@@ -74,10 +94,16 @@ require("flatten").setup({
             require("bufdelete").bufdelete(bufnr, true)
           end),
         })
+      elseif not is_blocking then
+        saved_pane = nil
       end
     end,
     -- After blocking ends (for a git commit, etc), reopen the terminal
     block_end = vim.schedule_wrap(function()
+      if saved_pane then
+        require("wezterm").switch_pane.id(saved_pane)
+        saved_pane = nil
+      end
       if saved_terminal then
         saved_terminal:open()
         saved_terminal = nil
