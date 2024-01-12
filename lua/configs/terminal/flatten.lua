@@ -5,43 +5,39 @@ local saved_pane
 require("flatten").setup({
   window = {
     open = "smart",
-    -- open = "alternate",
-    -- open = function(files, argv, stdin_buf_id)
-    --
-    -- end,
   },
-  pipe_path = function()
-    -- If running in a terminal inside Neovim:
-    local nvim = vim.env.NVIM
-    if nvim then
-      return nvim
-    end
-
-    -- If running in a Wezterm terminal,
-    -- all tabs/windows/os-windows in the same instance of wezterm will open in the first neovim instance
-    local wezterm = vim.env.WEZTERM_UNIX_SOCKET
-    if not wezterm then
-      return
-    end
-
-    local addr = ("%s/%s"):format(
-      vim.fn.stdpath("run"),
-      "wezterm.nvim-"
-        .. wezterm:match("gui%-sock%-(%d+)")
-        .. "-"
-        .. vim.fn.getcwd(-1):gsub("/", "_")
-    )
-    if not vim.loop.fs_stat(addr) then
-      vim.fn.serverstart(addr)
-    end
-
-    return addr
-  end,
   nest_if_no_args = true,
-  one_per = {
+  integrations = {
     wezterm = true,
   },
   callbacks = {
+    pipe_path = function()
+      -- If running in a terminal inside Neovim:
+      local nvim = vim.env.NVIM
+      if nvim then
+        return nvim
+      end
+
+      -- If running in a Wezterm terminal,
+      -- all tabs/windows/os-windows in the same instance of wezterm will open in the first neovim instance
+      local wezterm = vim.env.WEZTERM_UNIX_SOCKET
+      if not wezterm then
+        return
+      end
+
+      local addr = ("%s/%s"):format(
+        vim.fn.stdpath("run"),
+        "wezterm.nvim-"
+          .. wezterm:match("gui%-sock%-(%d+)")
+          .. "-"
+          .. vim.fn.getcwd(-1):gsub("/", "_")
+      )
+      if not vim.loop.fs_stat(addr) then
+        vim.fn.serverstart(addr)
+      end
+
+      return addr
+    end,
     should_block = function(argv)
       return vim.tbl_contains(argv, "-b")
     end,
@@ -54,21 +50,15 @@ require("flatten").setup({
         pane = require("wezterm").get_current_pane(),
       }
     end,
-    pre_open = function(data)
+    pre_open = function(opts)
       local term = require("toggleterm.terminal")
       local id = term.get_focused_id()
       saved_terminal = term.get(id)
-
-      local pane = data.pane
-      if not pane then
-        return
-      end
-      pane = tonumber(pane)
-      if pane then
-        saved_pane = pane
-      end
     end,
-    post_open = function(bufnr, winnr, ft, is_blocking, is_diff)
+    post_open = function(opts)
+      local bufnr, winnr, ft, is_blocking, is_diff =
+        opts.bufnr, opts.winnr, opts.filetype, opts.is_blocking, opts.is_diff
+
       if is_blocking and saved_terminal then
         -- Hide the terminal while it's blocking
         saved_terminal:close()
@@ -94,15 +84,12 @@ require("flatten").setup({
             require("bufdelete").bufdelete(bufnr, true)
           end),
         })
-      elseif not is_blocking then
-        saved_pane = nil
       end
     end,
     -- After blocking ends (for a git commit, etc), reopen the terminal
-    block_end = vim.schedule_wrap(function()
-      if saved_pane then
-        require("wezterm").switch_pane.id(saved_pane)
-        saved_pane = nil
+    block_end = vim.schedule_wrap(function(opts)
+      if type(opts.data) == "table" and opts.data.pane then
+        require("wezterm").switch_pane.id(opts.data.pane)
       end
       if saved_terminal then
         saved_terminal:open()
