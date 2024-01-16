@@ -390,7 +390,9 @@ return {
   {
     "tris203/hawtkeys.nvim",
     -- dir = "~/projects/lua/hawtkeys.nvim/",
-    opts = {},
+    config = function()
+      require("configs.editor.hawtkeys")
+    end,
     event = "VeryLazy",
   },
   {
