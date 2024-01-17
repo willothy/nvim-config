@@ -12,6 +12,7 @@ local opts = {
     markdown = { { "markdownlint", "prettierd", "prettier" } },
     json = { { "jq", "prettierd", "prettier" } },
     proto = { { "buf", "protolint" } },
+    -- nasm = { { "asmfmt" } },
   },
   -- format_on_save = {
   --   timeout_ms = 500,

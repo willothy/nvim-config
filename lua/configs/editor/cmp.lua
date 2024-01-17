@@ -146,7 +146,10 @@ local opts = {
       local row, col = unpack(vim.api.nvim_win_get_cursor(0))
       local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
       local ts = require("nvim-treesitter.indent")
-      local indent = ts.get_indent(row)
+      local ok, indent = pcall(ts.get_indent, row)
+      if not ok then
+        indent = 0
+      end
 
       if cmp.visible() and not vim.snippet.active() then
         cmp.confirm({ select = true })
@@ -189,7 +192,10 @@ local opts = {
       local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
 
       local ts = require("nvim-treesitter.indent")
-      local indent = ts.get_indent(row) or 0
+      local ok, indent = pcall(ts.get_indent, row)
+      if not ok then
+        indent = 0
+      end
 
       if
         vim.fn.strcharpart(line, indent - 1, col - indent + 1):gsub("%s+", "")

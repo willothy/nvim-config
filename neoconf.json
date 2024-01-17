@@ -77,6 +77,9 @@
       }
     },
     "rust_analyzer": {
+      "check": {
+        "allTargets": false
+      },
       "imports": {
         "granularity": {
           "enforce": true,

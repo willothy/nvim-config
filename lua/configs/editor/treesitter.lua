@@ -1,5 +1,5 @@
 ---@diagnostic disable: missing-fields
-require("tree-sitter-just").setup({})
+-- require("tree-sitter-just").setup({})
 
 require("nvim-treesitter.configs").setup({
   -- A list of parser names, or "all"

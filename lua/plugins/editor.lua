@@ -64,7 +64,7 @@ return {
     build = ":TSUpdate",
     dependencies = {
       "nvim-treesitter/nvim-treesitter-textobjects",
-      "IndianBoy42/tree-sitter-just",
+      -- "IndianBoy42/tree-sitter-just",
       "chrisgrieser/nvim-various-textobjs",
     },
     config = function()
