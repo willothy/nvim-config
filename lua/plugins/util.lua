@@ -55,6 +55,17 @@ return {
     event = "VeryLazy",
   },
   {
+    "kawre/leetcode.nvim",
+    config = function()
+      local leet = require("leetcode")
+      leet.should_skip = function()
+        return false
+      end
+      leet.setup({})
+    end,
+    cmd = "Leet",
+  },
+  {
     "Dhanus3133/LeetBuddy.nvim",
     config = true,
     cmd = {

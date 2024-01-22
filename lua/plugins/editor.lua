@@ -414,4 +414,20 @@ return {
     config = true,
     cmd = "EasyreadToggle",
   },
+  {
+    "johmsalas/text-case.nvim",
+    config = true,
+    keys = {
+      {
+        "ga",
+        dode = { "n", "v" },
+      },
+      {
+        "ga.",
+        "<cmd>TextCaseOpenTelescope<CR>",
+        mode = { "n", "v" },
+        desc = "telescope",
+      },
+    },
+  },
 }
