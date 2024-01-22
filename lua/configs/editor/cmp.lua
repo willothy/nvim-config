@@ -66,15 +66,26 @@ cmp_lsp.resolve = function(self, item, cb)
     return cb()
   end
 
-  if item.kind == cmp.lsp.CompletionItemKind.Snippet then
-    item.documentation = {
-      kind = "markdown",
-      value = string.format(
-        "```%s\n%s\n```",
-        vim.bo.filetype,
-        item.insertText
-      ),
-    }
+  if not item.documentation then
+    if item.insertText then
+      item.documentation = {
+        kind = "markdown",
+        value = string.format(
+          "```%s\n%s\n```",
+          vim.bo.filetype,
+          item.insertText
+        ),
+      }
+    elseif item.textEdit then
+      item.documentation = {
+        kind = "markdown",
+        value = string.format(
+          "```%s\n%s\n```",
+          vim.bo.filetype,
+          item.textEdit.newText
+        ),
+      }
+    end
   end
 
   self:_request("completionItem/resolve", item, function(_, response)
