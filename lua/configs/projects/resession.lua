@@ -307,8 +307,8 @@ vim.api.nvim_create_autocmd("QuitPre", {
         -- require("harpoon"):sync()
         -- require("wezterm").set_user_var("IS_NVIM", "")
 
+        vim.api.nvim_exec_autocmds("VimLeavePre", {})
         vim.schedule(function()
-          vim.api.nvim_exec_autocmds("VimLeavePre", {})
           vim.o.eventignore = ""
           vim.cmd.qa()
         end)
