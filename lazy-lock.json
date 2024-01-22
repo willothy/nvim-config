@@ -36,6 +36,7 @@
   "floating-help.nvim": { "branch": "main", "commit": "798a1fc71f3b7d739a3fd381125ac9d7d5632b92" },
   "focus.nvim": { "branch": "master", "commit": "4135f976afe5d6e1fe66dff121db9d06643f439f" },
   "foldsigns.nvim": { "branch": "main", "commit": "c36c2cc8122caf2a5bb05096097ea8e684233a34" },
+  "friendly-snippets": { "branch": "main", "commit": "69a2c1675b66e002799f5eef803b87a12f593049" },
   "gist.nvim": { "branch": "main", "commit": "92b13e486dd9fd083750450e0d262fcc68a62b91" },
   "git-conflict.nvim": { "branch": "main", "commit": "4c8e252b87d54d944c1e56bfb477f78b6fdaf661" },
   "github-nvim-theme": { "branch": "main", "commit": "067cb69b93957ace0d0d83811453b401d1fb672c" },

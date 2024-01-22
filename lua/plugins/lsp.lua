@@ -72,13 +72,11 @@ return {
     "willothy/nvim-snippets",
     config = true,
     event = "InsertEnter",
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+    },
     -- dir = "~/projects/lua/nvim-snippets/",
   },
-  -- {
-  --   "L3MON4D3/LuaSnip",
-  --   build = "make install_jsregexp",
-  --   -- config = true,
-  -- },
   {
     -- "simrat39/rust-tools.nvim",
     "willothy/rust-tools.nvim",
