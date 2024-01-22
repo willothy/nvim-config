@@ -48,6 +48,40 @@ local main_sources = cmp.config.sources({
   { name = "path" },
 })
 
+-- add highlights for nvim-cmp
+local cmp_lsp = require("cmp_nvim_lsp.source")
+cmp_lsp.resolve = function(self, item, cb)
+  -- client is stopped.
+  if self.client.is_stopped() then
+    return cb()
+  end
+
+  -- client has no completion capability.
+  if
+    not self:_get(
+      self.client.server_capabilities,
+      { "completionProvider", "resolveProvider" }
+    )
+  then
+    return cb()
+  end
+
+  if item.kind == cmp.lsp.CompletionItemKind.Snippet then
+    item.documentation = {
+      kind = "markdown",
+      value = string.format(
+        "```%s\n%s\n```",
+        vim.bo.filetype,
+        item.insertText
+      ),
+    }
+  end
+
+  self:_request("completionItem/resolve", item, function(_, response)
+    cb(response or item)
+  end)
+end
+
 local enabled = true
 local main_enabled = true
 vim.api.nvim_create_user_command("CmpToggle", function(args)
