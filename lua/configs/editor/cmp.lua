@@ -136,7 +136,6 @@ local opts = {
   },
   sorting = {
     priority_weight = 10,
-
     comparators = {
       cmp.config.compare.exact,
       cmp.config.compare.scopes,

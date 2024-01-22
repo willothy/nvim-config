@@ -170,6 +170,12 @@ local commands = {
     end,
     desc = "Select a browser",
   },
+  Sync = {
+    function()
+      require("lazy").sync()
+    end,
+    desc = "Sync the telescope configuration",
+  },
 }
 
 return {

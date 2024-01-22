@@ -55,14 +55,13 @@ return {
     event = "VeryLazy",
   },
   {
-    "kawre/leetcode.nvim",
-    config = function()
-      local leet = require("leetcode")
-      leet.should_skip = function()
-        return false
-      end
-      leet.setup({})
-    end,
+    -- "kawre/leetcode.nvim",
+    "willothy/leetcode.nvim",
+    branch = "feat-start-with-cmd",
+    -- dir = "~/projects/lua/leetcode.nvim",
+    opts = {
+      lang = "rust",
+    },
     cmd = "Leet",
   },
   {

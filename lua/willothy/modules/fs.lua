@@ -28,13 +28,19 @@ function M.hijack_dir_buf(buf)
   local bufnr = buf
   local uv = vim.uv or vim.loop
   local bufname = vim.api.nvim_buf_get_name(bufnr)
+  if bufname == "" then
+    return
+  end
+  vim.print(bufname)
   local stat = vim.F.ok_or_nil(pcall(uv.fs_stat, bufname))
   if not stat or stat.type ~= "directory" then
     return
   end
 
-  -- ensure no buffers remain with the directory name
-  require("bufdelete").bufdelete(bufnr)
+  if bufnr then
+    -- ensure no buffers remain with the directory name
+    require("bufdelete").bufdelete(bufnr)
+  end
 
   vim.schedule(function()
     M.browse(bufname)
