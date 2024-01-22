@@ -1,49 +1,41 @@
-local function mkcaps(extra)
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities = vim.lsp.protocol.make_client_capabilities()
 
-  if extra then
-    capabilities.textDocument.foldingRange = {
-      dynamicRegistration = false,
-      lineFoldingOnly = true,
-    }
+capabilities.textDocument.foldingRange = {
+  dynamicRegistration = false,
+  lineFoldingOnly = true,
+}
 
-    -- send actions with hover request
-    capabilities.experimental = {
-      hoverActions = true,
-      hoverRange = true,
-      serverStatusNotification = true,
-      snippetTextEdit = true,
-      codeActionGroup = true,
-      ssr = true,
-    }
+-- send actions with hover request
+capabilities.experimental = {
+  hoverActions = true,
+  hoverRange = true,
+  serverStatusNotification = true,
+  snippetTextEdit = true,
+  codeActionGroup = true,
+  ssr = true,
+}
 
-    capabilities.textDocument.formatting = {
-      dynamicRegistration = false,
-    }
+capabilities.textDocument.formatting = {
+  dynamicRegistration = false,
+}
 
-    capabilities.general.positionEncodings = { "utf-8" }
+capabilities.general.positionEncodings = { "utf-8" }
 
-    capabilities.offsetEncoding = "utf-8"
-  end
+---@diagnostic disable-next-line: inject-field
+capabilities.offsetEncoding = "utf-8"
 
-  ---@diagnostic disable-next-line: missing-fields
-  capabilities.textDocument.semanticTokens = {
-    augmentsSyntaxTokens = false,
-  }
-
-  return capabilities
-end
+capabilities.textDocument.semanticTokens.augmentsSyntaxTokens = false
 
 local icons = willothy.icons
 require("mason").setup()
 
 local lspconfig = require("lspconfig")
-local capabilities = mkcaps(true)
 
 local lsp_attach = require("configs.lsp").lsp_attach
 
 require("neoconf").setup({})
 
+-- TODO: replace rust-tools as it is no longer maintained
 require("rust-tools").setup({
   executor = {
     execute_command = function(command, args, cwd)
@@ -60,24 +52,7 @@ require("rust-tools").setup({
       auto = false,
     },
     hover_actions = {
-      border = {
-        -- { "▄", "NormalFloatInv" }, -- top left
-        -- { "▄", "NormalFloatInv" }, -- top
-        -- { "▄", "NormalFloatInv" }, -- top right
-        -- { " ", "NormalFloatInv" }, -- right
-        -- { "▀", "NormalFloatInv" }, -- bottom right
-        -- { "▀", "NormalFloatInv" }, -- bottom
-        -- { "▀", "NormalFloatInv" }, -- bottom left
-        -- { " ", "NormalFloatInv" }, -- left
-        { " ", "NormalFloat" }, -- top left
-        { " ", "NormalFloat" }, -- top
-        { " ", "NormalFloat" }, -- top right
-        { " ", "NormalFloat" }, -- right
-        { " ", "NormalFloat" }, -- bottom right
-        { " ", "NormalFloat" }, -- bottom
-        { " ", "NormalFloat" }, -- bottom left
-        { " ", "NormalFloat" }, -- left
-      },
+      border = "solid",
     },
   },
   server = {
@@ -87,16 +62,8 @@ require("rust-tools").setup({
 })
 
 require("neodev").setup({
-  lspconfig = true,
+  lspconfig = false,
   pathStrict = true,
-})
-lspconfig.lua_ls.setup({
-  capabilities = capabilities,
-  on_attach = lsp_attach,
-  root_dir = require("lspconfig.util").root_pattern(".git"),
-  before_init = require("neodev.lsp").before_init,
-  single_file_support = true,
-  filetypes = { "lua" },
 })
 
 require("mason-lspconfig").setup({
@@ -110,8 +77,20 @@ require("mason-lspconfig").setup({
     end,
     clangd = function()
       lspconfig.clangd.setup({
-        capabilities = mkcaps(true),
-        on_attach = lsp_attach,
+        capabilities = capabilities,
+        on_attach = function(_client, bufnr)
+          vim.keymap.set(
+            "n",
+            "<leader>gh",
+            "<cmd>ClangdSwitchSourceHeader<CR>",
+            {
+              silent = true,
+              noremap = true,
+              buffer = bufnr,
+              desc = "header / source",
+            }
+          )
+        end,
         root_dir = require("lspconfig.util").root_pattern(".git"),
         filetypes = { "c", "cpp", "h", "hpp" },
         offsetEncoding = { "utf-8" },
@@ -129,10 +108,19 @@ require("mason-lspconfig").setup({
         ),
       })
     end,
-    lua_ls = function() end,
+    lua_ls = function()
+      lspconfig.lua_ls.setup({
+        capabilities = capabilities,
+        on_attach = lsp_attach,
+        root_dir = require("lspconfig.util").root_pattern(".git"),
+        before_init = require("neodev.lsp").before_init,
+        single_file_support = true,
+        filetypes = { "lua" },
+      })
+    end,
     bashls = function()
       require("lspconfig").bashls.setup({
-        capabilities = mkcaps(false),
+        capabilities = capabilities,
         attach = lsp_attach,
         filetypes = { "zsh", "sh", "bash" },
         root_dir = require("lspconfig.util").root_pattern(".git", ".zshrc"),
@@ -148,8 +136,6 @@ require("mason-lspconfig").setup({
   },
 })
 
--- vim.lsp.buf.references
----@diagnostic disable-next-line: duplicate-set-field
 vim.lsp.handlers["textDocument/references"] = function()
   require("trouble").open("lsp_references")
 end
@@ -158,52 +144,44 @@ vim.lsp.handlers["textDocument/definition"] = function()
   require("trouble").open("lsp_definitions")
 end
 
-local sign = function(opts)
-  vim.fn.sign_define(opts.name, {
-    texthl = opts.hl or opts.name,
-    icon = opts.text,
-    text = opts.text,
-  })
+local signs = {
+  DapBreakpoint = {
+    text = icons.dap.breakpoint.data,
+    icon = icons.dap.breakpoint.data,
+    texthl = "DiagnosticSignError",
+  },
+  DapBreakpointCondition = {
+    text = icons.dap.breakpoint.conditional,
+    icon = icons.dap.breakpoint.conditional,
+    texthl = "DiagnosticSignWarn",
+  },
+  DapLogPoint = {
+    text = icons.dap.breakpoint.log,
+    icon = icons.dap.breakpoint.log,
+    texthl = "DiagnosticSignInfo",
+  },
+  DapStopped = {
+    text = icons.dap.action.stop,
+    icon = icons.dap.action.stop,
+    texthl = "DiagnosticSignInfo",
+  },
+  DapBreakpointRejected = {
+    text = icons.dap.breakpoint.unsupported,
+    icon = icons.dap.breakpoint.unsupported,
+    texthl = "DiagnosticSignWarn",
+  },
+}
+
+for name, def in pairs(signs) do
+  vim.fn.sign_define(name, def)
 end
 
-sign({ name = "DiagnosticSignError", text = icons.diagnostics.errors })
-sign({ name = "DiagnosticSignWarn", text = icons.diagnostics.warnings })
-sign({ name = "DiagnosticSignHint", text = icons.diagnostics.hints })
-sign({ name = "DiagnosticSignInfo", text = icons.diagnostics.info })
-sign({
-  name = "LightBulbSign",
-  text = icons.lsp.action_hint,
-  hl = "DiagnosticSignWarn",
-})
-sign({
-  name = "DapBreakpoint",
-  text = icons.dap.breakpoint.data,
-  hl = "DiagnosticSignError",
-})
-sign({
-  name = "DapBreakpointCondition",
-  text = icons.dap.breakpoint.conditional,
-  hl = "DiagnosticSignWarn",
-})
-sign({
-  name = "DapLogPoint",
-  text = icons.dap.breakpoint.log,
-  hl = "DiagnosticSignInfo",
-})
-sign({
-  name = "DapStopped",
-  text = icons.dap.action.stop,
-  hl = "DiagnosticSignInfo",
-})
-sign({
-  name = "DapBreakpointRejected",
-  text = icons.dap.breakpoint.unsupported,
-  hl = "DiagnosticSignWarn",
-})
-
 vim.diagnostic.config({
-  underline = true,
-  -- virtual_lines = true,
+  severity_sort = true,
+  update_in_insert = true,
+  underline = {
+    severity = vim.diagnostic.severity.ERROR,
+  },
   signs = {
     text = {
       [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
@@ -212,7 +190,6 @@ vim.diagnostic.config({
       [vim.diagnostic.severity.HINT] = icons.diagnostics.Hint,
     },
   },
-  severity_sort = true,
   float = {
     header = setmetatable({}, {
       __index = function(_, k)
@@ -227,41 +204,16 @@ vim.diagnostic.config({
             )
           end,
           function()
-            return "NoiceMini"
+            return "Title"
           end,
         }
         return arr[k]()
       end,
     }),
     source = "always",
-    border = {
-      { "▀", "NoiceCmdlinePopupBorder" }, -- top left
-      { "▀", "NoiceCmdlinePopupBorder" }, -- top
-      { "▀", "NoiceCmdlinePopupBorder" }, -- top right
-      { " ", "NoiceCmdlinePopupBorder" }, -- right
-      { "▄", "NoiceCmdlinePopupBorder" }, -- bottom right
-      { "▄", "NoiceCmdlinePopupBorder" }, -- bottom
-      { "▄", "NoiceCmdlinePopupBorder" }, -- bottom left
-      { " ", "NoiceCmdlinePopupBorder" }, -- left
-    },
+    border = "solid",
     focusable = false,
   },
-  update_in_insert = true,
-  -- virtual_text = {
-  -- virt_text_pos = "right_align",
-  -- prefix = "",
-  -- format = function(diag)
-  --   local severity = "Info"
-  --   if diag.severity == 1 then
-  --     severity = "Error"
-  --   elseif diag.severity == 2 then
-  --     severity = "Warn"
-  --   elseif diag.severity == 3 then
-  --     severity = "Hint"
-  --   end
-  --   return icons.diagnostics[severity] -- string.format("%s %s", icons.diagnostics[severity], diag.message)
-  -- end,
-  -- },
 })
 
 if

@@ -370,6 +370,7 @@ return {
     },
     cmd = "GitLink",
   },
+  -- MISC --
   {
     "echasnovski/mini.trailspace",
     config = true,
@@ -407,5 +408,10 @@ return {
       require("configs.editor.miniclue")
     end,
     event = "VeryLazy",
+  },
+  {
+    "JellyApple102/easyread.nvim",
+    config = true,
+    cmd = "EasyreadToggle",
   },
 }

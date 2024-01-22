@@ -155,6 +155,10 @@ return {
     end,
   },
   {
+    "carbon-steel/detour.nvim",
+    cmd = { "Detour", "DetourCurrentWindow" },
+  },
+  {
     -- "mrjones2014/smart-splits.nvim",
     "willothy/smart-splits.nvim",
     -- dir = "~/projects/lua/smart-splits.nvim/",
@@ -212,8 +216,8 @@ return {
     event = "UiEnter",
   },
   {
-    -- "Bekaboo/dropbar.nvim",
-    "willothy/dropbar.nvim",
+    "Bekaboo/dropbar.nvim",
+    -- "willothy/dropbar.nvim",
     -- dir = "~/projects/lua/dropbar.nvim/",
     config = function()
       require("configs.status.dropbar")
@@ -229,6 +233,11 @@ return {
     config = function()
       require("configs.status.statuscol")
     end,
+  },
+  {
+    "lewis6991/foldsigns.nvim",
+    config = true,
+    event = "VeryLazy",
   },
   {
     "willothy/incline.nvim",

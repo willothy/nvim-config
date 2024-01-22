@@ -1,3 +1,5 @@
+local active_win
+
 require("murmur").setup({
   exclude_filetypes = {
     "harpoon",
@@ -12,13 +14,15 @@ require("murmur").setup({
   cursor_rgb_always_use_config = true,
   callbacks = {
     function()
-      vim.api.nvim_exec_autocmds("User", { pattern = "MurmurDiagnostics" })
-      vim.w.diag_shown = false
+      if active_win and vim.api.nvim_win_is_valid(active_win) then
+        vim.api.nvim_win_close(active_win, true)
+      end
+      active_win = nil
     end,
   },
 })
 
-local enabled = false
+local enabled = true
 vim.api.nvim_create_user_command("DiagnosticFloat", function()
   enabled = not enabled
 end, { nargs = 0 })
@@ -31,32 +35,29 @@ vim.api.nvim_create_autocmd("CursorHold", {
   pattern = "*",
   callback = function()
     -- skip when a float-win already exists.
-    if vim.w.diag_shown then
+    if active_win and vim.api.nvim_win_is_valid(active_win) then
       return
     end
 
     -- open float-win when hovering on a cursor-word.
     if vim.w.cursor_word ~= "" and enabled then
-      local buf = vim.diagnostic.open_float({
+      local buf, win = vim.diagnostic.open_float({
         scope = "cursor",
         close_events = {
           "InsertEnter",
-          "User MurmurDiagnostics",
           "BufLeave",
         },
       })
+      active_win = win
 
       vim.api.nvim_create_autocmd({ "WinClosed" }, {
         group = au,
         buffer = buf,
         once = true,
         callback = function()
-          vim.w.diag_shown = false
+          active_win = nil
         end,
       })
-      vim.w.diag_shown = true
-    else
-      vim.w.diag_shown = false
     end
   end,
 })
