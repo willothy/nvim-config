@@ -139,6 +139,15 @@ return {
     cmd = "KeySeer",
   },
   {
+    "chrisgrieser/nvim-scissors",
+    opts = {
+      editSnippetPopup = {
+        border = "solid",
+      },
+      jsonFormatter = "jq",
+    },
+  },
+  {
     "pwntester/octo.nvim",
     config = true,
     cmd = "Octo",

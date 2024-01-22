@@ -1,3 +1,7 @@
+local M = {}
+
+local au = vim.api.nvim_create_augroup("murmur_au", { clear = true })
+local enabled = true
 local active_win
 
 require("murmur").setup({
@@ -22,42 +26,78 @@ require("murmur").setup({
   },
 })
 
-local enabled = true
-vim.api.nvim_create_user_command("DiagnosticFloat", function()
-  enabled = not enabled
-end, { nargs = 0 })
+function M.enable()
+  enabled = true
+end
 
-local au = vim.api.nvim_create_augroup("murmur_au", { clear = true })
+function M.disable()
+  enabled = false
+  M.hide()
+end
+
+function M.toggle()
+  enabled = not enabled
+  if not enabled then
+    M.hide()
+  end
+end
+
+function M.hide()
+  if active_win and vim.api.nvim_win_is_valid(active_win) then
+    vim.api.nvim_win_close(active_win, true)
+  end
+  active_win = nil
+end
+
+function M.show()
+  if
+    (active_win and vim.api.nvim_win_is_valid(active_win))
+    or (vim.w.cursor_word == "" or vim.w.cursor_word == nil)
+    or not enabled
+  then
+    return
+  end
+
+  local buf, win = vim.diagnostic.open_float({
+    scope = "cursor",
+    close_events = {
+      "InsertEnter",
+      "TextChanged",
+      "BufLeave",
+    },
+  })
+  if not buf or not win then
+    return
+  end
+  active_win = win
+  vim.api.nvim_create_autocmd("WinClosed", {
+    group = au,
+    buffer = buf,
+    once = true,
+    callback = function()
+      active_win = nil
+    end,
+  })
+end
+
+willothy.fn.create_command("DiagnosticFloat", {
+  command = M.toggle,
+  subcommands = {
+    enable = {
+      execute = M.enable,
+    },
+    disable = {
+      execute = M.disable,
+    },
+    toggle = {
+      execute = M.toggle,
+    },
+  },
+})
 
 -- To create IDE-like no blinking diagnostic message with `cursor` scope. (should be paired with the callback above)
 vim.api.nvim_create_autocmd("CursorHold", {
   group = au,
   pattern = "*",
-  callback = function()
-    -- skip when a float-win already exists.
-    if active_win and vim.api.nvim_win_is_valid(active_win) then
-      return
-    end
-
-    -- open float-win when hovering on a cursor-word.
-    if vim.w.cursor_word ~= "" and enabled then
-      local buf, win = vim.diagnostic.open_float({
-        scope = "cursor",
-        close_events = {
-          "InsertEnter",
-          "BufLeave",
-        },
-      })
-      active_win = win
-
-      vim.api.nvim_create_autocmd({ "WinClosed" }, {
-        group = au,
-        buffer = buf,
-        once = true,
-        callback = function()
-          active_win = nil
-        end,
-      })
-    end
-  end,
+  callback = M.show,
 })

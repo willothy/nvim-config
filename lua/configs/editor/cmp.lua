@@ -43,6 +43,7 @@ local main_sources = cmp.config.sources({
   { name = "nvim_lsp", max_item_count = 40 },
   { name = "copilot", max_item_count = 2 },
   { name = "cody" },
+  { name = "snippets" },
   { name = "buffer", max_item_count = 4 },
   { name = "path" },
 })
@@ -209,7 +210,7 @@ local opts = {
           })
           vim.api.nvim_win_set_cursor(
             0,
-            { row, math.min(indent, vim.fn.strcharlen(new_line)) }
+            { row, math.min(indent or 0, vim.fn.strcharlen(new_line)) }
           )
         elseif row > 1 and (indent > 0 and col + 1 > indent) then
           local prev_line =

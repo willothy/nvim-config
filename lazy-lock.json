@@ -103,6 +103,8 @@
   "nvim-neoclip.lua": { "branch": "main", "commit": "798cd0592a81c185465db3a091a0ff8a21af60fd" },
   "nvim-notify": { "branch": "master", "commit": "80b67b265530632505193553d05127ae7fe09ddd" },
   "nvim-nu": { "branch": "main", "commit": "f45f36a97fb0ea6e39f08cc2fac7a2fb3dc3999b" },
+  "nvim-scissors": { "branch": "main", "commit": "63d05e732d1403fcd7c7e1fb6b55763adcd08b64" },
+  "nvim-snippets": { "branch": "main", "commit": "02ed26b86f20e4e24b6c6799c3d9fa6a0de9fdb0" },
   "nvim-spectre": { "branch": "master", "commit": "d8906855f1949ac97b1e77aaf8d3fe12ed158ddc" },
   "nvim-spider": { "branch": "main", "commit": "dc371a116041c49ae6d3813f6e1722c2dcdabdcf" },
   "nvim-surround": { "branch": "main", "commit": "0c02c52182a9c2a7fa7e122b4037f6408e98434a" },

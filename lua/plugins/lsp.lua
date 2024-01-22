@@ -68,6 +68,18 @@ return {
     -- build = "nvim -l build/init.lua",
   },
   {
+    -- "garymjr/nvim-snippets",
+    "willothy/nvim-snippets",
+    config = true,
+    event = "InsertEnter",
+    -- dir = "~/projects/lua/nvim-snippets/",
+  },
+  -- {
+  --   "L3MON4D3/LuaSnip",
+  --   build = "make install_jsregexp",
+  --   -- config = true,
+  -- },
+  {
     -- "simrat39/rust-tools.nvim",
     "willothy/rust-tools.nvim",
     branch = "master",
