@@ -120,7 +120,8 @@ return {
   -- COMPLETION --
   {
     "hrsh7th/nvim-cmp",
-    dir = "~/projects/lua/nvim-cmp/",
+    -- "willothy/nvim-cmp",
+    -- dir = "~/projects/lua/nvim-cmp/",
     dependencies = {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
