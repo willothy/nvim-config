@@ -71,6 +71,9 @@ dropbar.setup({
       end,
       name_hl = "Normal",
     },
+    path = {
+      preview = "previous",
+    },
   },
   icons = {
     kinds = {

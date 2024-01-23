@@ -125,6 +125,14 @@ local opts = {
       vim.snippet.expand(args.body)
     end,
   },
+  -- completion = {
+  --   completeopt = "menu,menuone,noselect",
+  --   autocomplete = {
+  --     "TextChanged",
+  --     "TextChangedI",
+  --     "TextChangedT",
+  --   },
+  -- },
   experimental = {
     ghost_text = true,
   },
@@ -154,11 +162,11 @@ local opts = {
   mapping = {
     ["<M-k>"] = cmp.mapping(
       cmp.mapping.select_prev_item(cmp_select),
-      { "i", "c" }
+      { "i", "c", "t" }
     ),
     ["<M-j>"] = cmp.mapping(
       cmp.mapping.select_next_item(cmp_select),
-      { "i", "c" }
+      { "i", "c", "t" }
     ),
     ["<M-Up>"] = cmp.mapping(cmp.mapping.select_prev_item(cmp.select)),
     ["<M-Down>"] = cmp.mapping(cmp.mapping.select_next_item(cmp.select)),
@@ -166,7 +174,7 @@ local opts = {
     ["<C-PageDown>"] = cmp.mapping(cmp.mapping.scroll_docs(5), { "i", "c" }),
     ["<C-Space>"] = cmp.mapping(function()
       cmp.complete()
-    end, { "i", "c" }),
+    end, { "i", "c", "t" }),
     ["<C-e>"] = cmp.mapping(function()
       local suggestion = require("copilot.suggestion")
       if vim.snippet.active() then
@@ -189,6 +197,16 @@ local opts = {
     end, { "i", "c" }),
     ["<Tab>"] = cmp.mapping(function(fallback)
       local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+
+      if vim.api.nvim_get_mode().mode == "t" then
+        if cmp.visible() then
+          cmp.confirm({ select = true })
+        else
+          fallback()
+        end
+        return
+      end
+
       local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
       local ts = require("nvim-treesitter.indent")
       local ok, indent = pcall(ts.get_indent, row)
@@ -224,7 +242,7 @@ local opts = {
       else
         fallback()
       end
-    end, { "i", "c" }),
+    end, { "i", "c", "t" }),
     ["<BS>"] = cmp.mapping(function(fallback)
       local row, col = unpack(vim.api.nvim_win_get_cursor(0))
 
@@ -355,9 +373,23 @@ cmp.setup.cmdline(":", {
     local disabled = {
       IncRename = true,
     }
+    if
+      vim.api.nvim_get_option_value("buftype", {
+        buf = 0,
+      }) == "prompt"
+    then
+      return false
+    end
+    if vim.fn.reg_recording() ~= "" then
+      return false
+    end
+    if vim.fn.reg_executing() ~= "" then
+      return false
+    end
+
     -- get first word of cmdline
     local cmd = vim.fn.getcmdline():match("%S+")
-    return (not disabled[cmd]) or cmp.close()
+    return disabled[cmd] == nil
   end,
   formatting = format,
 })
@@ -365,6 +397,14 @@ cmp.setup.cmdline(":", {
 cmp.setup.filetype("harpoon", {
   sources = cmp.config.sources({
     { name = "path" },
+  }),
+  formatting = format,
+})
+
+cmp.setup.filetype("terminal", {
+  sources = cmp.config.sources({
+    { name = "path" },
+    { name = "buffer" },
   }),
   formatting = format,
 })
