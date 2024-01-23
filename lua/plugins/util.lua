@@ -54,6 +54,9 @@ return {
     -- dir = "~/projects/lua/leetcode.nvim",
     opts = {
       lang = "rust",
+      plugins = {
+        nonstandalone = true,
+      },
     },
     cmd = "Leet",
   },

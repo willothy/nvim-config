@@ -19,7 +19,7 @@ capabilities.textDocument.formatting = {
   dynamicRegistration = false,
 }
 
-capabilities.general.positionEncodings = { "utf-8" }
+-- capabilities.general.positionEncodings = { "utf-8" }
 
 capabilities.textDocument.semanticTokens.augmentsSyntaxTokens = false
 

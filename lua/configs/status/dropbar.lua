@@ -105,7 +105,7 @@ dropbar.setup({
       background = false,
     },
     win_configs = {
-      -- border = { " " },
+      -- border = "single",
     },
   },
   fzf = {

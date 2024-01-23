@@ -261,9 +261,13 @@ local function apply_code_action(action, client, ctx)
       return
     end
     if res and type(res) == "table" then
-      vim.print(res)
+      if res.edit then
+        util.apply_workspace_edit(
+          action.edit,
+          client.server_capabilities.positionEncoding or "utf-8"
+        )
+      end
     end
-    -- client._exec_cmd(command, ctx)
   end
 end
 
@@ -552,7 +556,6 @@ M.code_actions = function(options)
     -- local client_actions =
     --   a.lsp.buf_request_all(bufnr, "textDocument/codeAction", params)
 
-    vim.print(client_actions)
     local actions = parse_client_actions(client_actions)
 
     if vim.tbl_isempty(actions) then
