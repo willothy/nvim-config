@@ -32,7 +32,10 @@ wk.register({
     bind("trouble", "toggle", "document_diagnostics"),
     "diagnostics",
   },
-  K = bind("rust-tools.hover_actions", "hover_actions"):with_desc(
-    "lsp: hover"
-  ),
+  K = bind(function()
+    vim.lsp.buf.hover()
+  end):with_desc("lsp: hover"),
+  -- K = bind("rust-tools.hover_actions", "hover_actions"):with_desc(
+  --   "lsp: hover"
+  -- ),
 }, { mode = modes.non_editing })

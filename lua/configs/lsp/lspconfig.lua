@@ -21,9 +21,6 @@ capabilities.textDocument.formatting = {
 
 capabilities.general.positionEncodings = { "utf-8" }
 
----@diagnostic disable-next-line: inject-field
-capabilities.offsetEncoding = "utf-8"
-
 capabilities.textDocument.semanticTokens.augmentsSyntaxTokens = false
 
 local icons = willothy.icons
@@ -36,34 +33,42 @@ local lsp_attach = require("configs.lsp").lsp_attach
 require("neoconf").setup({})
 
 -- TODO: replace rust-tools as it is no longer maintained
-require("rust-tools").setup({
-  executor = {
-    execute_command = function(command, args, cwd)
-      require("overseer.task")
-        .new({
-          cmd = { command, unpack(args) },
-          cwd = cwd,
-        })
-        :start()
-    end,
-  },
-  tools = {
-    inlay_hints = {
-      auto = false,
-    },
-    hover_actions = {
-      border = "solid",
-    },
-  },
-  server = {
-    on_attach = lsp_attach,
-    root_dir = require("lspconfig.util").root_pattern(".git", "Cargo.toml"),
-  },
-})
+-- require("rust-tools").setup({
+--   executor = {
+--     execute_command = function(command, args, cwd)
+--       require("overseer.task")
+--         .new({
+--           cmd = { command, unpack(args) },
+--           cwd = cwd,
+--         })
+--         :start()
+--     end,
+--   },
+--   tools = {
+--     inlay_hints = {
+--       auto = false,
+--     },
+--     hover_actions = {
+--       border = "solid",
+--     },
+--   },
+--   server = {
+--     on_attach = lsp_attach,
+--     root_dir = require("lspconfig.util").root_pattern(".git", "Cargo.toml"),
+--   },
+-- })
 
 require("neodev").setup({
   lspconfig = false,
   pathStrict = true,
+})
+
+lspconfig.rust_analyzer.setup({
+  capabilities = capabilities,
+  on_attach = lsp_attach,
+  root_dir = require("lspconfig.util").root_pattern(".git", "Cargo.toml"),
+  offsetEncoding = { "utf-8" },
+  client_encoding = "utf-8",
 })
 
 require("mason-lspconfig").setup({

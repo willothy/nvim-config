@@ -78,9 +78,40 @@ return {
     -- dir = "~/projects/lua/nvim-snippets/",
   },
   {
-    -- "simrat39/rust-tools.nvim",
-    "willothy/rust-tools.nvim",
-    branch = "master",
+    "vxpm/ferris.nvim",
+    config = function()
+      require("ferris").setup()
+
+      local function cmd(name, module, opts)
+        vim.api.nvim_create_user_command(name, function(...)
+          require(module)(...)
+        end, opts or {})
+      end
+
+      cmd("FerrisExpandMacro", "ferris.methods.expand_macro")
+      cmd("FerrisViewHIR", "ferris.methods.view_hir")
+      cmd("FerrisViewMIR", "ferris.methods.view_mir")
+      cmd("FerrisViewMemoryLayout", "ferris.methods.view_memory_layout")
+      cmd("FerrisOpenCargoToml", "ferris.methods.open_cargo_toml")
+      cmd("FerrisOpenParentModule", "ferris.methods.open_parent_module")
+      cmd("FerrisOpenDocumentation", "ferris.methods.open_documentation")
+      cmd("FerrisReloadWorkspace", "ferris.methods.reload_workspace")
+    end,
+    opts = {},
+    cmd = {
+      "FerrisViewHIR",
+      "FerrisViewMIR",
+      "FerrisViewMemoryLayout",
+      -- "FerrisViewSyntaxTree",
+      -- "FerrisViewItemTree",
+      "FerrisOpenCargoToml",
+      "FerrisOpenParentModule",
+      "FerrisOpenDocumentation",
+      "FerrisReloadWorkspace",
+      -- "FerrisExpandMacro",
+      -- "FerrisJoinLines",
+      -- "FerrisRebuildMacros"
+    },
   },
   {
     "p00f/clangd_extensions.nvim",
