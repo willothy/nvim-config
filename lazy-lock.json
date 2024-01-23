@@ -2,7 +2,7 @@
   "Comment.nvim": { "branch": "master", "commit": "0236521ea582747b58869cb72f70ccfa967d2e89" },
   "Hypersonic.nvim": { "branch": "main", "commit": "a98dbd6b5ac1aac3cd895990e08d1ea40e67a9e3" },
   "LeetBuddy.nvim": { "branch": "main", "commit": "8eecdd907a17a7f96dde9e7f072c45926b8d34c8" },
-  "NeoComposer.nvim": { "branch": "main", "commit": "10cb5b8f04650feb08245ec9bb3418d11dfa077c" },
+  "NeoComposer.nvim": { "branch": "fix-store", "commit": "eff5da66dd60a91ca63c1118a2c87dcb3d871edc" },
   "actually.nvim": { "branch": "main", "commit": "a735082694b1f06c4d9874f2a7288dba94acdb71" },
   "aerial.nvim": { "branch": "master", "commit": "e9661d4f739508377f42528fd08a85c4c8feba6e" },
   "alpha-nvim": { "branch": "main", "commit": "4b36c1ca9ea475bdc006896657cf1ccc486aeffa" },
