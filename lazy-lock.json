@@ -127,6 +127,7 @@
   "resession.nvim": { "branch": "master", "commit": "742aba4998123fc11f490a3aeffe8f550b2cb789" },
   "savior.nvim": { "branch": "main", "commit": "9c7df9cf02a6dd54d0ec300c0a9a7152740400b2" },
   "scope.nvim": { "branch": "main", "commit": "cd27af77ad61a7199af5c28d27013fb956eb0e3e" },
+  "search.nvim": { "branch": "main", "commit": "860f7673744e139d00d416d11552533835bfdd2d" },
   "sentiment.nvim": { "branch": "main", "commit": "ecde8d877881bb78fdb90060c0991e76770dbdbc" },
   "sg.nvim": { "branch": "master", "commit": "691e138a86ccb4083c46ff62ab5eb53f9148696d" },
   "sidebar.nvim": { "branch": "main", "commit": "990ce5f562c9125283ccac5473235b1a56fea6dc" },

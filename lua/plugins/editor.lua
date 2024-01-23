@@ -154,6 +154,13 @@ return {
     },
   },
   {
+    "FabianWirth/search.nvim",
+    config = function()
+      require("configs.editor.search")
+    end,
+    cmd = "Search",
+  },
+  {
     "nvim-telescope/telescope-fzf-native.nvim",
     build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
   },

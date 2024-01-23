@@ -278,7 +278,7 @@ end
 
 ---@class Willothy.CommandOpts: vim.api.keyset.user_command
 ---@field subcommands table<string, Willothy.CommandOpts.Subcommand>?
----@field command string|fun()?
+---@field command string|fun(...)?
 
 ---@param name string
 ---@param opts Willothy.CommandOpts
@@ -342,9 +342,17 @@ function M.create_command(name, opts)
           vim.api.nvim_exec2(subcommands[cmd].execute --[[@as string]], {})
         end
       else
-        vim.notify("Unknown subcommand " .. cmd, vim.log.levels.WARN, {
-          title = name:lower(),
-        })
+        if command then
+          if type(command) == "function" then
+            wrap(command, cmd, args)
+          else
+            vim.api.nvim_exec2(command, { output = false })
+          end
+        else
+          vim.notify("Unknown subcommand " .. cmd, vim.log.levels.WARN, {
+            title = name:lower(),
+          })
+        end
       end
     end
 
