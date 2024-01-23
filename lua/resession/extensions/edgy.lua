@@ -111,7 +111,7 @@ function M.on_pre_load()
 end
 
 function M.on_post_load(data)
-  local restore_opts = modify_opts()
+  local restore_opts
   -- call with the tabpage as the current tabpage
   local tabs = vim.api.nvim_list_tabpages()
   for _, win_info in ipairs(data.wins or {}) do
@@ -119,6 +119,9 @@ function M.on_post_load(data)
     if
       f and (data.scope == "tabpage" or tabs[win_info.tabpage + first_tab])
     then
+      if not restore_opts then
+        restore_opts = modify_opts()
+      end
       local tab
       if data.scope == "global" then
         tab = tabs[win_info.tabpage + first_tab]
@@ -135,7 +138,9 @@ function M.on_post_load(data)
       end)
     end
   end
-  restore_opts()
+  if restore_opts then
+    restore_opts()
+  end
 end
 
 return M

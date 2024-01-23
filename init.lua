@@ -57,7 +57,8 @@ require("lazy").setup({
     name = "willothy.settings",
     main = "willothy.settings",
     dir = conf_path,
-    event = "VimEnter",
+    event = "UiEnter",
+    priority = 10000,
     config = true,
   },
 }, {

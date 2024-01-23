@@ -111,16 +111,19 @@ function M.toggle_float()
 end
 
 function M.send_to_main(cmd)
-  local a = require("micro-async")
-  a.void(function()
-    cmd = coroutine.yield(vim.ui.input({
-      prompt = "$ ",
-      completion = "shellcmd",
-    }, vim.schedule_wrap(a.callback())))
+  local a = require("nio")
+  a.run(function()
+    if not cmd then
+      cmd = a.ui.input({
+        prompt = "$ ",
+        completion = "shellcmd",
+        highlight = function() end,
+      })
+    end
 
     if not M.main.bufnr or not vim.api.nvim_buf_is_valid(M.main.bufnr) then
       M.main:spawn()
-      a.defer(200)
+      a.sleep(200)
     end
     if type(cmd) == "string" then
       cmd = cmd .. "\r"
@@ -128,7 +131,7 @@ function M.send_to_main(cmd)
       cmd[#cmd] = cmd[#cmd] .. "\r"
     end
     M.main:send(cmd)
-  end)()
+  end)
 end
 
 function M.cargo_build()
@@ -138,7 +141,6 @@ function M.cargo_build()
       client = "cargo",
     },
   })
-  p:begin()
   vim.system(
     {
       "cargo",
@@ -159,10 +161,8 @@ function M.cargo_build()
         end
       end),
     },
-    vim.schedule_wrap(function(obj)
-      p:finish({
-        title = "Finished",
-      })
+    vim.schedule_wrap(function()
+      p:finish()
     end)
   )
 end

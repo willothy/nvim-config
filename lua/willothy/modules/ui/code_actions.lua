@@ -221,7 +221,6 @@ local function diff_workspace_edit(workspace_edit, offset_encoding)
   local all_changes = workspace_edit.changes
   if all_changes and not vim.tbl_isempty(all_changes) then
     for uri, changes in pairs(all_changes) do
-      local path = vim.fn.fnamemodify(vim.uri_to_fname(uri), ":.")
       local bufnr = vim.uri_to_bufnr(uri)
 
       diff = diff
@@ -235,15 +234,36 @@ local function diff_workspace_edit(workspace_edit, offset_encoding)
   return diff
 end
 
+---@param action nio.lsp.types.CodeAction | nio.lsp.types.Command
+---@param client nio.lsp.Client
 local function apply_code_action(action, client, ctx)
   local util = vim.lsp.util
   if action.edit then
-    util.apply_workspace_edit(action.edit, client.offset_encoding)
+    util.apply_workspace_edit(
+      action.edit,
+      client.server_capabilities.positionEncoding or "utf-8"
+    )
   end
   if action.command then
     local command = type(action.command) == "table" and action.command
       or action
-    client._exec_cmd(command, ctx)
+    local err, res = client.request.workspace_executeCommand(
+      {
+        command = command --[[@as string]],
+      },
+      ctx.bufnr or 0,
+      {
+        timeout = 1000,
+      }
+    )
+    if err then
+      vim.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
+      return
+    end
+    if res and type(res) == "table" then
+      vim.print(res)
+    end
+    -- client._exec_cmd(command, ctx)
   end
 end
 
@@ -251,63 +271,64 @@ local function exec_selected_action(action_tuple, ctx)
   if not action_tuple then
     return
   end
-  local client = vim.lsp.get_client_by_id(action_tuple[1])
+  ---@type nio.lsp.Client?
+  local client = action_tuple[1]
   if not client then
     vim.notify("No client found for selected action", vim.log.levels.ERROR)
     return
   end
   local action = action_tuple[2]
 
-  ---@diagnostic disable-next-line: invisible
-  local reg = client.dynamic_capabilities:get(
-    "textDocument/codeAction",
-    { bufnr = ctx.bufnr }
-  )
-
-  local supports_resolve = vim.tbl_get(
-    reg or {},
-    "registerOptions",
-    "resolveProvider"
-  ) or client.supports_method("codeAction/resolve")
+  local supports_resolve = type(client.server_capabilities.codeActionProvider)
+      == "table"
+    and client.server_capabilities.codeActionProvider.resolveProvider
 
   if not action.edit and client and supports_resolve then
-    client.request("codeAction/resolve", action, function(err, resolved_action)
-      if err then
-        vim.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
-        return
-      end
-      apply_code_action(resolved_action, client, ctx)
-    end, ctx.bufnr)
+    local err, resolved_action =
+      client.request.codeAction_resolve(action, ctx.bufnr, {
+        timeout = 1000,
+      })
+    if err then
+      vim.notify(err.code .. ": " .. err.message, vim.log.levels.ERROR)
+      return
+    end
+    if not resolved_action then
+      return
+    end
+    apply_code_action(resolved_action, client, ctx)
   else
     apply_code_action(action, client, ctx)
   end
 end
 
----@param client_actions table<integer, { error: lsp.ResponseError, result: table }>
+---@param client_actions { client: nio.lsp.Client, error: any, result: nio.lsp.types.CodeAction[] }
 local function parse_client_actions(client_actions)
   local groups = {}
   local ungrouped = vim
-    .iter(pairs(client_actions))
-    :filter(function(_, actions)
-      return actions.error == nil and actions.result ~= nil
+    .iter(client_actions)
+    :filter(function(action)
+      return action.error == nil and action.result ~= nil
     end)
-    :map(function(client, actions)
-      local res = {}
-      for _, action in ipairs(actions.result) do
-        -- TODO: action groups
-        -- if action.group then
-        --   local group = groups[action.group]
-        --   if not group then
-        --     group = {}
-        --     groups[action.group] = group
-        --   end
-        --   table.insert(group, { client, action })
-        -- else
-        -- end
-        table.insert(res, { client, action })
+    :map(
+      ---@param action { client: nio.lsp.Client, error: any, result: nio.lsp.types.CodeAction[] }
+      function(action)
+        local res = {}
+        for _, act in ipairs(action.result) do
+          -- TODO: action groups
+          -- if action.group then
+          --   local group = groups[action.group]
+          --   if not group then
+          --     group = {}
+          --     groups[action.group] = group
+          --   end
+          --   table.insert(group, { client, action })
+          -- else
+          -- end
+          table.insert(res, { action.client, act })
+        end
+        return res
       end
-      return res
-    end)
+    )
     :fold({}, function(acc, actions)
       vim.list_extend(acc, actions)
       return acc
@@ -473,22 +494,65 @@ local M = {}
 M.code_actions = function(options)
   options = options or {}
 
-  local a = require("micro-async")
+  local a = require("nio")
   local util = vim.lsp.util
 
   local bufnr = vim.api.nvim_get_current_buf()
 
-  a.void(function()
-    local context = {}
+  a.run(function()
+    local clients = a.lsp.get_clients({
+      bufnr = bufnr,
+      method = "textDocument/codeAction",
+    })
+
+    ---@type nio.lsp.types.CodeActionParams
+    local params = util.make_range_params()
+    ---@type nio.lsp.types.CodeActionContext
+    local context = {
+      ---@type nio.lsp.types.Diagnostic[]
+      diagnostics = {},
+    }
     context.triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Invoked
     context.diagnostics = vim.lsp.diagnostic.get_line_diagnostics(bufnr)
-
-    local params = util.make_range_params()
     params.context = context
 
-    local client_actions =
-      a.lsp.buf_request_all(bufnr, "textDocument/codeAction", params)
+    local opts = {
+      -- timeout = 250,
+    }
 
+    local req_thunks = vim
+      .iter(clients)
+      :map(
+        ---@param client nio.lsp.Client
+        function(client)
+          return function()
+            local err, res =
+              client.request.textDocument_codeAction(params, bufnr, opts)
+            return {
+              error = err,
+              result = res,
+              client = client,
+            }
+          end
+        end
+      )
+      :totable()
+    ---@type (nio.lsp.types.CodeAction[]|nio.lsp.types.Command|nil)[]
+    local client_actions = a.gather(req_thunks)
+
+    -- local client_actions = vim.iter(results):fold({}, function(tbl, res)
+    --   if type(res) == "table" then
+    --     vim.list_extend(tbl, res)
+    --   else
+    --     table.insert(tbl, res)
+    --   end
+    --   return tbl
+    -- end)
+
+    -- local client_actions =
+    --   a.lsp.buf_request_all(bufnr, "textDocument/codeAction", params)
+
+    vim.print(client_actions)
     local actions = parse_client_actions(client_actions)
 
     if vim.tbl_isempty(actions) then
@@ -507,7 +571,7 @@ M.code_actions = function(options)
     })
 
     exec_selected_action(selection, context)
-  end)()
+  end)
 end
 
 function M.setup()

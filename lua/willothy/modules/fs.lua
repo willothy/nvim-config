@@ -76,20 +76,20 @@ function M.hijack_netrw()
 end
 
 M.set_browser = function()
-  local a = require("micro-async")
-  a.void(function()
+  local a = require("nio")
+  a.run(function()
     local options = {}
     for browser in pairs(M.browsers) do
       table.insert(options, browser)
     end
-    local ok, item = a.wrap(vim.ui.select, 3)(options, {
+    local item = a.ui.select(options, {
       prompt = "Browsers",
     })
-    if not ok or not item then
+    if not item then
       return
     end
     M.browser = M.browsers[options[item]] or M.browser
-  end)()
+  end)
 end
 
 ---@param target string | string[] | nil | fun():string

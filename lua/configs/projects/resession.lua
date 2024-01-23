@@ -242,7 +242,6 @@ local group =
 local quitting = false
 vim.api.nvim_create_autocmd("QuitPre", {
   group = group,
-  -- pattern = "*",
   -- nested = true,
   callback = function()
     if quitting then
@@ -304,13 +303,10 @@ vim.api.nvim_create_autocmd("QuitPre", {
       end
       if is_last then
         quitting = true
-        -- require("harpoon"):sync()
-        -- require("wezterm").set_user_var("IS_NVIM", "")
-
         vim.api.nvim_exec_autocmds("VimLeavePre", {})
         vim.schedule(function()
           vim.o.eventignore = ""
-          vim.cmd.qa()
+          vim.cmd.quitall()
         end)
       end
     end
