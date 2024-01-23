@@ -179,9 +179,7 @@ end
 vim.diagnostic.config({
   severity_sort = true,
   update_in_insert = true,
-  underline = {
-    severity = vim.diagnostic.severity.ERROR,
-  },
+  underline = true,
   signs = {
     text = {
       [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,

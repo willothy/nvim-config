@@ -1,4 +1,6 @@
-require("otter").setup({})
+require("otter").setup({
+  set_filetype = true,
+})
 
 local otter = require("otter")
 

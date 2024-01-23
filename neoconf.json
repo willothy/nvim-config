@@ -18,7 +18,7 @@
         "nvim-treesitter",
         "nvim-lspconfig",
         "which-key.nvim",
-        "flatten.nvim",
+        // "flatten.nvim",
         "wezterm.nvim",
         "nui.nvim",
         "bufdelete.nvim",

@@ -31,7 +31,6 @@ function M.hijack_dir_buf(buf)
   if bufname == "" then
     return
   end
-  vim.print(bufname)
   local stat = vim.F.ok_or_nil(pcall(uv.fs_stat, bufname))
   if not stat or stat.type ~= "directory" then
     return

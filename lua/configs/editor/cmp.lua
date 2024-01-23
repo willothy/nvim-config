@@ -407,3 +407,13 @@ require("cmp").setup.filetype("norg", {
     { name = "path" },
   },
 })
+
+require("cmp").setup.filetype("markdown", {
+  sources = {
+    { name = "otter" },
+    { name = "copilot", max_item_count = 2 },
+    { name = "cody" },
+    { name = "buffer", max_item_count = 4 },
+    { name = "path" },
+  },
+})
