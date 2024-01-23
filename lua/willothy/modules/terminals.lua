@@ -135,10 +135,10 @@ function M.send_to_main(cmd)
 end
 
 function M.cargo_build()
-  local p = require("fidget.progress.handle").create({
+  local p = require("fidget").progress.handle.create({
     title = "Compiling",
     lsp_client = {
-      client = "cargo",
+      name = "cargo",
     },
   })
   vim.system(
@@ -147,7 +147,6 @@ function M.cargo_build()
       "build",
     },
     {
-      cwd = "/home/willothy/projects/rust/sesh/",
       text = true,
       stderr = vim.schedule_wrap(function(_, data)
         data = data or ""
