@@ -68,14 +68,12 @@ return {
     -- build = "nvim -l build/init.lua",
   },
   {
-    -- "garymjr/nvim-snippets",
-    "willothy/nvim-snippets",
+    "garymjr/nvim-snippets",
     config = true,
     event = "InsertEnter",
     dependencies = {
       "rafamadriz/friendly-snippets",
     },
-    -- dir = "~/projects/lua/nvim-snippets/",
   },
   {
     "vxpm/ferris.nvim",
