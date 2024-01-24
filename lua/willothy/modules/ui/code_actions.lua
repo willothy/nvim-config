@@ -133,7 +133,11 @@ local function apply_text_edits(text_edits, lines, offset_encoding)
     end
     for i, t in pairs(e.text) do
       if text_edit.insertTextFormat == 2 then
-        t = vim.lsp.util.parse_snippet(t)
+        local snippet = require("vim.lsp._snippet_grammar")
+        local ok, parsed = pcall(snippet.parse, t)
+        if ok then
+          t = tostring(parsed)
+        end
       end
 
       table.insert(lines, e.start_row + i, t)
