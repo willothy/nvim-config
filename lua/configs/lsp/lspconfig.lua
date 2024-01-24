@@ -69,6 +69,7 @@ lspconfig.rust_analyzer.setup({
   root_dir = require("lspconfig.util").root_pattern(".git", "Cargo.toml"),
   offsetEncoding = { "utf-8" },
   client_encoding = "utf-8",
+  single_file_support = true,
 })
 
 require("mason-lspconfig").setup({

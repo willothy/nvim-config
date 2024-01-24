@@ -13,6 +13,7 @@ wk.register({
   l = bind("trouble", "open", "loclist"):with_desc("trouble: loclist"),
   d = bind("dapui", "toggle"):with_desc("dap-ui"),
   o = { telescope.oldfiles, "oldfiles" },
+  z = { "<cmd>ZenMode<CR>", "zen mode" },
   p = {
     function()
       willothy.player.toggle()
