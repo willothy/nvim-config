@@ -31,13 +31,13 @@ return {
     cmd = "Tardis",
   },
   {
-    -- "ecthelionvi/NeoComposer.nvim",
-    "willothy/NeoComposer.nvim",
-    branch = "fix-store",
+    "ecthelionvi/NeoComposer.nvim",
+    -- "willothy/NeoComposer.nvim",
+    -- branch = "fix-store",
     -- dir = "~/projects/lua/NeoComposer.nvim",
-    -- dependencies = {
-    --   "kkharji/sqlite.lua",
-    -- },
+    dependencies = {
+      "kkharji/sqlite.lua",
+    },
     config = function()
       require("configs.editor.neocomposer")
     end,

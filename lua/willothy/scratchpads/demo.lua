@@ -1,6 +1,6 @@
-local a = require("micro-async")
+local a = require("nio")
 
-local defer = a.defer
+local defer = a.sleep
 
 local function tmp_buf(text)
   if type(text) == "string" then
@@ -14,7 +14,7 @@ end
 local STAGE_DELAY = 1500
 -- local STAGE_DELAY = 10
 
-a.void(function()
+a.run(function()
   local initial_win = vim.api.nvim_get_current_win()
   local buf
   buf = tmp_buf({ "this is split 1", "a right-aligned top-level window" })
@@ -63,6 +63,7 @@ a.void(function()
   })
   local win3 = vim.api.nvim_open_win(buf, false, {
     split = "above",
+    win = -1,
   })
   defer(STAGE_DELAY)
 
@@ -89,6 +90,7 @@ a.void(function()
   )
   vim.api.nvim_win_set_config(float, {
     split = "right",
+    win = -1,
   })
   defer(STAGE_DELAY)
 
@@ -107,4 +109,4 @@ a.void(function()
       end
     end
   end, { nowait = true })
-end)()
+end)
