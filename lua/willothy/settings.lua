@@ -39,7 +39,8 @@ function M.setup()
   o.mousetime = 200
   o.mousemoveevent = true
 
-  -- o.conceallevel = 2
+  o.conceallevel = 3
+  o.confirm = true
 
   o.foldcolumn = "1"
   o.foldlevel = 99

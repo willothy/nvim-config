@@ -82,40 +82,45 @@ wk.register({
   L = { "$", "end of line" },
 }, { mode = modes.non_editing })
 
-local function surround(l)
-  return function()
-    require("nvim-surround")
-    vim.api.nvim_feedkeys("S" .. l, vim.api.nvim_get_mode().mode, false)
+local surrounds = {}
+
+local function surround(l, r)
+  local l_desc, r_desc = l, r
+  if type(l) == "table" then
+    l, l_desc = l[1], l[2]
   end
+  if type(r) == "table" then
+    r, r_desc = r[1], r[2]
+  end
+
+  table.insert(surrounds, {
+    [l] = {
+      function()
+        require("nvim-surround")
+        vim.api.nvim_feedkeys("S" .. l, vim.api.nvim_get_mode().mode, false)
+      end,
+      "surround: " .. l_desc .. r_desc,
+    },
+    [r] = {
+      function()
+        require("nvim-surround")
+        vim.api.nvim_feedkeys("S" .. r, vim.api.nvim_get_mode().mode, false)
+      end,
+      "surround: " .. l_desc .. r_desc,
+    },
+  })
 end
 
+surround("(", ")")
+surround("{", "}")
+surround("[", "]")
+-- surround({ "<lt>", "<" }, ">") -- conflicts with indents
+-- surround('"', '"') -- conflicts with registers
+-- surround("'", "'") -- conflicts with marks
+-- surround("`", "`") -- conflicts with marks
+
 -- surround mappings
-wk.register({
-  ["("] = {
-    surround("("),
-    "surround: ()",
-  },
-  [")"] = {
-    surround(")"),
-    "surround: ()",
-  },
-  ["{"] = {
-    surround("{"),
-    "surround: {}",
-  },
-  ["}"] = {
-    surround("}"),
-    "surround: {}",
-  },
-  ["["] = {
-    surround("["),
-    "surround: []",
-  },
-  ["]"] = {
-    surround("]"),
-    "surround: []",
-  },
-}, { mode = { "v", "x" } })
+wk.register(surrounds, { mode = { "v", "x" } })
 
 wk.register({
   ["<CR>"] = bind("wildfire", "init_selection"):with_desc("wildfire: init"),

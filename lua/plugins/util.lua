@@ -49,9 +49,10 @@ return {
   },
   {
     -- "kawre/leetcode.nvim",
+    -- branch = "dev",
     "willothy/leetcode.nvim",
     branch = "feat-start-with-cmd",
-    -- dir = "~/projects/lua/leetcode.nvim",
+    dir = "~/projects/lua/leetcode.nvim",
     opts = {
       lang = "rust",
       plugins = {

@@ -31,3 +31,13 @@ require("neorg").setup({
     ["core.ui.calendar"] = {},
   },
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "norg",
+  callback = function(ev)
+    vim.bo[ev.buf].shiftwidth = 4
+    vim.bo[ev.buf].tabstop = 4
+    vim.bo[ev.buf].softtabstop = 4
+    vim.bo[ev.buf].expandtab = true
+  end,
+})
