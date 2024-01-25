@@ -275,12 +275,16 @@ wk.register({
 }, { mode = modes.normal })
 
 wk.register({
-  ["<Tab>"] = bind("stay-in-place", "shift_right_line"):with_desc(
-    "indent: increase"
-  ),
-  ["<S-Tab>"] = bind("stay-in-place", "shift_left_line"):with_desc(
-    "indent: decrease"
-  ),
+  ["<Tab>"] = bind(function()
+    if vim.bo.modifiable then
+      require("stay-in-place").shift_right_line()
+    end
+  end):with_desc("indent: increase"),
+  ["<S-Tab>"] = bind(function()
+    if vim.bo.modifiable then
+      require("stay-in-place").shift_left_line()
+    end
+  end):with_desc("indent: decrease"),
   M = bind("multicursors", "start"),
   u = "edit: undo",
   ["<C-r>"] = "edit: redo",
@@ -290,14 +294,18 @@ wk.register({
 }, { mode = modes.normal })
 
 wk.register({
-  ["<M-k>"] = { bind("moveline", "block_up"), "move: up" },
-  ["<M-j>"] = { bind("moveline", "block_down"), "move: down" },
-  ["<Tab>"] = bind("stay-in-place", "shift_right_visual"):with_desc(
-    "indent: increase"
-  ),
-  ["<S-Tab>"] = bind("stay-in-place", "shift_left_visual"):with_desc(
-    "indent: decrease"
-  ),
+  ["<M-k>"] = bind("moveline", "block_up"):with_desc("move: up"),
+  ["<M-j>"] = bind("moveline", "block_down"):with_desc("move: down"),
+  ["<Tab>"] = bind(function()
+    if vim.bo.modifiable then
+      require("stay-in-place").shift_right_visual()
+    end
+  end):with_desc("indent: increase"),
+  ["<S-Tab>"] = bind(function()
+    if vim.bo.modifiable then
+      require("stay-in-place").shift_left_visual()
+    end
+  end):with_desc("indent: decrease"),
   ["<C-c>"] = { '"+y', "copy selection" },
   ["M"] = { ":MCvisual<CR>", "multicursor mode" },
   ["<"] = "indent: decrease",

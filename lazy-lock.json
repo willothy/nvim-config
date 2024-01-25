@@ -132,6 +132,7 @@
   "sg.nvim": { "branch": "master", "commit": "691e138a86ccb4083c46ff62ab5eb53f9148696d" },
   "sidebar.nvim": { "branch": "main", "commit": "990ce5f562c9125283ccac5473235b1a56fea6dc" },
   "smart-splits.nvim": { "branch": "master", "commit": "e397d046ede47230ddc130b021b31b193c852231" },
+  "speedtyper.nvim": { "branch": "main", "commit": "2d158eed4c753995b0501a3a7a72464fbb213e3d" },
   "sqlite.lua": { "branch": "master", "commit": "b7e28c8463254c46a8e61c52d27d6a2040492fc3" },
   "ssr.nvim": { "branch": "main", "commit": "bb323ba621ac647b4ac5638b47666e3ef3c279e1" },
   "statuscol.nvim": { "branch": "main", "commit": "3b629754420919575a9e5758027d6e1831dbf2aa" },

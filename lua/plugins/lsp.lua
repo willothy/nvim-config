@@ -146,6 +146,20 @@ return {
     end,
     event = "VeryLazy",
   },
+  {
+    "NStefan002/speedtyper.nvim",
+    cmd = "Speedtyper",
+    opts = {
+      window = {
+        border = "solid",
+      },
+    },
+  },
+  -- {
+  --   "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+  --   config = true,
+  --   event = "DiagnosticChanged",
+  -- },
   -- COMPLETION --
   {
     "hrsh7th/nvim-cmp",
