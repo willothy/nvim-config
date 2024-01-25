@@ -77,53 +77,72 @@ end
 
 require("incline").setup({
   window = {
-    zindex = 500,
-    padding = 1,
-    padding_char = " ",
+    placement = { horizontal = "right", vertical = "bottom" },
+    overlap = {
+      winbar = false,
+      tabline = false,
+      borders = false,
+      statusline = false,
+    },
     margin = {
       horizontal = 0,
       vertical = 0,
     },
-    overlap = {
-      winbar = true,
-      tabline = false,
-    },
   },
-  highlight = {
-    groups = {
-      InclineNormal = {
-        default = true,
-        group = "TabLine",
-      },
-      InclineNormalNC = {
-        default = true,
-        group = "TabLine",
-      },
-    },
+  hide = {
+    cursorline = "focused_win",
   },
-  debounce_threshold = {
-    rising = 10,
-    falling = 10,
-  },
-  render = function(props)
-    local filename =
-      vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-    local ft_icon, ft_color =
-      require("nvim-web-devicons").get_icon_color(filename)
-    local modified = vim.api.nvim_buf_get_option(props.buf, "modified")
-        and "bold,italic"
-      or "bold"
-
-    local buffer = {
-      -- get_search_term(props),
-      -- get_diagnostic_label(props),
-      -- { " ", get_git_diff(props) or "" },
-      { ft_icon, " ", guifg = ft_color },
-      {
-        filename,
-        gui = modified,
-      },
-    }
-    return buffer
-  end,
 })
+
+-- require("incline").setup({
+--   window = {
+--     zindex = 500,
+--     padding = 1,
+--     padding_char = " ",
+--     margin = {
+--       horizontal = 0,
+--       vertical = 0,
+--     },
+--     overlap = {
+--       winbar = true,
+--       tabline = false,
+--     },
+--   },
+--   highlight = {
+--     groups = {
+--       InclineNormal = {
+--         default = true,
+--         group = "TabLine",
+--       },
+--       InclineNormalNC = {
+--         default = true,
+--         group = "TabLine",
+--       },
+--     },
+--   },
+--   debounce_threshold = {
+--     rising = 10,
+--     falling = 10,
+--   },
+--   render = function(props)
+--     local filename =
+--       vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+--     local ft_icon, ft_color =
+--       require("nvim-web-devicons").get_icon_color(filename)
+--     local modified = vim.api.nvim_buf_get_option(props.buf, "modified")
+--         and "bold,italic"
+--       or "bold"
+--
+--     local buffer = {
+--       -- get_search_term(props),
+--       -- get_diagnostic_label(props),
+--       -- { " ", get_git_diff(props) or "" },
+--       { ft_icon, " ", guifg = ft_color },
+--       {
+--         filename,
+--         gui = modified,
+--       },
+--     }
+--     return buffer
+--   end,
+-- })

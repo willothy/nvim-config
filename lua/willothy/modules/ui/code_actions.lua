@@ -251,9 +251,17 @@ local function apply_code_action(action, client, ctx)
   if action.command then
     local command = type(action.command) == "table" and action.command
       or action
+    if type(command) == "string" then
+      command = {
+        command = command,
+        arguments = {},
+      }
+    end
+    ---@cast command nio.lsp.types.Command
     local err, res = client.request.workspace_executeCommand(
       {
-        command = command --[[@as string]],
+        command = command.command,
+        arguments = command.arguments,
       },
       ctx.bufnr or 0,
       {

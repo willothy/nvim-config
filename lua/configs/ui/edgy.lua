@@ -36,6 +36,9 @@ local sidebar = View.new({
 })
 
 function _G._edgywb()
+  if not package.loaded.dropbar then
+    return ""
+  end
   local win = vim.api.nvim_get_current_win()
   local buf = vim.api.nvim_get_current_buf()
   local bar = _G.dropbar.bars[buf][win]
