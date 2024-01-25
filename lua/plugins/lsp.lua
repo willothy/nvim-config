@@ -149,11 +149,15 @@ return {
   {
     "NStefan002/speedtyper.nvim",
     cmd = "Speedtyper",
-    opts = {
-      window = {
-        border = "solid",
-      },
-    },
+    -- dir = "~/projects/lua/speedtyper.nvim/",
+    config = function()
+      require("speedtyper").setup({
+        window = {
+          border = "solid",
+        },
+        vim_opt = {},
+      })
+    end,
   },
   -- {
   --   "https://git.sr.ht/~whynothugo/lsp_lines.nvim",

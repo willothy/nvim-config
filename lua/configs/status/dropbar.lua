@@ -105,11 +105,46 @@ dropbar.setup({
       background = false,
     },
     win_configs = {
-      -- border = "single",
+      -- lower
+      -- border = { "│", "─", "│", "│", "┘", "─", "└", "│" },
+      -- upper
+      -- border = { "┌", "─", "┐", "│", "┤", "─", "├", "│" },
+      -- border = function(self)
+      --   if self.fzf_state then
+      --     return {
+      --       "┌",
+      --       "─",
+      --       "┐",
+      --       "│",
+      --       "┤",
+      --       "─",
+      --       "├",
+      --       "│",
+      --     }
+      --   end
+      --   return "single"
+      -- end,
     },
   },
   fzf = {
-    prompt = "%#GitSignsAdd#  ",
+    prompt = "%#GitSignsAdd# ",
+    win_configs = {
+      -- border = {
+      --   -- "│", --topleft
+      --   -- "├", --topleft
+      --   "",
+      --   "",
+      --   -- "─", --top
+      --   -- "┤", --topright
+      --   -- "│", --topright
+      --   "",
+      --   "│",
+      --   "┘",
+      --   "─",
+      --   "└",
+      --   "│",
+      -- },
+    },
     keymaps = {
       ["<C-j>"] = function()
         require("dropbar.api").fuzzy_find_navigate("down")
