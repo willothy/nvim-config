@@ -401,13 +401,15 @@ cmp.setup.filetype("harpoon", {
   formatting = format,
 })
 
-cmp.setup.filetype("terminal", {
-  sources = cmp.config.sources({
-    { name = "path" },
-    { name = "buffer" },
-  }),
-  formatting = format,
-})
+-- cmp.setup.filetype("terminal", {
+--   sources = cmp.config.sources({
+--     { name = "cody" },
+--     { name = "copilot" },
+--     { name = "path" },
+--     { name = "buffer" },
+--   }),
+--   formatting = format,
+-- })
 
 cmp.setup.filetype("gitcommit", {
   sources = {
