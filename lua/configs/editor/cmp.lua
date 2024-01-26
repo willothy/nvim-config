@@ -244,6 +244,9 @@ local opts = {
       end
     end, { "i", "c", "t" }),
     ["<BS>"] = cmp.mapping(function(fallback)
+      -- TODO: check if we are trying to de-indent at the end of a block or the end of a comment.
+      --
+      -- allow deleting (maybe even quick-delete) the beginning of the line in those cases.
       local row, col = unpack(vim.api.nvim_win_get_cursor(0))
 
       if row == 1 and col == 0 then
