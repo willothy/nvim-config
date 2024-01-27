@@ -407,6 +407,7 @@ local opts = {
       },
       {
         text = function(tab)
+          -- return tostring(tab.index) .. ":" .. tostring(tab.number)
           return string.format(
             " %s ",
             vim.fn.fnamemodify(vim.fn.getcwd(-1, tab.index or 1), ":t")

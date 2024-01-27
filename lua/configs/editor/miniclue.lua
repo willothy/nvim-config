@@ -9,7 +9,8 @@ miniclue.setup({
     { mode = "i", keys = "<C-x>" },
 
     -- Visual mode
-    { mode = "n", keys = "v" },
+    { mode = "n", keys = "va" },
+    -- { mode = "x", keys = "v" },
 
     -- `g` key
     { mode = "n", keys = "g" },

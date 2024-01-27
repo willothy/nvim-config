@@ -427,13 +427,8 @@ return {
     keys = {
       {
         "ga",
-        dode = { "n", "v" },
-      },
-      {
-        "ga.",
-        "<cmd>TextCaseOpenTelescope<CR>",
-        mode = { "n", "v" },
-        desc = "telescope",
+        mode = { "n", "v", "o" },
+        desc = "text case",
       },
     },
   },

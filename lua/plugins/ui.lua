@@ -4,6 +4,7 @@ return {
   {
     -- "folke/which-key.nvim",
     "willothy/which-key.nvim", -- fork with fixes and description sort
+    -- dir = "~/projects/lua/which-key.nvim/",
     config = function()
       require("configs.editor.which-key")
     end,
@@ -199,7 +200,7 @@ return {
   -- STATUS --
   {
     "willothy/nvim-cokeline",
-    -- dir = "~/projects/lua/cokeline/",
+    dir = "~/projects/lua/cokeline/",
     -- branch = "incremental-truncate",
     config = function()
       require("configs.status.cokeline")

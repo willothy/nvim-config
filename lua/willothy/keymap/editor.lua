@@ -2,7 +2,14 @@ local keymap = willothy.keymap
 local bind, modes = keymap.bind, keymap.modes
 
 local function ai_textobjs(ai)
+  local name
+  if ai == "inner" then
+    name = "inside"
+  else
+    name = "around"
+  end
   return {
+    name = name,
     w = "word",
     ['"'] = 'string: ""',
     ["'"] = "string: ''",
@@ -59,12 +66,22 @@ local wk = require("which-key")
 wk.register({
   i = ai_textobjs("inner"),
   a = ai_textobjs("outer"),
+  g = {
+    name = "go",
+  },
+  ["["] = {
+    name = "prev",
+  },
+  ["]"] = {
+    name = "next",
+  },
 }, { mode = { "o", "v" } })
 
 wk.register({
   g = {
     name = "go",
     ["?"] = bind("which-key", "show"):with_desc("which-key"),
+    a = { name = "text case" },
     c = { name = "comment" },
     b = { name = "which_key_ignore" },
     g = "first line",

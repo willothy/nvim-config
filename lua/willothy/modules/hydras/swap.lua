@@ -122,6 +122,7 @@ return require("hydra")({
   hint = hint,
   short_name = "S󰅩",
   config = {
+    desc = "swap",
     hint = {
       border = "single",
       position = "bottom-left",
