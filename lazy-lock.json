@@ -33,6 +33,7 @@
   "ferris.nvim": { "branch": "main", "commit": "52e39c017f511e8cf9a024022d48164bfbfe52ee" },
   "fidget.nvim": { "branch": "main", "commit": "3a93300c076109d86c7ce35ec67a8034ae6ba9db" },
   "flash.nvim": { "branch": "main", "commit": "48817af25f51c0590653bbc290866e4890fe1cbe" },
+  "flatten.nvim": { "branch": "guest-data", "commit": "1840a55226763175906d0d6b4058f31743747548" },
   "floating-help.nvim": { "branch": "main", "commit": "798a1fc71f3b7d739a3fd381125ac9d7d5632b92" },
   "focus.nvim": { "branch": "master", "commit": "4135f976afe5d6e1fe66dff121db9d06643f439f" },
   "foldsigns.nvim": { "branch": "main", "commit": "c36c2cc8122caf2a5bb05096097ea8e684233a34" },
