@@ -1,4 +1,4 @@
-local keymap = willothy.keymap
+local keymap = willothy.map
 local bind, modes = keymap.bind, keymap.modes
 
 local cody

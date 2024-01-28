@@ -1,4 +1,4 @@
-local keymap = willothy.keymap
+local keymap = willothy.map
 local bind, modes = keymap.bind, keymap.modes
 
 local function ai_textobjs(ai)
@@ -302,7 +302,6 @@ wk.register({
       require("stay-in-place").shift_left_line()
     end
   end):with_desc("indent: decrease"),
-  M = bind("multicursors", "start"),
   u = "edit: undo",
   ["<C-r>"] = "edit: redo",
   ["<"] = "indent: decrease",
@@ -324,7 +323,6 @@ wk.register({
     end
   end):with_desc("indent: decrease"),
   ["<C-c>"] = { '"+y', "copy selection" },
-  ["M"] = { ":MCvisual<CR>", "multicursor mode" },
   ["<"] = "indent: decrease",
   [">"] = "indent: increase",
   ["="] = "indent: auto",

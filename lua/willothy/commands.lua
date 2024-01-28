@@ -176,6 +176,12 @@ local commands = {
     end,
     desc = "Sync the telescope configuration",
   },
+  DrawDiagram = {
+    function()
+      require("willothy.keymap.hydras.diagrams"):activate()
+    end,
+    desc = "Draw a diagram",
+  },
 }
 
 return {

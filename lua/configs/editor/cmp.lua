@@ -20,7 +20,7 @@ local has_words_before = function()
     and next_char ~= "]"
 end
 
-local icons = willothy.icons
+local icons = willothy.ui.icons
 
 local format = {
   fields = { "kind", "abbr", "menu" },
@@ -416,7 +416,6 @@ cmp.setup.filetype("harpoon", {
 
 cmp.setup.filetype("gitcommit", {
   sources = {
-    { name = "git" },
     { name = "commit" },
     { name = "path" },
   },

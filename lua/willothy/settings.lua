@@ -3,7 +3,7 @@ local M = {}
 function M.setup()
   local o = vim.o
   local opt = vim.opt
-  local icons = willothy.icons
+  local icons = willothy.ui.icons
 
   o.cmdheight = 0
   o.scrolloff = 16

@@ -199,10 +199,10 @@ then
     }
   )
   if is_empty() then
-    require("willothy.modules.ui.intro").show()
+    willothy.ui.intro.show()
   end
 elseif argc == 0 and is_empty() then
-  require("willothy.modules.ui.intro").show()
+  willothy.ui.intro.show()
 end
 
 local uv = vim.uv or vim.loop

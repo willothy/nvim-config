@@ -37,8 +37,10 @@ local autocmds = {
   },
   {
     "BufWritePost",
-    callback = function()
-      require("mini.trailspace").trim()
+    callback = function(ev)
+      if vim.bo[ev.buf].modifiable and vim.bo[ev.buf].buftype == "" then
+        require("mini.trailspace").trim()
+      end
     end,
   },
   {

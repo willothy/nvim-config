@@ -1,4 +1,4 @@
-local keymap = willothy.keymap
+local keymap = willothy.map
 local modes = keymap.modes
 
 local telescope = willothy.fn.telescope

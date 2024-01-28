@@ -26,6 +26,8 @@ require("murmur").setup({
   },
 })
 
+-- TODO: this functionality should not be
+-- in the plugin config.
 function M.enable()
   enabled = true
 end

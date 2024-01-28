@@ -1,4 +1,4 @@
-local keymap = willothy.keymap
+local keymap = willothy.map
 local modes = keymap.modes
 
 local wk = require("which-key")

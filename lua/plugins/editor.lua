@@ -19,27 +19,15 @@ return {
     config = function()
       require("configs.editor.live_cmd")
     end,
-    event = "VeryLazy",
+    cmd = "Norm",
   },
   -- EDITING --
-  {
-    "smoka7/multicursors.nvim",
-    config = function()
-      require("configs.editor.multicursor")
-    end,
-  },
   {
     "numToStr/Comment.nvim",
     config = function()
       require("configs.editor.comment")
     end,
     event = "VeryLazy",
-  },
-  {
-    "cshuaimin/ssr.nvim",
-    config = function()
-      require("configs.editor.ssr")
-    end,
   },
   {
     "nvim-pack/nvim-spectre",
@@ -165,6 +153,13 @@ return {
     build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
   },
   {
+    "stevearc/oil.nvim",
+    config = function()
+      require("configs.editor.oil")
+    end,
+    cmd = "Oil",
+  },
+  {
     "echasnovski/mini.files",
     -- "willothy/mini.files",
     config = function()
@@ -233,18 +228,16 @@ return {
     cmd = "WeztermSpawn",
   },
   {
-    "desdic/greyjoy.nvim",
-    cmd = "Greyjoy",
-    config = function()
-      require("configs.terminal.greyjoy")
-    end,
-  },
-  {
     "stevearc/overseer.nvim",
     config = function()
       require("configs.editor.overseer")
     end,
-    event = "VeryLazy",
+    cmd = {
+      "OverseerRun",
+      "OverseerRunCmd",
+      "OverseerRunOpen",
+      "OverseerRunToggle",
+    },
   },
   -- NAVIGATION --
   -- {
@@ -259,40 +252,22 @@ return {
     config = function()
       require("configs.navigation.flash")
     end,
-    event = "VeryLazy",
+    keys = {
+      { "f", desc = "flash" },
+      { "F", desc = "flash" },
+      { "t", desc = "flash" },
+      { "T", desc = "flash" },
+    },
+    -- event = "VeryLazy",
   },
   {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
     -- "willothy/harpoon",
-    -- branch = "combined-ext",
     -- dir = "~/projects/lua/harpoon/",
-    event = "VeryLazy",
     config = function()
       require("configs.navigation.harpoon")
     end,
-    -- enabled = false,
-  },
-  {
-    "willothy/wrangler.nvim",
-    config = true,
-    event = "VeryLazy",
-    keys = {
-      {
-        "<C-m>",
-        function()
-          require("wrangler").toggle_menu()
-        end,
-        desc = "wrangler: toggle menu",
-      },
-      {
-        "<leader>mw",
-        function()
-          require("wrangler").toggle_mark()
-        end,
-        desc = "wrangler: toggle mark",
-      },
-    },
   },
   {
     "cbochs/portal.nvim",
@@ -381,14 +356,14 @@ return {
   {
     "echasnovski/mini.trailspace",
     config = true,
-    event = "VeryLazy",
+    event = { "TextChanged", "TextChangedI" },
   },
   {
     "chomosuke/term-edit.nvim",
     opts = {
       prompt_end = "✦ -> ",
     },
-    event = "TermOpen",
+    event = "TermEnter",
   },
   {
     "LhKipp/nvim-nu",
@@ -403,24 +378,11 @@ return {
     end,
     event = "VeryLazy",
   },
-  {
-    "tris203/precognition.nvim",
-    opts = {},
-    -- dir = "~/projects/lua/precognition.nvim/",
-  },
-  {
-    "echasnovski/mini.clue",
-    enabled = false,
-    config = function()
-      require("configs.editor.miniclue")
-    end,
-    event = "VeryLazy",
-  },
-  {
-    "JellyApple102/easyread.nvim",
-    config = true,
-    cmd = "EasyreadToggle",
-  },
+  -- {
+  --   "tris203/precognition.nvim",
+  --   opts = {},
+  --   -- dir = "~/projects/lua/precognition.nvim/",
+  -- },
   {
     "johmsalas/text-case.nvim",
     config = true,

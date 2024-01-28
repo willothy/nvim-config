@@ -129,7 +129,7 @@ local opts = {
     }),
     terminal:extend({
       open = function()
-        willothy.term.vertical:open()
+        willothy.terminal.vertical:open()
       end,
       filter = function(buf, win)
         if not terminal.filter(buf, win) then
@@ -177,6 +177,24 @@ local opts = {
       open = function()
         require("overseer").open()
       end,
+    }),
+    sidebar:extend({
+      ft = "oil",
+      open = function()
+        require("oil").open()
+      end,
+      wo = {
+        winbar = "%{%v:lua.require('oil').winbar()%}",
+      },
+      size = {
+        width = function()
+          if vim.o.columns > 140 then
+            return 35
+          else
+            return math.floor(vim.o.columns * 0.25)
+          end
+        end,
+      },
     }),
     sidebar:extend({
       ft = "SidebarNvim",
@@ -273,7 +291,7 @@ local opts = {
   bottom = {
     terminal:extend({
       open = function()
-        willothy.term.main:open()
+        willothy.terminal.main:open()
       end,
       filter = function(buf, win)
         if not terminal.filter(buf, win) then

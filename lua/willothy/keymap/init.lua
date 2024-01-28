@@ -26,28 +26,30 @@ return {
       )
     end
 
-    local bind = willothy.keymap.bind
+    local bind = willothy.map.bind
 
     require("which-key").register({
       ["<leader>"] = {
         t = {
           name = "terminal",
-          t = bind(willothy.term.main, "toggle", willothy.term.main):with_desc(
+          t = bind(willothy.terminal.main, "toggle", willothy.terminal.main):with_desc(
             "main"
           ),
-          v = bind(willothy.term.vertical, "toggle", willothy.term.vertical):with_desc(
-            "vertical"
-          ),
-          f = bind(willothy.term.float, "toggle", willothy.term.float):with_desc(
+          v = bind(
+            willothy.terminal.vertical,
+            "toggle",
+            willothy.terminal.vertical
+          ):with_desc("vertical"),
+          f = bind(willothy.terminal.float, "toggle", willothy.terminal.float):with_desc(
             "float"
           ),
-          x = bind(willothy.term.xplr, "toggle", willothy.term.xplr):with_desc(
+          x = bind(willothy.terminal.xplr, "toggle", willothy.terminal.xplr):with_desc(
             "xplr"
           ),
-          y = bind(willothy.term.yazi, "toggle", willothy.term.yazi):with_desc(
+          y = bind(willothy.terminal.yazi, "toggle", willothy.terminal.yazi):with_desc(
             "yazi"
           ),
-          s = bind(willothy.term, "send_to_main"):with_desc("send"),
+          s = bind(willothy.terminal, "send_to_main"):with_desc("send"),
           o = { "<cmd>OverseerFloat<cr>", "overseer: show" },
           r = {
             function()
@@ -57,13 +59,13 @@ return {
           },
           p = {
             function()
-              willothy.term.py:toggle()
+              willothy.terminal.py:toggle()
             end,
             "python",
           },
           l = {
             function()
-              willothy.term.lua:toggle()
+              willothy.terminal.lua:toggle()
             end,
             "lua",
           },
@@ -82,5 +84,6 @@ return {
     require("willothy.keymap.lsp")
     require("willothy.keymap.jump")
     require("willothy.keymap.window")
+    require("willothy.keymap.hydras")
   end,
 }

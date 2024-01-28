@@ -2,10 +2,9 @@ vim.g.nvim_ghost_autostart = 0
 
 return {
   "famiu/bufdelete.nvim",
-  { "jbyuki/venn.nvim", cmd = "VBox" },
   {
-    "willothy/leptos.nvim",
-    event = "VeryLazy",
+    "jbyuki/venn.nvim",
+    cmd = "VBox",
   },
   {
     "ellisonleao/glow.nvim",
@@ -26,18 +25,8 @@ return {
     cmd = { "UndotreeToggle", "UndotreeShow" },
   },
   {
-    "FredeEB/tardis.nvim",
-    config = true,
-    cmd = "Tardis",
-  },
-  {
     "ecthelionvi/NeoComposer.nvim",
-    -- "willothy/NeoComposer.nvim",
-    -- branch = "fix-store",
-    -- dir = "~/projects/lua/NeoComposer.nvim",
-    dependencies = {
-      "kkharji/sqlite.lua",
-    },
+    dependencies = { "kkharji/sqlite.lua" },
     config = function()
       require("configs.editor.neocomposer")
     end,
@@ -52,7 +41,7 @@ return {
     -- branch = "dev",
     "willothy/leetcode.nvim",
     branch = "feat-start-with-cmd",
-    dir = "~/projects/lua/leetcode.nvim",
+    -- dir = "~/projects/lua/leetcode.nvim",
     opts = {
       lang = "rust",
       plugins = {
@@ -62,28 +51,12 @@ return {
     cmd = "Leet",
   },
   {
-    "Dhanus3133/LeetBuddy.nvim",
-    config = true,
-    cmd = {
-      "LBQuestion",
-      "LBQuestions",
-      "LBSplit",
-    },
-  },
-  {
     "AckslD/nvim-neoclip.lua",
     opts = {
       enable_persistent_history = true,
       continuous_sync = true,
     },
     event = "VeryLazy",
-  },
-  {
-    "m-demare/attempt.nvim",
-    config = function()
-      require("configs.editor.attempt")
-    end,
-    cmd = "Attempt",
   },
   {
     "rawnly/gist.nvim",

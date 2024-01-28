@@ -1,4 +1,4 @@
-local bar = willothy.icons.git.signs.bar
+local bar = willothy.ui.icons.git.signs.bar
 
 local gitsigns = require("gitsigns")
 

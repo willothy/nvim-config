@@ -1,5 +1,6 @@
 local M = {}
 
+---@type table<string, fun(target: string?)>
 M.browsers = {
   telescope = function(target)
     require("telescope").extensions.file_browser.file_browser({
@@ -14,12 +15,29 @@ M.browsers = {
     require("mini.files").open(target)
   end,
   oil = function(target)
+    vim.cmd.vsplit()
+    local win = vim.api.nvim_get_current_win()
+    local au
     require("oil").open(target)
+    au = vim.api.nvim_create_autocmd({ "BufLeave" }, {
+      buffer = vim.api.nvim_get_current_buf(),
+      callback = vim.schedule_wrap(function()
+        if vim.api.nvim_win_is_valid(win) and vim.bo[0].filetype ~= "oil" then
+          vim.api.nvim_win_close(win, false)
+          vim.api.nvim_del_autocmd(au)
+        end
+      end),
+    })
+
+    -- fixes icons not showing with edgy.nvim
+    require("oil.actions").refresh.callback()
   end,
 }
 
-M.browser = M.browsers.telescope
+---@type fun(target: string?)
+M.browser = M.browsers.oil
 
+---@param buf integer
 function M.hijack_dir_buf(buf)
   if vim.bo[buf].buftype ~= "" then
     return
@@ -61,21 +79,29 @@ function M.hijack_netrw()
     desc = "Hijack netrw with switchable file browser",
   })
 
+  local argc = vim.fn.argc()
+  if argc ~= 1 then
+    return
+  end
+
   local last_win
   local n_wins = 0
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     if vim.api.nvim_win_get_config(win).zindex == nil then
+      if n_wins >= 1 then
+        return
+      end
       n_wins = n_wins + 1
       last_win = last_win or win
     end
   end
-  if vim.fn.argc() == 1 and n_wins == 1 then
+  if n_wins == 1 then
     local buf = vim.api.nvim_win_get_buf(last_win)
     M.hijack_dir_buf(buf)
   end
 end
 
-M.set_browser = function()
+function M.set_browser()
   local a = require("nio")
   a.run(function()
     local options = {}
@@ -92,7 +118,8 @@ M.set_browser = function()
   end)
 end
 
----@param target string | string[] | nil | fun():string
+---@param target? string | string[] | fun():string
+---@param browser? string
 function M.browse(target, browser)
   if target == nil then
     target = vim.fn.getcwd()
@@ -110,23 +137,31 @@ function M.browse(target, browser)
   browse(target)
 end
 
-function M.is_root(pathname)
+---@param path string
+---@return boolean
+function M.is_root(path)
   if string.sub(package["config"], 1, 1) == "\\" then
-    return string.match(pathname, "^[A-Z]:\\?$")
+    return string.match(path, "^[A-Z]:\\?$")
   end
-  return pathname == "/"
+  return path == "/"
 end
 
 function M.project_root()
   return require("lspconfig.util").find_git_ancestor(vim.fn.getcwd(-1))
 end
 
+---@param dir string?
+---@return string?
 function M.crate_root(dir)
-  return vim.fs.find("Cargo.toml", {
+  local file = vim.fs.find("Cargo.toml", {
     upward = true,
     type = "directory",
     path = dir or vim.fn.getcwd(-1),
-  })
+  })[1]
+  if not file then
+    return
+  end
+  return vim.fs.dirname(file)
 end
 
 function M.parent_crate()

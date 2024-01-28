@@ -1,5 +1,6 @@
 local M = {}
 
+--TODO: This file should not be in configs, since it provides functionality.
 M.launchers = {
   lua = function()
     require("osv").run_this()

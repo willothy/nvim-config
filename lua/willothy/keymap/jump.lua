@@ -1,4 +1,4 @@
-local keymap = willothy.keymap
+local keymap = willothy.map
 -- selene: allow(unused_variable)
 local bind, modes = keymap.bind, keymap.modes
 

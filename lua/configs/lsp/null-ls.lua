@@ -20,7 +20,6 @@ null_ls.setup({
     builtins.hover.dictionary,
     builtins.hover.printenv,
   },
-  on_attach = require("configs.lsp").lsp_attach,
   should_attach = function(bufnr)
     local ignored = {
       "TelescopePrompt",

@@ -1,4 +1,4 @@
-local icons = willothy.icons
+local icons = willothy.ui.icons
 local dropbar = require("dropbar")
 local utils = require("dropbar.utils")
 
@@ -14,6 +14,7 @@ local enable = function(buf, win)
   -- end
   local filetype = vim.bo[buf].filetype
   local disabled = {
+    ["oil"] = true,
     ["Trouble"] = true,
     ["qf"] = true,
     ["noice"] = true,
@@ -25,6 +26,9 @@ local enable = function(buf, win)
     ["dap-repl"] = true,
     ["neocomposer-menu"] = true,
   }
+  if disabled[filetype] then
+    return false
+  end
   if vim.api.nvim_win_get_config(win).zindex ~= nil then
     return vim.bo[buf].buftype == "terminal"
       and vim.bo[buf].filetype == "terminal"
@@ -32,7 +36,6 @@ local enable = function(buf, win)
   return vim.bo[buf].buflisted == true
     and vim.bo[buf].buftype == ""
     and vim.api.nvim_buf_get_name(buf) ~= ""
-    and not disabled[filetype]
 end
 
 local close = function()
@@ -51,7 +54,7 @@ dropbar.setup({
       "BufWinEnter",
       "BufWritePost",
       "FileType",
-      -- "BufEnter",
+      "BufEnter",
       -- "TermEnter",
     },
   },

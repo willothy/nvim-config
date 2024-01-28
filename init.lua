@@ -94,6 +94,7 @@ require("lazy").setup({
         "zipPlugin",
         "man",
         "osc52", -- Wezterm doesn't support osc52 yet
+        "spellfile",
       },
     },
   },

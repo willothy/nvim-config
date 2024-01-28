@@ -1,16 +1,16 @@
-local icons = willothy.icons.diagnostics
+local icons = willothy.ui.icons
 
 local trouble = require("trouble")
 
 trouble.setup({
   signs = {
-    error = icons.error,
-    warning = icons.warning,
-    hint = icons.hint,
-    information = icons.info,
+    error = icons.diagnostics.error,
+    warning = icons.diagnostics.warning,
+    hint = icons.diagnostics.hint,
+    information = icons.diagnostics.info,
   },
-  fold_open = willothy.icons.fold.open,
-  fold_closed = willothy.icons.fold.closed,
+  fold_open = icons.fold.open,
+  fold_closed = icons.fold.closed,
   auto_open = false,
   auto_close = false,
   track_cursor = true,

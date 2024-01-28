@@ -23,12 +23,10 @@ capabilities.textDocument.formatting = {
 
 capabilities.textDocument.semanticTokens.augmentsSyntaxTokens = false
 
-local icons = willothy.icons
+local icons = willothy.ui.icons
 require("mason").setup()
 
 local lspconfig = require("lspconfig")
-
-local lsp_attach = require("configs.lsp").lsp_attach
 
 require("neoconf").setup({})
 
@@ -65,7 +63,6 @@ require("neodev").setup({
 
 lspconfig.rust_analyzer.setup({
   capabilities = capabilities,
-  on_attach = lsp_attach,
   root_dir = require("lspconfig.util").root_pattern(".git", "Cargo.toml"),
   offsetEncoding = { "utf-8" },
   client_encoding = "utf-8",
@@ -77,7 +74,6 @@ require("mason-lspconfig").setup({
     function(server_name)
       lspconfig[server_name].setup({
         capabilities = capabilities,
-        on_attach = lsp_attach,
         root_dir = require("lspconfig.util").root_pattern(".git"),
       })
     end,
@@ -106,7 +102,6 @@ require("mason-lspconfig").setup({
     taplo = function()
       lspconfig.taplo.setup({
         capabilities = capabilities,
-        on_attach = lsp_attach,
         root_dir = require("lspconfig.util").root_pattern(
           ".git",
           "Cargo.toml",
@@ -117,7 +112,6 @@ require("mason-lspconfig").setup({
     lua_ls = function()
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
-        on_attach = lsp_attach,
         root_dir = require("lspconfig.util").root_pattern(".git"),
         before_init = require("neodev.lsp").before_init,
         single_file_support = true,
@@ -127,7 +121,6 @@ require("mason-lspconfig").setup({
     bashls = function()
       require("lspconfig").bashls.setup({
         capabilities = capabilities,
-        attach = lsp_attach,
         filetypes = { "zsh", "sh", "bash" },
         root_dir = require("lspconfig.util").root_pattern(".git", ".zshrc"),
       })
@@ -135,7 +128,6 @@ require("mason-lspconfig").setup({
     intelephense = function()
       lspconfig.intelephense.setup({
         capabilities = capabilities,
-        on_attach = lsp_attach,
         root_dir = require("lspconfig.util").root_pattern(".git"),
       })
     end,

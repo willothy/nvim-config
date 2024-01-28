@@ -12,6 +12,7 @@ return require("hydra")({
   _q_, _<Esc>_: exit
   ]],
   config = {
+    desc = "hydra",
     hint = {
       type = "window",
       position = "bottom-left",

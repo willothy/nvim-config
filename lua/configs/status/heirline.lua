@@ -1,5 +1,5 @@
 local p = require("minimus").hex
-local icons = willothy.icons
+local icons = willothy.ui.icons
 
 local get_hex = willothy.hl.get
 

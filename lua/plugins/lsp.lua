@@ -3,7 +3,7 @@ return {
   {
     "ThePrimeagen/refactoring.nvim",
     config = true,
-    event = "LspAttach",
+    cmd = "Refactor",
   },
   {
     "folke/neodev.nvim",
@@ -19,7 +19,7 @@ return {
       "rouge8/neotest-rust",
       "nvim-neotest/neotest-plenary",
     },
-    event = "VeryLazy",
+    cmd = "Neotest",
   },
   -- LSP UI --
   {
@@ -37,7 +37,7 @@ return {
   -- LANGUAGE SERVERS & RELATED TOOLS --
   {
     "williamboman/mason.nvim",
-    event = "VeryLazy",
+    cmd = "Mason",
     config = true,
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
@@ -56,7 +56,6 @@ return {
       require("configs.lsp.sourcegraph")
     end,
     cmd = {
-      "CodyDo",
       "CodyTask",
       "CodyAsk",
       "CodyChat",
@@ -64,7 +63,7 @@ return {
       "SourcegraphSearch",
       "SourcegraphLink",
     },
-    event = "VeryLazy",
+    event = "InsertEnter",
     -- build = "nvim -l build/init.lua",
   },
   {
@@ -75,42 +74,42 @@ return {
       "rafamadriz/friendly-snippets",
     },
   },
-  {
-    "vxpm/ferris.nvim",
-    config = function()
-      require("ferris").setup()
-
-      local function cmd(name, module, opts)
-        vim.api.nvim_create_user_command(name, function(...)
-          require(module)(...)
-        end, opts or {})
-      end
-
-      cmd("FerrisExpandMacro", "ferris.methods.expand_macro")
-      cmd("FerrisViewHIR", "ferris.methods.view_hir")
-      cmd("FerrisViewMIR", "ferris.methods.view_mir")
-      cmd("FerrisViewMemoryLayout", "ferris.methods.view_memory_layout")
-      cmd("FerrisOpenCargoToml", "ferris.methods.open_cargo_toml")
-      cmd("FerrisOpenParentModule", "ferris.methods.open_parent_module")
-      cmd("FerrisOpenDocumentation", "ferris.methods.open_documentation")
-      cmd("FerrisReloadWorkspace", "ferris.methods.reload_workspace")
-    end,
-    opts = {},
-    cmd = {
-      "FerrisViewHIR",
-      "FerrisViewMIR",
-      "FerrisViewMemoryLayout",
-      -- "FerrisViewSyntaxTree",
-      -- "FerrisViewItemTree",
-      "FerrisOpenCargoToml",
-      "FerrisOpenParentModule",
-      "FerrisOpenDocumentation",
-      "FerrisReloadWorkspace",
-      -- "FerrisExpandMacro",
-      -- "FerrisJoinLines",
-      -- "FerrisRebuildMacros"
-    },
-  },
+  -- {
+  --   "vxpm/ferris.nvim",
+  --   config = function()
+  --     require("ferris").setup()
+  --
+  --     local function cmd(name, module, opts)
+  --       vim.api.nvim_create_user_command(name, function(...)
+  --         require(module)(...)
+  --       end, opts or {})
+  --     end
+  --
+  --     cmd("FerrisExpandMacro", "ferris.methods.expand_macro")
+  --     cmd("FerrisViewHIR", "ferris.methods.view_hir")
+  --     cmd("FerrisViewMIR", "ferris.methods.view_mir")
+  --     cmd("FerrisViewMemoryLayout", "ferris.methods.view_memory_layout")
+  --     cmd("FerrisOpenCargoToml", "ferris.methods.open_cargo_toml")
+  --     cmd("FerrisOpenParentModule", "ferris.methods.open_parent_module")
+  --     cmd("FerrisOpenDocumentation", "ferris.methods.open_documentation")
+  --     cmd("FerrisReloadWorkspace", "ferris.methods.reload_workspace")
+  --   end,
+  --   opts = {},
+  --   cmd = {
+  --     "FerrisViewHIR",
+  --     "FerrisViewMIR",
+  --     "FerrisViewMemoryLayout",
+  --     -- "FerrisViewSyntaxTree",
+  --     -- "FerrisViewItemTree",
+  --     "FerrisOpenCargoToml",
+  --     "FerrisOpenParentModule",
+  --     "FerrisOpenDocumentation",
+  --     "FerrisReloadWorkspace",
+  --     -- "FerrisExpandMacro",
+  --     -- "FerrisJoinLines",
+  --     -- "FerrisRebuildMacros"
+  --   },
+  -- },
   {
     "p00f/clangd_extensions.nvim",
     config = true,
@@ -129,14 +128,14 @@ return {
     config = function()
       require("configs.lsp.conform")
     end,
-    event = "VeryLazy",
+    event = "BufWritePre",
   },
   {
     "mfussenegger/nvim-lint",
     config = function()
       require("configs.lsp.nvim-lint")
     end,
-    event = "DiagnosticChanged",
+    event = "VeryLazy",
   },
   {
     "dgagn/diagflow.nvim",
@@ -144,26 +143,8 @@ return {
     config = function()
       require("configs.lsp.diagflow")
     end,
-    event = "VeryLazy",
+    event = "DiagnosticChanged",
   },
-  {
-    "NStefan002/speedtyper.nvim",
-    cmd = "Speedtyper",
-    -- dir = "~/projects/lua/speedtyper.nvim/",
-    config = function()
-      require("speedtyper").setup({
-        window = {
-          border = "solid",
-        },
-        vim_opt = {},
-      })
-    end,
-  },
-  -- {
-  --   "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-  --   config = true,
-  --   event = "DiagnosticChanged",
-  -- },
   -- COMPLETION --
   {
     "hrsh7th/nvim-cmp",
@@ -177,7 +158,6 @@ return {
       "dmitmel/cmp-cmdline-history",
       "rcarriga/cmp-dap",
       "zbirenbaum/copilot-cmp",
-      "petertriho/cmp-git",
     },
     event = { "CmdlineEnter", "InsertEnter" },
     config = function()

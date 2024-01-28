@@ -1,4 +1,4 @@
-local icons = willothy.icons
+local icons = willothy.ui.icons
 
 local opts = {
   placement = "top",

@@ -45,9 +45,10 @@ M.hl_id = vim.api.nvim_get_hl_id_by_name
 M.hl_by_id = vim.api.nvim_get_hl
 
 ---@param group string | integer
+---@return vim.api.keyset.highlight
 function M.hl(group)
   if not group then
-    return
+    error("hl: group is required")
   end
   if cache.groups[group] then
     return cache.groups[group]
@@ -62,6 +63,8 @@ function M.hl(group)
   return hl
 end
 
+---@param hl vim.api.keyset.highlight | table
+---@return vim.api.keyset.highlight
 function M.sanitize(hl)
   for k, v in pairs(hl) do
     if type(v) == "number" then
@@ -71,16 +74,22 @@ function M.sanitize(hl)
   return hl
 end
 
+---@param group string | integer
+---@param attr  string
+---@return any?
 function M.fetch_attr(group, attr)
   return M.hl(group)[attr]
 end
 
+---@param group string | integer
+---@param attr  string?
+---@return any?
 function M.get(group, attr)
-  group = M.hl(group)
-  if group and attr then
-    return group[attr]
+  local hl = M.hl(group)
+  if hl and attr then
+    return hl[attr]
   end
-  return group
+  return hl
 end
 
 return M

@@ -1,49 +1,47 @@
-local function module()
-  local submodules = {}
-  local setup = {}
-
-  local mt = {}
-
-  function mt:__index(k)
-    if not submodules[k] then
-      return
-    end
-    local mod
-    if type(submodules[k]) == "table" then
-      mod = submodules[k]
-    else
-      mod = require("willothy.modules." .. submodules[k])
-    end
-    if not setup[k] then
-      if type(mod) == "table" and vim.is_callable(mod.setup) then
-        mod.setup()
-      end
-      setup[k] = true
-    end
-    return mod
-  end
-  function mt:__newindex(k, v)
-    submodules[k] = v
-  end
-
-  local m = {}
-
-  function m.setup()
-    for k in pairs(submodules) do
-      if not setup[k] then
-        if type(m[k]) == "table" and vim.is_callable(m[k].setup) then
-          m[k].setup()
-        end
-        setup[k] = true
-      end
-    end
-  end
-
-  return setmetatable(m, mt)
+local function metamodule(path, sub_metamodules)
+  return setmetatable(sub_metamodules or {}, {
+    __index = function(self, k)
+      local m = require(path .. "." .. k)
+      self[k] = m
+      return m
+    end,
+  })
 end
+
+local function module(path, ...)
+  local args = { ... }
+  return setmetatable({}, {
+    __index = function(_, k)
+      local m = require(path)
+      -- replace the lazy loader with the actual module so metatable,
+      -- index isn't required after the initial load, but but do it
+      -- some time later so we can return the value
+      -- immediately and continue execution.
+      vim.schedule(function()
+        local t = _G
+        for i, v in ipairs(args) do
+          if i == #args then
+            t[v] = m
+            break
+          end
+          t = t[v]
+        end
+      end)
+      return m[k]
+    end,
+  })
+end
+
+willothy = metamodule("willothy", {
+  ui = metamodule("willothy.ui"),
+  utils = metamodule("willothy.utils"),
+  async = module("nio", "willothy", "async"),
+})
 
 -- TODO: Modules should just load automatically,
 -- TODO: I want to organize this whole config better.
+--
+-- WIP
 --
 -- My idea is a structure like this:
 --
@@ -76,106 +74,43 @@ end
 -- │   │   │   └── ...
 -- │   │   ├── hydras/ (todo: make hydras fully lazy)
 -- │   │   │   └── ...
--- │   │   ├── fs.lua      # filesystem utils
--- │   │   ├── hl.lua      # highlighting
--- │   │   ├── keymap.lua  # keymap utils
--- │   │   ├── term.lua    # terminals
--- │   │   ├── event.lua   # autocmd and event utils
--- │   │   ├── win.lua     # window utils
--- │   │   ├── buf.lua     # buffer utils
--- │   │   ├── tab.lua     # tabpage utils
--- │   │   ├── str.lua     # string lib
--- │   │   └── graphql.lua # integrate my Lua graphql client
-
----@diagnostic disable: assign-type-mismatch
----@module "willothy.modules"
-willothy = module()
----@module "willothy.modules.fs"
-willothy.fs = "fs"
----@module "willothy.modules.hl"
-willothy.hl = "hl"
----@module "willothy.modules.fn"
-willothy.fn = "fn"
----@module "willothy.modules.rx"
-willothy.rx = "rx"
----@module "willothy.modules.icons"
-willothy.icons = "icons"
----@module "willothy.modules.keymap"
-willothy.keymap = "keymap"
----@module "willothy.modules.player"
-willothy.player = "player"
----@module "willothy.modules.terminals"
-willothy.term = "terminals"
----@module "willothy.modules.event"
-willothy.event = "event"
----@module "willothy.modules.win"
-willothy.win = "win"
----@module "willothy.modules.buf"
-willothy.buf = "buf"
----@module "willothy.modules.tab"
-willothy.tab = "tab"
----@module "willothy.modules.str"
-willothy.str = "str"
-
----@module "willothy.modules.utils"
-willothy.utils = module()
----@module "willothy.modules.utils.cursor"
-willothy.utils.cursor = "utils.cursor"
----@module "willothy.modules.utils.plugins"
-willothy.utils.plugins = "utils.plugins"
----@module "willothy.modules.utils.debug"
-willothy.utils.debug = "utils.debug"
----@module "willothy.modules.utils.table"
-willothy.utils.table = "utils.table"
----@module "willothy.modules.utils.templates"
-willothy.utils.templates = "utils.templates"
-
----@module "willothy.modules.ui"
-willothy.ui = module()
----@module "willothy.modules.ui.scrollbar"
-willothy.ui.scrollbar = "ui.scrollbar"
----@module "willothy.modules.ui.scrolleof"
-willothy.ui.scrolleof = "ui.scrolleof"
----@module "willothy.modules.ui.float_drag"
-willothy.ui.float_drag = "ui.float_drag"
----@module "willothy.modules.ui.code_actions"
-willothy.ui.code_actions = "ui.code_actions"
----@module "willothy.modules.ui.foldtext"
-willothy.ui.foldtext = "ui.foldtext"
----@module "willothy.modules.ui.foldexpr"
-willothy.ui.foldexpr = "ui.foldexpr"
----@module "willothy.modules.ui.intro"
-willothy.ui.intro = "ui.intro"
----@module "willothy.modules.ui.mode"
-willothy.ui.mode = "ui.mode"
-
----@module "willothy.modules.hydras"
-willothy.hydras = module()
----@module "willothy.modules.hydras.git"
-willothy.hydras.git = "hydras.git"
----@module "willothy.modules.hydras.options"
-willothy.hydras.options = "hydras.options"
----@module "willothy.modules.hydras.telescope"
-willothy.hydras.telescope = "hydras.telescope"
----@module "willothy.modules.hydras.diagrams"
-willothy.hydras.diagrams = "hydras.diagrams"
----@module "willothy.modules.hydras.windows"
-willothy.hydras.windows = "hydras.windows"
----@module "willothy.modules.hydras.buffers"
-willothy.hydras.buffers = "hydras.buffers"
----@module "willothy.modules.hydras.swap"
-willothy.hydras.swap = "hydras.swap"
+-- │   │   ├── fs.lua       # filesystem utils
+-- │   │   ├── hl.lua       # highlighting
+-- │   │   ├── keymap.lua   # keymap utils
+-- │   │   ├── terminal.lua # terminals
+-- │   │   ├── event.lua    # autocmd and event utils
+-- │   │   ├── win.lua      # window utils
+-- │   │   ├── buf.lua      # buffer utils
+-- │   │   ├── tab.lua      # tabpage utils
+-- │   │   ├── str.lua      # string lib
+-- │   │   └── graphql.lua  # integrate my Lua graphql client
 
 return {
   setup = function()
-    willothy.fs.hijack_netrw()
+    -- hijack netrw
+    pcall(vim.api.nvim_clear_autocmds, { group = "FileExplorer" })
+
+    vim.api.nvim_create_autocmd("BufNew", {
+      group = vim.api.nvim_create_augroup(
+        "willothy.file-browsers",
+        { clear = true }
+      ),
+      pattern = "*",
+      callback = function(ev)
+        willothy.fs.hijack_dir_buf(ev.buf)
+      end,
+      desc = "Hijack netrw with switchable file browser",
+    })
 
     vim.api.nvim_create_autocmd("UiEnter", {
       once = true,
       callback = function()
         -- setup ui
-        willothy.ui.setup()
-        willothy.hydras.setup()
+        willothy.ui.scrollbar.setup()
+        willothy.ui.scrolleof.setup()
+        willothy.ui.float_drag.setup()
+        willothy.ui.code_actions.setup()
+        willothy.ui.mode.setup()
 
         -- Inform vim how to enable undercurl in wezterm
         vim.api.nvim_exec2(
@@ -187,5 +122,25 @@ return {
         )
       end,
     })
+
+    local argc = vim.fn.argc()
+    if argc ~= 1 then
+      return
+    end
+    local last_win
+    local n_wins = 0
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if vim.api.nvim_win_get_config(win).zindex == nil then
+        if n_wins >= 1 then
+          return
+        end
+        n_wins = n_wins + 1
+        last_win = last_win or win
+      end
+    end
+    if n_wins == 1 then
+      local buf = vim.api.nvim_win_get_buf(last_win)
+      willothy.fs.hijack_dir_buf(buf)
+    end
   end,
 }
