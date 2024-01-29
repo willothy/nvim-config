@@ -16,18 +16,26 @@ M.browsers = {
   end,
   oil = function(target)
     -- don't hijack current window
+    -- TODO: maybe upstream this into Oil? I think it would be nice to have.
     vim.cmd.vsplit()
+    require("oil").open(target)
     local win = vim.api.nvim_get_current_win()
     vim.api.nvim_win_set_var(win, "is_oil_win", true)
-    require("oil").open(target)
-    vim.api.nvim_create_autocmd("BufWinLeave", {
+    vim.api.nvim_create_autocmd("BufLeave", {
       buffer = vim.api.nvim_get_current_buf(),
-      once = true,
-      callback = function()
-        if vim.api.nvim_win_is_valid(win) then
-          vim.api.nvim_win_close(win, false)
+      callback = vim.schedule_wrap(function()
+        if
+          vim.api.nvim_win_is_valid(win)
+          -- only close the window if the buffer has changed
+          -- basically we treat this autocmd as "BufWinLeave" but for
+          -- all windows containing oil buffers, not just the last one.
+          and not require("oil.util").is_oil_bufnr(
+            vim.api.nvim_win_get_buf(win)
+          )
+        then
+          vim.api.nvim_win_close(win, true)
         end
-      end,
+      end),
     })
 
     -- fixes icons not showing with edgy.nvim
@@ -50,7 +58,7 @@ function M.hijack_dir_buf(buf)
   if bufname == "" then
     return
   end
-  local stat = vim.F.ok_or_nil(pcall(uv.fs_stat, bufname))
+  local stat = uv.fs_stat(bufname)
   if not stat or stat.type ~= "directory" then
     return
   end
@@ -66,14 +74,16 @@ function M.hijack_dir_buf(buf)
 end
 
 function M.hijack_netrw()
-  pcall(vim.api.nvim_clear_autocmds, { group = "FileExplorer" })
+  vim.g.loaded_netrw = 1
+  vim.g.loaded_netrwPlugin = 1
+  if vim.fn.exists("#FileExplorer") == 1 then
+    vim.api.nvim_clear_autocmds({ group = "FileExplorer" })
+  end
 
-  vim.api.nvim_create_autocmd("BufNew", {
-    group = vim.api.nvim_create_augroup(
-      "willothy.file-browsers",
-      { clear = true }
-    ),
+  vim.api.nvim_create_autocmd("BufAdd", {
+    group = vim.api.nvim_create_augroup("ExplHijackDirBuf", { clear = true }),
     pattern = "*",
+    nested = true,
     callback = function(ev)
       M.hijack_dir_buf(ev.buf)
     end,

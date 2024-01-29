@@ -87,21 +87,6 @@ willothy = metamodule("willothy", {
 
 return {
   setup = function()
-    -- hijack netrw
-    pcall(vim.api.nvim_clear_autocmds, { group = "FileExplorer" })
-
-    vim.api.nvim_create_autocmd("BufNew", {
-      group = vim.api.nvim_create_augroup(
-        "willothy.file-browsers",
-        { clear = true }
-      ),
-      pattern = "*",
-      callback = function(ev)
-        willothy.fs.hijack_dir_buf(ev.buf)
-      end,
-      desc = "Hijack netrw with switchable file browser",
-    })
-
     vim.api.nvim_create_autocmd("UiEnter", {
       once = true,
       callback = function()
@@ -123,24 +108,6 @@ return {
       end,
     })
 
-    local argc = vim.fn.argc()
-    if argc ~= 1 then
-      return
-    end
-    local last_win
-    local n_wins = 0
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-      if vim.api.nvim_win_get_config(win).zindex == nil then
-        if n_wins >= 1 then
-          return
-        end
-        n_wins = n_wins + 1
-        last_win = last_win or win
-      end
-    end
-    if n_wins == 1 then
-      local buf = vim.api.nvim_win_get_buf(last_win)
-      willothy.fs.hijack_dir_buf(buf)
-    end
+    require("willothy.fs").hijack_netrw()
   end,
 }

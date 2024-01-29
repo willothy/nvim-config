@@ -20,7 +20,7 @@ end
 -- If the user cancels the save, discard all changes.
 --
 -- This is more like the behavior of mini.files, which I like.
-vim.api.nvim_create_autocmd("BufLeave", {
+vim.api.nvim_create_autocmd("BufWinLeave", {
   pattern = "oil://*",
   callback = function()
     oil.save({
@@ -42,7 +42,7 @@ vim.api.nvim_create_autocmd("BufLeave", {
 oil.setup({
   default_file_explorer = false,
   buf_options = {
-    buflisted = false,
+    -- buflisted = false,
   },
   keymaps = {
     ["<C-s>"] = "actions.select_split",
