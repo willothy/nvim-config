@@ -50,7 +50,7 @@ function M.setup()
   o.foldopen = "block,mark,percent,quickfix,search,tag,undo"
   o.foldmethod = "expr"
   o.foldexpr = "v:lua.willothy.ui.foldexpr()"
-  o.foldtext = "v:lua.willothy.ui.foldtext()"
+  o.foldtext = ""
 
   o.splitkeep = "topline"
   -- o.splitkeep = "cursor"

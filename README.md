@@ -26,14 +26,24 @@ to add to your own config :)
 
 - Custom UI elements
   - Simple floating scrollbars for split windows
-  - Custom foldexpr and foldtext
-    - Shows both the last line of the fold
-    - Preserves extmarks / inlay hints
-    - Preserves semantic token highlights
-  - Code action menu with preview, based on dropbar.nvim
-  - Featureful bars and lines based on heirline, dropbar.nvim, and nvim-cokeline
+  - Custom foldexpr <strike>and foldtext</strike>
+    - Foldexpr
+      - Shows both the last line of the fold
+    - Foldtext
+      - Removed as [neovim/neovim#20750](https://github.com/neovim/neovim/pull/20750) renders this redundant,
+        see commit 1a93bd9 for my implementation.
+      - Preserves, extmarks, semantic highlights, and inlay hints.
   - `ui.select` based on [`dropbar.nvim`](https://github.com/Bekaboo/dropbar.nvim)
-    - This has now been merged into `dropbar.nvim`, so ignore the impl in this repo and use that instead :)
+    - This has now been merged into [`dropbar.nvim`](https://github.com/Bekaboo/dropbar.nvim), see the implementation there.
+  - Code action menu with preview, based on dropbar.nvim's ui-select
+    - Preview functionality for ui-select is not upstreamed in dropbar
+      so a fork is used, but should be upstreamed soon.
+  - Simple but featureful bars and lines:
+    - Statusline: [`heirline.nvim`](https://github.com/rebelot/heirline.nvim)
+    - Winbar: [`dropbar.nvim`](https://github.com/Bekaboo/dropbar.nvim)
+    - Bufferline: [`nvim-cokeline`](https://github.com/willothy/nvim-cokeline).
+    - Floating window indicator: [`incline.nvim`](https://github.com/b0o/incline.nvim).
+
 - `rx.lua`: Reactive extensions for Neovim (very WIP, kinda abandoned)
   - [x] signals and effects
   - [x] automatic dependency tracking
