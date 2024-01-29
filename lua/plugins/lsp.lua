@@ -31,8 +31,10 @@ return {
   },
   {
     "smjonas/inc-rename.nvim",
-    config = true,
-    event = "LspAttach",
+    config = function()
+      require("configs.lsp.increname")
+    end,
+    cmd = "IncRename",
   },
   -- LANGUAGE SERVERS & RELATED TOOLS --
   {

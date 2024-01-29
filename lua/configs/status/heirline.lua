@@ -166,6 +166,10 @@ local Filetype = (
         [""] = true,
         ["terminal"] = true,
       },
+      -- excplicitly allow filetypes regardless of buftype
+      filetypes = {
+        ["oil"] = true,
+      },
     },
     update = {
       -- "BufEnter",
@@ -175,7 +179,10 @@ local Filetype = (
         "UpdateHeirlineComponents",
       },
       callback = function(self)
-        if not self.buftypes[vim.bo.buftype] then
+        if
+          not self.buftypes[vim.bo.buftype]
+          and not self.filetypes[vim.bo.filetype]
+        then
           return
         end
         self.val = vim.bo.filetype ~= "" and vim.bo.filetype

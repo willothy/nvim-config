@@ -20,7 +20,9 @@ M.browsers = {
     vim.cmd.vsplit()
     require("oil").open(target)
     local win = vim.api.nvim_get_current_win()
+    local buf = vim.api.nvim_get_current_buf()
     vim.api.nvim_win_set_var(win, "is_oil_win", true)
+
     vim.api.nvim_create_autocmd("BufLeave", {
       buffer = vim.api.nvim_get_current_buf(),
       callback = vim.schedule_wrap(function()
@@ -40,6 +42,14 @@ M.browsers = {
 
     -- fixes icons not showing with edgy.nvim
     require("oil.actions").refresh.callback()
+    -- vim.cmd.nohlsearch()
+    -- require("oil.view").set_win_options()
+    -- require("oil.view").render_buffer_async(vim.api.nvim_win_get_buf(win), {
+    --   refetch = true,
+    -- })
+    -- vim.api.nvim_exec_autocmds("BufReadPre", {
+    --   buffer = vim.api.nvim_win_get_buf(win),
+    -- })
   end,
 }
 
@@ -99,6 +109,7 @@ function M.hijack_netrw()
   local n_wins = 0
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     if vim.api.nvim_win_get_config(win).zindex == nil then
+      -- TODO: do I only want to hijack buffers when there's one window?
       if n_wins >= 1 then
         return
       end
@@ -107,8 +118,7 @@ function M.hijack_netrw()
     end
   end
   if n_wins == 1 then
-    local buf = vim.api.nvim_win_get_buf(last_win)
-    M.hijack_dir_buf(buf)
+    M.hijack_dir_buf(vim.api.nvim_win_get_buf(last_win))
   end
 end
 

@@ -180,9 +180,9 @@ local opts = {
     }),
     sidebar:extend({
       ft = "oil",
-      open = function()
-        require("oil").open()
-      end,
+      -- open = function()
+      --   require("oil").open()
+      -- end,
       wo = {
         winbar = "%{%v:lua.require('oil').winbar()%}",
       },

@@ -54,6 +54,7 @@ resession.setup({
 local lazy_open = false
 
 resession.add_hook("pre_load", function()
+  require("edgy.config").animate.enabled = false
   local view = require("lazy.view")
   if view.view then
     lazy_open = true
@@ -67,6 +68,27 @@ resession.add_hook("pre_load", function()
 end)
 
 resession.add_hook("post_load", function()
+  vim.schedule(function()
+    require("edgy.config").animate.enabled = true
+  end)
+  local oil_view = require("oil.view")
+  vim
+    .iter(vim.api.nvim_list_wins())
+    :filter(function(win)
+      local buf = vim.api.nvim_win_get_buf(win)
+      return vim.bo[buf].filetype == "oil"
+    end)
+    :each(function(win)
+      vim.api.nvim_win_set_var(win, "is_oil_win", true)
+      vim.api.nvim_win_call(win, oil_view.set_win_options)
+      local bufnr = vim.api.nvim_win_get_buf(win)
+      vim.bo[bufnr].buftype = "acwrite"
+      vim.bo[bufnr].swapfile = false
+      vim.bo[bufnr].syntax = "oil"
+      vim.b[bufnr].EditorConfig_disable = 1
+      oil_view.render_buffer_async(bufnr)
+    end)
+
   vim.o.showtabline = 2
   vim.schedule(function()
     willothy.ui.scrolleof.check()
@@ -301,13 +323,26 @@ vim.api.nvim_create_autocmd("QuitPre", {
           end
         end
       end
+      local modified = vim.fn.getbufinfo({
+        bufmodified = true,
+        buflisted = true,
+      })
+      if modified and #modified > 0 then
+        -- don't try to quit if there are unsaved changes
+        local msg = "the following buffers have unsaved changes:\n"
+          .. table.concat(
+            vim.tbl_map(function(buf)
+              return vim.api.nvim_buf_get_name(buf.bufnr)
+            end, modified),
+            "\n"
+          )
+        vim.notify(msg, vim.log.levels.WARN)
+        return
+      end
       if is_last then
         quitting = true
         vim.api.nvim_exec_autocmds("VimLeavePre", {})
-        vim.schedule(function()
-          vim.o.eventignore = ""
-          vim.cmd.quitall()
-        end)
+        vim.cmd.quitall()
       end
     end
   end,

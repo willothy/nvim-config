@@ -17,6 +17,7 @@ wk.register({
   I = bind(vim.lsp.buf, "incoming_calls"):with_desc("incoming calls"),
   n = {
     function()
+      require("inc_rename") -- ensure increname is loaded
       vim.api.nvim_feedkeys(
         ":IncRename " .. vim.fn.expand("<cword>"),
         "n",
