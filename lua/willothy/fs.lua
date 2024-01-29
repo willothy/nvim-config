@@ -49,6 +49,14 @@ M.browsers = {
               and #vim.fn.getbufinfo(buf)[1].windows == 0
             then
               vim.api.nvim_buf_delete(buf, {})
+              if
+                vim.api.nvim_win_is_valid(win)
+                and not require("oil.util").is_oil_bufnr(
+                  vim.api.nvim_win_get_buf(win)
+                )
+              then
+                vim.api.nvim_win_close(win, true)
+              end
             end
           end)
         end
