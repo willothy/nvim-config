@@ -135,7 +135,7 @@ function M.set_browser()
     if not item then
       return
     end
-    M.browser = M.browsers[options[item]] or M.browser
+    M.browser = M.browsers[item] or M.browser
   end)
 end
 
