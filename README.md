@@ -31,7 +31,7 @@ to add to your own config :)
       - Shows both the last line of the fold
     - Foldtext
       - Removed as [neovim/neovim#20750](https://github.com/neovim/neovim/pull/20750) renders this redundant,
-        see commit 1a93bd9 for my implementation.
+        see commit [1a93bd9](https://github.com/willothy/nvim-config/commit/1a93bd9eae4ffd4136ad4ac6d15c6f9974b27864) for my implementation.
       - Preserves, extmarks, semantic highlights, and inlay hints.
   - `ui.select` based on [`dropbar.nvim`](https://github.com/Bekaboo/dropbar.nvim)
     - This has now been merged into [`dropbar.nvim`](https://github.com/Bekaboo/dropbar.nvim), see the implementation there.
