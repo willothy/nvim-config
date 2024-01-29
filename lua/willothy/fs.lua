@@ -15,14 +15,16 @@ M.browsers = {
     require("mini.files").open(target)
   end,
   oil = function(target)
-    -- don't hijack current window
     -- TODO: maybe upstream this into Oil? I think it would be nice to have.
+
     if
-      vim.bo.filetype ~= "oil"
-      or target ~= require("oil").get_current_dir()
+      vim.bo.filetype == "oil"
+      and require("plenary.path"):new(target):absolute()
+        == require("oil").get_current_dir():gsub("/$", "")
     then
-      vim.cmd.vsplit()
+      return
     end
+    vim.cmd.vsplit()
     require("oil").open(target)
     local win = vim.api.nvim_get_current_win()
     local buf = vim.api.nvim_get_current_buf()
