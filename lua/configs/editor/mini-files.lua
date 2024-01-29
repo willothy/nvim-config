@@ -4,9 +4,11 @@ files.setup({
   windows = {
     preview = false,
     width_focus = 25,
-    width_preview = 40,
+    width_nofocus = 25,
+    width_preview = 25,
     height_focus = 20,
     border = "solid",
+    max_number = 3,
   },
   use_as_default_explorer = false,
 })

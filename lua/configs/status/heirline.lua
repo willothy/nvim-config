@@ -172,19 +172,17 @@ local Filetype = (
       },
     },
     update = {
-      -- "BufEnter",
-      -- "OptionSet",
       "User",
       pattern = {
         "UpdateHeirlineComponents",
       },
       callback = function(self)
-        if
-          not self.buftypes[vim.bo.buftype]
-          and not self.filetypes[vim.bo.filetype]
-        then
-          return
-        end
+        -- if
+        --   not self.buftypes[vim.bo.buftype]
+        --   and not self.filetypes[vim.bo.filetype]
+        -- then
+        --   return
+        -- end
         self.val = vim.bo.filetype ~= "" and vim.bo.filetype
           or vim.fn.fnamemodify(
             string.lower(vim.api.nvim_buf_get_name(0)),
@@ -207,10 +205,13 @@ local Devicon = {
     return package.loaded["nvim-web-devicons"] ~= nil
   end,
   static = {
-    buftypes = {
-      [""] = true,
-      ["terminal"] = true,
-    },
+    -- buftypes = {
+    --   [""] = true,
+    --   ["terminal"] = true,
+    -- },
+    -- filetypes = {
+    --   ["oil"] = true,
+    -- },
   },
   update = {
     "User",
@@ -218,9 +219,12 @@ local Devicon = {
       "UpdateHeirlineComponents",
     },
     callback = function(self)
-      if not self.buftypes[vim.bo.buftype] then
-        return
-      end
+      -- if
+      --   not self.buftypes[vim.bo.buftype]
+      --   and not self.filetypes[vim.bo.filetype]
+      -- then
+      --   return
+      -- end
       local filename = vim.fn.expand("%")
       local extension = vim.fn.fnamemodify(filename, ":e")
       local devicons = require("nvim-web-devicons")

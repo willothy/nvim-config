@@ -50,9 +50,50 @@ oil.setup({
     ["<C-h>"] = false,
     ["<C-l>"] = false,
     ["<C-/>"] = "actions.refresh",
-    ["q"] = "actions.close",
-    ["l"] = "actions.select",
+    ["q"] = {
+      callback = function()
+        local win = vim.api.nvim_get_current_win()
+        oil.close()
+        if vim.api.nvim_win_is_valid(win) then
+          vim.api.nvim_win_close(win, false)
+        end
+      end,
+    },
+    ["l"] = {
+      callback = function()
+        local win = vim.api.nvim_get_current_win()
+        local entry = oil.get_cursor_entry()
+        local vertical, split
+        if entry.type == "file" then
+          vertical = true
+          split = "belowright"
+        end
+        oil.select({
+          vertical = vertical,
+          split = split,
+          close = false,
+        }, function()
+          if vim.api.nvim_win_is_valid(win) then
+            vim.api.nvim_set_current_win(win)
+          end
+        end)
+      end,
+    },
     ["h"] = "actions.parent",
+    ["<CR>"] = {
+      callback = function()
+        local win = vim.api.nvim_get_current_win()
+        oil.select({
+          vertical = true,
+          split = "belowright",
+          close = true,
+        }, function()
+          if vim.api.nvim_win_is_valid(win) then
+            vim.api.nvim_win_close(win, false)
+          end
+        end)
+      end,
+    },
   },
   win_options = {
     statuscolumn = "",

@@ -17,39 +17,41 @@ M.browsers = {
   oil = function(target)
     -- don't hijack current window
     -- TODO: maybe upstream this into Oil? I think it would be nice to have.
-    vim.cmd.vsplit()
+    if
+      vim.bo.filetype ~= "oil"
+      or target ~= require("oil").get_current_dir()
+    then
+      vim.cmd.vsplit()
+    end
     require("oil").open(target)
     local win = vim.api.nvim_get_current_win()
     local buf = vim.api.nvim_get_current_buf()
-    vim.api.nvim_win_set_var(win, "is_oil_win", true)
 
     vim.api.nvim_create_autocmd("BufLeave", {
-      buffer = vim.api.nvim_get_current_buf(),
-      callback = vim.schedule_wrap(function()
+      buffer = buf,
+      callback = function()
         if
           vim.api.nvim_win_is_valid(win)
           -- only close the window if the buffer has changed
           -- basically we treat this autocmd as "BufWinLeave" but for
           -- all windows containing oil buffers, not just the last one.
-          and not require("oil.util").is_oil_bufnr(
-            vim.api.nvim_win_get_buf(win)
-          )
+          and vim.api.nvim_win_get_buf(win) ~= buf
         then
           vim.api.nvim_win_close(win, true)
+        else
+          -- delete the buffer immediately if its no longer displayed
+          -- fixes icons not showing with edgy.nvim
+          vim.schedule(function()
+            if
+              vim.api.nvim_buf_is_valid(buf)
+              and #vim.fn.getbufinfo(buf)[1].windows == 0
+            then
+              vim.api.nvim_buf_delete(buf, {})
+            end
+          end)
         end
-      end),
+      end,
     })
-
-    -- fixes icons not showing with edgy.nvim
-    require("oil.actions").refresh.callback()
-    -- vim.cmd.nohlsearch()
-    -- require("oil.view").set_win_options()
-    -- require("oil.view").render_buffer_async(vim.api.nvim_win_get_buf(win), {
-    --   refetch = true,
-    -- })
-    -- vim.api.nvim_exec_autocmds("BufReadPre", {
-    --   buffer = vim.api.nvim_win_get_buf(win),
-    -- })
   end,
 }
 

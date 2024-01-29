@@ -12,6 +12,7 @@
         // "nvim-cokeline",
         "lazy.nvim",
         "nio",
+        // "oil.nvim",
         "fidget.nvim",
         "plenary.nvim",
         "edgy.nvim",
