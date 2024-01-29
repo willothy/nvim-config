@@ -55,6 +55,7 @@ function M.show()
   if
     (active_win and vim.api.nvim_win_is_valid(active_win))
     or (vim.w.cursor_word == "" or vim.w.cursor_word == nil)
+    or (require("noice.lsp.docs").get("hover"):win() ~= nil)
     or not enabled
   then
     return
@@ -80,6 +81,16 @@ function M.show()
       active_win = nil
     end,
   })
+end
+
+local docs = require("noice.lsp.docs")
+local get = docs.get
+---@diagnostic disable-next-line: duplicate-set-field
+docs.get = function(name)
+  if name == "hover" then
+    M.hide()
+  end
+  return get(name)
 end
 
 willothy.fn.create_command("DiagnosticFloat", {
