@@ -15,18 +15,19 @@ M.browsers = {
     require("mini.files").open(target)
   end,
   oil = function(target)
+    -- don't hijack current window
     vim.cmd.vsplit()
     local win = vim.api.nvim_get_current_win()
-    local au
+    vim.api.nvim_win_set_var(win, "is_oil_win", true)
     require("oil").open(target)
-    au = vim.api.nvim_create_autocmd({ "BufLeave" }, {
+    vim.api.nvim_create_autocmd("BufWinLeave", {
       buffer = vim.api.nvim_get_current_buf(),
-      callback = vim.schedule_wrap(function()
-        if vim.api.nvim_win_is_valid(win) and vim.bo[0].filetype ~= "oil" then
+      once = true,
+      callback = function()
+        if vim.api.nvim_win_is_valid(win) then
           vim.api.nvim_win_close(win, false)
-          vim.api.nvim_del_autocmd(au)
         end
-      end),
+      end,
     })
 
     -- fixes icons not showing with edgy.nvim
