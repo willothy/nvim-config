@@ -174,7 +174,7 @@ local commands = {
     function()
       require("lazy").sync()
     end,
-    desc = "Sync the telescope configuration",
+    desc = "Update plugins",
   },
   DrawDiagram = {
     function()
