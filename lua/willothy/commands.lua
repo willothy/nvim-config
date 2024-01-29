@@ -182,25 +182,16 @@ local commands = {
     end,
     desc = "Draw a diagram",
   },
+  Q = { "q", desc = ":q, common cmdline typo" },
+  W = { "w", desc = ":w, common cmdline typo" },
 }
 
 return {
   setup = function()
     for name, cmd in pairs(commands) do
-      vim.api.nvim_create_user_command(name, cmd[1], {
-        buffer = cmd.buffer,
-        nargs = cmd.nargs,
-        bar = cmd.bar,
-        bang = cmd.bang,
-        complete = cmd.complete,
-        preview = cmd.preview,
-        desc = cmd.desc,
-        range = cmd.range,
-        count = cmd.count,
-        addr = cmd.addr,
-        register = cmd.register,
-        force = cmd.force,
-      })
+      local command = cmd[1]
+      cmd[1] = nil
+      vim.api.nvim_create_user_command(name, command, cmd)
     end
   end,
 }
