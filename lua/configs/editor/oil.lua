@@ -63,14 +63,18 @@ oil.setup({
       callback = function()
         local win = vim.api.nvim_get_current_win()
         local entry = oil.get_cursor_entry()
-        local vertical, split
+        local vertical, split, tgt_win
         if entry.type == "file" then
-          vertical = true
-          split = "belowright"
+          tgt_win = require("flatten.core").smart_open()
+          if not tgt_win then
+            vertical = true
+            split = "belowright"
+          end
         end
         oil.select({
           vertical = vertical,
           split = split,
+          win = tgt_win,
           close = false,
         }, function()
           if vim.api.nvim_win_is_valid(win) then
