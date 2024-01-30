@@ -29,6 +29,19 @@ M.browsers = {
     local win = vim.api.nvim_get_current_win()
     local buf = vim.api.nvim_get_current_buf()
 
+    local winhl = vim.api.nvim_get_option_value("winhighlight", {
+      win = win,
+    })
+    winhl = winhl:gsub("NormalNC:%w+,?", "")
+    if winhl == "" then
+      winhl = "NormalNC:Normal"
+    else
+      winhl = winhl .. ",NormalNC:Normal"
+    end
+    vim.api.nvim_set_option_value("winhighlight", winhl, {
+      win = win,
+    })
+
     vim.api.nvim_create_autocmd("BufLeave", {
       buffer = buf,
       callback = function()
