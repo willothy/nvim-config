@@ -31,7 +31,9 @@ return {
   },
   {
     "nvim-pack/nvim-spectre",
-    config = true,
+    opts = {
+      is_block_ui_break = true,
+    },
   },
   {
     "willothy/moveline.nvim",
