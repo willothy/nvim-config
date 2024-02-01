@@ -226,6 +226,7 @@ return {
   },
   {
     "luukvbaal/statuscol.nvim",
+    dir = "~/projects/lua/statuscol.nvim/",
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },

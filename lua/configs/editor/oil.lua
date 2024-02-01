@@ -23,6 +23,9 @@ end
 vim.api.nvim_create_autocmd("BufWinLeave", {
   pattern = "oil://*",
   callback = function()
+    if require("oil.util").is_oil_bufnr(vim.api.nvim_get_current_buf()) then
+      return
+    end
     oil.save({
       confirm = true,
     }, function(err)
