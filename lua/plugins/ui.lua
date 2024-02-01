@@ -225,8 +225,10 @@ return {
     event = "UiEnter",
   },
   {
-    "luukvbaal/statuscol.nvim",
-    dir = "~/projects/lua/statuscol.nvim/",
+    -- "luukvbaal/statuscol.nvim",
+    -- dir = "~/projects/lua/statuscol.nvim/",
+    "willothy/statuscol.nvim",
+    branch = "wip",
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },
