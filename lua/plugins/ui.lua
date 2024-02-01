@@ -54,11 +54,6 @@ return {
     "3rd/image.nvim",
     event = "VeryLazy",
     config = function()
-      package.path = package.path
-        .. ";"
-        .. "/usr/share/lua/5.1/?/init.lua;"
-        .. ";"
-        .. "/usr/share/lua/5.1/?.lua;"
       require("image").setup({})
     end,
   },
