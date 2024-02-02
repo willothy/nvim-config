@@ -16,65 +16,66 @@ M.browsers = {
   end,
   oil = function(target)
     -- TODO: maybe upstream this into Oil? I think it would be nice to have.
-
-    if
-      vim.bo.filetype == "oil"
-      and require("plenary.path"):new(target):absolute()
-        == require("oil").get_current_dir():gsub("/$", "")
-    then
-      return
-    end
-    vim.cmd.vsplit()
     require("oil").open(target)
-    local win = vim.api.nvim_get_current_win()
-    local buf = vim.api.nvim_get_current_buf()
 
-    local winhl = vim.api.nvim_get_option_value("winhighlight", {
-      win = win,
-    })
-    winhl = winhl:gsub("NormalNC:%w+,?", "")
-    if winhl == "" then
-      winhl = "NormalNC:Normal"
-    else
-      winhl = winhl .. ",NormalNC:Normal"
-    end
-    vim.api.nvim_set_option_value("winhighlight", winhl, {
-      win = win,
-    })
-
-    vim.api.nvim_create_autocmd("BufLeave", {
-      buffer = buf,
-      callback = function()
-        if
-          vim.api.nvim_win_is_valid(win)
-          -- only close the window if the buffer has changed
-          -- basically we treat this autocmd as "BufWinLeave" but for
-          -- all windows containing oil buffers, not just the last one.
-          and vim.api.nvim_win_get_buf(win) ~= buf
-        then
-          vim.api.nvim_win_close(win, true)
-        else
-          -- delete the buffer immediately if its no longer displayed
-          -- fixes icons not showing with edgy.nvim
-          vim.schedule(function()
-            if
-              vim.api.nvim_buf_is_valid(buf)
-              and #vim.fn.getbufinfo(buf)[1].windows == 0
-            then
-              vim.api.nvim_buf_delete(buf, {})
-              if
-                vim.api.nvim_win_is_valid(win)
-                and not require("oil.util").is_oil_bufnr(
-                  vim.api.nvim_win_get_buf(win)
-                )
-              then
-                vim.api.nvim_win_close(win, true)
-              end
-            end
-          end)
-        end
-      end,
-    })
+    -- if
+    --   vim.bo.filetype == "oil"
+    --   and require("plenary.path"):new(target):absolute()
+    --     == require("oil").get_current_dir():gsub("/$", "")
+    -- then
+    --   return
+    -- end
+    -- vim.cmd.vsplit()
+    -- require("oil").open(target)
+    -- local win = vim.api.nvim_get_current_win()
+    -- local buf = vim.api.nvim_get_current_buf()
+    --
+    -- local winhl = vim.api.nvim_get_option_value("winhighlight", {
+    --   win = win,
+    -- })
+    -- winhl = winhl:gsub("NormalNC:%w+,?", "")
+    -- if winhl == "" then
+    --   winhl = "NormalNC:Normal"
+    -- else
+    --   winhl = winhl .. ",NormalNC:Normal"
+    -- end
+    -- vim.api.nvim_set_option_value("winhighlight", winhl, {
+    --   win = win,
+    -- })
+    --
+    -- vim.api.nvim_create_autocmd("BufLeave", {
+    --   buffer = buf,
+    --   callback = function()
+    --     if
+    --       vim.api.nvim_win_is_valid(win)
+    --       -- only close the window if the buffer has changed
+    --       -- basically we treat this autocmd as "BufWinLeave" but for
+    --       -- all windows containing oil buffers, not just the last one.
+    --       and vim.api.nvim_win_get_buf(win) ~= buf
+    --     then
+    --       vim.api.nvim_win_close(win, true)
+    --     else
+    --       -- delete the buffer immediately if its no longer displayed
+    --       -- fixes icons not showing with edgy.nvim
+    --       vim.schedule(function()
+    --         if
+    --           vim.api.nvim_buf_is_valid(buf)
+    --           and #vim.fn.getbufinfo(buf)[1].windows == 0
+    --         then
+    --           vim.api.nvim_buf_delete(buf, {})
+    --           if
+    --             vim.api.nvim_win_is_valid(win)
+    --             and not require("oil.util").is_oil_bufnr(
+    --               vim.api.nvim_win_get_buf(win)
+    --             )
+    --           then
+    --             vim.api.nvim_win_close(win, true)
+    --           end
+    --         end
+    --       end)
+    --     end
+    --   end,
+    -- })
   end,
 }
 
@@ -181,6 +182,35 @@ function M.browse(target, browser)
     browse = M.browser
   end
   browse(target)
+end
+
+---@param path string
+---@param length integer
+function M.incremental_shorten(path, length)
+  local sep = require("plenary.path").path.sep
+  local segments = vim.fn.split(path, sep)
+  local len = #segments
+  local strlen = string.len(path)
+  while strlen > length do
+    local all_short = true
+    for i = 1, len do
+      local l = vim.fn.strcharlen(segments[i])
+      if l > 1 then
+        segments[i] = vim.fn.strcharpart(segments[i], 0, l - 1)
+        strlen = strlen - 1
+        all_short = false
+      end
+      if strlen <= length then
+        break
+      end
+    end
+    if all_short then
+      -- the path cannot be shortened any further
+      -- if we don't break here, we'll be stuck in an infinite loop
+      break
+    end
+  end
+  return table.concat(segments, sep)
 end
 
 ---@param path string

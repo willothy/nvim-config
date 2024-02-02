@@ -178,24 +178,24 @@ local opts = {
         require("overseer").open()
       end,
     }),
-    sidebar:extend({
-      ft = "oil",
-      -- open = function()
-      --   require("oil").open()
-      -- end,
-      wo = {
-        winbar = "%{%v:lua.require('oil').winbar()%}",
-      },
-      size = {
-        width = function()
-          if vim.o.columns > 140 then
-            return 35
-          else
-            return math.floor(vim.o.columns * 0.25)
-          end
-        end,
-      },
-    }),
+    -- sidebar:extend({
+    --   ft = "oil",
+    --   -- open = function()
+    --   --   require("oil").open()
+    --   -- end,
+    --   wo = {
+    --     winbar = "%{%v:lua.require('oil').winbar()%}",
+    --   },
+    --   size = {
+    --     width = function()
+    --       if vim.o.columns > 140 then
+    --         return 35
+    --       else
+    --         return math.floor(vim.o.columns * 0.25)
+    --       end
+    --     end,
+    --   },
+    -- }),
     sidebar:extend({
       ft = "SidebarNvim",
       title = "Sidebar",

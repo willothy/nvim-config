@@ -1,6 +1,7 @@
 local focus = require("focus")
 
 local ignore_filetypes = {
+  ["oil"] = true,
   ["neo-tree"] = true,
   ["dap-repl"] = true,
   ["neotest-summary"] = true,

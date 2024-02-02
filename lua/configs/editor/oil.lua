@@ -8,37 +8,51 @@ oil.winbar = function()
   local width = vim.api.nvim_win_get_width(0)
   local limit = width - 2
   if string.len(path) > limit then
-    local parents = vim.iter(vim.fs.parents(path)):totable()
-    local len = #parents + 1
-    local max_seg_width = math.floor(limit / (len + 1))
-    path = vim.fn.pathshorten(path, math.max(1, max_seg_width))
+    path = willothy.fs.incremental_shorten(path, limit)
   end
   return path .. "/"
 end
+
+vim.api.nvim_create_autocmd("WinNew", {
+  pattern = "oil://*",
+  callback = function()
+    -- ensure the window is the one that was current
+    -- when the autocmd was executed, since the rest
+    -- of the callback will executed later.
+    local win = vim.api.nvim_get_current_win()
+    vim.schedule(function()
+      if
+        vim.api.nvim_win_is_valid(win)
+        and require("oil.util").is_oil_bufnr(vim.api.nvim_win_get_buf(win))
+      then
+        vim.w[win].oil_opened = true
+      end
+    end)
+  end,
+})
 
 -- Auto-confirm changes on exit.
 -- If the user cancels the save, discard all changes.
 --
 -- This is more like the behavior of mini.files, which I like.
-vim.api.nvim_create_autocmd("BufWinLeave", {
-  pattern = "oil://*",
-  callback = function()
-    if require("oil.util").is_oil_bufnr(vim.api.nvim_get_current_buf()) then
-      return
-    end
-    oil.save({
-      confirm = true,
-    }, function(err)
-      if err then
-        if err == "Canceled" then
-          oil.discard_all_changes()
-        else
-          vim.notify(err, vim.log.levels.WARN, {
-            title = "Oil",
-          })
+vim.api.nvim_create_autocmd("BufHidden", {
+  callback = function(ev)
+    local buf = ev.buf
+    if require("oil.util").is_oil_bufnr(buf) then
+      oil.save({
+        confirm = true,
+      }, function(err)
+        if err then
+          if err == "Canceled" then
+            oil.discard_all_changes()
+          else
+            vim.notify(err, vim.log.levels.WARN, {
+              title = "Oil",
+            })
+          end
         end
-      end
-    end)
+      end)
+    end
   end,
 })
 
@@ -49,15 +63,26 @@ oil.setup({
   },
   keymaps = {
     ["<C-s>"] = "actions.select_split",
-    ["<C-v>"] = "actions.select_vsplit",
+    ["<C-v>"] = {
+      callback = function() end,
+    },
     ["<C-h>"] = false,
     ["<C-l>"] = false,
     ["<C-/>"] = "actions.refresh",
     ["q"] = {
       callback = function()
         local win = vim.api.nvim_get_current_win()
+        local alt = vim.api.nvim_win_call(win, function()
+          return vim.fn.winnr("#")
+        end)
+
         oil.close()
-        if vim.api.nvim_win_is_valid(win) then
+
+        if
+          vim.api.nvim_win_is_valid(win)
+          and vim.w[win].oil_opened
+          and alt ~= 0
+        then
           vim.api.nvim_win_close(win, false)
         end
       end,
@@ -87,20 +112,7 @@ oil.setup({
       end,
     },
     ["h"] = "actions.parent",
-    ["<CR>"] = {
-      callback = function()
-        local win = vim.api.nvim_get_current_win()
-        oil.select({
-          vertical = true,
-          split = "belowright",
-          close = true,
-        }, function()
-          if vim.api.nvim_win_is_valid(win) then
-            vim.api.nvim_win_close(win, false)
-          end
-        end)
-      end,
-    },
+    ["<CR>"] = "actions.select",
   },
   win_options = {
     statuscolumn = "",

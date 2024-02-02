@@ -77,10 +77,13 @@ end
 
 -- require("incline").setup({
 --   window = {
---     placement = { horizontal = "right", vertical = "bottom" },
+--     placement = {
+--       horizontal = "right",
+--       vertical = "top",
+--     },
 --     overlap = {
 --       winbar = false,
---       tabline = false,
+--       tabline = true,
 --       borders = false,
 --       statusline = false,
 --     },
