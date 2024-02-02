@@ -52,3 +52,5 @@ to add to your own config :)
 - `player.lua`: Playerctl UI for Neovim
   - [x] playerctl wrapper
   - [ ] nui UI (wip)
+- `native/`: Native module written in Rust
+  - [x] basic http client (wip)
