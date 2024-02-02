@@ -233,8 +233,30 @@ impl Poppable for RequestOpts {
     }
 }
 
+enum StringOrNil {
+    String(String),
+    Nil,
+}
+
+impl Pushable for StringOrNil {
+    unsafe fn push(
+        self,
+        lstate: *mut oxi::lua::ffi::lua_State,
+    ) -> Result<std::ffi::c_int, oxi::lua::Error> {
+        match self {
+            StringOrNil::String(s) => s.push(lstate),
+            StringOrNil::Nil => oxi::Object::nil().push(lstate),
+        }
+    }
+}
+
 fn request(
-    (method, url, opts, callback): (LuaMethod, LuaUrl, RequestOpts, Function<(bool, String), ()>),
+    (method, url, opts, callback): (
+        LuaMethod,
+        LuaUrl,
+        RequestOpts,
+        Function<(bool, StringOrNil), ()>,
+    ),
 ) -> oxi::Result<Object> {
     // TODO: Can I reuse clients by caching them somewhere in the Lua runtime?
     let mut request = reqwest::Client::new().request(method.0, url.0);
@@ -286,7 +308,11 @@ fn request(
         let res = retval.clone();
         let success = success.clone();
         move || {
-            let res = res.blocking_lock().take().unwrap_or("unknown".to_string());
+            let res = res
+                .blocking_lock()
+                .take()
+                .map(|s| StringOrNil::String(s))
+                .unwrap_or(StringOrNil::Nil);
 
             let success = success.load(std::sync::atomic::Ordering::Relaxed);
             callback.call((success, res))?;
