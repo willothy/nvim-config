@@ -61,6 +61,14 @@ require("lazy").setup({
     config = true,
     event = "VimEnter",
   },
+  {
+    name = "sidecar",
+    main = "sidecar",
+    dir = conf_path,
+    build = "cargo build --release && cp target/release/libsidecar.so "
+      .. conf_path
+      .. "/lua/sidecar.so",
+  },
 }, {
   defaults = {
     lazy = true,

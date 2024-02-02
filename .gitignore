@@ -2,3 +2,6 @@ tags
 importgraph.dot
 .repro
 repro.lua
+Cargo.lock
+target/
+lua/sidecar.so

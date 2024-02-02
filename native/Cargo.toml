@@ -1,0 +1,13 @@
+[package]
+name = "sidecar"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "sidecar"
+crate-type = ["cdylib"]
+
+[dependencies]
+nvim-oxi = { version = "0.4.2", features = ["neovim-nightly", "libuv", "miniserde"] }
+reqwest = "0.11.24"
+tokio = { version = "1.35.1", features = ["full"] }
