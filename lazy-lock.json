@@ -1,6 +1,7 @@
 {
   "Comment.nvim": { "branch": "master", "commit": "0236521ea582747b58869cb72f70ccfa967d2e89" },
   "Hypersonic.nvim": { "branch": "main", "commit": "a98dbd6b5ac1aac3cd895990e08d1ea40e67a9e3" },
+  "LuaSnip": { "branch": "master", "commit": "2dbef19461198630b3d7c39f414d09fb07d1fdd2" },
   "NeoComposer.nvim": { "branch": "main", "commit": "b06e8e88e289947937f241f76e86f7c46f4a5805" },
   "actually.nvim": { "branch": "main", "commit": "a735082694b1f06c4d9874f2a7288dba94acdb71" },
   "aerial.nvim": { "branch": "master", "commit": "e9661d4f739508377f42528fd08a85c4c8feba6e" },
@@ -15,6 +16,7 @@
   "cmp-dap": { "branch": "master", "commit": "ea92773e84c0ad3288c3bc5e452ac91559669087" },
   "cmp-nvim-lsp": { "branch": "main", "commit": "5af77f54de1b16c34b23cba810150689a3a90312" },
   "cmp-path": { "branch": "main", "commit": "91ff86cd9c29299a64f968ebb45846c485725f23" },
+  "cmp_luasnip": { "branch": "master", "commit": "05a9ab28b53f71d1aece421ef32fee2cb857a843" },
   "compiler-explorer.nvim": { "branch": "master", "commit": "ee8e7a2808bdad67cd2acb61b5c9ffa7735c7ec9" },
   "conform.nvim": { "branch": "master", "commit": "4588008a7c5b57fbff97fdfb529c059235cdc7ee" },
   "copilot-cmp": { "branch": "master", "commit": "72fbaa03695779f8349be3ac54fa8bd77eed3ee3" },

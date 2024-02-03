@@ -40,58 +40,13 @@ local format = {
 }
 
 local main_sources = cmp.config.sources({
-  { name = "nvim_lsp", max_item_count = 40 },
-  { name = "copilot", max_item_count = 2 },
-  { name = "cody" },
+  { name = "nvim_lsp", max_item_count = 20 },
   { name = "snippets" },
+  { name = "copilot", max_item_count = 2 },
+  { name = "cody", max_item_count = 2 },
   { name = "buffer", max_item_count = 4 },
   { name = "path" },
 })
-
--- add highlights for nvim-cmp
-local cmp_lsp = require("cmp_nvim_lsp.source")
-cmp_lsp.resolve = function(self, item, cb)
-  -- client is stopped.
-  if self.client.is_stopped() then
-    return cb()
-  end
-
-  -- client has no completion capability.
-  if
-    not self:_get(
-      self.client.server_capabilities,
-      { "completionProvider", "resolveProvider" }
-    )
-  then
-    return cb()
-  end
-
-  if not item.documentation then
-    if item.insertText then
-      item.documentation = {
-        kind = "markdown",
-        value = string.format(
-          "```%s\n%s\n```",
-          vim.bo.filetype,
-          item.insertText
-        ),
-      }
-    elseif item.textEdit then
-      item.documentation = {
-        kind = "markdown",
-        value = string.format(
-          "```%s\n%s\n```",
-          vim.bo.filetype,
-          item.textEdit.newText
-        ),
-      }
-    end
-  end
-
-  self:_request("completionItem/resolve", item, function(_, response)
-    cb(response or item)
-  end)
-end
 
 local enabled = true
 local main_enabled = true

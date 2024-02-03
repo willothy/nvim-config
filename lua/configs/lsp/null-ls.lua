@@ -6,7 +6,7 @@ null_ls.setup({
     -- null_ls.builtins.formatting.protolint,
     -- null_ls.builtins.diagnostics.protolint,
     -- builtins.formatting.markdownlint,
-    -- builtins.formatting.taplo,
+    builtins.formatting.taplo,
     -- builtins.diagnostics.commitlint,
     -- builtins.diagnostics.markdownlint,
     -- builtins.diagnostics.semgrep,

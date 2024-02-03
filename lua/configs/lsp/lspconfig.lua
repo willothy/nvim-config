@@ -1,8 +1,41 @@
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- auto-create nested tables
+local mt
+mt = {
+  __index = function(self, k)
+    local v = setmetatable({}, mt)
+    self[k] = v
+    return v
+  end,
+}
+
+---@type lsp.ClientCapabilities
+local capabilities = setmetatable({}, mt)
 
 capabilities.textDocument.foldingRange = {
   dynamicRegistration = false,
   lineFoldingOnly = true,
+}
+
+capabilities.textDocument.formatting = {
+  dynamicRegistration = false,
+}
+
+capabilities.textDocument.semanticTokens.augmentsSyntaxTokens = false
+
+capabilities.textDocument.completion.completionItem = {
+  contextSupport = true,
+  snippetSupport = true,
+  deprecatedSupport = true,
+  commitCharactersSupport = true,
+  resolveSupport = {
+    properties = {
+      "documentation",
+      "detail",
+      "additionalTextEdits",
+    },
+  },
+  labelDetailsSupport = true,
+  documentationFormat = { "markdown", "plaintext" },
 }
 
 -- send actions with hover request
@@ -13,15 +46,18 @@ capabilities.experimental = {
   snippetTextEdit = true,
   codeActionGroup = true,
   ssr = true,
+  commands = {
+    "rust-analyzer.runSingle",
+    "rust-analyzer.debugSingle",
+    "rust-analyzer.showReferences",
+    "rust-analyzer.gotoLocation",
+    "editor.action.triggerParameterHints",
+  },
 }
 
-capabilities.textDocument.formatting = {
-  dynamicRegistration = false,
-}
+local default_capabilities = vim.lsp.protocol.make_client_capabilities()
 
--- capabilities.general.positionEncodings = { "utf-8" }
-
-capabilities.textDocument.semanticTokens.augmentsSyntaxTokens = false
+capabilities = vim.tbl_deep_extend("force", default_capabilities, capabilities)
 
 local icons = willothy.ui.icons
 require("mason").setup()
