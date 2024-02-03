@@ -1,17 +1,18 @@
 use std::{
     collections::HashMap,
-    sync::{atomic::AtomicBool, Arc},
+    sync::{atomic::AtomicBool, Arc, OnceLock},
 };
 
 use nvim_oxi as oxi;
 use oxi::{
+    conversion::ToObject,
     libuv::AsyncHandle,
     lua::{Poppable, Pushable},
     Dictionary, Function, Object,
 };
 use reqwest::{
     header::{HeaderMap, HeaderName, HeaderValue},
-    Url, Version,
+    Method, Url, Version,
 };
 use tokio::sync::Mutex;
 
@@ -73,6 +74,37 @@ fn oxi_type_name(obj: &oxi::Object) -> &'static str {
         oxi::ObjectKind::Buffer => "buffer",
         oxi::ObjectKind::Window => "window",
         oxi::ObjectKind::TabPage => "tabpage",
+    }
+}
+
+fn from_value(value: serde_json::Value) -> Result<Object, oxi::conversion::Error> {
+    match value {
+        serde_json::Value::Null => Ok(Object::nil()),
+        serde_json::Value::Bool(b) => b.to_object(),
+        serde_json::Value::Number(n) => {
+            if n.is_u64() {
+                n.as_u64().expect("u64").to_object()
+            } else if n.is_i64() {
+                n.as_i64().expect("i64").to_object()
+            } else {
+                n.as_f64().expect("f64").to_object()
+            }
+        }
+        serde_json::Value::String(s) => s.to_object(),
+        serde_json::Value::Array(a) => {
+            let mut list = Vec::new();
+            for v in a {
+                Vec::push(&mut list, from_value(v)?);
+            }
+            list.to_object()
+        }
+        serde_json::Value::Object(o) => {
+            let mut table = HashMap::new();
+            for (k, v) in o {
+                table.insert(oxi::String::from(&*k), from_value(v)?);
+            }
+            table.to_object()
+        }
     }
 }
 
@@ -233,33 +265,38 @@ impl Poppable for RequestOpts {
     }
 }
 
-enum StringOrNil {
-    String(String),
-    Nil,
-}
-
-impl Pushable for StringOrNil {
-    unsafe fn push(
-        self,
-        lstate: *mut oxi::lua::ffi::lua_State,
-    ) -> Result<std::ffi::c_int, oxi::lua::Error> {
-        match self {
-            StringOrNil::String(s) => s.push(lstate),
-            StringOrNil::Nil => oxi::Object::nil().push(lstate),
-        }
-    }
-}
-
 fn request(
-    (method, url, opts, callback): (
+    (LuaMethod(method), LuaUrl(url), opts, callback): (
         LuaMethod,
         LuaUrl,
         RequestOpts,
-        Function<(bool, StringOrNil), ()>,
+        Function<(bool, Option<Object>), ()>,
     ),
 ) -> oxi::Result<Object> {
     // TODO: Can I reuse clients by caching them somewhere in the Lua runtime?
-    let mut request = reqwest::Client::new().request(method.0, url.0);
+    let client = reqwest::ClientBuilder::new()
+        .referer(true)
+        .build()
+        .map_err(|e| err(e.to_string()))?;
+
+    // let mut request = client.request(method.0, url.0);
+    let mut request = match method {
+        Method::GET => client.get(url),
+        Method::POST => client.post(url),
+        Method::DELETE => client.delete(url),
+        // Method::CONNECT => request,
+        // Method::OPTIONS => request,
+        // Method::PUT => request,
+        // Method::PATCH => request,
+        // Method::TRACE => request,
+        // Method::HEAD => request,
+        _ => {
+            return Err(err(format!(
+                "invalid method: {}",
+                method.as_str().to_string()
+            )));
+        }
+    };
 
     if let Some(version) = opts.version {
         match version.as_str() {
@@ -272,20 +309,28 @@ fn request(
                 return Err(err(format!("invalid version {invalid}")));
             }
         }
-    } else {
-        request = request.version(Version::HTTP_11);
     }
+    // else {
+    //     request = request.version(Version::HTTP_11);
+    // }
+
+    // request = request.bearer_auth(opts.bearer);
 
     if let Some(headers) = opts.headers {
-        let mut h = HeaderMap::new();
         for (k, v) in headers {
-            h.insert(
+            request = request.header(
                 HeaderName::try_from(k).map_err(err)?,
                 HeaderValue::try_from(v).map_err(err)?,
             );
         }
-        request = request.headers(h);
     }
+
+    request = request.header(
+        HeaderName::try_from("Referer").map_err(err)?,
+        HeaderValue::try_from("https://leetcode.com").map_err(err)?,
+    );
+
+    // request = request.header("Referer", "https://leetcode.com");
 
     if let Some(body) = opts.body {
         request = request.json(&body);
@@ -303,19 +348,24 @@ fn request(
     // we need to use a few Arcs and Mutexes to share the return value and whether the request was
     // successful.
     let success = Arc::new(AtomicBool::new(true));
-    let retval = Arc::new(Mutex::new(None));
+    let retval: Arc<Mutex<Option<serde_json::Value>>> = Arc::new(Mutex::new(None));
+    // let err: OnceLock<Option<Object>> = std::sync::OnceLock::new();
     let handle = AsyncHandle::new({
         let res = retval.clone();
         let success = success.clone();
         move || {
-            let res = res
-                .blocking_lock()
-                .take()
-                .map(|s| StringOrNil::String(s))
-                .unwrap_or(StringOrNil::Nil);
+            let res = res.blocking_lock().take();
 
             let success = success.load(std::sync::atomic::Ordering::Relaxed);
-            callback.call((success, res))?;
+            callback.call((
+                success,
+                res.map(|x| {
+                    from_value(x).unwrap()
+                    // x.into_object()
+                    //     .map_err(|e| oxi::Error::from(oxi::api::Error::Other(format!("{e}"))))
+                    //     .unwrap()
+                }),
+            ))?;
             oxi::Result::Ok(())
         }
     })?;
@@ -327,12 +377,12 @@ fn request(
             match request.send().await {
                 Ok(res) => {
                     // we want to report it if there's an error with the actual request
-                    retval.lock().await.replace(res.text().await.map_err(err)?);
+                    retval.lock().await.replace(res.json().await.map_err(err)?);
                     handle.send()?;
                 }
                 Err(e) => {
                     success.store(false, std::sync::atomic::Ordering::Relaxed);
-                    retval.lock().await.replace(format!("{:?}", e));
+                    // retval.lock().await.replace(format!("{:?}", e).to_object()?);
                     handle.send()?;
                 }
             }
