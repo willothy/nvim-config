@@ -1,6 +1,6 @@
 use std::{
     collections::HashMap,
-    sync::{atomic::AtomicBool, Arc, OnceLock},
+    sync::{atomic::AtomicBool, Arc, Once, OnceLock},
 };
 
 use nvim_oxi as oxi;
@@ -270,7 +270,7 @@ fn request(
         LuaMethod,
         LuaUrl,
         RequestOpts,
-        Function<(bool, Option<Object>), ()>,
+        Function<(bool, Object), ()>,
     ),
 ) -> oxi::Result<Object> {
     // TODO: Can I reuse clients by caching them somewhere in the Lua runtime?
@@ -279,24 +279,7 @@ fn request(
         .build()
         .map_err(|e| err(e.to_string()))?;
 
-    // let mut request = client.request(method.0, url.0);
-    let mut request = match method {
-        Method::GET => client.get(url),
-        Method::POST => client.post(url),
-        Method::DELETE => client.delete(url),
-        // Method::CONNECT => request,
-        // Method::OPTIONS => request,
-        // Method::PUT => request,
-        // Method::PATCH => request,
-        // Method::TRACE => request,
-        // Method::HEAD => request,
-        _ => {
-            return Err(err(format!(
-                "invalid method: {}",
-                method.as_str().to_string()
-            )));
-        }
-    };
+    let mut request = client.request(method, url);
 
     if let Some(version) = opts.version {
         match version.as_str() {
@@ -310,9 +293,6 @@ fn request(
             }
         }
     }
-    // else {
-    //     request = request.version(Version::HTTP_11);
-    // }
 
     // request = request.bearer_auth(opts.bearer);
 
@@ -330,8 +310,6 @@ fn request(
         HeaderValue::try_from("https://leetcode.com").map_err(err)?,
     );
 
-    // request = request.header("Referer", "https://leetcode.com");
-
     if let Some(body) = opts.body {
         request = request.json(&body);
     }
@@ -344,28 +322,19 @@ fn request(
         request = request.bearer_auth(bearer);
     }
 
-    // Since this needs to be async with tokio, libuv, *and* native threads (it's ugly, I know)
-    // we need to use a few Arcs and Mutexes to share the return value and whether the request was
-    // successful.
-    let success = Arc::new(AtomicBool::new(true));
-    let retval: Arc<Mutex<Option<serde_json::Value>>> = Arc::new(Mutex::new(None));
-    // let err: OnceLock<Option<Object>> = std::sync::OnceLock::new();
+    let rv: Arc<Mutex<Option<Result<serde_json::Value, String>>>> = Arc::new(Mutex::new(None));
     let handle = AsyncHandle::new({
-        let res = retval.clone();
-        let success = success.clone();
+        let rv = rv.clone();
         move || {
-            let res = res.blocking_lock().take();
+            let mut rv = rv.blocking_lock();
 
-            let success = success.load(std::sync::atomic::Ordering::Relaxed);
-            callback.call((
-                success,
-                res.map(|x| {
-                    from_value(x).unwrap()
-                    // x.into_object()
-                    //     .map_err(|e| oxi::Error::from(oxi::api::Error::Other(format!("{e}"))))
-                    //     .unwrap()
-                }),
-            ))?;
+            // This panics if the value was not set, because it should have been.
+            // If this panics, it is a bug.
+            let (ok, res) = match rv.take().expect("value was not set") {
+                Ok(value) => (true, from_value(value).expect("from_value")),
+                Err(err) => (false, err.to_object().expect("to_object")),
+            };
+            callback.call((ok, res))?;
             oxi::Result::Ok(())
         }
     })?;
@@ -374,18 +343,15 @@ fn request(
         // TODO: can I reuse the tokio runtime by caching it in the Lua registry as userdata?
         let rt = tokio::runtime::Runtime::new().unwrap();
         let task = rt.spawn(async move {
+            let mut rv = rv.lock().await;
             match request.send().await {
-                Ok(res) => {
-                    // we want to report it if there's an error with the actual request
-                    retval.lock().await.replace(res.json().await.map_err(err)?);
-                    handle.send()?;
-                }
-                Err(e) => {
-                    success.store(false, std::sync::atomic::Ordering::Relaxed);
-                    // retval.lock().await.replace(format!("{:?}", e).to_object()?);
-                    handle.send()?;
-                }
-            }
+                Ok(res) => match res.json().await {
+                    Ok(value) => rv.replace(Ok(value)),
+                    Err(e) => rv.replace(Err(format!("invalid json: {}", e))),
+                },
+                Err(e) => rv.replace(Err(e.to_string())),
+            };
+            handle.send()?;
             oxi::Result::Ok(())
         });
         while !task.is_finished() {
