@@ -44,6 +44,13 @@ to add to your own config :)
     - Bufferline: [`nvim-cokeline`](https://github.com/willothy/nvim-cokeline).
     - Floating window indicator: [`incline.nvim`](https://github.com/b0o/incline.nvim).
 
+- `native/`: Native module written in Rust
+  - [x] basic http client (wip)
+- `graphql.lua`: Asynchronous GraphQL client built on libuv and tokio
+  - [x] "compiler" which turns text queries into Lua functions bound to a client.
+    - These functions are called with args specifying the query variables.
+  - [x] opt-in automatic query memoization (wip)
+
 - `rx.lua`: Reactive extensions for Neovim (very WIP, kinda abandoned)
   - [x] signals and effects
   - [x] automatic dependency tracking
@@ -52,5 +59,3 @@ to add to your own config :)
 - `player.lua`: Playerctl UI for Neovim
   - [x] playerctl wrapper
   - [ ] nui UI (wip)
-- `native/`: Native module written in Rust
-  - [x] basic http client (wip)
