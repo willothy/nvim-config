@@ -363,22 +363,23 @@ fn request(
         let rt = tokio::runtime::Runtime::new()
             .map_err(|e| err(format!("failed to create tokio runtime: {e}")))?;
         rt.block_on(async move {
-            let mut rv = rv.lock().await;
             match request.send().await {
                 Ok(res) => {
                     if opts.json.unwrap_or(true) {
+                        let mut rv = rv.lock().await;
                         match res.json().await {
                             Ok(value) => rv.replace(Ok(value)),
                             Err(e) => rv.replace(Err(format!("{}", e))),
                         }
                     } else {
+                        let mut rv = rv.lock().await;
                         match res.text().await {
                             Ok(value) => rv.replace(Ok(serde_json::Value::String(value))),
                             Err(e) => rv.replace(Err(format!("{}", e))),
                         }
                     }
                 }
-                Err(e) => rv.replace(Err(e.to_string())),
+                Err(e) => rv.lock().await.replace(Err(e.to_string())),
             };
             handle.send()?;
             oxi::Result::Ok(())
