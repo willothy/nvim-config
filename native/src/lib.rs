@@ -1,7 +1,4 @@
-use std::{
-    collections::HashMap,
-    sync::{atomic::AtomicBool, Arc, Once, OnceLock},
-};
+use std::{collections::HashMap, sync::Arc};
 
 use nvim_oxi as oxi;
 use oxi::{
@@ -11,8 +8,8 @@ use oxi::{
     Dictionary, Function, Object,
 };
 use reqwest::{
-    header::{HeaderMap, HeaderName, HeaderValue},
-    Method, Url, Version,
+    header::{HeaderName, HeaderValue},
+    Url, Version,
 };
 use tokio::sync::Mutex;
 
@@ -178,6 +175,7 @@ struct RequestOpts {
     body: Option<serde_json::Value>,
     timeout: Option<u64>,
     bearer: Option<String>,
+    json: Option<bool>,
 }
 use oxi::lua::ffi::lua_State;
 
@@ -189,6 +187,7 @@ impl Poppable for RequestOpts {
             body: None,
             timeout: None,
             bearer: None,
+            json: None,
         };
         for (key, value) in Dictionary::pop(lua_state)?.into_iter() {
             match &*key.to_string_lossy() {
@@ -253,6 +252,17 @@ impl Poppable for RequestOpts {
                         )));
                     }
                 }
+                "json" => {
+                    if let oxi::ObjectKind::Boolean = value.kind() {
+                        // Safety: ^^
+                        opts.json = Some(unsafe { value.as_boolean_unchecked() });
+                    } else {
+                        return Err(oxi::lua::Error::RuntimeError(format!(
+                            "invalid json: expected boolean, got {}",
+                            oxi_type_name(&value)
+                        )));
+                    }
+                }
                 _ => {
                     return Err(oxi::lua::Error::RuntimeError(format!(
                         "invalid key: {}",
@@ -270,7 +280,7 @@ fn request(
         LuaMethod,
         LuaUrl,
         RequestOpts,
-        Function<(bool, Object), ()>,
+        Function<(bool, Option<Object>), ()>,
     ),
 ) -> oxi::Result<Object> {
     // TODO: Can I reuse clients by caching them somewhere in the Lua runtime?
@@ -294,8 +304,6 @@ fn request(
         }
     }
 
-    // request = request.bearer_auth(opts.bearer);
-
     if let Some(headers) = opts.headers {
         for (k, v) in headers {
             request = request.header(
@@ -304,11 +312,6 @@ fn request(
             );
         }
     }
-
-    request = request.header(
-        HeaderName::try_from("Referer").map_err(err)?,
-        HeaderValue::try_from("https://leetcode.com").map_err(err)?,
-    );
 
     if let Some(body) = opts.body {
         request = request.json(&body);
@@ -330,9 +333,25 @@ fn request(
 
             // This panics if the value was not set, because it should have been.
             // If this panics, it is a bug.
-            let (ok, res) = match rv.take().expect("value was not set") {
-                Ok(value) => (true, from_value(value).expect("from_value")),
-                Err(err) => (false, err.to_object().expect("to_object")),
+            let (ok, res) = match rv
+                .take()
+                .expect("to have set the return value before the async handle is called")
+            {
+                Ok(value) => match from_value(value) {
+                    Ok(obj) => (true, Some(obj)),
+                    Err(e) => (
+                        false,
+                        Some(
+                            e.to_string()
+                                .to_object()
+                                .expect("to convert error msg to Lua value"),
+                        ),
+                    ),
+                },
+                Err(err) => (
+                    false,
+                    Some(err.to_object().expect("to convert error msg to Lua value")),
+                ),
             };
             callback.call((ok, res))?;
             oxi::Result::Ok(())
@@ -341,22 +360,30 @@ fn request(
     // create a new thread so that the request doesn't get interrupted on return
     std::thread::spawn(move || {
         // TODO: can I reuse the tokio runtime by caching it in the Lua registry as userdata?
-        let rt = tokio::runtime::Runtime::new().unwrap();
-        let task = rt.spawn(async move {
+        let rt = tokio::runtime::Runtime::new()
+            .map_err(|e| err(format!("failed to create tokio runtime: {e}")))?;
+        rt.block_on(async move {
             let mut rv = rv.lock().await;
             match request.send().await {
-                Ok(res) => match res.json().await {
-                    Ok(value) => rv.replace(Ok(value)),
-                    Err(e) => rv.replace(Err(format!("invalid json: {}", e))),
-                },
+                Ok(res) => {
+                    if opts.json.unwrap_or(true) {
+                        match res.json().await {
+                            Ok(value) => rv.replace(Ok(value)),
+                            Err(e) => rv.replace(Err(format!("{}", e))),
+                        }
+                    } else {
+                        match res.text().await {
+                            Ok(value) => rv.replace(Ok(serde_json::Value::String(value))),
+                            Err(e) => rv.replace(Err(format!("{}", e))),
+                        }
+                    }
+                }
                 Err(e) => rv.replace(Err(e.to_string())),
             };
             handle.send()?;
             oxi::Result::Ok(())
-        });
-        while !task.is_finished() {
-            std::thread::yield_now();
-        }
+        })?;
+        oxi::Result::Ok(())
     });
     Ok(Object::nil())
 }
