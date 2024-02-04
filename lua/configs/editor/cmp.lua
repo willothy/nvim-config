@@ -40,7 +40,9 @@ local format = {
 }
 
 local main_sources = cmp.config.sources({
-  { name = "nvim_lsp", max_item_count = 20 },
+  {
+    name = "nvim_lsp" --[[ , max_item_count = 40 ]],
+  },
   { name = "snippets" },
   { name = "copilot", max_item_count = 2 },
   { name = "cody", max_item_count = 2 },
