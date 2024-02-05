@@ -2,7 +2,8 @@ local oil = require("oil")
 
 oil.winbar = function()
   if vim.api.nvim_win_get_config(0).relative ~= "" then
-    return "%#NormalFloat#"
+    vim.wo[0].winbar = ""
+    return ""
   end
   local path = oil.get_current_dir():gsub(vim.env.HOME, "~"):gsub("/$", "")
   local width = vim.api.nvim_win_get_width(0)
@@ -36,7 +37,11 @@ vim.api.nvim_create_autocmd("WinNew", {
 --
 -- This is more like the behavior of mini.files, which I like.
 vim.api.nvim_create_autocmd("BufHidden", {
+  pattern = "oil//*",
   callback = function(ev)
+    if vim.v.exiting ~= vim.NIL then
+      return
+    end
     local buf = ev.buf
     if require("oil.util").is_oil_bufnr(buf) then
       oil.save({
@@ -58,14 +63,10 @@ vim.api.nvim_create_autocmd("BufHidden", {
 
 oil.setup({
   default_file_explorer = false,
-  buf_options = {
-    -- buflisted = false,
-  },
+  buf_options = {},
   keymaps = {
     ["<C-s>"] = "actions.select_split",
-    ["<C-v>"] = {
-      callback = function() end,
-    },
+    ["<C-v>"] = "actions.select_vsplit",
     ["<C-h>"] = false,
     ["<C-l>"] = false,
     ["<C-/>"] = "actions.refresh",
@@ -87,7 +88,7 @@ oil.setup({
         end
       end,
     },
-    ["l"] = {
+    ["L"] = {
       callback = function()
         local win = vim.api.nvim_get_current_win()
         local entry = oil.get_cursor_entry()
@@ -111,7 +112,7 @@ oil.setup({
         end)
       end,
     },
-    ["h"] = "actions.parent",
+    ["H"] = "actions.parent",
     ["<CR>"] = "actions.select",
   },
   win_options = {

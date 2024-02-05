@@ -155,9 +155,9 @@ return {
     build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
   },
   {
-    -- "stevearc/oil.nvim",
-    "willothy/oil.nvim",
-    branch = "feat-select-win",
+    "stevearc/oil.nvim",
+    -- "willothy/oil.nvim",
+    -- branch = "feat-select-win",
     config = function()
       require("configs.editor.oil")
     end,

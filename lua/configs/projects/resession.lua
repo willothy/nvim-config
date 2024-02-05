@@ -77,26 +77,23 @@ resession.add_hook("post_load", function()
   vim.schedule(function()
     require("edgy.config").animate.enabled = true
   end)
-  local oil_view = require("oil.view")
-  vim
-    .iter(vim.api.nvim_list_wins())
-    :filter(function(win)
-      local buf = vim.api.nvim_win_get_buf(win)
-      return vim.bo[buf].filetype == "oil"
-    end)
-    :each(function(win)
-      vim.api.nvim_win_set_var(win, "is_oil_win", true)
-      vim.api.nvim_win_call(win, oil_view.set_win_options)
-      local bufnr = vim.api.nvim_win_get_buf(win)
-      vim.bo[bufnr].buftype = "acwrite"
-      vim.bo[bufnr].swapfile = false
-      vim.bo[bufnr].syntax = "oil"
-      vim.b[bufnr].EditorConfig_disable = 1
-      oil_view.render_buffer_async(bufnr)
-    end)
 
   vim.o.showtabline = 2
   vim.schedule(function()
+    local wins = vim
+      .iter(vim.api.nvim_list_wins())
+      :map(function(win)
+        ---@diagnostic disable-next-line: redundant-return-value
+        return win, vim.api.nvim_win_get_buf(win)
+      end)
+      :filter(function(_, buf)
+        return vim.bo[buf].filetype == "oil"
+      end)
+      :each(function(win, buf)
+        vim.api.nvim_win_call(win, function()
+          require("oil").open(vim.api.nvim_buf_get_name(buf))
+        end)
+      end)
     willothy.ui.scrolleof.check()
     -- Fixes lazy freaking out when a session is loaded and there are
     -- auto-installs being run.
