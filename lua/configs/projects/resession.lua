@@ -68,7 +68,6 @@ resession.add_hook("pre_load", function()
   else
     lazy_open = false
   end
-  vim.o.eventignore = ""
   require("lspconfig") -- make sure LSP starts automatically
 end)
 
@@ -78,9 +77,8 @@ resession.add_hook("post_load", function()
     require("edgy.config").animate.enabled = true
   end)
 
-  vim.o.showtabline = 2
   vim.schedule(function()
-    local wins = vim
+    vim
       .iter(vim.api.nvim_list_wins())
       :map(function(win)
         ---@diagnostic disable-next-line: redundant-return-value
