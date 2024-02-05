@@ -381,7 +381,7 @@ return {
     config = function()
       require("configs.editor.hawtkeys")
     end,
-    event = "VeryLazy",
+    cmd = "Hawtkeys",
   },
   -- {
   --   "tris203/precognition.nvim",

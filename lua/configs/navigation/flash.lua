@@ -1,3 +1,7 @@
+local flash = require("flash")
+
+local on_key_ns
+
 ---Returns an iterator over words in a string
 ---@param str string
 ---@param offset integer?
@@ -61,10 +65,17 @@ function Locations:setup(opts)
   Locations.ns = vim.api.nvim_create_namespace("flash_locations")
   Locations = setmetatable({}, { __index = self })
   Locations.list = {}
+  local config = require("flash.config").get()
+  local labels = config.labels
+  local exclude = config.modes.char.label.exclude
+  for _, char in ipairs(vim.split(exclude, "")) do
+    labels = labels:gsub(char, "")
+  end
+  labels = labels .. labels:upper()
   Locations.config = vim.tbl_deep_extend("force", {
-    chars = "abcdegimnopqrsuvwxyzABCDEGIMNOPQRSUVWXYZ", -- all but h/j/k/l and f/t
+    chars = labels,
     hl = {
-      primary = "Search",
+      primary = "Constant",
       secondary = "Macro",
     },
     range = 15,
@@ -74,6 +85,11 @@ end
 
 function Locations:clear()
   vim.api.nvim_buf_clear_namespace(0, Locations.ns, 0, -1)
+  if on_key_ns then
+    ---@diagnostic disable-next-line: param-type-mismatch
+    on_key_ns = vim.on_key(nil, on_key_ns) -- remove the listener
+    on_key_ns = nil
+  end
   Locations.list = {}
 end
 
@@ -185,7 +201,6 @@ end
 local Char = require("flash.plugins.char")
 local Repeat = require("flash.repeat")
 local Util = require("flash.util")
-local flash = require("flash")
 
 -- Override the setup function of the Char plugin
 local c = Char.setup
@@ -270,7 +285,7 @@ Char.setup = function(...)
     end,
   })
 
-  vim.on_key(function(key)
+  on_key_ns = vim.on_key(function(key)
     if
       (Char.state and key == Util.ESC and vim.fn.mode() == "n") or Char._active
     then
@@ -278,21 +293,39 @@ Char.setup = function(...)
       Locations:clear()
       return
     end
-  end)
+  end, on_key_ns)
 end
 
 flash.setup({
+  highlight = {
+    groups = {
+      match = "FlashMatch",
+      current = "FlashCurrent",
+      backdrop = "FlashBackdrop",
+      label = "Constant",
+      -- label = "FlashLabel",
+    },
+  },
   modes = {
     char = {
       enabled = true,
       jump_labels = true,
-      labels = "abegimnopquvwz",
+      label = { exclude = "hjkliardc" },
+      keys = {
+        "f",
+        "F",
+        "t",
+        "T",
+        -- remove ; and , and use clever-f style repeat
+      },
       config = function(opts)
         opts.autohide = vim.fn.mode(true):find("no") and vim.v.operator == "y"
+
+        opts.jump_labels = opts.jump_labels
+          and vim.v.count == 0
+          and vim.fn.reg_executing() == ""
+          and vim.fn.reg_recording() == ""
       end,
-    },
-    treesitter = {
-      labels = "abegimnopquvwz",
     },
   },
 })
