@@ -154,11 +154,9 @@ local function diff_text_edits(text_edits, _bufnr, offset_encoding)
   local old_text = table.concat(lines, eol)
   apply_text_edits(text_edits, lines, offset_encoding)
 
-  return vim.diff(
-    old_text .. "\n",
-    table.concat(lines, eol) .. "\n",
-    { ctxlen = 3 }
-  )
+  return vim.diff(old_text .. "\n", table.concat(lines, eol) .. "\n", {
+    ctxlen = 3,
+  })
 end
 
 -- based on https://github.com/neovim/neovim/blob/v0.7.2/runtime/lua/vim/lsp/util.lua#L492-L523
@@ -418,6 +416,7 @@ local function preview_render_buf(preview_buf, edit, offset_encoding)
   return max_line_len
 end
 
+---@param symbol dropbar_symbol_t
 local function preview_open_win(symbol, preview_buf, max_line_len)
   local win = symbol.entry.menu.preview_win
   if not win or not vim.api.nvim_win_is_valid(win) then
@@ -469,6 +468,16 @@ local function preview_open_win(symbol, preview_buf, max_line_len)
         height = height,
       })
     )
+
+    for k, v in pairs({
+      statuscolumn = "",
+      signcolumn = "no",
+      foldcolumn = "0",
+    }) do
+      vim.api.nvim_set_option_value(k, v, {
+        win = win,
+      })
+    end
   end
   return win
 end
