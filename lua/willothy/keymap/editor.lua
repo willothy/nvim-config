@@ -75,7 +75,7 @@ wk.register({
   ["]"] = {
     name = "next",
   },
-}, { mode = { "o", "v" } })
+}, { mode = { "o", "v", "x" } })
 
 local text_cases = {
   upper = "u",
@@ -93,28 +93,36 @@ local text_cases = {
 
 local mode_fmt = "to_%s_case"
 local desc_fmt = "%s case"
+local text_case = {}
 for case, prefix in pairs(text_cases) do
+  local desc = desc_fmt:format(case)
   -- normal operator mappings
   --
   -- example: gaui" = uppercase inside quotes
   vim.keymap.set("n", "ga" .. prefix, function()
     require("textcase").operator(mode_fmt:format(case))
   end, {
-    desc = desc_fmt:format(case),
+    desc = desc,
   })
   -- visual mappings
   vim.keymap.set({ "x", "v" }, "ga" .. prefix, function()
     require("textcase").visual(mode_fmt:format(case))
   end, {
-    desc = desc_fmt:format(case),
+    desc = desc,
   })
+  text_case[prefix] = {
+    -- name = desc,
+    desc = desc,
+  }
 end
+
+text_case.name = "text case"
 
 wk.register({
   g = {
     name = "go",
     ["?"] = bind("which-key", "show"):with_desc("which-key"),
-    a = { name = "text case" },
+    a = text_case,
     c = { name = "comment" },
     b = { name = "which_key_ignore" },
     g = "first line",
