@@ -21,6 +21,24 @@ local autocmd
 
 local M = {}
 
+local saved_opts = {}
+
+local function save_opts(opts)
+  for opt, val in pairs(opts) do
+    if not saved_opts[opt] then
+      saved_opts[opt] = vim.o[opt]
+    end
+    vim.o[opt] = val
+  end
+end
+
+local function restore_opts()
+  for k, v in pairs(saved_opts) do
+    vim.o[k] = v
+    saved_opts[k] = nil
+  end
+end
+
 function M.show()
   if winid and vim.api.nvim_win_is_valid(winid) then
     return
@@ -157,17 +175,28 @@ function M.show()
 
   winid = win
 
+  save_opts({
+    laststatus = 0,
+    showtabline = 0,
+    number = false,
+    relativenumber = false,
+    guicursor = "a:NoiceHiddenCursor",
+  })
+  saved_opts.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
+  willothy.ui.cursor.hide_cursor()
+
   -- Clear the intro when the user does something
   autocmd = vim.api.nvim_create_autocmd({
     "BufModifiedSet",
     "BufReadPre",
-    "StdinReadPre",
+    "CmdlineEnter",
     "CursorMoved",
     "InsertEnter",
     "TermOpen",
     "TextChanged",
     "VimResized",
     "WinEnter",
+    "BufEnter",
   }, {
     once = true,
     group = augroup,
@@ -176,6 +205,8 @@ function M.show()
 end
 
 function M.hide()
+  restore_opts()
+  willothy.ui.cursor.show_cursor()
   if winid and vim.api.nvim_win_is_valid(winid) then
     vim.api.nvim_win_close(winid, true)
   end
