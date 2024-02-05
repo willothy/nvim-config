@@ -9,7 +9,7 @@ wk.register({
   name = "find",
   f = {
     function()
-      require("telescope._extensions.frecency").exports.frecency({
+      require("telescope").extensions.frecency.frecency({
         sorter = require("telescope").extensions.fzf.native_fzf_sorter(),
       })
     end,

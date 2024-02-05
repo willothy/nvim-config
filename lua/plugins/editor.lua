@@ -132,12 +132,11 @@ return {
     config = function()
       require("configs.editor.telescope")
     end,
-    event = "VeryLazy",
+    -- event = "VeryLazy",
+    cmd = "Telescope",
     dependencies = {
       "nvim-telescope/telescope-file-browser.nvim",
       "molecule-man/telescope-menufacture",
-      "crispgm/telescope-heading.nvim",
-      "debugloop/telescope-undo.nvim",
       "dhruvmanila/browser-bookmarks.nvim",
       "nvim-telescope/telescope-frecency.nvim",
       "nvim-telescope/telescope-smart-history.nvim",

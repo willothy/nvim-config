@@ -217,16 +217,16 @@ local flexible = function(picker)
           },
         },
         prompt = {
-          width = results_width,
+          width = results_width + 1,
           height = 1,
           row = row + height - 1,
           col = col,
           border = {
             "─",
             "─",
-            "─",
-            " ",
-            " ",
+            "┤",
+            "│",
+            "│",
             " ",
             " ",
             " ",
@@ -530,15 +530,8 @@ local function open_with_trouble(prompt_bufnr)
   require("trouble").open("telescope")
 end
 
-local function get_filename(path)
-  local start, _ = path:find("[%w%s!-={-|]+[_%.].+")
-  return path:sub(start, #path)
-end
-
 local function add_to_harpoon(prompt_bufnr)
-  local fb_utils = require("telescope._extensions.file_browser.utils")
   local action_state = require("telescope.actions.state")
-  local actions = require("telescope.actions")
 
   local picker = action_state.get_current_picker(prompt_bufnr)
 
@@ -674,28 +667,10 @@ telescope.setup({
       create_layout = bottom_pane,
       display_stat = false,
     },
-    undo = {
-      use_delta = false,
-      entry_format = "$STAT, $TIME",
-      sorting_strategy = "ascending",
-      mappings = {
-        i = {
-          ["<cr>"] = require("telescope-undo.actions").yank_additions,
-          ["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
-          ["<C-cr>"] = require("telescope-undo.actions").restore,
-        },
-      },
-      results_title = "Undo History",
-      prompt_title = "Search",
-      preview_title = "Edit Diff",
-    },
     macros = {
       theme = "dropdown",
       results_title = "Macros",
       prompt_title = "Find Macros",
-    },
-    heading = {
-      treesitter = true,
     },
     fzf = {
       fuzzy = true,
@@ -747,8 +722,6 @@ local extensions = {
   -- "macros",
   -- "scope",
   -- "yank_history",
-  -- "undo",
-  -- "heading",
   -- "attempt",
   -- "bookmarks",
 }
