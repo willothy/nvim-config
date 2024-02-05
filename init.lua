@@ -97,9 +97,17 @@ require("lazy").setup({
   ui = {
     border = "solid",
   },
+  dev = {
+    path = "~/projects/lua/",
+  },
+  -- profiling = {
+  --   loader = true,
+  --   require = true,
+  -- },
   performance = {
     cache = {
       enabled = true,
+      disable_events = { "UiEnter" },
     },
     reset_packpath = true,
     rtp = {

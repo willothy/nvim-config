@@ -14,6 +14,9 @@ resession.setup({
     aerial = {
       enable_in_tab = true,
     },
+    oil = {
+      enable_in_tab = true,
+    },
     scope = {},
   },
   autosave = {
@@ -66,6 +69,7 @@ resession.add_hook("pre_load", function()
     lazy_open = false
   end
   vim.o.eventignore = ""
+  require("lspconfig") -- make sure LSP starts automatically
 end)
 
 resession.add_hook("post_load", function()
@@ -73,11 +77,6 @@ resession.add_hook("post_load", function()
   vim.schedule(function()
     require("edgy.config").animate.enabled = true
   end)
-  -- vim.defer_fn(function()
-  --   vim.api.nvim_exec_autocmds("BufReadPost", {
-  --     buffer = vim.api.nvim_get_current_buf(),
-  --   })
-  -- end, 500)
   local oil_view = require("oil.view")
   vim
     .iter(vim.api.nvim_list_wins())
@@ -104,11 +103,6 @@ resession.add_hook("post_load", function()
     if lazy_open then
       require("lazy.view").show()
       lazy_open = false
-    elseif vim.bo.buflisted then
-      require("lspconfig") -- small hack to make sure LSP starts automatically
-      vim.api.nvim_exec_autocmds("BufRead", {
-        buffer = vim.api.nvim_get_current_buf(),
-      })
     end
   end)
 end)

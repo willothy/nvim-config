@@ -16,6 +16,7 @@ M.browsers = {
   end,
   oil = function(target)
     -- TODO: maybe upstream this into Oil? I think it would be nice to have.
+    -- require("oil")
     require("oil").open(target)
 
     -- if

@@ -158,7 +158,6 @@ return {
     -- "stevearc/oil.nvim",
     "willothy/oil.nvim",
     branch = "feat-select-win",
-    -- dir = "~/projects/lua/oil.nvim/",
     config = function()
       require("configs.editor.oil")
     end,
@@ -183,6 +182,7 @@ return {
     -- dir = "~/projects/lua/resession.nvim/",
     dependencies = {
       "tiagovla/scope.nvim",
+      "stevearc/oil.nvim",
     },
     config = function()
       require("configs.projects.resession")
