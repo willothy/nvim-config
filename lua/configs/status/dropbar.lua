@@ -108,6 +108,7 @@ dropbar.setup({
       background = false,
     },
     win_configs = {
+      -- border = "single",
       -- lower
       -- border = { "│", "─", "│", "│", "┘", "─", "└", "│" },
       -- upper
@@ -132,6 +133,7 @@ dropbar.setup({
   fzf = {
     prompt = "%#GitSignsAdd# ",
     win_configs = {
+      -- border = "none",
       -- border = {
       --   -- "│", --topleft
       --   -- "├", --topleft
