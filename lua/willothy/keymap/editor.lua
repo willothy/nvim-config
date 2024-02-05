@@ -77,6 +77,39 @@ wk.register({
   },
 }, { mode = { "o", "v" } })
 
+local text_cases = {
+  upper = "u",
+  lower = "l",
+  snake = "s",
+  dash = "k", -- kebab case - textcase.nvim calls this dash case
+  constant = "C",
+  dot = "d",
+  -- phrase = "P", -- what is this?
+  camel = "c",
+  pascal = "p",
+  title = "t",
+  path = "/",
+}
+
+local mode_fmt = "to_%s_case"
+local desc_fmt = "%s case"
+for case, prefix in pairs(text_cases) do
+  -- normal operator mappings
+  --
+  -- example: gaui" = uppercase inside quotes
+  vim.keymap.set("n", "ga" .. prefix, function()
+    require("textcase").operator(mode_fmt:format(case))
+  end, {
+    desc = desc_fmt:format(case),
+  })
+  -- visual mappings
+  vim.keymap.set({ "x", "v" }, "ga" .. prefix, function()
+    require("textcase").visual(mode_fmt:format(case))
+  end, {
+    desc = desc_fmt:format(case),
+  })
+end
+
 wk.register({
   g = {
     name = "go",

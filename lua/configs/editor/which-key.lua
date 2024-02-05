@@ -11,6 +11,18 @@ require("which-key").setup({
   },
   operators = {
     gc = "comment",
+
+    --text-case.nvim
+    gau = "uppercase",
+    gal = "uppercase",
+    gas = "snake case",
+    gak = "kebab case",
+    gac = "camel case",
+    gap = "pascal case",
+    gad = "dot case",
+    gat = "title case",
+    ["ga/"] = "path case",
+
     v = "visual",
     [">"] = "indent",
     ["<lt>"] = "unindent",

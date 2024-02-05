@@ -390,13 +390,8 @@ return {
   -- },
   {
     "johmsalas/text-case.nvim",
-    config = true,
-    keys = {
-      {
-        "ga",
-        mode = { "n", "v", "o" },
-        desc = "text case",
-      },
+    opts = {
+      default_keymappings_enabled = false,
     },
   },
 }
