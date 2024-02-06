@@ -157,6 +157,7 @@ return {
     "stevearc/oil.nvim",
     -- "willothy/oil.nvim",
     -- branch = "feat-select-win",
+    -- dir = "~/projects/lua/oil.nvim/",
     config = function()
       require("configs.editor.oil")
     end,

@@ -23,6 +23,7 @@ local function anim(direction)
         row = next_row,
         border = "single",
         style = "minimal",
+        focusable = false,
       }
     end,
     function(state, win)
