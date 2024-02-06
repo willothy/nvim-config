@@ -37,7 +37,7 @@ vim.api.nvim_create_autocmd("WinNew", {
 --
 -- This is more like the behavior of mini.files, which I like.
 vim.api.nvim_create_autocmd("BufHidden", {
-  pattern = "oil//*",
+  pattern = "oil://*",
   callback = function(ev)
     if vim.v.exiting ~= vim.NIL then
       return
@@ -124,6 +124,7 @@ oil.setup({
     winbar = "%{%v:lua.require('oil').winbar()%}",
   },
   float = {
+    border = "single",
     win_options = {},
   },
 })
