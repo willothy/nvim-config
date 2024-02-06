@@ -72,7 +72,6 @@ resession.add_hook("pre_load", function()
 end)
 
 resession.add_hook("post_load", function()
-  vim.o.eventignore = ""
   vim.schedule(function()
     require("edgy.config").animate.enabled = true
   end)
@@ -98,6 +97,29 @@ resession.add_hook("post_load", function()
     if lazy_open then
       require("lazy.view").show()
       lazy_open = false
+    end
+
+    local function do_bufread()
+      vim
+        .iter(vim.api.nvim_list_bufs())
+        :filter(function(buf)
+          return vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == ""
+        end)
+        :each(function(buf)
+          vim.api.nvim_exec_autocmds("BufReadPost", {
+            buffer = buf,
+          })
+        end)
+    end
+
+    if vim.g.did_very_lazy then
+      do_bufread()
+    else
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        once = true,
+        callback = do_bufread,
+      })
     end
   end)
 end)
@@ -221,9 +243,11 @@ then
       reset = true,
     }
   )
-  if is_empty() then
-    willothy.ui.intro.show()
-  end
+  vim.schedule(function()
+    if is_empty() then
+      willothy.ui.intro.show()
+    end
+  end)
 elseif argc == 0 and is_empty() then
   willothy.ui.intro.show()
 end
