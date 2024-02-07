@@ -48,6 +48,9 @@ function FidgetView:can_hide(message)
 end
 
 function FidgetView:autohide(id)
+  if not id then
+    return
+  end
   if not self.timers[id] then
     self.timers[id] = vim.loop.new_timer()
   end
@@ -110,8 +113,9 @@ function FidgetView:update()
       self.handles[message.id] = require("fidget").progress.handle.create({
         title = message.level or "info",
         message = message:content(),
+        level = message.level,
         lsp_client = {
-          name = self._view_opts.title,
+          name = self._view_opts.title or "noice",
         },
       })
     end
@@ -295,16 +299,20 @@ require("noice").setup({
     {
       filter = {
         any = {
-          { find = "%d+L, %d+B written$" },
-          { find = "^%d+ change[s]?; before #%d+" },
-          { find = "^%d+ change[s]?; after #%d+" },
-          { find = "^%-%-No lines in buffer%-%-$" },
+          -- this filters messages to be shown by fidget
+          { find = "(%d+)L, (%d+)B%s+%[w%]%s*$" },
+          -- { find = "^%d+ change[s]?; before #%d+" },
+          -- { find = "^%d+ change[s]?; after #%d+" },
+          -- { find = "^%-%-No lines in buffer%-%-$" },
         },
       },
-      view = "mini",
+      view = "fidget",
       opts = {
         stop = true,
-        skip = true,
+        skip = false,
+        format = {
+          "{message}",
+        },
       },
     },
   },

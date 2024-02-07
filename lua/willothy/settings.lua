@@ -9,7 +9,7 @@ function M.setup()
   o.scrolloff = 16
 
   o.shell = "/usr/bin/zsh"
-  o.shortmess = "filnxoOCFIs"
+  o.shortmess = "filnxoOCFIsw"
   o.virtualedit = "block"
   o.signcolumn = "yes"
   o.wrap = false
