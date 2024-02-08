@@ -128,10 +128,25 @@ end)
 local progress = {}
 ---@diagnostic disable-next-line: redundant-parameter
 resession.add_hook("pre_save", function(name)
+  local util = require("resession.util")
+  local filename = util.get_session_file(name)
+  local info = require("resession.files").load_json_file(filename)
+
+  local title
+  if info then
+    if info.tab_scoped then
+      title = info.tabs[1].cwd
+    else
+      title = info.global.cwd
+    end
+    title = vim.fs.basename(title) or title
+  else
+    title = name
+  end
   table.insert(
     progress,
     require("fidget.progress.handle").create({
-      title = name,
+      title = title,
       message = "saving session",
       lsp_client = {
         name = "resession",
@@ -165,10 +180,18 @@ end
 -- Session management commands
 willothy.fn.create_command("Session", {
   desc = "Manage sessions",
+  command = function()
+    vim.cmd.Session("load")
+  end,
   subcommands = {
     load = {
       complete = complete_session_name,
       execute = function(session)
+        session = session and vim.trim(session)
+        if session == nil or session == "" then
+          vim.cmd.Session("list")
+          return
+        end
         local ok = pcall(resession.load, session, {})
         if not ok then
           vim.notify("Unknown session: " .. session, "warn")
@@ -178,6 +201,7 @@ willothy.fn.create_command("Session", {
     delete = {
       complete = complete_session_name,
       execute = function(session)
+        session = session and vim.trim(session)
         local ok = pcall(resession.delete, session)
         if not ok then
           vim.notify("Unknown session: " .. session, "warn")
@@ -187,7 +211,8 @@ willothy.fn.create_command("Session", {
     save = {
       complete = complete_session_name,
       execute = function(session)
-        if not session then
+        session = session and vim.trim(session)
+        if session == nil or session == "" then
           return resession.save_all({ notify = false })
         end
         resession.save(session)
@@ -195,7 +220,80 @@ willothy.fn.create_command("Session", {
     },
     list = {
       execute = function()
-        resession.load(nil, {})
+        local sessions = resession.list({})
+        if vim.tbl_isempty(sessions) then
+          vim.notify("No saved sessions", vim.log.levels.WARN)
+          return
+        end
+        local select_opts =
+          { kind = "resession_load", prompt = "Load session" }
+        local session_data = {}
+        local util = require("resession.util")
+        local shortnames = {}
+        for _, session_name in ipairs(sessions) do
+          local filename = util.get_session_file(session_name)
+          local data = require("resession.files").load_json_file(filename)
+          session_data[session_name] = data
+        end
+        for name, data in pairs(session_data) do
+          local cwd
+          if data.tab_scoped then
+            cwd = data.tabs[1].cwd
+          else
+            cwd = data.global.cwd
+          end
+          local shortname = vim.fs.basename(cwd) or name
+          if shortnames[shortname] then
+            local other = shortnames[shortname]
+            local other_cwd
+            if other.tab_scoped then
+              other_cwd = other.tabs[1].cwd
+            else
+              other_cwd = other.global.cwd
+            end
+            local new_other = vim.fs.basename(
+              vim.fs.dirname(other_cwd:gsub("/$", ""))
+                or other_cwd:gsub("/$", "")
+            ) .. "/" .. shortname
+            local new_short = vim.fs.basename(
+              vim.fs.dirname(cwd):gsub("/$", "") or cwd:gsub("/$", "")
+            ) .. "/" .. shortname
+
+            data.short_name = new_short
+            other.short_name = new_other
+
+            shortnames[new_short] = data
+            shortnames[new_other] = other
+          else
+            shortnames[shortname] = data
+            data.short_name = shortname
+          end
+        end
+        select_opts.format_item = function(session_name)
+          local data = session_data[session_name]
+          if data then
+            if data.tab_scoped then
+              local tab_cwd = data.tabs[1].cwd
+              return string.format(
+                "%s (tab) [%s]",
+                data.short_name,
+                util.shorten_path(tab_cwd)
+              )
+            else
+              return string.format(
+                "%s [%s]",
+                data.short_name,
+                util.shorten_path(data.global.cwd)
+              )
+            end
+          end
+          return session_name
+        end
+        vim.ui.select(sessions, select_opts, function(selected)
+          if selected then
+            resession.load(selected, {})
+          end
+        end)
       end,
     },
   },
@@ -237,7 +335,7 @@ if
 then
   resession.load(
     ---@diagnostic disable-next-line: param-type-mismatch
-    vim.fs.basename(vim.fn.getcwd()),
+    vim.fn.getcwd():gsub("/", "_"),
     {
       silence_errors = true,
       reset = true,
@@ -342,7 +440,7 @@ vim.api.nvim_create_autocmd("QuitPre", {
           for _, tabpage in ipairs(vim.api.nvim_list_tabpages()) do
             local win = vim.api.nvim_tabpage_get_win(tabpage)
             vim.api.nvim_win_call(win, function()
-              local name = vim.fs.basename(vim.fn.getcwd(-1) --[[@as string]])
+              local name = vim.fn.getcwd(-1) --[[@as string]]
               resession.save_tab(name, { notify = false })
             end)
           end
