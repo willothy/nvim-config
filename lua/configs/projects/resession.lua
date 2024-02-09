@@ -99,28 +99,28 @@ resession.add_hook("post_load", function()
       lazy_open = false
     end
 
-    local function do_bufread()
-      vim
-        .iter(vim.api.nvim_list_bufs())
-        :filter(function(buf)
-          return vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == ""
-        end)
-        :each(function(buf)
-          vim.api.nvim_exec_autocmds("BufReadPost", {
-            buffer = buf,
-          })
-        end)
-    end
-
-    if vim.g.did_very_lazy then
-      do_bufread()
-    else
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "VeryLazy",
-        once = true,
-        callback = do_bufread,
-      })
-    end
+    -- local function do_bufread()
+    --   vim
+    --     .iter(vim.api.nvim_list_bufs())
+    --     :filter(function(buf)
+    --       return vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == ""
+    --     end)
+    --     :each(function(buf)
+    --       vim.api.nvim_exec_autocmds("BufReadPost", {
+    --         buffer = buf,
+    --       })
+    --     end)
+    -- end
+    --
+    -- if vim.g.did_very_lazy then
+    --   do_bufread()
+    -- else
+    --   vim.api.nvim_create_autocmd("User", {
+    --     pattern = "VeryLazy",
+    --     once = true,
+    --     callback = do_bufread,
+    --   })
+    -- end
   end)
 end)
 
