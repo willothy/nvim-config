@@ -1,4 +1,13 @@
 local commands = {
+  Detach = {
+    function()
+      vim.system({ "sesh", "detach" }, {}, function(obj)
+        if obj.code ~= 0 then
+          vim.notify("Failed to detach from session", vim.log.levels.ERROR, {})
+        end
+      end)
+    end,
+  },
   Capture = {
     function(args)
       local function max_length(list)

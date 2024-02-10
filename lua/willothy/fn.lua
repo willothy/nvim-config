@@ -362,4 +362,113 @@ function M.create_command(name, opts)
   vim.api.nvim_create_user_command(name, command, opts)
 end
 
+function M.round(n)
+  return math.floor(n + 0.5)
+end
+
+function M.nanos_to_ms(nanos)
+  return nanos / 1e6
+end
+
+---@param multiplier integer
+---@param format string | fun(n: number): string
+local function mkunit(multiplier, format)
+  return {
+    multiplier = multiplier,
+    format = function(n)
+      local val = n / multiplier
+      if type(format) == "function" then
+        return format(val)
+      else
+        return string.format(format, val)
+      end
+    end,
+  }
+end
+
+local time_units = {
+  ns = mkunit(1, "%dns"),
+  us = mkunit(1e3, "%fus"),
+  ms = mkunit(1e6, "%fms"),
+  s = mkunit(1e9, "%fs"),
+  min = mkunit(60 * 1e9, function(n)
+    local val = n / (60 * 1e9)
+    return string.format("%fmin%s", val, val == 1 and "" or "s")
+  end),
+  hour = mkunit(60 * 60 * 1e9, function(n)
+    return string.format("%fhour%s", n, n == 1 and "" or "s")
+  end),
+  day = mkunit(24 * 60 * 60 * 1e9, function(n)
+    return string.format("%fday%s", n, n == 1 and "" or "s")
+  end),
+  week = mkunit(7 * 24 * 60 * 60 * 1e9, function(n)
+    return string.format("%fweek%s", n, n == 1 and "" or "s")
+  end),
+  month = mkunit(30 * 24 * 60 * 60 * 1e9, function(n)
+    return string.format("%fmonth%s", n, n == 1 and "" or "s")
+  end),
+  year = mkunit(365 * 24 * 60 * 60 * 1e9, function(n)
+    return string.format("%fyear%s", n, n == 1 and "" or "s")
+  end),
+}
+
+function M.fmt_duration(time, unit, to_unit)
+  unit = time_units[unit or "ms"]
+  to_unit = time_units[to_unit or "ms"]
+  if not unit or not to_unit then
+    return
+  end
+  time = time * unit.multiplier
+
+  return to_unit.format(time)
+end
+
+function M.profile(fn, iterations)
+  local results = {}
+  for _ = 1, iterations do
+    local start = vim.loop.hrtime()
+    fn()
+    local finish = vim.loop.hrtime()
+    local elapsed = finish - start
+    table.insert(results, elapsed)
+  end
+  table.sort(results)
+  local sum = vim.iter(results):fold(0, function(a, b)
+    return a + b
+  end)
+  local mean = sum / iterations
+  local median = results[M.round(iterations / 2)]
+
+  local occurrences = {}
+  local maxn = 0
+  local maxv
+  for _, v in ipairs(results) do
+    occurrences[v] = (occurrences[v] or 0) + 1
+    if occurrences[v] > maxn then
+      maxn = occurrences[v]
+      maxv = v
+    end
+  end
+  local mode = maxv
+
+  local min = results[1]
+  local max = results[iterations]
+
+  local variance = vim.iter(results):fold(0, function(acc, val)
+    return acc + (val - mean) ^ 2
+  end)
+
+  local stdev = math.sqrt(variance / iterations)
+
+  return {
+    mean = mean,
+    median = median,
+    mode = mode,
+    min = min,
+    max = max,
+    variance = variance,
+    standard_deviation = stdev,
+  }
+end
+
 return M

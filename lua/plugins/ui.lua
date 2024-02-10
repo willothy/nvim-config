@@ -1,5 +1,14 @@
 return {
   "MunifTanjim/nui.nvim",
+  -- EXTENRAL UIs --
+  {
+    "glacambre/firenvim",
+    cond = vim.g.started_by_firenvim == true,
+    lazy = false,
+    build = function()
+      vim.cmd("call firenvim#install(0)")
+    end,
+  },
   -- LAYOUT / CORE UI --
   {
     -- "folke/which-key.nvim",
@@ -45,7 +54,8 @@ return {
     end,
   },
   {
-    "rcarriga/nvim-notify",
+    -- "rcarriga/nvim-notify", -- main repo is broken on nightly
+    "ls-devs/nvim-notify",
     config = function()
       require("configs.ui.notify")
     end,

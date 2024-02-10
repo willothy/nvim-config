@@ -81,10 +81,12 @@ require("lazy").setup({
     priority = 10000,
     config = true,
     event = "VimEnter",
+    cond = true,
   },
 }, {
   defaults = {
     lazy = true,
+    cond = not vim.g.started_by_firenvim,
   },
   install = {
     missing = true,
