@@ -102,36 +102,23 @@ function FidgetView:update()
       return ret
     end
   )
-  local seen = {}
   for _, message in pairs(active) do
-    seen[message.id] = true
-    if self.handles[message.id] then
-      self.handles[message.id]:report({
-        message = message:content(),
-      })
-    else
-      self.handles[message.id] = require("fidget").progress.handle.create({
-        title = message.level or "info",
-        message = message:content(),
-        level = message.level,
-        lsp_client = {
-          name = self._view_opts.title or "noice",
-        },
-      })
-    end
-  end
-  for id, handle in pairs(self.handles) do
-    if not seen[id] then
-      handle:finish()
-      self.handles[id] = nil
-    end
+    require("fidget").notify(
+      message:content(),
+      message.level or vim.log.levels.INFO,
+      {
+        id = message.id,
+        group = "noice",
+        annote = message.opts.title,
+      }
+    )
   end
 end
 
 function FidgetView:hide()
-  for _, handle in pairs(self.handles) do
-    handle:finish()
-  end
+  -- for _, handle in pairs(self.handles) do
+  --   handle:finish()
+  -- end
 end
 
 package.loaded["noice.view.backend.fidget"] = FidgetView
@@ -149,6 +136,9 @@ require("noice").setup({
   },
   smart_move = {
     enabled = true,
+  },
+  redirect = {
+    view = "fidget",
   },
   views = {
     split = {
@@ -266,18 +256,6 @@ require("noice").setup({
         lang = "python",
         title = " python ",
       },
-      session = {
-        pattern = { "^:Session%s+" },
-        icon = "",
-        lang = "vim",
-        title = " session ",
-      },
-      git = {
-        pattern = { "^:Gitsigns%s+", "^:Neogit%s+", "^:GitLink%s+" },
-        icon = "",
-        lang = "vim",
-        title = " git ",
-      },
     },
   },
   popupmenu = {
@@ -300,16 +278,13 @@ require("noice").setup({
       filter = {
         any = {
           -- this filters messages to be shown by fidget
-          { find = "(%d+)L, (%d+)B%s+%[w%]%s*$" },
-          -- { find = "^%d+ change[s]?; before #%d+" },
-          -- { find = "^%d+ change[s]?; after #%d+" },
-          -- { find = "^%-%-No lines in buffer%-%-$" },
+          { find = "^[^%s]+%s(%d+)L, (%d+)B%s+%[w%]$" },
         },
       },
       view = "fidget",
       opts = {
         stop = true,
-        skip = false,
+        skip = true, -- change to false to show
         format = {
           "{message}",
         },
@@ -317,32 +292,3 @@ require("noice").setup({
     },
   },
 })
-
--- local quiet = {
---   ["lazy.nvim"] = true,
--- }
---
--- local levels = {
---   [vim.log.levels.DEBUG] = "debug",
---   [vim.log.levels.INFO] = "info",
---   [vim.log.levels.WARN] = "warn",
---   [vim.log.levels.ERROR] = "error",
---   [vim.log.levels.TRACE] = "fatal",
--- }
--- local notify = vim.notify
--- ---@diagnostic disable-next-line: duplicate-set-field
--- vim.notify = function(msg, level, opts)
---   opts = opts or {}
---   if opts.title and quiet[opts.title] then
---     require("fidget").progress.handle.create({
---       title = levels[level],
---       msg = vim.split(msg, "\n")[1],
---       level = level,
---       lsp_client = {
---         name = opts.title,
---       },
---     })
---     return
---   end
---   notify(msg, level, opts)
--- end
