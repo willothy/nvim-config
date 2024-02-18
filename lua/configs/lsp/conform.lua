@@ -14,6 +14,7 @@ local opts = {
     proto = { { "buf", "protolint" } },
     nasm = { { "asmfmt" } },
     asm = { { "asmfmt" } },
+    nix = {},
   },
   -- format_on_save = {
   --   timeout_ms = 500,

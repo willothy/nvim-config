@@ -60,9 +60,9 @@ function M.setup()
 
   o.mousescroll = "ver:1,hor:6"
 
-  -- o.tabstop = 2
-  -- o.shiftwidth = 2
-  -- o.softtabstop = 2
+  o.tabstop = 2
+  o.shiftwidth = 2
+  o.softtabstop = 2
   o.expandtab = true
 
   -- o.indentkeys = o.indentkeys .. ",!0\t"

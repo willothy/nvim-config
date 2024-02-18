@@ -54,8 +54,7 @@ return {
     end,
   },
   {
-    -- "rcarriga/nvim-notify", -- main repo is broken on nightly
-    "ls-devs/nvim-notify",
+    "rcarriga/nvim-notify",
     config = function()
       require("configs.ui.notify")
     end,
