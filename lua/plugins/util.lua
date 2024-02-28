@@ -37,11 +37,7 @@ return {
     event = "VeryLazy",
   },
   {
-    -- "kawre/leetcode.nvim",
-    -- branch = "dev",
-    "willothy/leetcode.nvim",
-    branch = "feat-start-with-cmd",
-    -- dir = "~/projects/lua/leetcode.nvim",
+    "kawre/leetcode.nvim",
     config = function()
       require("configs.editor.leetcode")
     end,
