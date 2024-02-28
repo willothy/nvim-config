@@ -42,12 +42,9 @@ return {
     "willothy/leetcode.nvim",
     branch = "feat-start-with-cmd",
     -- dir = "~/projects/lua/leetcode.nvim",
-    opts = {
-      lang = "rust",
-      plugins = {
-        nonstandalone = true,
-      },
-    },
+    config = function()
+      require("configs.editor.leetcode")
+    end,
     cmd = "Leet",
   },
   {
