@@ -129,6 +129,7 @@
   "statuscol.nvim": { "branch": "wip", "commit": "0d15578c6e2833f2140cf11d407a4a0ad400f2e6" },
   "stay-in-place.nvim": { "branch": "main", "commit": "0628b6db8970fc731abf9608d6f80659b58932c9" },
   "stickybuf.nvim": { "branch": "master", "commit": "2160fcd536d81f5fa43f7167dba6634e814e3154" },
+  "strat-hero.nvim": { "branch": "main", "commit": "077bf12777256a6999b2de73682334ff9c21bdc9" },
   "substitute.nvim": { "branch": "main", "commit": "17ffaeb5a1dc2dbef39cf0865d8a4b6000836714" },
   "suda.vim": { "branch": "master", "commit": "8b0fc3711760195aba104e2d190cff9af8267052" },
   "tabout.nvim": { "branch": "master", "commit": "6a8f4e67a9bfc9bfc9989cc45253180598cc4339" },
