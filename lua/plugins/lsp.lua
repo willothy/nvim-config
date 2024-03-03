@@ -7,7 +7,6 @@ return {
   },
   {
     "folke/neodev.nvim",
-    -- commit = "f7f249b361e9fb245eea24cbcd9f5502e796c6ea", -- next commit breaks vim.uv types
     config = true,
   },
   {
