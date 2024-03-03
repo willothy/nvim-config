@@ -149,8 +149,19 @@ require("mason-lspconfig").setup({
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
         root_dir = require("lspconfig.util").root_pattern(".git"),
-        before_init = require("neodev.lsp").before_init,
-        single_file_support = true,
+        before_init = function(params, config)
+          local libs = config.settings.Lua.workspace.library
+
+          for _, lib in ipairs({
+            -- "${3rd}/busted/library",
+            "${3rd}/luv/library",
+          }) do
+            table.insert(libs, lib)
+          end
+
+          return require("neodev.lsp").before_init(params, config)
+        end,
+        single_file_support = false,
         filetypes = { "lua" },
       })
     end,

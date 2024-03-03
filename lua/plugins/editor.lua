@@ -1,11 +1,15 @@
 return {
   -- DEPENDENCIES --
-  "folke/neoconf.nvim",
   "kkharji/sqlite.lua",
   "nvim-lua/plenary.nvim",
   {
     "nvim-neotest/nvim-nio",
     name = "nio",
+  },
+  {
+    "folke/neoconf.nvim",
+    config = true,
+    -- event = "VimEnter",
   },
   {
     -- "anuvyklack/hydra.nvim" -- original author
