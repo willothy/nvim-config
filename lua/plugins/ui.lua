@@ -219,9 +219,8 @@ return {
     event = "UiEnter",
   },
   {
-    -- "Bekaboo/dropbar.nvim",
-    "willothy/dropbar.nvim",
-    branch = "feat-file-preview",
+    "Bekaboo/dropbar.nvim",
+    -- "willothy/dropbar.nvim",
     -- dir = "~/projects/lua/dropbar.nvim/",
     config = function()
       require("configs.status.dropbar")

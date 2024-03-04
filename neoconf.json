@@ -52,7 +52,6 @@
     "lua_ls": {
       "Lua": {
         "workspace.checkThirdParty": false,
-        "completion.callSnippet": "Disable",
         "diagnostics": {
           "enable": true,
           "unusedLocalExclude": [
@@ -62,6 +61,11 @@
             "vim",
             "willothy"
           ]
+        },
+        "completion": {
+          "autoRequire": true,
+          "callSnippet": "Disable",
+          "displayContext": 2,
         },
         "format": {
           "enable": false
