@@ -8,6 +8,7 @@ name = "sidecar"
 crate-type = ["cdylib"]
 
 [dependencies]
+libsql = "0.2.0"
 nvim-oxi = { version = "0.4.2", features = ["neovim-nightly", "libuv"] }
 reqwest = { version = "0.11.24", features = ["json"] }
 serde = { version = "1.0.196", features = ["derive"] }
