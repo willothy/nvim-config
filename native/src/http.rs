@@ -1,11 +1,13 @@
 use std::{collections::HashMap, sync::Arc};
 
+use mlua::{FromLua, Lua};
+use mlua::{IntoLua, LuaSerdeExt};
 use nvim_oxi as oxi;
 use oxi::{
     conversion::ToObject,
     libuv::AsyncHandle,
     lua::{Poppable, Pushable},
-    Dictionary, Function, Object,
+    Dictionary, Object,
 };
 use reqwest::{
     header::{HeaderName, HeaderValue},
@@ -26,8 +28,11 @@ use oxi::lua::ffi::lua_State;
 
 use crate::object::{err, LuaJSON as _, OxiTypeName as _};
 
-impl Poppable for RequestOpts {
-    unsafe fn pop(lua_state: *mut lua_State) -> Result<Self, oxi::lua::Error> {
+impl<'a> FromLua<'a> for RequestOpts {
+    fn from_lua(
+        value: mlua::prelude::LuaValue<'a>,
+        lua: &'a Lua,
+    ) -> mlua::prelude::LuaResult<Self> {
         let mut opts = RequestOpts {
             version: None,
             headers: None,
@@ -36,86 +41,118 @@ impl Poppable for RequestOpts {
             bearer: None,
             json: None,
         };
-        for (key, value) in Dictionary::pop(lua_state)?.into_iter() {
-            match &*key.to_string_lossy() {
-                "version" => {
-                    if let oxi::ObjectKind::String = value.kind() {
-                        // Safety: ^^
-                        opts.version = Some(unsafe { value.into_string_unchecked().to_string() });
-                    } else {
-                        return Err(oxi::lua::Error::RuntimeError(format!(
-                            "invalid version: expected string, got {}",
-                            value.oxi_type_name()
-                        )));
-                    }
+        let value = match value {
+            mlua::Value::Table(t) => t,
+            _ => {
+                return Err(mlua::Error::external(format!(
+                    "expected table, got {}",
+                    value.type_name()
+                )))
+            }
+        };
+
+        for pair in value.pairs::<mlua::Value, mlua::Value>() {
+            let (key, value) = pair?;
+
+            let key = match key {
+                mlua::Value::String(key) => key,
+                _ => {
+                    return Err(mlua::Error::external(format!(
+                        "invalid key: {}",
+                        key.type_name()
+                    )))
                 }
-                "headers" => {
-                    if let oxi::ObjectKind::Dictionary = value.kind() {
+            };
+
+            match &*key.to_string_lossy() {
+                "version" => match value {
+                    mlua::Value::String(value) => {
+                        opts.version = Some(value.to_string_lossy().to_string());
+                    }
+                    _ => {
+                        return Err(mlua::Error::external(format!(
+                            "invalid version: expected string, got {}",
+                            value.type_name()
+                        )))
+                    }
+                },
+                "headers" => match value {
+                    mlua::Value::Table(t) => {
                         let mut headers = HashMap::new();
-                        for (k, v) in unsafe { value.into_dict_unchecked() } {
-                            if let oxi::ObjectKind::String = v.kind() {
-                                // Safety: ^^
-                                headers.insert(k.to_string(), unsafe {
-                                    v.into_string_unchecked().to_string()
-                                });
-                            } else {
-                                return Err(oxi::lua::Error::RuntimeError(format!(
-                                    "invalid header value: expected string, got {}",
-                                    v.oxi_type_name()
-                                )));
-                            }
+                        for pair in t.pairs::<mlua::Value, mlua::Value>() {
+                            let (k, v) = pair?;
+                            let k = match k {
+                                mlua::Value::String(k) => k,
+                                _ => {
+                                    return Err(mlua::Error::external(format!(
+                                        "invalid header key: {}",
+                                        k.type_name()
+                                    )))
+                                }
+                            };
+                            let v = match v {
+                                mlua::Value::String(v) => v,
+                                _ => {
+                                    return Err(mlua::Error::external(format!(
+                                        "invalid header value: {}",
+                                        v.type_name()
+                                    )))
+                                }
+                            };
+                            headers.insert(k.to_str()?.to_string(), v.to_str()?.to_string());
                         }
                         opts.headers = Some(headers);
-                    } else {
-                        return Err(oxi::lua::Error::RuntimeError(format!(
-                            "invalid headers: expected Dictionary, got {}",
-                            value.oxi_type_name()
-                        )));
                     }
-                }
+                    _ => {
+                        return Err(mlua::Error::external(format!(
+                            "invalid headers: expected table, got {}",
+                            value.type_name()
+                        )))
+                    }
+                },
                 "body" => {
-                    let value = value
-                        .to_owned()
-                        .into_json()
-                        .map_err(|e| oxi::lua::Error::RuntimeError(e.to_string()))?;
-                    opts.body = Some(value);
+                    opts.body = Some(
+                        value
+                            .to_owned()
+                            .into_json(lua)
+                            .map_err(|e| mlua::Error::external(e.to_string()))?,
+                    );
                 }
                 "timeout" => {
-                    if let oxi::ObjectKind::Integer = value.kind() {
-                        // Safety: ^^
-                        opts.timeout = Some(unsafe { value.as_integer_unchecked() as u64 });
-                    } else {
-                        return Err(oxi::lua::Error::RuntimeError(format!(
-                            "invalid timeout: expected integer, got {}",
-                            value.oxi_type_name()
-                        )));
-                    }
+                    opts.timeout = match value {
+                        mlua::Value::Integer(i) => Some(i as u64),
+                        _ => {
+                            return Err(mlua::Error::external(format!(
+                                "invalid timeout: expected integer, got {}",
+                                value.type_name()
+                            )))
+                        }
+                    };
                 }
                 "bearer" => {
-                    if let oxi::ObjectKind::String = value.kind() {
-                        opts.bearer = Some(unsafe { value.into_string_unchecked().to_string() });
-                    } else {
-                        return Err(oxi::lua::Error::RuntimeError(format!(
-                            "invalid bearer: expected string, got {}",
-                            value.oxi_type_name()
-                        )));
-                    }
+                    opts.bearer = match value {
+                        mlua::Value::String(s) => Some(s.to_str()?.to_string()),
+                        _ => {
+                            return Err(mlua::Error::external(format!(
+                                "invalid bearer: expected string, got {}",
+                                value.type_name()
+                            )))
+                        }
+                    };
                 }
-                "json" => {
-                    if let oxi::ObjectKind::Boolean = value.kind() {
-                        // Safety: ^^
-                        opts.json = Some(unsafe { value.as_boolean_unchecked() });
-                    } else {
-                        return Err(oxi::lua::Error::RuntimeError(format!(
+                "json" => match value {
+                    mlua::Value::Boolean(b) => opts.json = Some(b),
+                    _ => {
+                        return Err(mlua::Error::external(format!(
                             "invalid json: expected boolean, got {}",
-                            value.oxi_type_name()
-                        )));
+                            value.type_name()
+                        )))
                     }
-                }
+                },
                 _ => {
-                    return Err(oxi::lua::Error::RuntimeError(format!(
+                    return Err(mlua::Error::external(format!(
                         "invalid key: {}",
-                        key
+                        key.to_str()?
                     )))
                 }
             }
@@ -124,19 +161,20 @@ impl Poppable for RequestOpts {
     }
 }
 
-pub fn request(
+pub fn request<'a>(
+    lua: &'a Lua,
     (LuaMethod(method), LuaUrl(url), opts, callback): (
         LuaMethod,
         LuaUrl,
         RequestOpts,
-        Function<(bool, Option<Object>), ()>,
+        mlua::Function,
     ),
-) -> oxi::Result<Object> {
+) -> mlua::Result<mlua::Value<'a>> {
     // TODO: Can I reuse clients by caching them somewhere in the Lua runtime?
     let client = reqwest::ClientBuilder::new()
         .referer(true)
         .build()
-        .map_err(|e| err(e.to_string()))?;
+        .map_err(|e| mlua::Error::external(e))?;
 
     let mut request = client.request(method, url);
 
@@ -148,7 +186,7 @@ pub fn request(
             "HTTP/2" => request = request.version(Version::HTTP_2),
             "HTTP/3" => request = request.version(Version::HTTP_3),
             invalid => {
-                return Err(err(format!("invalid version {invalid}")));
+                return Err(mlua::Error::external(format!("invalid version {invalid}")));
             }
         }
     }
@@ -156,8 +194,8 @@ pub fn request(
     if let Some(headers) = opts.headers {
         for (k, v) in headers {
             request = request.header(
-                HeaderName::try_from(k).map_err(err)?,
-                HeaderValue::try_from(v).map_err(err)?,
+                HeaderName::try_from(k).map_err(|e| mlua::Error::external(e))?,
+                HeaderValue::try_from(v).map_err(|e| mlua::Error::external(e))?,
             );
         }
     }
@@ -175,10 +213,13 @@ pub fn request(
     }
 
     let rv: Arc<Mutex<Option<Result<serde_json::Value, String>>>> = Arc::new(Mutex::new(None));
+    let lua = lua as *const Lua;
     let handle = AsyncHandle::new({
         let rv = rv.clone();
         move || {
             let mut rv = rv.blocking_lock();
+
+            // let lua = mlua::Lua::init_from_ptr(state)
 
             // This panics if the value was not set, because it should have been.
             // If this panics, it is a bug.
@@ -186,26 +227,19 @@ pub fn request(
                 .take()
                 .expect("to have set the return value before the async handle is called")
             {
-                Ok(value) => match Object::from_json(value) {
+                Ok(value) => match mlua::Value::from_json(value, unsafe { &*lua }) {
                     Ok(obj) => (true, Some(obj)),
-                    Err(e) => (
-                        false,
-                        Some(
-                            e.to_string()
-                                .to_object()
-                                .expect("to convert error msg to Lua value"),
-                        ),
-                    ),
+                    Err(e) => (false, Some(e.to_string().into_lua(unsafe { &*lua })?)),
                 },
-                Err(err) => (
-                    false,
-                    Some(err.to_object().expect("to convert error msg to Lua value")),
-                ),
+                Err(err) => (false, Some(err.into_lua(unsafe { &*lua })?)),
             };
+            // mlua::serde::ser::Serializer::new(lua)
             callback.call((ok, res))?;
-            oxi::Result::Ok(())
+            mlua::Result::Ok(())
         }
-    })?;
+    })
+    .map_err(|e| mlua::Error::external(e))?;
+
     // create a new thread so that the request doesn't get interrupted on return
     std::thread::spawn(move || {
         // TODO: can I reuse the tokio runtime by caching it in the Lua registry as userdata?
@@ -235,46 +269,40 @@ pub fn request(
         })?;
         oxi::Result::Ok(())
     });
-    Ok(Object::nil())
+    Ok(mlua::Value::Nil)
 }
 
 pub struct LuaUrl(Url);
 
-impl Pushable for LuaUrl {
-    unsafe fn push(
-        self,
-        lstate: *mut oxi::lua::ffi::lua_State,
-    ) -> Result<std::ffi::c_int, oxi::lua::Error> {
-        self.0.as_str().to_string().push(lstate)
+impl<'a> FromLua<'a> for LuaUrl {
+    fn from_lua(value: mlua::Value, lua: &Lua) -> mlua::Result<Self> {
+        let s = <String as FromLua>::from_lua(value, lua)?;
+        Ok(LuaUrl(
+            Url::parse(&s).map_err(|e| mlua::Error::external(format!("{e}")))?,
+        ))
     }
 }
 
-impl Poppable for LuaUrl {
-    unsafe fn pop(lstate: *mut oxi::lua::ffi::lua_State) -> Result<Self, oxi::lua::Error> {
-        let s = <String as Poppable>::pop(lstate)?;
-        Ok(LuaUrl(Url::parse(&s).map_err(|e| {
-            oxi::lua::Error::RuntimeError(format!("{e}"))
-        })?))
+impl<'a> IntoLua<'a> for LuaUrl {
+    fn into_lua(self, lua: &Lua) -> mlua::Result<mlua::Value> {
+        self.0.as_str().into_lua(lua)
     }
 }
 
 pub struct LuaMethod(reqwest::Method);
 
-impl Pushable for LuaMethod {
-    unsafe fn push(
-        self,
-        lstate: *mut oxi::lua::ffi::lua_State,
-    ) -> Result<std::ffi::c_int, oxi::lua::Error> {
-        self.0.as_str().to_string().push(lstate)
+impl<'a> IntoLua<'a> for LuaMethod {
+    fn into_lua(self, lua: &Lua) -> mlua::Result<mlua::Value> {
+        self.0.as_str().into_lua(lua)
     }
 }
 
-impl Poppable for LuaMethod {
-    unsafe fn pop(lstate: *mut oxi::lua::ffi::lua_State) -> Result<Self, oxi::lua::Error> {
-        let s = <String as Poppable>::pop(lstate)?;
+impl<'a> FromLua<'a> for LuaMethod {
+    fn from_lua(value: mlua::Value<'a>, lua: &'a Lua) -> mlua::Result<Self> {
+        let s = <String as FromLua>::from_lua(value, lua)?;
         Ok(LuaMethod(
             reqwest::Method::from_bytes(s.as_bytes())
-                .map_err(|e| oxi::lua::Error::RuntimeError(format!("{e}")))?,
+                .map_err(|e| mlua::Error::external(format!("{e}")))?,
         ))
     }
 }
