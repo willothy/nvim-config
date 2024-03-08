@@ -87,7 +87,7 @@ function M.show()
   }
 
   ---Window configuration for the intro message floating window
-  ---@type vim.api.keyset.float_config
+  ---@type vim.api.keyset.win_config
   local win_config = {
     width = 0,
     height = #lines,
@@ -176,8 +176,8 @@ function M.show()
   winid = win
 
   save_opts({
-    laststatus = 0,
-    showtabline = 0,
+    -- laststatus = 0,
+    -- showtabline = 0,
     number = false,
     relativenumber = false,
     guicursor = "a:NoiceHiddenCursor",

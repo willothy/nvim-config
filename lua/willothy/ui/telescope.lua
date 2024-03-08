@@ -18,6 +18,11 @@ local Layout = lazy("telescope.pickers.layout")
 local open_win = function(enter, opts)
   local bufnr = vim.api.nvim_create_buf(false, true)
 
+  vim.bo[bufnr].bufhidden = "wipe"
+  vim.bo[bufnr].buftype = "nofile"
+  vim.bo[bufnr].swapfile = false
+  vim.bo[bufnr].buflisted = false
+
   local config = vim.tbl_deep_extend(
     "force",
     {
