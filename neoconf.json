@@ -8,7 +8,7 @@
         // "mason-lspconfig",
         // "mason.nvim",
         // "rust-tools.nvim",
-        // "telescope.nvim",
+        "telescope.nvim",
         // "nvim-cokeline",
         "lazy.nvim",
         "nio",
