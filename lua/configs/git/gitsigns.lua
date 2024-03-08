@@ -28,7 +28,7 @@ gitsigns.setup({
   },
   trouble = true,
   signcolumn = true,
-  _extmark_signs = true,
+  -- _extmark_signs = false,
   on_attach = vim.schedule_wrap(function(bufnr)
     vim.api.nvim_exec_autocmds("User", {
       pattern = "GitSignsAttach",

@@ -1,6 +1,9 @@
 return {
   -- DEPENDENCIES --
-  "kkharji/sqlite.lua",
+  {
+    "kkharji/sqlite.lua",
+    -- dir = "~/projects/lua/sqlite.lua/",
+  },
   "nvim-lua/plenary.nvim",
   {
     "nvim-neotest/nvim-nio",
@@ -144,6 +147,7 @@ return {
       "dhruvmanila/browser-bookmarks.nvim",
       "nvim-telescope/telescope-frecency.nvim",
       "nvim-telescope/telescope-smart-history.nvim",
+      "polirritmico/telescope-lazy-plugins.nvim",
     },
   },
   {

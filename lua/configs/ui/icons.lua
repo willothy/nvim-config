@@ -7,18 +7,4 @@ require("nvim-web-devicons").setup({
       name = "ToggleTerm",
     },
   },
-  override_by_filetype = {
-    teal = {
-      icon = "",
-      color = "#72d6d6",
-      name = "Teal",
-    },
-  },
-  override_by_extension = {
-    tl = {
-      icon = "",
-      color = "#72d6d6",
-      name = "Teal",
-    },
-  },
 })

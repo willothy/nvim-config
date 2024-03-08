@@ -135,6 +135,7 @@
   "telescope-file-browser.nvim": { "branch": "master", "commit": "8839e3f8070dfafa5b0c0e4652700298e7b872c4" },
   "telescope-frecency.nvim": { "branch": "master", "commit": "771726f7d6e7e96e9273e454b1c1f49168663a37" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "9ef21b2e6bb6ebeaf349a0781745549bbb870d27" },
+  "telescope-lazy-plugins.nvim": { "branch": "main", "commit": "c45e892fceb752cfc5ae26450631816580c103d8" },
   "telescope-menufacture": { "branch": "main", "commit": "2f342d275feab92cd6e7eb80c418d3c4370d4174" },
   "telescope-smart-history.nvim": { "branch": "master", "commit": "81a4cceaa54d65d5f7c7c26178ee63b634d3e26d" },
   "telescope.nvim": { "branch": "master", "commit": "dc1ea28cc2a02cd1cebb9d80e967807d668f78f8" },

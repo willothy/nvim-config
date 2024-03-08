@@ -28,7 +28,7 @@ return {
   {
     -- "folke/edgy.nvim",
     "willothy/edgy.nvim",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     config = function()
       require("configs.ui.edgy")
     end,
@@ -240,11 +240,13 @@ return {
       require("configs.status.statuscol")
     end,
   },
-  {
-    "lewis6991/foldsigns.nvim",
-    config = true,
-    event = "VeryLazy",
-  },
+  -- NOTE: This seems to be broken atm (likely from 0.10 sign extmark changes)
+  -- {
+  --   "lewis6991/foldsigns.nvim",
+  --   config = true,
+  --   --
+  --   event = "VeryLazy",
+  -- },
   {
     "willothy/incline.nvim",
     branch = "dev",
@@ -301,8 +303,6 @@ return {
     "echasnovski/mini.hues",
     config = true,
   },
-  "projekt0n/github-nvim-theme",
   "folke/tokyonight.nvim",
-  "yorickpeterse/nvim-grey",
   "rebelot/kanagawa.nvim",
 }
