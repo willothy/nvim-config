@@ -202,7 +202,7 @@ return {
   -- STATUS --
   {
     "willothy/nvim-cokeline",
-    dir = "~/projects/lua/cokeline/",
+    -- dir = "~/projects/lua/cokeline/",
     -- branch = "incremental-truncate",
     config = function()
       require("configs.status.cokeline")
