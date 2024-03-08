@@ -381,7 +381,6 @@ local Git = (
       "User",
       pattern = {
         "UpdateHeirlineComponents",
-        "GitSignsAttach",
         "GitSignsUpdate",
       },
       callback = function(self)
