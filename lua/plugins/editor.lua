@@ -87,12 +87,22 @@ return {
     config = true,
     event = "VeryLazy",
   },
+  -- Cool but DESTROYS startup time
+  -- {
+  --   "vhyrro/luarocks.nvim",
+  --   priority = 1000,
+  --   config = true,
+  --   lazy = false,
+  --   -- event = "VeryLazy",
+  -- },
   {
     "nvim-neorg/neorg",
+    version = "0.7.0", -- 0.8.0 switched to Luarocks for dist and it straight up doesn't work for me
     dependencies = {
       "nvim-lua/plenary.nvim",
+      -- "luarocks.nvim",
     },
-    build = ":Neorg sync-parsers",
+    -- build = ":Neorg sync-parsers",
     cmd = "Neorg",
     ft = "norg",
     config = function()
