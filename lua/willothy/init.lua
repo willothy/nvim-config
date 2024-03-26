@@ -96,15 +96,6 @@ return {
         willothy.ui.float_drag.setup()
         willothy.ui.code_actions.setup()
         willothy.ui.mode.setup()
-
-        -- Inform vim how to enable undercurl in wezterm
-        vim.api.nvim_exec2(
-          [[
-                  let &t_Cs = "\e[4:3m"
-                  let &t_Ce = "\e[4:0m"
-              ]],
-          {}
-        )
       end,
     })
 
