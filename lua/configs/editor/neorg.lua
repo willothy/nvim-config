@@ -1,8 +1,6 @@
 require("neorg").setup({
   lazy_loading = false,
   load = {
-    ["core.defaults"] = {},
-    ["core.concealer"] = {},
     ["core.dirman"] = {
       config = {
         workspaces = {
@@ -30,6 +28,13 @@ require("neorg").setup({
       },
     },
     ["core.highlights"] = {},
+    ["core.esupports.hop"] = {},
+    ["core.esupports.indent"] = {},
+    ["core.esupports.metagen"] = {},
+    ["core.pivot"] = {},
+    ["core.qol.toc"] = {},
+    ["core.qol.todo_items"] = {},
+    ["core.concealer"] = {},
     ["core.mode"] = {},
     ["core.export"] = {},
     ["core.export.markdown"] = {},
