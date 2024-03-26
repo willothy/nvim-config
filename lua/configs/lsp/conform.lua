@@ -3,6 +3,7 @@ local opts = {
     lua = { "stylua" },
     c = { { "uncrustify", "clang_format" } },
     cpp = { "clang_format" },
+    cuda = { "clang_format" },
     rust = { "rustfmt" },
     javascript = { { "prettierd", "prettier" } },
     typescript = { { "prettierd", "prettier" } },
@@ -15,6 +16,7 @@ local opts = {
     nasm = { { "asmfmt" } },
     asm = { { "asmfmt" } },
     nix = {},
+    just = { "just" },
   },
   -- format_on_save = {
   --   timeout_ms = 500,

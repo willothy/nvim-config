@@ -1,4 +1,5 @@
 require("neorg").setup({
+  lazy_loading = false,
   load = {
     ["core.defaults"] = {},
     ["core.concealer"] = {},
@@ -20,6 +21,12 @@ require("neorg").setup({
       config = {
         engine = "nvim-cmp",
         name = "Neorg",
+      },
+    },
+    ["core.neorgcmd"] = {},
+    ["core.keybinds"] = {
+      config = {
+        default_keybinds = true,
       },
     },
     ["core.highlights"] = {},
