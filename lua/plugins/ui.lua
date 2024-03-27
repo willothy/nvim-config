@@ -1,5 +1,9 @@
 return {
   "MunifTanjim/nui.nvim",
+  {
+    "grapp-dev/nui-components.nvim",
+    dir = "~/projects/lua/nui-components.nvim/",
+  },
   -- EXTENRAL UIs --
   {
     "glacambre/firenvim",
