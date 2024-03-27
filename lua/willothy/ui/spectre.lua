@@ -85,7 +85,7 @@ local search = function(state)
       autofocus = true,
       flex = 1,
       max_lines = 1,
-      -- placeholder = "Search",
+      placeholder = "Search",
       window = {
         highlight = winhighlight({
           NormalFloat = "Normal",
@@ -123,7 +123,7 @@ end
 local replace = function(state)
   return text_input({
     max_lines = 1,
-    -- placeholder = "Replace",
+    placeholder = "Replace",
     value = state.replace_text,
     on_change = function(value)
       state.replace_text = value
@@ -260,7 +260,5 @@ function M.open()
     reset_search()
   end)
 end
-
-M.open()
 
 return M
