@@ -44,29 +44,31 @@ local replace = function()
 end
 
 local results = function()
-  local next_id = 1
-  local Node = require("nui.tree").Node
   return NC.tree({
     size = 5,
     border_label = "Results",
     data = {
       NC.node({
-        id = "c",
         text = "test1",
       }),
       NC.node({
-        id = "b",
         text = "test2",
       }),
       NC.node({
         text = "test3",
-        id = "a",
       }, {
         NC.node({
           text = "test1",
         }),
         NC.node({
           text = "test2",
+        }, {
+          NC.node({
+            text = "test1",
+          }),
+          NC.node({
+            text = "test2",
+          }),
         }),
       }),
     },
