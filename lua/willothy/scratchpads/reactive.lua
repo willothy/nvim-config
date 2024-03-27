@@ -46,20 +46,17 @@ end
 
 ---@class Rx.Effect
 ---@field cx Rx.Runtime
----@field dependencies table<Rx.Signal<any>, boolean>
+---@field dependencies table<Rx.Signal, boolean>
 local Effect = {}
 
+---@param cx Rx.Runtime
+---@return Rx.Effect
 function Effect.new(cx, fn)
-  local proxy = newproxy(true)
   local self = setmetatable({
     cx = cx,
     fn = fn,
     dependencies = {},
-    proxy = proxy,
   }, Effect)
-  getmetatable(proxy).__gc = function()
-    self:cleanup()
-  end
   return self
 end
 
@@ -81,6 +78,7 @@ end
 ---@field running_effect Rx.EffectId
 ---@field effects table<Rx.EffectId, fun()>
 ---@field next_effect_id Rx.EffectId
+---@field effect_dependencies table<Rx.EffectId, table<Rx.Signal, boolean>>
 local Runtime = {}
 
 Runtime.__index = Runtime
@@ -119,6 +117,12 @@ function Runtime:run_effect(id)
     self.running_effect = id
     effect()
     self.running_effect = prev
+  end
+end
+
+function Runtime:dispose()
+  for id in pairs(self.effects) do
+    self.effects[id] = nil
   end
 end
 

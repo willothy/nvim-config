@@ -4,74 +4,142 @@ local rows, columns, gap = NC.rows, NC.columns, NC.gap
 local paragraph = NC.paragraph
 local button, text_input = NC.button, NC.text_input
 
-local view = NC.create_renderer({
-  width = 40,
-  height = 5,
-})
+local spectre_search = require("spectre.search")
+local spectre_state = require("spectre.state")
+local spectre_state_utils = require("spectre.state_utils")
+local spectre_utils = require("spectre.utils")
 
-local search = function()
+--- Sooooo work in progress
+
+local function handler(state)
+  local results = {}
+  return {
+    on_start = function()
+      results = {}
+      spectre_state.is_running = true
+    end,
+    on_result = function(item)
+      if not spectre_state.is_running then
+        return
+      end
+      table.insert(results, NC.node(item))
+      -- state.results = results
+    end,
+    on_error = function(err)
+      vim.notify_once(err, vim.log.levels.ERROR)
+    end,
+    on_finish = function()
+      if not spectre_state.is_running then
+        return
+      end
+      spectre_state.is_running = false
+      state.results = results
+      results = {}
+    end,
+  }
+end
+
+local function reset_search()
+  if spectre_state.finder_instance then
+    spectre_state.finder_instance:stop()
+    spectre_state.finder_instance = nil
+  end
+end
+
+local update_search = vim.schedule_wrap(function(state)
+  reset_search()
+
+  local search_engine = spectre_search.rg
+
+  spectre_state.options["ignore-case"] = not state.case_sensitive
+
+  spectre_state.finder_instance = search_engine:new(
+    spectre_state_utils.get_search_engine_config(),
+    handler(state)
+  )
+  spectre_state.regex = require("spectre.regex.vim")
+
+  spectre_state.finder_instance:search({
+    cwd = vim.uv.cwd(),
+    search_text = state.search_text:get_value(),
+    replace_query = state.replace_text:get_value(),
+  })
+end)
+
+local function winhighlight(tbl)
+  local s = ""
+  for k, v in pairs(tbl) do
+    if s == "" then
+      s = k .. ":" .. v
+    else
+      s = s .. "," .. k .. ":" .. v
+    end
+  end
+  return s
+end
+
+local search = function(state)
   return columns(
     { size = 3 },
     text_input({
       autofocus = true,
       flex = 1,
       max_lines = 1,
-      placeholder = "Search",
+      -- placeholder = "Search",
       window = {
-        highlight = "Normal:Normal,FloatBorder:NormalNC",
+        highlight = winhighlight({
+          NormalFloat = "Normal",
+          FloatBorder = "NormalNC",
+        }),
       },
+      value = state.search_text,
+      on_change = function(value)
+        state.search_text = value
+        update_search(state)
+      end,
     }),
     NC.checkbox({
       label = "Aa",
       default_sign = "",
       checked_sign = "",
       border_style = "rounded",
+      value = state.case_sensitive,
+      on_change = function(value)
+        state.case_sensitive = value
+        update_search(state)
+      end,
       window = {
-        highlight = "Normal:Normal,FloatBorder:NormalNC",
+        highlight = winhighlight({
+          NormalFloat = "Normal",
+          FloatBorder = "NormalNC",
+          NuiComponentsCheckboxLabelChecked = "Normal",
+          NuiComponentsCheckboxLabel = "NormalNC",
+        }),
       },
     })
   )
 end
 
-local replace = function()
+local replace = function(state)
   return text_input({
     max_lines = 1,
-    placeholder = "Replace",
+    -- placeholder = "Replace",
+    value = state.replace_text,
+    on_change = function(value)
+      state.replace_text = value
+      update_search(state)
+    end,
     window = {
       highlight = "Normal:Normal,FloatBorder:NormalNC",
     },
   })
 end
 
-local results = function()
+local results = function(state)
   return NC.tree({
     size = 5,
     border_label = "Results",
-    data = {
-      NC.node({
-        text = "test1",
-      }),
-      NC.node({
-        text = "test2",
-      }),
-      NC.node({
-        text = "test3",
-      }, {
-        NC.node({
-          text = "test1",
-        }),
-        NC.node({
-          text = "test2",
-        }, {
-          NC.node({
-            text = "test1",
-          }),
-          NC.node({
-            text = "test2",
-          }),
-        }),
-      }),
-    },
+    data = state.results,
     on_select = function(node, component)
       if node:is_expanded() then
         node:collapse()
@@ -81,6 +149,8 @@ local results = function()
 
       component:get_tree():render()
     end,
+    ---@param node NuiTree.Node
+    ---@param line NuiLine
     prepare_node = function(node, line, component)
       local depth = node:get_depth()
       line:append(string.rep(" ", (depth - 1) * 2))
@@ -100,108 +170,97 @@ local results = function()
 end
 
 local body = function()
+  local state = NC.create_signal({
+    search_text = "",
+    replace_text = "",
+    case_sensitive = false,
+    results = {},
+  })
+
   return rows(
     { flex = 1 },
-    search(), -- search input and case sensitive checkbox
-    replace(), -- replace input
-    results() -- Results file tree
+    search(state), -- search input and case sensitive checkbox
+    replace(state), -- replace input
+    results(state) -- Results file tree
   )
 end
 
--- Directional form navigation
-local function move(dir)
-  vim.schedule(function()
-    local dirs = {
-      left = function(pos, current)
-        return pos[2] < current[2]
+local M = {}
+
+function M.close()
+  if M.running then
+    M.running:close()
+    M.running = nil
+  end
+  reset_search()
+end
+
+function M.open()
+  local view = NC.create_renderer({
+    width = 40,
+    height = 5,
+  })
+
+  view:add_mappings({
+    {
+      mode = "n",
+      key = "q",
+      handler = function()
+        view:close()
       end,
-      right = function(pos, current)
-        return pos[2] > current[2]
+    },
+    {
+      mode = { "n", "v", "i" },
+      key = "<C-l>",
+      handler = function()
+        local c = view:get_component_by_direction("right")
+        if c then
+          c:focus()
+        end
       end,
-      up = function(pos, current)
-        return pos[1] < current[1]
+    },
+    {
+      mode = { "n", "v", "i" },
+      key = "<C-h>",
+      handler = function()
+        local c = view:get_component_by_direction("left")
+        if c then
+          c:focus()
+        end
       end,
-      down = function(pos, current)
-        return pos[1] > current[1]
+    },
+    {
+      mode = { "n", "v", "i" },
+      key = "<C-k>",
+      handler = function()
+        local c = view:get_component_by_direction("up")
+        if c then
+          c:focus()
+        end
       end,
-    }
+    },
+    {
+      mode = { "n", "v", "i" },
+      key = "<C-j>",
+      handler = function()
+        local c = view:get_component_by_direction("down")
+        if c then
+          c:focus()
+        end
+      end,
+    },
+  })
 
-    local focused = view:get_last_focused_component()
+  M.running = view
 
-    local focusable = vim
-      .iter(view:get_focusable_components())
-      :filter(function(_, component)
-        return component ~= focused
-      end)
-      :map(function(component)
-        local winid = component.winid
-        return {
-          component = component,
-          pos = vim.api.nvim_win_get_position(winid),
-        }
-      end)
-      :filter(function(component)
-        return dirs[dir](
-          component.pos,
-          vim.api.nvim_win_get_position(focused.winid)
-        )
-      end)
-      :totable()
+  view:render(body)
 
-    table.sort(focusable, function(a, b)
-      local focused_pos = vim.api.nvim_win_get_position(focused.winid)
-
-      if dir == "left" or dir == "right" then
-        return math.abs(a.pos[2] - focused_pos[2])
-          < math.abs(b.pos[2] - focused_pos[2])
-      else
-        return math.abs(a.pos[1] - focused_pos[1])
-          < math.abs(b.pos[1] - focused_pos[1])
-      end
-    end)
-
-    if focusable[1] then
-      focusable[1].component:focus()
-    end
+  view:on_unmount(function()
+    M.running = nil
+    reset_search()
   end)
 end
 
-view:add_mappings({
-  {
-    mode = "n",
-    key = "q",
-    handler = function()
-      view:close()
-    end,
-  },
-  {
-    mode = { "n", "v", "i" },
-    key = "<C-l>",
-    handler = function()
-      move("right")
-    end,
-  },
-  {
-    mode = { "n", "v", "i" },
-    key = "<C-h>",
-    handler = function()
-      move("left")
-    end,
-  },
-  {
-    mode = { "n", "v", "i" },
-    key = "<C-k>",
-    handler = function()
-      move("up")
-    end,
-  },
-  {
-    mode = { "n", "v", "i" },
-    key = "<C-j>",
-    handler = function()
-      move("down")
-    end,
-  },
-})
+M.open()
 
-view:render(body)
+return M

@@ -3,7 +3,7 @@ return {
   {
     "willothy/nui-components.nvim",
     -- "grapp-dev/nui-components.nvim",
-    -- dir = "~/projects/lua/nui-components.nvim/",
+    dir = "~/projects/lua/nui-components.nvim/",
   },
   -- EXTENRAL UIs --
   {
@@ -24,6 +24,10 @@ return {
     end,
     event = "VeryLazy",
   },
+  -- {
+  --   "tamton-aquib/keys.nvim",
+  --   cmd = "KeysToggle",
+  -- },
   {
     "nvim-tree/nvim-web-devicons",
     config = function()
