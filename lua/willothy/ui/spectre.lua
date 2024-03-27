@@ -49,6 +49,11 @@ end
 local update_search = vim.schedule_wrap(function(state)
   reset_search()
 
+  local search_text = state.search_text:get_value()
+  if state.search_text:get_value() == "" then
+    return
+  end
+
   local search_engine = spectre_search.rg
 
   spectre_state.options["ignore-case"] = not state.case_sensitive
@@ -61,7 +66,7 @@ local update_search = vim.schedule_wrap(function(state)
 
   spectre_state.finder_instance:search({
     cwd = vim.uv.cwd(),
-    search_text = state.search_text:get_value(),
+    search_text = search_text,
     replace_query = state.replace_text:get_value(),
   })
 end)
@@ -85,7 +90,7 @@ local search = function(state)
       autofocus = true,
       flex = 1,
       max_lines = 1,
-      placeholder = "Search",
+      -- placeholder = "Search",
       window = {
         highlight = winhighlight({
           NormalFloat = "Normal",
@@ -123,7 +128,7 @@ end
 local replace = function(state)
   return text_input({
     max_lines = 1,
-    placeholder = "Replace",
+    -- placeholder = "Replace",
     value = state.replace_text,
     on_change = function(value)
       state.replace_text = value
@@ -199,6 +204,12 @@ function M.open()
   local view = NC.create_renderer({
     width = 40,
     height = 5,
+    keymap = {
+      focus_left = "<C-h>",
+      focus_right = "<C-l>",
+      focus_down = "<C-j>",
+      focus_up = "<C-k>",
+    },
   })
 
   view:add_mappings({
@@ -209,46 +220,46 @@ function M.open()
         view:close()
       end,
     },
-    {
-      mode = { "n", "v", "i" },
-      key = "<C-l>",
-      handler = function()
-        local c = view:get_component_by_direction("right")
-        if c then
-          c:focus()
-        end
-      end,
-    },
-    {
-      mode = { "n", "v", "i" },
-      key = "<C-h>",
-      handler = function()
-        local c = view:get_component_by_direction("left")
-        if c then
-          c:focus()
-        end
-      end,
-    },
-    {
-      mode = { "n", "v", "i" },
-      key = "<C-k>",
-      handler = function()
-        local c = view:get_component_by_direction("up")
-        if c then
-          c:focus()
-        end
-      end,
-    },
-    {
-      mode = { "n", "v", "i" },
-      key = "<C-j>",
-      handler = function()
-        local c = view:get_component_by_direction("down")
-        if c then
-          c:focus()
-        end
-      end,
-    },
+    -- {
+    --   mode = { "n", "v", "i" },
+    --   key = "<C-l>",
+    --   handler = function()
+    --     local c = view:get_component_by_direction("right")
+    --     if c then
+    --       c:focus()
+    --     end
+    --   end,
+    -- },
+    -- {
+    --   mode = { "n", "v", "i" },
+    --   key = "<C-h>",
+    --   handler = function()
+    --     local c = view:get_component_by_direction("left")
+    --     if c then
+    --       c:focus()
+    --     end
+    --   end,
+    -- },
+    -- {
+    --   mode = { "n", "v", "i" },
+    --   key = "<C-k>",
+    --   handler = function()
+    --     local c = view:get_component_by_direction("up")
+    --     if c then
+    --       c:focus()
+    --     end
+    --   end,
+    -- },
+    -- {
+    --   mode = { "n", "v", "i" },
+    --   key = "<C-j>",
+    --   handler = function()
+    --     local c = view:get_component_by_direction("down")
+    --     if c then
+    --       c:focus()
+    --     end
+    --   end,
+    -- },
   })
 
   M.running = view
@@ -260,5 +271,7 @@ function M.open()
     reset_search()
   end)
 end
+
+M.open()
 
 return M
