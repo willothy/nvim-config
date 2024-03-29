@@ -83,25 +83,67 @@ local function winhighlight(tbl)
   return s
 end
 
+local function focus_handler(state, cursor)
+  return function(self)
+    self.border:set_highlight("FloatTitleTransparent")
+    self:get_renderer():redraw()
+    if not state.old_guicursor:get_value() then
+      state.old_guicursor = vim.o.guicursor
+    end
+    if cursor then
+      vim.o.guicursor = cursor
+    elseif state.old_guicursor:get_value() then
+      vim.o.guicursor = state.old_guicursor:get_value()
+    end
+  end
+end
+local function blur_handler(_state)
+  return function(self)
+    self.border:set_highlight("NormalNC")
+    self:get_renderer():redraw()
+  end
+end
+local function unmount_handler(state)
+  return function()
+    if state.old_guicursor:get_value() then
+      vim.o.guicursor = state.old_guicursor:get_value()
+      state.old_guicursor = nil
+    end
+  end
+end
+
+local component_winhl = winhighlight({
+  Normal = "Normal",
+  NormalFloat = "Normal",
+  FloatBorder = "NormalNC",
+  FloatTitle = "FloatTitleTransparent",
+  NvimFloat = "Normal",
+  NuiComponentsCheckboxLabelChecked = "Normal",
+  NuiComponentsCheckboxLabel = "NormalNC",
+})
+
 local search = function(state)
+  local on_focus = focus_handler(state)
+  local on_blur = blur_handler(state)
+  local on_unmount = unmount_handler(state)
   return columns(
     { size = 3 },
     text_input({
       autofocus = true,
       flex = 1,
       max_lines = 1,
-      -- placeholder = "Search",
+      placeholder = "Search",
       window = {
-        highlight = winhighlight({
-          NormalFloat = "Normal",
-          FloatBorder = "NormalNC",
-        }),
+        highlight = component_winhl,
       },
       value = state.search_text,
       on_change = function(value)
         state.search_text = value
         update_search(state)
       end,
+      on_unmount = on_unmount,
+      on_focus = on_focus,
+      on_blur = on_blur,
     }),
     NC.checkbox({
       label = "Aa",
@@ -109,38 +151,59 @@ local search = function(state)
       checked_sign = "",
       border_style = "rounded",
       value = state.case_sensitive,
+      window = {
+        highlight = component_winhl,
+      },
       on_change = function(value)
         state.case_sensitive = value
         update_search(state)
       end,
-      window = {
-        highlight = winhighlight({
-          NormalFloat = "Normal",
-          FloatBorder = "NormalNC",
-          NuiComponentsCheckboxLabelChecked = "Normal",
-          NuiComponentsCheckboxLabel = "NormalNC",
-        }),
-      },
+      on_unmount = on_unmount,
+      on_focus = focus_handler(state, "a:hor25"),
+      on_blur = on_blur,
     })
   )
 end
 
 local replace = function(state)
+  local on_focus = focus_handler(state)
+  local on_blur = blur_handler(state)
+  local on_unmount = unmount_handler(state)
+
   return text_input({
     max_lines = 1,
-    -- placeholder = "Replace",
+    placeholder = "Replace",
     value = state.replace_text,
+    window = {
+      highlight = component_winhl,
+    },
     on_change = function(value)
       state.replace_text = value
       update_search(state)
     end,
-    window = {
-      highlight = "Normal:Normal,FloatBorder:NormalNC",
-    },
+    on_unmount = on_unmount,
+    on_focus = on_focus,
+    on_blur = on_blur,
   })
 end
 
 local results = function(state)
+  local on_focus = function(self)
+    self.border:set_highlight("FloatTitleTransparent")
+    local winhl = vim.wo[self.winid].winhl
+    -- Hack because nui tree messes up the winhl
+    vim.schedule(function()
+      if winhl == "" then
+        vim.wo[self.winid].winhl = "Normal:Normal"
+      else
+        vim.wo[self.winid].winhl = winhl .. ",Normal:Normal"
+      end
+    end)
+  end
+  local on_blur = function(self)
+    self.border:set_highlight("NormalNC")
+  end
+  local on_unmount = unmount_handler(state)
   return NC.tree({
     size = 5,
     border_label = "Results",
@@ -154,6 +217,9 @@ local results = function(state)
 
       component:get_tree():render()
     end,
+    window = {
+      highlight = component_winhl,
+    },
     ---@param node NuiTree.Node
     ---@param line NuiLine
     prepare_node = function(node, line, component)
@@ -171,23 +237,10 @@ local results = function(state)
       line:append(node.text)
       return line
     end,
+    on_focus = on_focus,
+    on_blur = on_blur,
+    on_unmount = on_unmount,
   })
-end
-
-local body = function()
-  local state = NC.create_signal({
-    search_text = "",
-    replace_text = "",
-    case_sensitive = false,
-    results = {},
-  })
-
-  return rows(
-    { flex = 1 },
-    search(state), -- search input and case sensitive checkbox
-    replace(state), -- replace input
-    results(state) -- Results file tree
-  )
 end
 
 local M = {}
@@ -201,6 +254,14 @@ function M.close()
 end
 
 function M.open()
+  local state = NC.create_signal({
+    search_text = "",
+    replace_text = "",
+    case_sensitive = false,
+    results = {},
+    old_guicursor = nil,
+  })
+
   local view = NC.create_renderer({
     width = 40,
     height = 5,
@@ -210,6 +271,9 @@ function M.open()
       focus_down = "<C-j>",
       focus_up = "<C-k>",
     },
+    on_close = function()
+      vim.print("close")
+    end,
   })
 
   view:add_mappings({
@@ -220,51 +284,18 @@ function M.open()
         view:close()
       end,
     },
-    -- {
-    --   mode = { "n", "v", "i" },
-    --   key = "<C-l>",
-    --   handler = function()
-    --     local c = view:get_component_by_direction("right")
-    --     if c then
-    --       c:focus()
-    --     end
-    --   end,
-    -- },
-    -- {
-    --   mode = { "n", "v", "i" },
-    --   key = "<C-h>",
-    --   handler = function()
-    --     local c = view:get_component_by_direction("left")
-    --     if c then
-    --       c:focus()
-    --     end
-    --   end,
-    -- },
-    -- {
-    --   mode = { "n", "v", "i" },
-    --   key = "<C-k>",
-    --   handler = function()
-    --     local c = view:get_component_by_direction("up")
-    --     if c then
-    --       c:focus()
-    --     end
-    --   end,
-    -- },
-    -- {
-    --   mode = { "n", "v", "i" },
-    --   key = "<C-j>",
-    --   handler = function()
-    --     local c = view:get_component_by_direction("down")
-    --     if c then
-    --       c:focus()
-    --     end
-    --   end,
-    -- },
   })
 
   M.running = view
 
-  view:render(body)
+  view:render(function()
+    return rows(
+      { flex = 1 },
+      search(state), -- search input and case sensitive checkbox
+      replace(state), -- replace input
+      results(state) -- Results file tree
+    )
+  end)
 
   view:on_unmount(function()
     M.running = nil

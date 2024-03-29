@@ -1,6 +1,7 @@
 require("neorg").setup({
   lazy_loading = false,
   load = {
+    ["core.defaults"] = {},
     ["core.dirman"] = {
       config = {
         workspaces = {

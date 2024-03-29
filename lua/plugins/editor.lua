@@ -90,15 +90,19 @@ return {
   {
     "vhyrro/luarocks.nvim",
     priority = 1000,
-    config = true,
+    config = function()
+      require("luarocks-nvim").setup({})
+    end,
     event = "VeryLazy",
   },
   {
     "nvim-neorg/neorg",
     dependencies = {
+      "pysan3/pathlib.nvim",
       "nvim-lua/plenary.nvim",
       "vhyrro/luarocks.nvim",
       "nvim-neorg/lua-utils.nvim",
+      "nvim-treesitter/nvim-treesitter",
     },
     cmd = "Neorg",
     ft = "norg",
