@@ -28,12 +28,11 @@ wk.register({
     "projects",
   },
   u = {
-    telescope.undo,
+    function()
+      vim.cmd.UndotreeToggle()
+    end,
     "undo history",
   },
-  -- t = {
-  --   telescope
-  -- },
   P = {
     telescope.builtin,
     "telescope pickers",

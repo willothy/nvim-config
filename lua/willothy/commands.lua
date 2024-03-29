@@ -81,21 +81,6 @@ local commands = {
     end,
     nargs = 1,
   },
-  Browse = {
-    function(args)
-      local target
-      if args and args["args"] then
-        target = args["args"]
-      else
-        target = vim.fn.getcwd(-1)
-      end
-      require("telescope").extensions.file_browser.file_browser({
-        cwd = target,
-      })
-    end,
-    nargs = "?",
-    desc = "Browse the provided directory or the current directory",
-  },
   Reload = {
     function(args)
       local util = willothy.debug

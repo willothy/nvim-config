@@ -153,23 +153,15 @@ return {
     cmd = "Telescope",
     dependencies = {
       "nvim-telescope/telescope-file-browser.nvim",
-      "molecule-man/telescope-menufacture",
       "dhruvmanila/browser-bookmarks.nvim",
       "nvim-telescope/telescope-frecency.nvim",
       "nvim-telescope/telescope-smart-history.nvim",
       "polirritmico/telescope-lazy-plugins.nvim",
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+      },
     },
-  },
-  {
-    "FabianWirth/search.nvim",
-    config = function()
-      require("configs.editor.search")
-    end,
-    cmd = "Search",
-  },
-  {
-    "nvim-telescope/telescope-fzf-native.nvim",
-    build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
   },
   {
     "stevearc/oil.nvim",

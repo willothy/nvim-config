@@ -8,64 +8,6 @@ local schedule_if_buf_valid = function(buf, fn)
   end)
 end
 
----FIXME: I never use these mouse mappings. I should remove them.
-
-local mouse_scroll_up = function(prompt_bufnr)
-  local action_state = require("telescope.actions.state")
-  local actions = require("telescope.actions")
-  local picker = action_state.get_current_picker(prompt_bufnr)
-
-  local mouse_win = vim.fn.getmousepos().winid
-  if picker.results_win == mouse_win then
-    local win_info = vim.api.nvim_win_call(mouse_win, vim.fn.winsaveview)
-    if win_info.topline > 1 then
-      schedule_if_buf_valid(prompt_bufnr, function()
-        -- picker:set_selection(vim.fn.getmousepos().line - 1)
-        actions.results_scrolling_up(prompt_bufnr)
-      end)
-    end
-    return ""
-  elseif mouse_win == picker.preview_win then
-    schedule_if_buf_valid(prompt_bufnr, function()
-      actions.preview_scrolling_up(prompt_bufnr)
-    end)
-    return ""
-  else
-    return "<ScrollWheelUp>"
-  end
-end
-
-local mouse_scroll_down = function(prompt_bufnr)
-  local action_state = require("telescope.actions.state")
-  local actions = require("telescope.actions")
-  local picker = action_state.get_current_picker(prompt_bufnr)
-
-  local mouse_win = vim.fn.getmousepos().winid
-  local win_info = vim.api.nvim_win_call(mouse_win, vim.fn.winsaveview)
-  if mouse_win == picker.results_win then
-    if
-      win_info.topline
-      < (
-        vim.api.nvim_buf_line_count(vim.api.nvim_win_get_buf(mouse_win))
-        - vim.api.nvim_win_get_height(mouse_win)
-      )
-    then
-      schedule_if_buf_valid(prompt_bufnr, function()
-        actions.results_scrolling_down(prompt_bufnr)
-        picker:set_selection(vim.fn.getmousepos().line - 1)
-      end)
-    end
-    return ""
-  elseif mouse_win == picker.preview_win then
-    schedule_if_buf_valid(prompt_bufnr, function()
-      actions.preview_scrolling_down(prompt_bufnr)
-    end)
-    return ""
-  else
-    return "<ScrollWheelDown>"
-  end
-end
-
 local mouse_click = function(prompt_bufnr)
   local action_state = require("telescope.actions.state")
   local actions = require("telescope.actions")
@@ -78,21 +20,6 @@ local mouse_click = function(prompt_bufnr)
     end)
   elseif pos and pos.winid == picker.preview_win then
     schedule_if_buf_valid(prompt_bufnr, function()
-      actions.select_default(prompt_bufnr)
-    end)
-  end
-  return ""
-end
-
-local double_mouse_click = function(prompt_bufnr)
-  local actions = require("telescope.actions")
-  local action_state = require("telescope.actions.state")
-  local picker = action_state.get_current_picker(prompt_bufnr)
-
-  local pos = vim.fn.getmousepos()
-  if pos and pos.winid == picker.results_win then
-    schedule_if_buf_valid(prompt_bufnr, function()
-      picker:set_selection(pos.line - 1)
       actions.select_default(prompt_bufnr)
     end)
   end
@@ -243,23 +170,8 @@ telescope.setup({
           type = "action",
           opts = { expr = true },
         },
-        ["<scrollwheeldown>"] = {
-          mouse_scroll_down,
-          type = "action",
-          opts = { expr = true },
-        },
-        ["<scrollwheelup>"] = {
-          mouse_scroll_up,
-          type = "action",
-          opts = { expr = true },
-        },
         ["<leftmouse>"] = {
           mouse_click,
-          type = "action",
-          opts = { expr = true },
-        },
-        ["<2-LeftMouse>"] = {
-          double_mouse_click,
           type = "action",
           opts = { expr = true },
         },
@@ -271,23 +183,8 @@ telescope.setup({
           type = "action",
           opts = { expr = true },
         },
-        ["<ScrollWheelDown>"] = {
-          mouse_scroll_up,
-          type = "action",
-          opts = { expr = true },
-        },
-        ["<ScrollWheelUp>"] = {
-          mouse_scroll_down,
-          type = "action",
-          opts = { expr = true },
-        },
         ["<LeftMouse>"] = {
           mouse_click,
-          type = "action",
-          opts = { expr = true },
-        },
-        ["<2-LeftMouse>"] = {
-          double_mouse_click,
           type = "action",
           opts = { expr = true },
         },
@@ -365,11 +262,10 @@ telescope.setup({
   },
 })
 
-local extensions = {
+for _, ext in ipairs({
   "fzf",
   "frecency",
   "smart_history",
-  -- "menufacture",
   -- "neoclip",
   -- "file_browser",
   -- "projects",
@@ -379,8 +275,6 @@ local extensions = {
   -- "yank_history",
   -- "attempt",
   -- "bookmarks",
-}
-
-for _, ext in ipairs(extensions) do
+}) do
   telescope.load_extension(ext)
 end
