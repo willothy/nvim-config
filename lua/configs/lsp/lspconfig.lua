@@ -225,6 +225,9 @@ vim.diagnostic.config({
   severity_sort = true,
   update_in_insert = true,
   underline = true,
+  warden = {
+    line_highlight = true,
+  },
   signs = {
     text = {
       [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
@@ -237,23 +240,17 @@ vim.diagnostic.config({
     header = setmetatable({}, {
       __index = function(_, k)
         local arr = {
-          function()
-            return string.format(
-              "diagnostics: %s %s",
-              require("nvim-web-devicons").get_icon_by_filetype(
-                vim.bo.filetype
-              ),
-              vim.bo.filetype
-            )
-          end,
-          function()
-            return "Title"
-          end,
+          string.format(
+            "Diagnostics: %s %s",
+            require("nvim-web-devicons").get_icon_by_filetype(vim.bo.filetype),
+            vim.bo.filetype
+          ),
+          "Title",
         }
-        return arr[k]()
+        return arr[k]
       end,
     }),
-    source = "always",
+    source = true,
     border = "solid",
     focusable = false,
   },

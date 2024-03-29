@@ -3,8 +3,6 @@ local icons = willothy.ui.icons
 local opts = {
   placement = "top",
   scope = "line",
-  -- scope = "node",
-  show_sign = true,
   update_event = {
     "DiagnosticChanged",
     -- "BufReadPost",
@@ -26,10 +24,14 @@ local opts = {
       [4] = "Trace",
     }
 
-    local icon = icons.diagnostics[levels[diag.severity]] or ""
-    local space = icon == "" and "" or " "
+    local icon = icons.diagnostics[levels[diag.severity]]
 
-    return icon .. space .. diag.message
+    return string.format(
+      "%s%s%s",
+      icon or "",
+      icon and " " or "",
+      diag.message or ""
+    )
   end,
 }
 
