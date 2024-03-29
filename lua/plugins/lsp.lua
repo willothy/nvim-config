@@ -210,7 +210,5 @@ return {
     end,
   },
   -- Individual debugger plugins
-  {
-    "jbyuki/one-small-step-for-vimkind",
-  },
+  "jbyuki/one-small-step-for-vimkind",
 }

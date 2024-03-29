@@ -1,7 +1,6 @@
 vim.g.nvim_ghost_autostart = 0
 
 return {
-  "famiu/bufdelete.nvim",
   {
     "willothy/strat-hero.nvim",
     config = true,

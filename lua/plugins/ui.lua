@@ -1,10 +1,4 @@
 return {
-  "MunifTanjim/nui.nvim",
-  {
-    "willothy/nui-components.nvim",
-    -- "grapp-dev/nui-components.nvim",
-    -- dir = "~/projects/lua/nui-components.nvim/",
-  },
   -- EXTENRAL UIs --
   {
     "glacambre/firenvim",
@@ -134,6 +128,7 @@ return {
   {
     "folke/trouble.nvim",
     branch = "dev",
+    -- dir = "~/projects/lua/trouble.nvim/",
     -- "willothy/trouble.nvim",
     cmd = "Trouble",
     -- branch = "fix-fillchars",
@@ -166,10 +161,6 @@ return {
     config = function()
       require("configs.windows.window-picker")
     end,
-  },
-  {
-    "carbon-steel/detour.nvim",
-    cmd = { "Detour", "DetourCurrentWindow" },
   },
   {
     -- "mrjones2014/smart-splits.nvim",

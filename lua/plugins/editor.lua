@@ -1,14 +1,4 @@
 return {
-  -- DEPENDENCIES --
-  {
-    "kkharji/sqlite.lua",
-    -- dir = "~/projects/lua/sqlite.lua/",
-  },
-  "nvim-lua/plenary.nvim",
-  {
-    "nvim-neotest/nvim-nio",
-    name = "nio",
-  },
   {
     "folke/neoconf.nvim",
     config = true,
