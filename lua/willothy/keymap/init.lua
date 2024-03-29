@@ -29,6 +29,22 @@ return {
     local bind = willothy.map.bind
 
     require("which-key").register({
+      ["<leader>n"] = {
+        nil,
+        "neorg",
+        group = true,
+      },
+      ["<leader>nn"] = "note",
+      ["<leader>nl"] = "list",
+      ["<leader>ni"] = "insert",
+      ["<leader>nt"] = "task",
+      ["<leader>nm"] = "mode",
+      ["<leader>o"] = {
+        function() end,
+        "options",
+        group = true,
+        _ = "which_key_ignore",
+      },
       ["<leader>"] = {
         t = {
           name = "terminal",

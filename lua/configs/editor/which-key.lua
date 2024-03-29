@@ -74,4 +74,5 @@ require("which-key").setup({
     group = "",
   },
   sort_by_description = true,
+  ignore_missing = false,
 })

@@ -79,6 +79,11 @@ function Binding:with_desc(desc)
   return self
 end
 
+function Binding:with(key, val)
+  self[key] = val
+  return self
+end
+
 function M.bind(mod, name, ...)
   local args = { ... }
 
