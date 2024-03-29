@@ -189,7 +189,7 @@ function M.show()
   autocmd = vim.api.nvim_create_autocmd({
     "BufModifiedSet",
     "BufReadPre",
-    "CmdlineEnter",
+    -- "CmdlineEnter",
     "CursorMoved",
     "InsertEnter",
     "TermOpen",
