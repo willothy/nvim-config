@@ -3,26 +3,29 @@ local icons = willothy.ui.icons
 local trouble = require("trouble")
 
 trouble.setup({
-  signs = {
-    error = icons.diagnostics.error,
-    warning = icons.diagnostics.warning,
-    hint = icons.diagnostics.hint,
-    information = icons.diagnostics.info,
+  pinned = false,
+  focus = false,
+  follow = true,
+  results = {
+    win = {
+      type = "split",
+      wo = {
+        fillchars = vim.o.fillchars,
+      },
+    },
+    indent_guides = true,
+    multiline = true,
   },
-  fold_open = icons.fold.open,
-  fold_closed = icons.fold.closed,
-  auto_open = false,
-  auto_close = false,
-  track_cursor = true,
-  padding = false,
-  use_diagnostic_signs = true,
+  preview = {
+    win = {
+      type = "main",
+      wo = {
+        winbar = "",
+        statuscolumn = "%!v:lua.StatusCol()",
+        list = true,
+        number = true,
+        relativenumber = false,
+      },
+    },
+  },
 })
-
-local view = require("trouble.view")
-local update = view.update
-view.update = function(self, opts)
-  update(self, opts)
-  if opts and opts.mode then
-    vim.b[self.buf].trouble_mode = opts.mode
-  end
-end

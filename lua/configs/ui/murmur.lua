@@ -11,7 +11,7 @@ require("murmur").setup({
     "noice",
     "SidebarNvim",
     "terminal",
-    "Trouble",
+    "trouble",
   },
   cursor_rgb = "Cursorword",
   cursor_rgb_current = "CursorwordCurrent",

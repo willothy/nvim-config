@@ -146,7 +146,7 @@
   "todo-comments.nvim": { "branch": "main", "commit": "a7e39ae9e74f2c8c6dc4eea6d40c3971ae84752d" },
   "toggleterm.nvim": { "branch": "main", "commit": "193786e0371e3286d3bc9aa0079da1cd41beaa62" },
   "tokyonight.nvim": { "branch": "main", "commit": "9bf9ec53d5e87b025e2404069b71e7ebdc3a13e5" },
-  "trouble.nvim": { "branch": "fix-fillchars", "commit": "44261353272405c49c9e7250dd4b4add368e4eda" },
+  "trouble.nvim": { "branch": "dev", "commit": "151ef738dc2b40079e7de855bb8674e8573d7f71" },
   "undotree": { "branch": "master", "commit": "aa93a7e5890dbbebbc064cd22260721a6db1a196" },
   "venn.nvim": { "branch": "main", "commit": "e4d68341a73dd56c64955058821a58295fb337b1" },
   "wezterm.nvim": { "branch": "main", "commit": "9c8e58f8918b2b883d11bf6589786cefbbaea310" },

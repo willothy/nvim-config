@@ -164,7 +164,7 @@ Diagnostics = {
     if buffer.is_focused then
       trouble.toggle()
     elseif trouble.is_open() then
-      if vim.bo.filetype == "Trouble" then
+      if vim.bo.filetype == "trouble" then
         buffer:focus()
         trouble.close()
       else

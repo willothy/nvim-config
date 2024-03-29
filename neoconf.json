@@ -9,6 +9,7 @@
         // "mason.nvim",
         // "rust-tools.nvim",
         "telescope.nvim",
+        "trouble.nvim",
         // "nvim-cokeline",
         "lazy.nvim",
         "nio",

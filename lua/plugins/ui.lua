@@ -132,10 +132,11 @@ return {
     },
   },
   {
-    -- "folke/trouble.nvim",
-    "willothy/trouble.nvim",
+    "folke/trouble.nvim",
+    branch = "dev",
+    -- "willothy/trouble.nvim",
     cmd = "Trouble",
-    branch = "fix-fillchars",
+    -- branch = "fix-fillchars",
     config = function()
       require("configs.editor.trouble")
     end,

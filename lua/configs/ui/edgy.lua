@@ -76,7 +76,7 @@ local terminal = View.new({
 })
 
 local trouble = bottom:extend({
-  ft = "Trouble",
+  ft = "trouble",
 })
 
 local function get_rhs_width()
@@ -370,67 +370,68 @@ local opts = {
         require("spectre").open()
       end,
     }),
-    trouble:extend({
-      title = "Diagnostics",
-      filter = function(buf, win)
-        return (
-          vim.b[buf].trouble_mode == "document_diagnostics"
-          or vim.b[buf].trouble_mode == "workspace_diagnostics"
-          or vim.b[buf].trouble_mode == nil
-        ) and not is_float(win)
-      end,
-      open = function()
-        require("trouble").open("document_diagnostics")
-      end,
-    }),
-    trouble:extend({
-      title = "References",
-      filter = function(buf, win)
-        return vim.b[buf].trouble_mode == "lsp_references"
-          and not is_float(win)
-      end,
-      open = function()
-        require("trouble").open("lsp_references")
-      end,
-    }),
-    trouble:extend({
-      title = "Definitions",
-      filter = function(buf, win)
-        return vim.b[buf].trouble_mode == "lsp_definitions"
-          and not is_float(win)
-      end,
-      open = function()
-        require("trouble").open("lsp_definitions")
-      end,
-    }),
-    trouble:extend({
-      title = "Type Definitions",
-      filter = function(buf, win)
-        return vim.b[buf].trouble_mode == "lsp_type_definitions"
-          and not is_float(win)
-      end,
-      open = function()
-        require("trouble").open("lsp_type_definitions")
-      end,
-    }),
-    trouble:extend({
-      title = "QuickFix",
-      filter = function(buf, win)
-        return vim.b[buf].trouble_mode == "quickfix" and not is_float(win)
-      end,
-      open = function()
-        require("trouble").open("quickfix")
-      end,
-    }),
-    trouble:extend({
-      title = "LocList",
-      filter = function(buf, win)
-        return vim.b[buf].trouble_mode == "loclist" and not is_float(win)
-      end,
-      open = function()
-        require("trouble").open("loclist")
-      end,
-    }),
+    -- trouble:extend({
+    --   title = "Diagnostics",
+    --   filter = function(buf, win)
+    --     return (
+    --       vim.b[buf].trouble_mode == "document_diagnostics"
+    --       or vim.b[buf].trouble_mode == "workspace_diagnostics"
+    --       or vim.b[buf].trouble_mode == nil
+    --     ) and not is_float(win)
+    --   end,
+    --   open = function()
+    --     require("trouble").open("document_diagnostics")
+    --   end,
+    -- }),
+    -- trouble:extend({
+    --   title = "References",
+    --   filter = function(buf, win)
+    --     return vim.b[buf].trouble_mode == "lsp_references"
+    --       and not is_float(win)
+    --   end,
+    --   open = function()
+    --     require("trouble").open("lsp_references")
+    --   end,
+    -- }),
+    -- trouble:extend({
+    --   title = "Definitions",
+    --   filter = function(buf, win)
+    --     return vim.b[buf].trouble_mode == "lsp_definitions"
+    --       and not is_float(win)
+    --   end,
+    --   open = function()
+    --     require("trouble").open("lsp_definitions")
+    --   end,
+    -- }),
+    -- trouble:extend({
+    --   title = "Type Definitions",
+    --   filter = function(buf, win)
+    --     return vim.b[buf].trouble_mode == "lsp_type_definitions"
+    --       and not is_float(win)
+    --   end,
+    --   open = function()
+    --     require("trouble").open("lsp_type_definitions")
+    --   end,
+    -- }),
+    -- trouble:extend({
+    --   title = "QuickFix",
+    --   filter = function(buf, win)
+    --     return vim.b[buf].trouble_mode == "quickfix" and not is_float(win)
+    --   end,
+    --   open = function()
+    --     require("trouble").open("quickfix")
+    --   end,
+    -- }),
+    -- trouble:extend({
+    --   title = "LocList",
+    --   filter = function(buf, win)
+    --     return vim.b[buf].trouble_mode == "loclist" and not is_float(win)
+    --   end,
+    --   open = function()
+    --     require("trouble").open("loclist")
+    --   end,
+    -- }),
+    trouble,
   },
 
   options = {

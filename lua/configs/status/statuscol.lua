@@ -111,7 +111,7 @@ require("statuscol").setup({
     },
   },
   ft_ignore = {
-    "Trouble",
+    "trouble",
   },
   clickhandlers = {
     FoldOther = false,
