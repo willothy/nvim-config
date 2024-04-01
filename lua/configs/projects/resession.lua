@@ -447,25 +447,42 @@ vim.api.nvim_create_autocmd("QuitPre", {
         end
       end
       local modified = vim.fn.getbufinfo({
+        ---@diagnostic disable-next-line: assign-type-mismatch
         bufmodified = true,
+        ---@diagnostic disable-next-line: assign-type-mismatch
         buflisted = true,
       })
-      if modified and #modified > 0 then
-        -- don't try to quit if there are unsaved changes
-        local msg = "the following buffers have unsaved changes:\n"
-          .. table.concat(
-            vim.tbl_map(function(buf)
-              return vim.api.nvim_buf_get_name(buf.bufnr)
-            end, modified),
-            "\n"
-          )
-        vim.notify(msg, vim.log.levels.WARN)
-        return
-      end
       if is_last then
+        if modified and #modified > 0 then
+          -- don't try to quit if there are unsaved changes
+          local msg = "the following buffers have unsaved changes:\n"
+            .. table.concat(
+              vim.tbl_map(function(buf)
+                return vim.api.nvim_buf_get_name(buf.bufnr)
+              end, modified),
+              "\n"
+            )
+          vim.notify(msg, vim.log.levels.WARN)
+          return
+        end
         quitting = true
-        vim.api.nvim_exec_autocmds("VimLeavePre", {})
-        vim.cmd.quitall()
+        vim
+          .iter(vim.api.nvim_list_wins())
+          :filter(function(win)
+            return vim.api.nvim_win_get_config(win).relative ~= ""
+          end)
+          :each(function(win)
+            vim.api.nvim_win_close(win, true)
+          end)
+        vim.iter(vim.api.nvim_list_wins()):enumerate():each(function(i, win)
+          if i > 1 then
+            vim.api.nvim_win_close(win, true)
+          end
+        end)
+        -- vim.api.nvim_exec_autocmds("VimLeavePre", {})
+        vim.schedule(function()
+          vim.cmd.quitall()
+        end)
       end
     end
   end,
