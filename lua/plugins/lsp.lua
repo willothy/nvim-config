@@ -160,6 +160,11 @@ return {
       "dmitmel/cmp-cmdline-history",
       "rcarriga/cmp-dap",
       "zbirenbaum/copilot-cmp",
+      {
+        "jsongerber/nvim-px-to-rem",
+        ft = { "css", "scss", "less" },
+        config = true,
+      },
     },
     event = { "CmdlineEnter", "InsertEnter" },
     config = function()

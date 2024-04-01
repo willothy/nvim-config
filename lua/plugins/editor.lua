@@ -34,7 +34,7 @@ return {
   },
   {
     "willothy/moveline.nvim",
-    branch = "oxi",
+    -- branch = "oxi",
     event = "VeryLazy",
     build = "make build",
   },

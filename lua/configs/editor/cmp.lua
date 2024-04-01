@@ -39,42 +39,7 @@ local format = {
   end,
 }
 
-local main_sources = cmp.config.sources({
-  { name = "snippets" },
-  {
-    name = "nvim_lsp" --[[ , max_item_count = 40 ]],
-  },
-  { name = "copilot", max_item_count = 2 },
-  { name = "cody", max_item_count = 2 },
-  { name = "buffer", max_item_count = 4 },
-  { name = "path" },
-})
-
-local enabled = true
-local main_enabled = true
-vim.api.nvim_create_user_command("CmpToggle", function(args)
-  if args.bang then
-    main_enabled = not main_enabled
-    if main_enabled then
-      cmp.setup({
-        sources = main_sources,
-      })
-    else
-      cmp.setup({
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-        }),
-      })
-    end
-  else
-    enabled = not enabled
-    cmp.setup({
-      enabled = enabled,
-    })
-  end
-end, {
-  bang = true,
-})
+local comparators = require("cmp.config.compare")
 
 local opts = {
   snippet = {
@@ -82,14 +47,14 @@ local opts = {
       vim.snippet.expand(args.body)
     end,
   },
-  -- completion = {
-  --   completeopt = "menu,menuone,noselect",
-  --   autocomplete = {
-  --     "TextChanged",
-  --     "TextChangedI",
-  --     "TextChangedT",
-  --   },
-  -- },
+  completion = {
+    completeopt = "menu,menuone,noselect",
+    autocomplete = {
+      "TextChanged",
+      "TextChangedI",
+      "TextChangedT",
+    },
+  },
   experimental = {
     ghost_text = true,
   },
@@ -102,20 +67,29 @@ local opts = {
   sorting = {
     priority_weight = 10,
     comparators = {
-      cmp.config.compare.exact,
-      cmp.config.compare.scopes,
-      cmp.config.compare.kind,
-      cmp.config.compare.recently_used,
-      cmp.config.compare.offset,
-      cmp.config.compare.locality,
+      comparators.offset,
+      comparators.scopes,
+      comparators.exact,
+      comparators.score,
       require("clangd_extensions.cmp_scores"),
-      cmp.config.compare.sort_text,
-      cmp.config.compare.length,
-      cmp.config.compare.order,
+      comparators.recently_used,
+      -- comparators.locality,
+      comparators.kind,
+      comparators.length,
+      comparators.order,
     },
   },
   formatting = format,
-  sources = main_sources,
+  sources = cmp.config.sources({
+    { name = "nvim_px_to_rem" },
+    { name = "copilot", max_item_count = 1 },
+    { name = "snippets" },
+    {
+      name = "nvim_lsp" --[[ , max_item_count = 40 ]],
+    },
+    { name = "buffer", max_item_count = 4 },
+    { name = "path" },
+  }),
   mapping = {
     ["<M-k>"] = cmp.mapping(
       cmp.mapping.select_prev_item(cmp_select),
