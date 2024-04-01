@@ -354,7 +354,7 @@ local uv = vim.uv or vim.loop
 
 -- autosave once per minute
 local SAVE_INTERVAL = 60000
-local save_timer = uv.new_timer()
+local save_timer = uv.new_timer() --[[@as uv_timer_t]]
 save_timer:start(
   SAVE_INTERVAL,
   SAVE_INTERVAL,
@@ -419,12 +419,14 @@ vim.api.nvim_create_autocmd("QuitPre", {
       -- I should refactor this though it's a mess
       local only_commit = true
       local nothing_else = true
-      local buflist = vim.iter(vim.api.nvim_list_bufs()):filter(function(buf)
-        return vim.bo[buf].buftype == "" and vim.bo[buf].buflisted
-      end)
-      for buf in buflist do
+      for buf in
+        vim.iter(vim.api.nvim_list_bufs()):filter(function(buf)
+          return vim.bo[buf].buftype == "" and vim.bo[buf].buflisted
+        end)
+      do
         nothing_else = false
-        if vim.bo[buf].filetype ~= "gitcommit" then
+        local ft = vim.bo[buf].filetype
+        if ft ~= "gitcommit" and ft ~= "gitrebase" then
           only_commit = false
           break
         end

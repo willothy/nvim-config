@@ -258,7 +258,7 @@ wk.register({
   end):with_desc("harpoon: commands"),
   ["<C-t>"] = bind(function()
     local harpoon = require("harpoon")
-    local list = harpoon:list("tmux")
+    local list = harpoon:list("wezterm")
     local width_ratio = 0.45
     if vim.o.columns > 130 then
       width_ratio = 0.35

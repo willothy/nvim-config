@@ -1,9 +1,12 @@
 return {
   "famiu/bufdelete.nvim",
-  "MunifTanjim/nui.nvim",
   {
-    "willothy/nui-components.nvim",
-    -- "grapp-dev/nui-components.nvim",
+    "MunifTanjim/nui.nvim",
+    -- dir = "~/projects/lua/nui.nvim/",
+  },
+  {
+    -- "willothy/nui-components.nvim",
+    "grapp-dev/nui-components.nvim",
     -- dir = "~/projects/lua/nui-components.nvim/",
   },
   {

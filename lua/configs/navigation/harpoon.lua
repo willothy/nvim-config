@@ -150,12 +150,62 @@ local files = {
   end,
 }
 
+local wezterm = require("wezterm")
+
+local harpoon_wezterm = {
+  automated = true,
+  encode = false,
+  -- select_with_nil = true,
+  prepopulate = function(cb)
+    local tabs = wezterm.list_tabs()
+
+    return vim
+      .iter(tabs)
+      ---@param t Wezterm.Tab
+      :map(function(t)
+        return {
+          value = string.format(
+            "%d: %s (%d pane%s)",
+            t.tab_id,
+            t.tab_title == "" and "Untitled" or t.tab_title,
+            #t.panes,
+            #t.panes == 1 and "" or "s"
+          ),
+          context = {
+            tab_id = t.tab_id,
+          },
+        }
+      end)
+      :totable()
+  end,
+  remove = function(list_item, _list)
+    local panes = wezterm.list_panes()
+    vim
+      .iter(panes)
+      ---@param p Wezterm.Pane
+      :filter(function(p)
+        return tostring(p.tab_id) == tostring(list_item.context.tab_id)
+      end)
+      ---@param p Wezterm.Pane
+      :each(function(p)
+        wezterm.exec({
+          "cli",
+          "kill-pane",
+          "--pane-id",
+          tostring(p.pane_id),
+        }, function() end)
+      end)
+  end,
+  select = function(list_item, _list, _opts)
+    wezterm.switch_tab.id(list_item.context.tab_id)
+  end,
+}
+
 require("harpoon.config").DEFAULT_LIST = "files"
 
 harpoon:setup({
   settings = {
     save_on_toggle = true,
-    -- sync_on_ui_close = true,
     key = function()
       return vim.uv.cwd() --[[@as string]]
     end,
@@ -163,6 +213,7 @@ harpoon:setup({
   tmux = tmux,
   terminals = terminals,
   files = files,
+  wezterm = harpoon_wezterm,
   default = {},
 })
 
