@@ -8,6 +8,14 @@ return {
       vim.cmd("call firenvim#install(0)")
     end,
   },
+  -- ??? --
+  {
+    "altermo/nwm",
+    config = function()
+      require("configs.ui.nwm")
+    end,
+    event = "VeryLazy",
+  },
   -- LAYOUT / CORE UI --
   {
     -- "folke/which-key.nvim",
