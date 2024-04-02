@@ -12,6 +12,7 @@ willothy.ui.scrollbar = require("willothy.ui.scrollbar")
 willothy.ui.scrolleof = require("willothy.ui.scrolleof")
 willothy.ui.cursor = require("willothy.ui.cursor")
 willothy.ui.telescope = require("willothy.ui.telescope")
+willothy.ui.colors = require("willothy.ui.colors")
 
 willothy.terminal = require("willothy.terminal")
 

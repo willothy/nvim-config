@@ -96,6 +96,7 @@ return {
         willothy.ui.float_drag.setup()
         willothy.ui.code_actions.setup()
         willothy.ui.mode.setup()
+        willothy.ui.colors.setup()
       end,
     })
 

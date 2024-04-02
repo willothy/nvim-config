@@ -229,8 +229,10 @@ return {
   {
     "willothy/wezterm.nvim",
     -- dir = "~/projects/lua/wezterm.nvim/",
-    config = true,
-    cmd = "WeztermSpawn",
+    config = function()
+      require("configs.editor.wezterm")
+    end,
+    cmd = { "Wezterm" },
   },
   {
     "stevearc/overseer.nvim",

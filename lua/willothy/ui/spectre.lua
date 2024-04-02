@@ -51,6 +51,7 @@ local update_search = vim.schedule_wrap(function(state)
 
   local search_text = state.search_text:get_value()
   if state.search_text:get_value() == "" then
+    state.results = {}
     return
   end
 
@@ -303,6 +304,6 @@ function M.open()
   end)
 end
 
-M.open()
+-- M.open()
 
 return M

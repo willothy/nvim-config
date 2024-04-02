@@ -312,6 +312,11 @@ return {
     "echasnovski/mini.hues",
     config = true,
   },
+  {
+    "tjdevries/colorbuddy.nvim",
+  },
+  "loganswartz/polychrome.nvim",
   "folke/tokyonight.nvim",
   "rebelot/kanagawa.nvim",
+  "eldritch-theme/eldritch.nvim",
 }
