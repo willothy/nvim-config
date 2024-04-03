@@ -171,9 +171,7 @@ return {
     end,
   },
   {
-    -- "mrjones2014/smart-splits.nvim",
-    "willothy/smart-splits.nvim",
-    -- dir = "~/projects/lua/smart-splits.nvim/",
+    "mrjones2014/smart-splits.nvim",
     config = function()
       require("configs.windows.smart-splits")
     end,
