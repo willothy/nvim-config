@@ -4,6 +4,7 @@ trouble.setup({
   pinned = false,
   focus = true,
   follow = true,
+  restore = true,
   win = {
     type = "split",
     wo = {
@@ -23,6 +24,20 @@ trouble.setup({
       list = true,
       number = true,
       relativenumber = false,
+    },
+  },
+  modes = {
+    definitions2 = {
+      mode = "lsp_definitions",
+      focus = true,
+      sections = {
+        ["lsp_definitions"] = {
+          title = "LSP Definitions",
+          icon = "",
+          highlight = "TroubleLspDef",
+          indent = 1,
+        },
+      },
     },
   },
 })

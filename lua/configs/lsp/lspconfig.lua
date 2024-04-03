@@ -66,32 +66,6 @@ local lspconfig = require("lspconfig")
 
 require("neoconf").setup({})
 
--- TODO: replace rust-tools as it is no longer maintained
--- require("rust-tools").setup({
---   executor = {
---     execute_command = function(command, args, cwd)
---       require("overseer.task")
---         .new({
---           cmd = { command, unpack(args) },
---           cwd = cwd,
---         })
---         :start()
---     end,
---   },
---   tools = {
---     inlay_hints = {
---       auto = false,
---     },
---     hover_actions = {
---       border = "solid",
---     },
---   },
---   server = {
---     on_attach = lsp_attach,
---     root_dir = require("lspconfig.util").root_pattern(".git", "Cargo.toml"),
---   },
--- })
-
 require("neodev").setup({
   lspconfig = false,
   pathStrict = true,
@@ -110,7 +84,10 @@ require("mason-lspconfig").setup({
     function(server_name)
       lspconfig[server_name].setup({
         capabilities = capabilities,
-        root_dir = require("lspconfig.util").root_pattern(".git"),
+        root_dir = require("lspconfig.util").root_pattern(
+          ".git",
+          "package.json"
+        ),
       })
     end,
     clangd = function()
@@ -181,12 +158,18 @@ require("mason-lspconfig").setup({
   },
 })
 
-vim.lsp.handlers["textDocument/references"] = function()
-  require("trouble").open("lsp_references")
-end
-
-vim.lsp.handlers["textDocument/definition"] = function()
-  require("trouble").open("lsp_definitions")
+for nvim_name, trouble_name in pairs({
+  references = "lsp_references",
+  definition = "lsp_definitions",
+  type_definition = "lsp_type_definitions",
+  implementation = "lsp_implementations",
+  document_symbol = "lsp_document_symbols",
+}) do
+  vim.lsp.buf[nvim_name] = function()
+    require("trouble").open({
+      mode = trouble_name,
+    })
+  end
 end
 
 local signs = {

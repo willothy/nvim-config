@@ -36,7 +36,4 @@ wk.register({
   K = bind(function()
     vim.lsp.buf.hover()
   end):with_desc("lsp: hover"),
-  -- K = bind("rust-tools.hover_actions", "hover_actions"):with_desc(
-  --   "lsp: hover"
-  -- ),
 }, { mode = modes.non_editing })
