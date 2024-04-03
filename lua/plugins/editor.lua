@@ -81,7 +81,11 @@ return {
     "vhyrro/luarocks.nvim",
     priority = 1000,
     config = function()
-      require("luarocks-nvim").setup({})
+      require("luarocks-nvim").setup({
+        rocks = {
+          "http",
+        },
+      })
     end,
     event = "VeryLazy",
   },

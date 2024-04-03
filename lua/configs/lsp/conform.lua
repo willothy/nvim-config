@@ -15,7 +15,7 @@ local opts = {
     proto = { { "buf", "protolint" } },
     nasm = { { "asmfmt" } },
     asm = { { "asmfmt" } },
-    nix = {},
+    nix = { { "nixpkgs_fmt" } },
     just = { "just" },
   },
   -- format_on_save = {

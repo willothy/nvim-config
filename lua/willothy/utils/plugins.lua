@@ -22,6 +22,7 @@ function M.is_fork(p)
     ["wrangler.nvim"] = true,
     ["micro-async.nvim"] = true,
     ["leptos.nvim"] = true,
+    ["strat-hero.nvim"] = true,
   }
   return not my_plugins[p.name]
 end
