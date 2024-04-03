@@ -171,6 +171,22 @@ dropbar.setup({
 
 vim.ui.select = require("dropbar.utils.menu").select
 
+-- local colors = willothy.ui.colors
+-- local Color = colors.Color
+-- local Group = colors.Group
+
+-- willothy.ui.colors.register("dropbar", {
+--   Group.new("WinBar", {
+--     fg = Color.new_link("Normal", "fg"):darken(10),
+--   }),
+--   Group.new("WinBarNC", {
+--     fg = Color.new_link("Normal", "fg"):darken(10),
+--   }),
+--   Group.new("DropBarIconUISeparator", {
+--     fg = Color.new_link("Normal", "fg"):darken(50),
+--   }),
+-- })
+
 -- willothy.event.on("ResessionLoadPost", function()
 --   vim
 --     .iter(vim.api.nvim_list_wins())

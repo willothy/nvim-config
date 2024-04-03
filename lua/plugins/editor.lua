@@ -269,6 +269,7 @@ return {
   },
   {
     "ThePrimeagen/harpoon",
+    commit = "a38be6e0dd4c6db66997deab71fc4453ace97f9c",
     branch = "harpoon2",
     -- "willothy/harpoon",
     -- dir = "~/projects/lua/harpoon/",

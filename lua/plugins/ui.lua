@@ -258,8 +258,8 @@ return {
   -- },
   {
     "willothy/incline.nvim",
-    branch = "dev",
-    -- dir = "~/projects/lua/incline.nvim/",
+    -- branch = "dev",
+    dir = "~/projects/lua/incline.nvim/",
     event = "VeryLazy",
     config = function()
       require("configs.status.incline")
