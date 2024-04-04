@@ -82,6 +82,7 @@
   "nio": { "branch": "master", "commit": "173f285eebb410199273fa178aa517fd2d7edd80" },
   "noice.nvim": { "branch": "main", "commit": "0cbe3f88d038320bdbda3c4c5c95f43a13c3aa12" },
   "none-ls.nvim": { "branch": "main", "commit": "fff481b65d88415933b9574dc0e1947724bcf64a" },
+  "nui-components.nvim": { "branch": "main", "commit": "cc385cacf27d39407883a95bf5a7e1be306d0ff4" },
   "nui.nvim": { "branch": "main", "commit": "cbd2668414331c10039278f558630ed19b93e69b" },
   "numb.nvim": { "branch": "master", "commit": "3f7d4a74bd456e747a1278ea1672b26116e0824d" },
   "nvim-autopairs": { "branch": "master", "commit": "dbfc1c34bed415906395db8303c71039b3a3ffb4" },

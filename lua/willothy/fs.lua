@@ -187,7 +187,8 @@ end
 
 ---@param path string
 ---@param length integer
-function M.incremental_shorten(path, length)
+---@param hint string?
+function M.incremental_shorten(path, length, hint)
   local sep = require("plenary.path").path.sep
   local segments = vim.fn.split(path, sep)
   local len = #segments
@@ -197,7 +198,16 @@ function M.incremental_shorten(path, length)
     for i = 1, len do
       local l = vim.fn.strcharlen(segments[i])
       if l > 1 then
-        segments[i] = vim.fn.strcharpart(segments[i], 0, l - 1)
+        if hint then
+          if vim.fn.strcharpart(segments[i], l - 1, 1) == hint then
+            segments[i] = vim.fn.strcharpart(segments[i], 0, l - 2) .. hint
+          else
+            segments[i] = vim.fn.strcharpart(segments[i], 0, l - 1) .. hint
+            strlen = strlen + 1
+          end
+        else
+          segments[i] = vim.fn.strcharpart(segments[i], 0, l - 1)
+        end
         strlen = strlen - 1
         all_short = false
       end

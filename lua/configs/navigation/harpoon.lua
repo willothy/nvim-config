@@ -159,17 +159,34 @@ local harpoon_wezterm = {
   prepopulate = function(cb)
     local tabs = wezterm.list_tabs()
 
+    local current_pane = wezterm.get_current_pane()
+
     return vim
       .iter(tabs)
       ---@param t Wezterm.Tab
       :map(function(t)
+        local active_pane = vim
+          .iter(t.panes)
+          ---@param p Wezterm.Pane
+          :find(function(p)
+            return p.is_active
+          end) --[[@as Wezterm.Pane]]
+
+        local cwd = active_pane.cwd
+        local _scheme, _host = cwd:match("^%s*(%w+)://(%w+)")
+
+        cwd = cwd:gsub("^%s*(%w+)://(%w+)", "")
+
+        cwd = cwd:gsub(vim.env.HOME, "~")
+
         return {
           value = string.format(
-            "%d: %s (%d pane%s)",
+            "%s (%d, %d pane%s) %s",
+            t.tab_title == "" and cwd or t.tab_title,
             t.tab_id,
-            t.tab_title == "" and "Untitled" or t.tab_title,
             #t.panes,
-            #t.panes == 1 and "" or "s"
+            #t.panes == 1 and "" or "s",
+            active_pane.pane_id == current_pane and "(active)" or ""
           ),
           context = {
             tab_id = t.tab_id,
@@ -353,6 +370,9 @@ harpoon:extend({
     willothy.win.update_config(win, function(config)
       config.footer = harpoon.ui.active_list.name
       config.footer_pos = "center"
+      config.width = math.floor(math.max(math.min(120, vim.o.columns / 2), 40))
+      config.col = math.floor(vim.o.columns / 2 - config.width / 2)
+      config.row = math.floor(vim.o.lines / 2 - config.height / 2)
       return config
     end)
 

@@ -11,6 +11,7 @@
         "telescope.nvim",
         "polychrome.nvim",
         "trouble.nvim",
+        "libsql-lua",
         // "nvim-cokeline",
         "lazy.nvim",
         "nio",

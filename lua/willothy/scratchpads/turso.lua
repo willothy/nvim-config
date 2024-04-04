@@ -79,9 +79,9 @@ end
 ---@param token string
 ---@return LibSQL.Connection?, string?
 function Database:connect(token)
-  local lib = require("sidecar")
+  local lib = require("libsql").native
 
-  local ok, raw = lib.connect(self.url, token)
+  local ok, raw = pcall(lib.connect, self.url, token)
   if not ok then
     return nil, raw
   end
@@ -196,59 +196,71 @@ end
 --   },
 -- }))
 
--- local nio = require("nio")
---
--- nio.run(function()
---   local err
---
---   local db
---   db, err = Database.connect(_url, _token)
---   if not db then
---     vim.notify("Failed to connect to database: " .. err, vim.log.levels.ERROR)
---     return
---   end
---
---   local co = coroutine.running()
---
---   local resume = function(...)
---     return coroutine.resume(co, ...)
---   end
---   local yield = coroutine.yield
---   ---@async
---   local schedule = function()
---     yield(vim.schedule(resume))
---   end
---
---   schedule()
---   db:execute([[
---     CREATE TABLE IF NOT EXISTS scratchpad (
---       id INT PRIMARY KEY AUTOINCREMENT,
---       content TEXT
---     );
---   ]])
---   schedule()
---   vim.print("Created table scratchpad")
---
---   local value = yield(vim.ui.input(
---     {
---       prompt = "> ",
---     },
---     vim.schedule_wrap(function(input)
---       if input == nil or input == "" then
---         return
---       end
---
---       resume(input)
---     end)
---   ))
---
---   vim.print("Got value: " .. value)
---
---   db:execute(([[
---     INSERT INTO scratchpad (content) VALUES ('%s')
---   ]]):format(value))
---   schedule()
---   vim.print("Inserted content into scratchpad")
---   -- local res = db:execute("DROP TABLE IF EXISTS scratchpad")
---   -- vim.print("Dropped table scratchpad: " .. res)
--- end)
+local nio = require("nio")
+
+nio.run(function()
+  local err
+
+  local db
+  db, err = Database.connect(_url, _token)
+  if not db then
+    vim.notify("Failed to connect to database: " .. err, vim.log.levels.ERROR)
+    return
+  end
+
+  local co = coroutine.running()
+
+  local resume = function(...)
+    return coroutine.resume(co, ...)
+  end
+  local yield = coroutine.yield
+  ---@async
+  local schedule = function()
+    yield(vim.schedule(resume))
+  end
+
+  schedule()
+  db:execute([[
+    CREATE TABLE IF NOT EXISTS scratchpad (
+      id INT PRIMARY KEY AUTOINCREMENT,
+      content TEXT
+    );
+  ]])
+  schedule()
+  vim.print("Created table scratchpad")
+
+  local value = yield(vim.ui.input(
+    {
+      prompt = "> ",
+    },
+    vim.schedule_wrap(function(input)
+      if input == nil or input == "" then
+        return
+      end
+
+      resume(input)
+    end)
+  ))
+
+  vim.print("Got value: " .. value)
+
+  db:execute(([[
+    INSERT INTO scratchpad (content) VALUES ('%s')
+  ]]):format(value))
+  schedule()
+  vim.print("Inserted content into scratchpad")
+
+  local rows = db:query("SELECT * FROM scratchpad", "")
+
+  local contents = vim
+    .iter(function()
+      return rows:next()
+    end)
+    :map(function(row)
+      return row:get(1)
+    end)
+    :totable()
+  vim.print(contents)
+  -- local res = db:execute("DROP TABLE IF EXISTS scratchpad")
+  -- vim.print("Dropped table scratchpad: " .. res)
+end)

@@ -18,4 +18,10 @@ return {
     "nvim-neotest/nvim-nio",
     name = "nio",
   },
+  {
+    "willothy/libsql-lua",
+    -- name = "libsql-lua",
+    dir = "~/projects/cxx/libsql-lua/",
+    -- build = "make",
+  },
 }
