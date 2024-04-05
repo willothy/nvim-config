@@ -118,7 +118,7 @@
   "overseer.nvim": { "branch": "master", "commit": "b04b0b105c07b4f02b3073ea3a98d6eca90bf152" },
   "pathlib.nvim": { "branch": "main", "commit": "852ea2f1c0037af693dfca25dcbe93fef2815a6f" },
   "plenary.nvim": { "branch": "master", "commit": "8aad4396840be7fc42896e3011751b7609ca4119" },
-  "polychrome.nvim": { "branch": "main", "commit": "54ca1c06b9cdcc874046622de7bddeac9ba01ab4" },
+  "polychrome.nvim": { "branch": "main", "commit": "ba984fd7267956bf46fb14a6d482761c15f9c50d" },
   "portal.nvim": { "branch": "main", "commit": "77d9d53fec945bfa407d5fd7120f1b4f117450ed" },
   "project_nvim": { "branch": "main", "commit": "8c6bad7d22eef1b71144b401c9f74ed01526a4fb" },
   "reach.nvim": { "branch": "master", "commit": "f86830357941cca8a31f19601153087ea9524d22" },
