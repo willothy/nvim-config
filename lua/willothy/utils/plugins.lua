@@ -157,4 +157,38 @@ function M.unstar_repo(owner, repo)
   end)
 end
 
+function M.plugin_list(out_file)
+  local lazy = require("lazy")
+
+  local plugins = lazy.plugins()
+
+  local list = vim
+    .iter(plugins)
+    :map(function(plugin)
+      return plugin[1]
+    end)
+    :join("\n")
+
+  if not out_file then
+    local filename = "plugins.txt"
+    local config_dir = vim.fn.stdpath("config")
+    out_file = require("pathlib").new(config_dir) / filename
+  else
+    out_file = require("pathlib").new(out_file)
+  end
+  require("nio").run(function()
+    local offset = 0
+    while offset < #list do
+      local data = list:sub(offset + 1)
+      if data == "" then
+        break
+      end
+      local bytes = out_file:fs_write(data, offset)
+      offset = offset + bytes
+    end
+  end, function()
+    vim.notify("Wrote plugin list to " .. out_file:tostring())
+  end)
+end
+
 return M

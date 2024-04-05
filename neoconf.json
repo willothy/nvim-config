@@ -9,6 +9,7 @@
         // "mason.nvim",
         // "rust-tools.nvim",
         "telescope.nvim",
+        "pathlib.nvim",
         "polychrome.nvim",
         "trouble.nvim",
         "libsql-lua",
