@@ -85,21 +85,17 @@ willothy = metamodule("willothy", {
 -- │   │   ├── str.lua      # string lib
 -- │   │   └── graphql.lua  # integrate my Lua graphql client
 
-return {
-  setup = function()
-    vim.api.nvim_create_autocmd("UiEnter", {
-      once = true,
-      callback = function()
-        -- setup ui
-        willothy.ui.scrollbar.setup()
-        willothy.ui.scrolleof.setup()
-        willothy.ui.float_drag.setup()
-        willothy.ui.code_actions.setup()
-        willothy.ui.mode.setup()
-        willothy.ui.colors.setup()
-      end,
-    })
-
-    require("willothy.fs").hijack_netrw()
+vim.api.nvim_create_autocmd("UiEnter", {
+  once = true,
+  callback = function()
+    -- setup ui
+    willothy.ui.scrollbar.setup()
+    willothy.ui.scrolleof.setup()
+    willothy.ui.float_drag.setup()
+    willothy.ui.code_actions.setup()
+    willothy.ui.mode.setup()
+    willothy.ui.colors.setup()
   end,
-}
+})
+
+require("willothy.fs").hijack_netrw()

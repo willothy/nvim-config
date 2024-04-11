@@ -188,7 +188,7 @@ telescope.setup({
 for _, ext in ipairs({
   "fzf",
   "frecency",
-  "smart_history",
+  -- "smart_history",
   -- "neoclip",
   -- "file_browser",
   -- "projects",

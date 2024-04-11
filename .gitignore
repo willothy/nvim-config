@@ -5,3 +5,4 @@ repro.lua
 Cargo.lock
 target/
 lua/sidecar.so
+lua/plugins/nix.lua

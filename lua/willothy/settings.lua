@@ -8,7 +8,7 @@ function M.setup()
   o.cmdheight = 0
   o.scrolloff = 16
 
-  o.shell = "/usr/bin/zsh"
+  o.shell = "zsh"
   o.shortmess = "filnxoOCFIsw"
   o.virtualedit = "block"
   o.signcolumn = "yes"

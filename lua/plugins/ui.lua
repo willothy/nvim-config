@@ -11,6 +11,7 @@ return {
   -- ??? --
   {
     "altermo/nwm",
+    enabled = false,
     config = function()
       require("configs.ui.nwm")
     end,
@@ -72,7 +73,9 @@ return {
   },
   {
     "3rd/image.nvim",
-    event = "VeryLazy",
+    dependencies = {
+      "vhyrro/luarocks.nvim"
+    },
     config = function()
       require("image").setup({})
     end,

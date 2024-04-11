@@ -9,19 +9,19 @@ return {
     "grapp-dev/nui-components.nvim",
     -- dir = "~/projects/lua/nui-components.nvim/",
   },
-  {
-    "kkharji/sqlite.lua",
-    -- dir = "~/projects/lua/sqlite.lua/",
-  },
+  -- {
+  --   "kkharji/sqlite.lua",
+  --   -- dir = "~/projects/lua/sqlite.lua/",
+  -- },
   "nvim-lua/plenary.nvim",
   {
     "nvim-neotest/nvim-nio",
     name = "nio",
   },
-  {
-    "willothy/libsql-lua",
-    -- name = "libsql-lua",
-    dir = "~/projects/cxx/libsql-lua/",
-    -- build = "make",
-  },
+  -- {
+  --   "willothy/libsql-lua",
+  --   -- name = "libsql-lua",
+  --   dir = "~/projects/cxx/libsql-lua/",
+  --   -- build = "make",
+  -- },
 }

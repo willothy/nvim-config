@@ -83,7 +83,8 @@ return {
     config = function()
       require("luarocks-nvim").setup({
         rocks = {
-          "http",
+          "magick",
+          "sqlite"
         },
       })
     end,
@@ -107,6 +108,9 @@ return {
   -- DEFAULT FEATURE EXTENSIONS --
   {
     "gbprod/yanky.nvim",
+    dependencies = {
+      "kkharji/sqlite.lua"
+    },
     -- commit = "590a713b0372485f595eea36e7e3ab2069946794",
     event = "VeryLazy",
     config = function()
@@ -149,11 +153,11 @@ return {
       "nvim-telescope/telescope-file-browser.nvim",
       "dhruvmanila/browser-bookmarks.nvim",
       "nvim-telescope/telescope-frecency.nvim",
-      "nvim-telescope/telescope-smart-history.nvim",
+      --"nvim-telescope/telescope-smart-history.nvim", -- cool but causes sqlite error atm
       "polirritmico/telescope-lazy-plugins.nvim",
       {
         "nvim-telescope/telescope-fzf-native.nvim",
-        build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+        build = "make",
       },
     },
   },
