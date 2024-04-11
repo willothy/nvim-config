@@ -84,7 +84,6 @@ return {
       require("luarocks-nvim").setup({
         rocks = {
           "magick",
-          "sqlite"
         },
       })
     end,
