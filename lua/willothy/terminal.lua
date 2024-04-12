@@ -8,7 +8,7 @@ require("configs.terminal.toggleterm")
 require("toggleterm.constants").FILETYPE = "terminal"
 
 local Terminal = BaseTerminal:new({
-  cmd = "zsh",
+  -- cmd = "zsh",
   hidden = false,
   close_on_exit = true,
   start_in_insert = false,

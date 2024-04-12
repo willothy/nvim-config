@@ -108,7 +108,7 @@ return {
   {
     "gbprod/yanky.nvim",
     dependencies = {
-      "kkharji/sqlite.lua"
+      "kkharji/sqlite.lua",
     },
     -- commit = "590a713b0372485f595eea36e7e3ab2069946794",
     event = "VeryLazy",
@@ -376,7 +376,7 @@ return {
   {
     "chomosuke/term-edit.nvim",
     opts = {
-      prompt_end = "✦ -> ",
+      prompt_end = "-> ",
     },
     event = "TermEnter",
   },
