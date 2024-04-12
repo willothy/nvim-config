@@ -122,26 +122,6 @@ require("mason-lspconfig").setup({
         ),
       })
     end,
-    lua_ls = function()
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities,
-        root_dir = require("lspconfig.util").root_pattern(".git"),
-        before_init = function(params, config)
-          local libs = config.settings.Lua.workspace.library
-
-          for _, lib in ipairs({
-            -- "${3rd}/busted/library",
-            "${3rd}/luv/library",
-          }) do
-            table.insert(libs, lib)
-          end
-
-          return require("neodev.lsp").before_init(params, config)
-        end,
-        single_file_support = false,
-        filetypes = { "lua" },
-      })
-    end,
     bashls = function()
       require("lspconfig").bashls.setup({
         capabilities = capabilities,
@@ -156,6 +136,25 @@ require("mason-lspconfig").setup({
       })
     end,
   },
+})
+
+lspconfig.lua_ls.setup({
+  capabilities = capabilities,
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+  before_init = function(params, config)
+    local libs = config.settings.Lua.workspace.library
+
+    for _, lib in ipairs({
+      -- "${3rd}/busted/library",
+      "${3rd}/luv/library",
+    }) do
+      table.insert(libs, lib)
+    end
+
+    return require("neodev.lsp").before_init(params, config)
+  end,
+  single_file_support = false,
+  filetypes = { "lua" },
 })
 
 for nvim_name, trouble_name in pairs({
