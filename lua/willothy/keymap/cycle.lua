@@ -56,7 +56,7 @@ local previous = {
   ),
   m = bind("marks", "prev"):with_desc("mark"),
   d = bind("vim.diagnostic", "goto_prev"):with_desc("diagnostic"),
-  ["["] = bind(function()
+  ["h"] = bind(function()
     require("harpoon"):list("files"):prev()
   end):with_desc("harpoon mark"),
 }
@@ -75,7 +75,7 @@ local next = {
   ),
   m = bind("marks", "next"):with_desc("mark"),
   d = bind("vim.diagnostic", "goto_next"):with_desc("diagnostic"),
-  ["]"] = bind(function()
+  ["h"] = bind(function()
     require("harpoon"):list("files"):next()
   end):with_desc("harpoon mark"),
 }
