@@ -5,7 +5,7 @@ return {
     "willothy/strat-hero.nvim",
     config = true,
     cmd = "StratHero",
-    -- dev = true,
+    dev = true,
   },
   {
     "jbyuki/venn.nvim",

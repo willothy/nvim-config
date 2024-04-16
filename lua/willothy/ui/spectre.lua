@@ -11,34 +11,6 @@ local spectre_utils = require("spectre.utils")
 
 --- Sooooo work in progress
 
-local function handler(state)
-  local results = {}
-  return {
-    on_start = function()
-      results = {}
-      spectre_state.is_running = true
-    end,
-    on_result = function(item)
-      if not spectre_state.is_running then
-        return
-      end
-      table.insert(results, NC.node(item))
-      -- state.results = results
-    end,
-    on_error = function(err)
-      vim.notify_once(err, vim.log.levels.ERROR)
-    end,
-    on_finish = function()
-      if not spectre_state.is_running then
-        return
-      end
-      spectre_state.is_running = false
-      state.results = results
-      results = {}
-    end,
-  }
-end
-
 local function reset_search()
   if spectre_state.finder_instance then
     spectre_state.finder_instance:stop()
@@ -46,31 +18,14 @@ local function reset_search()
   end
 end
 
-local update_search = vim.schedule_wrap(function(state)
-  reset_search()
-
-  local search_text = state.search_text:get_value()
-  if state.search_text:get_value() == "" then
-    state.results = {}
-    return
-  end
-
-  local search_engine = spectre_search.rg
-
-  spectre_state.options["ignore-case"] = not state.case_sensitive
-
-  spectre_state.finder_instance = search_engine:new(
-    spectre_state_utils.get_search_engine_config(),
-    handler(state)
-  )
-  spectre_state.regex = require("spectre.regex.vim")
-
-  spectre_state.finder_instance:search({
-    cwd = vim.uv.cwd(),
-    search_text = search_text,
-    replace_query = state.replace_text:get_value(),
-  })
-end)
+---@type fun(search_text: (fun(): string), case_sensitive: (fun(): boolean), replace_text: (fun(): string), set_results_list: (fun(): any[]))
+local update_search = function(
+  search_text,
+  case_sensitive,
+  replace_text,
+  set_results_list
+)
+end
 
 local function winhighlight(tbl)
   local s = ""
@@ -84,35 +39,6 @@ local function winhighlight(tbl)
   return s
 end
 
-local function focus_handler(state, cursor)
-  return function(self)
-    self.border:set_highlight("FloatTitleTransparent")
-    self:get_renderer():redraw()
-    if not state.old_guicursor:get_value() then
-      state.old_guicursor = vim.o.guicursor
-    end
-    if cursor then
-      vim.o.guicursor = cursor
-    elseif state.old_guicursor:get_value() then
-      vim.o.guicursor = state.old_guicursor:get_value()
-    end
-  end
-end
-local function blur_handler(_state)
-  return function(self)
-    self.border:set_highlight("NormalNC")
-    self:get_renderer():redraw()
-  end
-end
-local function unmount_handler(state)
-  return function()
-    if state.old_guicursor:get_value() then
-      vim.o.guicursor = state.old_guicursor:get_value()
-      state.old_guicursor = nil
-    end
-  end
-end
-
 local component_winhl = winhighlight({
   Normal = "Normal",
   NormalFloat = "Normal",
@@ -123,125 +49,146 @@ local component_winhl = winhighlight({
   NuiComponentsCheckboxLabel = "NormalNC",
 })
 
-local search = function(state)
-  local on_focus = focus_handler(state)
-  local on_blur = blur_handler(state)
-  local on_unmount = unmount_handler(state)
-  return columns(
-    { size = 3 },
+local function view(cx)
+  local search_text, set_search_text = cx:create_signal("")
+
+  local replace_text, set_replace_text = cx:create_signal("")
+
+  local case_sensitive, set_case_sensitive = cx:create_signal(false)
+
+  local results_list, set_results_list = cx:create_signal({})
+
+  cx:create_effect(function()
+    reset_search()
+
+    if search_text() == "" then
+      set_results_list({})
+      return
+    end
+
+    local search_engine = spectre_search.rg
+
+    spectre_state.options["ignore-case"] = not case_sensitive()
+
+    local results = {}
+    spectre_state.finder_instance =
+      search_engine:new(spectre_state_utils.get_search_engine_config(), {
+        on_start = function()
+          results = {}
+          spectre_state.is_running = true
+        end,
+        on_result = function(item)
+          if not spectre_state.is_running then
+            return
+          end
+          table.insert(results, NC.node(item))
+        end,
+        on_error = function(err)
+          vim.notify_once(err, vim.log.levels.ERROR)
+        end,
+        on_finish = function()
+          if not spectre_state.is_running then
+            return
+          end
+          spectre_state.is_running = false
+          local res_list = results
+          results = {}
+          set_results_list(res_list)
+        end,
+      })
+    spectre_state.regex = require("spectre.regex.vim")
+
+    spectre_state.finder_instance:search({
+      cwd = vim.uv.cwd(),
+      search_text = search_text(),
+      replace_query = replace_text(),
+    })
+
+    -- vim.print(search_text())
+    -- local fmt = "%s : %s : case sensitive? %s"
+    -- vim.print(
+    --   fmt:format(
+    --     search_text(),
+    --     replace_text(),
+    --     case_sensitive() and "Yes" or "No"
+    --   )
+    -- )
+  end)
+
+  return rows(
+    { flex = 1 },
+    columns(
+      { size = 3 },
+      NC.text_input({
+        autofocus = true,
+        flex = 1,
+        max_lines = 1,
+        placeholder = "Search",
+        window = {
+          highlight = component_winhl,
+        },
+        value = search_text,
+        on_change = set_search_text,
+      }),
+      NC.checkbox({
+        label = "Aa",
+        default_sign = "",
+        checked_sign = "",
+        border_style = "rounded",
+        window = {
+          highlight = component_winhl,
+        },
+        value = case_sensitive,
+        on_change = set_case_sensitive,
+      })
+    ),
+    -- Replace input
     text_input({
-      autofocus = true,
-      flex = 1,
       max_lines = 1,
-      placeholder = "Search",
+      placeholder = "Replace",
       window = {
         highlight = component_winhl,
       },
-      value = state.search_text,
-      on_change = function(value)
-        state.search_text = value
-        update_search(state)
-      end,
-      on_unmount = on_unmount,
-      on_focus = on_focus,
-      on_blur = on_blur,
+      value = replace_text,
+      on_change = set_replace_text,
     }),
-    NC.checkbox({
-      label = "Aa",
-      default_sign = "",
-      checked_sign = "",
-      border_style = "rounded",
-      value = state.case_sensitive,
+    -- Results
+    NC.tree({
+      size = 5,
+      border_label = "Results",
+      -- data = {},
+      data = results_list,
+      on_select = function(node, component)
+        if node:is_expanded() then
+          node:collapse()
+        else
+          node:expand()
+        end
+
+        component:get_tree():render()
+      end,
       window = {
         highlight = component_winhl,
       },
-      on_change = function(value)
-        state.case_sensitive = value
-        update_search(state)
+      ---@param node NuiTree.Node
+      ---@param line NuiLine
+      prepare_node = function(node, line, _component)
+        local depth = node:get_depth()
+        line:append(string.rep(" ", (depth - 1) * 2))
+        if node:has_children() then
+          if node:is_expanded() then
+            line:append("v ")
+          else
+            line:append("> ")
+          end
+        else
+          line:append("- ")
+        end
+        line:append(node.text)
+        return line
       end,
-      on_unmount = on_unmount,
-      on_focus = focus_handler(state, "a:hor25"),
-      on_blur = on_blur,
     })
   )
-end
-
-local replace = function(state)
-  local on_focus = focus_handler(state)
-  local on_blur = blur_handler(state)
-  local on_unmount = unmount_handler(state)
-
-  return text_input({
-    max_lines = 1,
-    placeholder = "Replace",
-    value = state.replace_text,
-    window = {
-      highlight = component_winhl,
-    },
-    on_change = function(value)
-      state.replace_text = value
-      update_search(state)
-    end,
-    on_unmount = on_unmount,
-    on_focus = on_focus,
-    on_blur = on_blur,
-  })
-end
-
-local results = function(state)
-  local on_focus = function(self)
-    self.border:set_highlight("FloatTitleTransparent")
-    local winhl = vim.wo[self.winid].winhl
-    -- Hack because nui tree messes up the winhl
-    vim.schedule(function()
-      if winhl == "" then
-        vim.wo[self.winid].winhl = "Normal:Normal"
-      else
-        vim.wo[self.winid].winhl = winhl .. ",Normal:Normal"
-      end
-    end)
-  end
-  local on_blur = function(self)
-    self.border:set_highlight("NormalNC")
-  end
-  local on_unmount = unmount_handler(state)
-  return NC.tree({
-    size = 5,
-    border_label = "Results",
-    data = state.results,
-    on_select = function(node, component)
-      if node:is_expanded() then
-        node:collapse()
-      else
-        node:expand()
-      end
-
-      component:get_tree():render()
-    end,
-    window = {
-      highlight = component_winhl,
-    },
-    ---@param node NuiTree.Node
-    ---@param line NuiLine
-    prepare_node = function(node, line, component)
-      local depth = node:get_depth()
-      line:append(string.rep(" ", (depth - 1) * 2))
-      if node:has_children() then
-        if node:is_expanded() then
-          line:append("v ")
-        else
-          line:append("> ")
-        end
-      else
-        line:append("- ")
-      end
-      line:append(node.text)
-      return line
-    end,
-    on_focus = on_focus,
-    on_blur = on_blur,
-    on_unmount = on_unmount,
-  })
 end
 
 local M = {}
@@ -255,15 +202,15 @@ function M.close()
 end
 
 function M.open()
-  local state = NC.create_signal({
-    search_text = "",
-    replace_text = "",
-    case_sensitive = false,
-    results = {},
-    old_guicursor = nil,
-  })
+  -- local state = NC.create_signal({
+  --   search_text = "",
+  --   replace_text = "",
+  --   case_sensitive = false,
+  --   results = {},
+  --   old_guicursor = nil,
+  -- })
 
-  local view = NC.create_renderer({
+  local app = NC.create_renderer({
     width = 40,
     height = 5,
     keymap = {
@@ -277,33 +224,26 @@ function M.open()
     end,
   })
 
-  view:add_mappings({
+  app:add_mappings({
     {
       mode = "n",
       key = "q",
       handler = function()
-        view:close()
+        app:close()
       end,
     },
   })
 
-  M.running = view
+  M.running = app
 
-  view:render(function()
-    return rows(
-      { flex = 1 },
-      search(state), -- search input and case sensitive checkbox
-      replace(state), -- replace input
-      results(state) -- Results file tree
-    )
-  end)
+  app:render(view)
 
-  view:on_unmount(function()
+  app:on_unmount(function()
     M.running = nil
     reset_search()
   end)
 end
 
--- M.open()
+M.open()
 
 return M
