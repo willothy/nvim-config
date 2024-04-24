@@ -79,6 +79,22 @@ lspconfig.rust_analyzer.setup({
   single_file_support = true,
 })
 
+lspconfig.clangd.setup({
+  capabilities = capabilities,
+  on_attach = function(_client, bufnr)
+    vim.keymap.set("n", "<leader>gh", "<cmd>ClangdSwitchSourceHeader<CR>", {
+      silent = true,
+      noremap = true,
+      buffer = bufnr,
+      desc = "header / source",
+    })
+  end,
+  root_dir = require("lspconfig.util").root_pattern(".git"),
+  filetypes = { "c", "cpp", "h", "hpp" },
+  offsetEncoding = { "utf-8" },
+  client_encoding = "utf-8",
+})
+
 require("mason-lspconfig").setup({
   handlers = {
     function(server_name)
@@ -90,28 +106,8 @@ require("mason-lspconfig").setup({
         ),
       })
     end,
-    clangd = function()
-      lspconfig.clangd.setup({
-        capabilities = capabilities,
-        on_attach = function(_client, bufnr)
-          vim.keymap.set(
-            "n",
-            "<leader>gh",
-            "<cmd>ClangdSwitchSourceHeader<CR>",
-            {
-              silent = true,
-              noremap = true,
-              buffer = bufnr,
-              desc = "header / source",
-            }
-          )
-        end,
-        root_dir = require("lspconfig.util").root_pattern(".git"),
-        filetypes = { "c", "cpp", "h", "hpp" },
-        offsetEncoding = { "utf-8" },
-        client_encoding = "utf-8",
-      })
-    end,
+    clangd = function() end,
+    rust_analyzer = function() end,
     taplo = function()
       lspconfig.taplo.setup({
         capabilities = capabilities,
