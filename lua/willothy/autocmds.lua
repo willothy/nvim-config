@@ -31,7 +31,9 @@ local autocmds = {
         vim.lsp.inlay_hint
         and client.supports_method("textDocument/inlayHint")
       then
-        vim.lsp.inlay_hint.enable(bufnr)
+        vim.lsp.inlay_hint.enable(true, {
+          bufnr = bufnr,
+        })
       end
     end,
   },
@@ -56,10 +58,15 @@ local autocmds = {
       local ft = vim.bo[ev.buf].filetype
       local lang = parsers.ft_to_lang(ft)
       if not lang then
+        vim.notify_once(
+          "No language config for filetype '" .. ft .. "'",
+          vim.log.levels.WARN,
+          {}
+        )
         return
       end
       if parsers.has_parser(lang) then
-        vim.treesitter.start(ev.buf)
+        vim.treesitter.start(ev.buf, lang)
       end
     end,
   },

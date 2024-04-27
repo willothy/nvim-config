@@ -8,6 +8,7 @@ require("nvim-treesitter.configs").setup({
     "javascript",
     "typescript",
     "c",
+    "go",
     "cpp",
     "lua",
     "rust",

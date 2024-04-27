@@ -86,9 +86,6 @@ require("statuscol").setup({
     },
     {
       sign = {
-        -- "Dap*", "Diagnostic*"
-        name = { ".*" },
-        -- "Dap*", "Diagnostic*"
         namespace = { "Diagnostic*", ".*" },
         maxwidth = 1,
         minwidth = 1,
@@ -98,7 +95,12 @@ require("statuscol").setup({
       condition = { is_normal_buf, is_normal_buf },
     },
     {
-      text = { builtin.lnumfunc, " " },
+      text = {
+        function(...)
+          return string.format("%4s", builtin.lnumfunc(...))
+        end,
+        " ",
+      },
       click = "v:lua.ScLa",
     },
     {
