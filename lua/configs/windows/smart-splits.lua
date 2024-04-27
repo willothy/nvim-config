@@ -21,7 +21,7 @@ for _, direction in ipairs({ "up", "down", "left", "right" }) do
     then
       if direction == "left" then
         require("wezterm").switch_tab.relative(-1)
-      else
+      elseif direction == "right" then
         require("wezterm").switch_tab.relative(1)
       end
     else
