@@ -1,9 +1,9 @@
 local leetcode = require("leetcode")
 
 leetcode.setup({
-  lang = "rust",
+  lang = "python3",
   plugins = {
     non_standalone = true,
-    fidget = true,
+    -- fidget = true,
   },
 })

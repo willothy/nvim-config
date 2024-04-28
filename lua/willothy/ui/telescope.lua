@@ -142,8 +142,8 @@ function M.bottom_pane(picker)
       height = c.results.height,
       row = c.results.row,
       col = c.results.col,
-      title = picker.results_title,
-      title_pos = picker.results_title and "center",
+      title = picker.results_title or "",
+      title_pos = "center",
     })
     if c.preview then
       self.preview = open_win(false, {
@@ -151,8 +151,8 @@ function M.bottom_pane(picker)
         height = c.preview.height,
         row = c.preview.row,
         col = c.preview.col,
-        title = picker.preview_title,
-        title_pos = picker.preview_title and "center",
+        title = picker.preview_title or "",
+        title_pos = "center",
         border = c.preview.border,
       })
     end
@@ -161,8 +161,8 @@ function M.bottom_pane(picker)
       height = c.prompt.height,
       row = c.prompt.row,
       col = c.prompt.col,
-      title = picker.prompt_title,
-      title_pos = picker.prompt_title and "center",
+      title = picker.prompt_title or "",
+      title_pos = "center",
       border = c.prompt.border,
     })
   end
@@ -178,8 +178,8 @@ function M.bottom_pane(picker)
         height = c.preview.height,
         row = c.preview.row,
         col = c.preview.col,
-        title = picker.preview_title,
-        title_pos = picker.preview_title and "center",
+        title = picker.preview_title or "",
+        title_pos = "center",
         border = c.preview.border,
       })
     elseif not c.preview and self.preview then
@@ -314,8 +314,8 @@ function M.flexible(picker)
       height = c.results.height,
       row = c.results.row,
       col = c.results.col,
-      title = picker.results_title,
-      title_pos = picker.results_title and "center",
+      title = picker.results_title or "",
+      title_pos = "center",
     })
     if c.preview then
       self.preview = open_win(false, {
@@ -323,8 +323,8 @@ function M.flexible(picker)
         height = c.preview.height,
         row = c.preview.row,
         col = c.preview.col,
-        title = picker.preview_title,
-        title_pos = picker.preview_title and "center",
+        title = picker.preview_title or "",
+        title_pos = "center",
         border = c.preview.border,
       })
     end
@@ -333,8 +333,8 @@ function M.flexible(picker)
       height = c.prompt.height,
       row = c.prompt.row,
       col = c.prompt.col,
-      title = picker.prompt_title,
-      title_pos = picker.prompt_title and "center",
+      title = picker.prompt_title or "",
+      title_pos = "center",
       border = c.prompt.border,
     })
   end
@@ -350,8 +350,8 @@ function M.flexible(picker)
         height = c.preview.height,
         row = c.preview.row,
         col = c.preview.col,
-        title = picker.preview_title,
-        title_pos = picker.preview_title and "center",
+        title = picker.preview_title or "",
+        title_pos = "center",
         border = c.preview.border,
       })
     elseif not c.preview and self.preview then
