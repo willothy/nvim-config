@@ -117,6 +117,20 @@ local opts = {
         suggestion.dismiss()
       end
     end, { "i", "c" }),
+    ["<C-n>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      else
+        fallback()
+      end
+    end),
+    ["<C-p>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      else
+        fallback()
+      end
+    end),
     ["<S-Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() and not vim.snippet.active() then
         cmp.select_prev_item()
