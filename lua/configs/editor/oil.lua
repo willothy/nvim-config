@@ -1,3 +1,4 @@
+local Utils = require("oil.util")
 local oil = require("oil")
 
 oil.winbar = function()
@@ -43,7 +44,12 @@ vim.api.nvim_create_autocmd("BufHidden", {
       return
     end
     local buf = ev.buf
-    if require("oil.util").is_oil_bufnr(buf) then
+    if
+      Utils.is_oil_bufnr(buf)
+      and vim.iter(vim.api.nvim_list_wins()):any(function(win)
+        return Utils.is_oil_bufnr(vim.api.nvim_win_get_buf(win))
+      end)
+    then
       oil.save({
         confirm = true,
       }, function(err)
@@ -66,7 +72,14 @@ oil.setup({
   buf_options = {},
   keymaps = {
     ["<C-s>"] = "actions.select_split",
-    ["<C-v>"] = "actions.select_vsplit",
+    ["<C-v>"] = {
+      callback = function()
+        oil.select({
+          vertical = true,
+          split = "belowright",
+        })
+      end,
+    },
     ["<C-h>"] = false,
     ["<C-l>"] = false,
     ["<C-/>"] = "actions.refresh",
