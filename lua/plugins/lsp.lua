@@ -162,7 +162,7 @@ return {
       "zbirenbaum/copilot-cmp",
       {
         "jsongerber/nvim-px-to-rem",
-        ft = { "css", "scss", "less" },
+        ft = { "css" },
         config = true,
       },
     },

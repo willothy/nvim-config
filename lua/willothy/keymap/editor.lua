@@ -344,11 +344,20 @@ wk.register({
     end
   end):with_desc("indent: decrease"),
   u = "edit: undo",
-  ["<C-r>"] = "edit: redo",
-  ["<"] = "indent: decrease",
-  [">"] = "indent: increase",
-  ["="] = "indent: auto",
 }, { mode = modes.normal })
+
+wk.register({
+  ["<C-r>"] = "edit: redo",
+  ["<lt>"] = {
+    name = "indent: decrease",
+    ["<lt>"] = "line",
+  },
+  [">"] = {
+    name = "indent: increase",
+    [">"] = "line",
+  },
+  ["="] = "indent: auto",
+}, { mode = modes.normal, preset = true })
 
 wk.register({
   ["<M-k>"] = bind("moveline", "block_up"):with_desc("move: up"),
@@ -364,7 +373,7 @@ wk.register({
     end
   end):with_desc("indent: decrease"),
   ["<C-c>"] = { '"+y', "copy selection" },
-  ["<"] = "indent: decrease",
+  ["<lt>"] = "indent: decrease",
   [">"] = "indent: increase",
   ["="] = "indent: auto",
 }, { mode = modes.visual })

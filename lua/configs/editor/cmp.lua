@@ -132,9 +132,9 @@ local opts = {
       end
     end),
     ["<S-Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() and not vim.snippet.active() then
+      if cmp.visible() and not vim.snippet.active({ direction = -1 }) then
         cmp.select_prev_item()
-      elseif vim.snippet.jumpable(-1) then
+      elseif vim.snippet.active({ direction = -1 }) then
         vim.snippet.jump(-1)
       else
         fallback()
@@ -159,9 +159,9 @@ local opts = {
         indent = 0
       end
 
-      if cmp.visible() and not vim.snippet.active() then
+      if cmp.visible() and not vim.snippet.active({ direction = 1 }) then
         cmp.confirm({ select = true })
-      elseif vim.snippet.jumpable(1) then
+      elseif vim.snippet.active({ direction = 1 }) then
         vim.snippet.jump(1)
       elseif has_words_before() then
         cmp.complete()

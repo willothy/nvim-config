@@ -35,6 +35,21 @@ require("which-key").setup({
     c = "change",
     ["="] = "indent",
   },
+  -- triggers = "auto",
+  triggers_nowait = {
+    -- marks
+    "`",
+    "'",
+    "g`",
+    "g'",
+    -- registers
+    '"',
+    "<c-r>",
+    -- spelling
+    "z=",
+    -- [">"] = "indent",
+    -- ["<lt>"] = "unindent",
+  },
   motions = {
     count = true,
   },

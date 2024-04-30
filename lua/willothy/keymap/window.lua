@@ -53,7 +53,7 @@ wk.register({
     ["h"] = { bind("smart-splits", "move_cursor_left") },
     ["l"] = { bind("smart-splits", "move_cursor_right") },
     ["-"] = { "<nop>", noremap = true },
-    ["<"] = { "<nop>", noremap = true },
+    ["<lt>"] = { "<nop>", noremap = true },
     [">"] = { "<nop>", noremap = true },
     ["_"] = { "<nop>", noremap = true },
     ["o"] = { "<nop>" },
