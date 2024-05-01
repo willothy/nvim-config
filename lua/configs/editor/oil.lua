@@ -44,13 +44,15 @@ vim.api.nvim_create_autocmd("BufHidden", {
       return
     end
     local buf = ev.buf
-    if
-      Utils.is_oil_bufnr(buf)
-      and vim.iter(vim.api.nvim_list_wins()):any(function(win)
-        return Utils.is_oil_bufnr(vim.api.nvim_win_get_buf(win))
-      end)
-    then
+    if Utils.is_oil_bufnr(buf) then
       vim.schedule(function()
+        if
+          vim.iter(vim.api.nvim_list_wins()):any(function(win)
+            return Utils.is_oil_bufnr(vim.api.nvim_win_get_buf(win))
+          end)
+        then
+          return
+        end
         oil.save({
           confirm = true,
         }, function(err)
