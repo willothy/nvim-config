@@ -50,18 +50,20 @@ vim.api.nvim_create_autocmd("BufHidden", {
         return Utils.is_oil_bufnr(vim.api.nvim_win_get_buf(win))
       end)
     then
-      oil.save({
-        confirm = true,
-      }, function(err)
-        if err then
-          if err == "Canceled" then
-            oil.discard_all_changes()
-          else
-            vim.notify(err, vim.log.levels.WARN, {
-              title = "Oil",
-            })
+      vim.schedule(function()
+        oil.save({
+          confirm = true,
+        }, function(err)
+          if err then
+            if err == "Canceled" then
+              oil.discard_all_changes()
+            else
+              vim.notify(err, vim.log.levels.WARN, {
+                title = "Oil",
+              })
+            end
           end
-        end
+        end)
       end)
     end
   end,
