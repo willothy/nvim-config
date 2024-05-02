@@ -185,17 +185,6 @@
       }
     },
     "gopls": {},
-    "cssls": {
-      // "css": {
-      "customData": {
-        "atDirectives": [
-          {
-            "name": "@tailwind",
-            "description": "Tailwind CSS directive"
-          }
-        ]
-      }
-      // }
-    }
+    "cssls": {}
   }
 }
