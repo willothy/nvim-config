@@ -181,15 +181,6 @@ surround("[", "]")
 wk.register(surrounds, { mode = { "v", "x" } })
 
 wk.register({
-  ["<CR>"] = bind("wildfire", "init_selection"):with_desc("wildfire: init"),
-}, { mode = modes.normal })
-
-wk.register({
-  ["<CR>"] = bind("wildfire", "node_incremental"):with_desc("wildfire: init"),
-  ["<BS>"] = bind("wildfire", "node_decremental"):with_desc("wildfire: init"),
-}, { mode = { "x", "v" } })
-
-wk.register({
   w = bind("spider", "motion", "w"):with_desc("which_key_ignore"),
   b = bind("spider", "motion", "b"):with_desc("which_key_ignore"),
   e = bind("spider", "motion", "e"):with_desc("which_key_ignore"),

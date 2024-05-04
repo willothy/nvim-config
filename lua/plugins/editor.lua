@@ -303,16 +303,6 @@ return {
     cmd = "ReachOpen",
   },
   {
-    "SUSTech-data/wildfire.nvim",
-    opts = {
-      keymaps = {
-        init_selection = false,
-        node_incremental = false,
-        node_decremental = false,
-      },
-    },
-  },
-  {
     "abecodes/tabout.nvim",
     dependencies = {
       "hrsh7th/nvim-cmp",
