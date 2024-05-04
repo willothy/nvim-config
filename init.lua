@@ -53,7 +53,7 @@ require("lazy").setup({
     lazy = false,
     config = function()
       require("willothy")
-    end
+    end,
   },
   {
     name = "willothy.commands",

@@ -159,7 +159,7 @@ return {
     config = function()
       require("configs.windows.focus")
     end,
-    event = "VeryLazy",
+    event = "WinEnter",
   },
   {
     "echasnovski/mini.animate",
