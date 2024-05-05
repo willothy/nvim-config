@@ -35,5 +35,6 @@ wk.register({
   },
   K = bind(function()
     vim.lsp.buf.hover()
+    -- vim.lsp.with
   end):with_desc("lsp: hover"),
 }, { mode = modes.non_editing })
