@@ -51,8 +51,8 @@ function M.setup()
   o.foldexpr = "v:lua.willothy.ui.foldexpr()"
   o.foldtext = ""
 
-  o.splitkeep = "topline"
-  -- o.splitkeep = "cursor"
+  -- o.splitkeep = "topline"
+  o.splitkeep = "cursor"
 
   -- Pcall to avoid errors on older versions of nvim
   o.smoothscroll = true
