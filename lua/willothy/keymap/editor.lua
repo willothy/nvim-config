@@ -430,8 +430,8 @@ wk.register({
     end,
     "flash: toggle flash search",
   },
-  ["<C-f>"] = {
-    function() end,
-    "which_key_ignore",
-  },
+  -- ["<C-f>"] = {
+  --   function() end,
+  --   "which_key_ignore",
+  -- },
 }, { mode = modes.command })

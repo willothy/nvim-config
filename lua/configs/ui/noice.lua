@@ -235,6 +235,7 @@ require("noice").setup({
       opts = {},
     },
     hover = {
+      silent = true,
       enabled = true,
       border = {
         style = border_style,

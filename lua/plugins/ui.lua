@@ -157,9 +157,14 @@ return {
       "echasnovski/mini.animate",
     },
     config = function()
-      require("configs.windows.focus")
+      vim.api.nvim_create_autocmd("WinEnter", {
+        once = true,
+        callback = function()
+          require("configs.windows.focus")
+        end,
+      })
     end,
-    event = "WinEnter",
+    event = "VeryLazy",
   },
   {
     "echasnovski/mini.animate",
