@@ -387,7 +387,7 @@ local group =
 local quitting = false
 vim.api.nvim_create_autocmd("QuitPre", {
   group = group,
-  -- nested = true,
+  nested = true,
   callback = function()
     if quitting then
       return
@@ -482,9 +482,9 @@ vim.api.nvim_create_autocmd("QuitPre", {
           end
         end)
         -- vim.api.nvim_exec_autocmds("VimLeavePre", {})
-        vim.schedule(function()
-          vim.cmd.quitall()
-        end)
+        -- vim.schedule(function()
+        vim.cmd.quitall()
+        -- end)
       end
     end
   end,
