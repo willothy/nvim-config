@@ -109,7 +109,7 @@ local opts = {
     ["<C-e>"] = cmp.mapping(function()
       local suggestion = require("copilot.suggestion")
       if vim.snippet.active() then
-        vim.snippet.exit()
+        vim.snippet.stop()
       end
       if cmp.visible() then
         cmp.abort()

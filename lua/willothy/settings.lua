@@ -27,7 +27,6 @@ function M.setup()
   o.cursorline = true
   o.cursorlineopt = "number"
 
-  o.termguicolors = true
   o.modeline = false
 
   o.timeout = true
@@ -51,8 +50,8 @@ function M.setup()
   o.foldexpr = "v:lua.willothy.ui.foldexpr()"
   o.foldtext = ""
 
-  -- o.splitkeep = "topline"
-  o.splitkeep = "cursor"
+  o.splitkeep = "topline"
+  -- o.splitkeep = "cursor"
 
   -- Pcall to avoid errors on older versions of nvim
   o.smoothscroll = true

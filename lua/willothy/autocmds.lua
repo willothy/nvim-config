@@ -98,7 +98,7 @@ local autocmds = {
     "InsertLeave",
     callback = function()
       if vim.snippet.active() then
-        vim.snippet.exit()
+        vim.snippet.stop()
       end
       local cmp = require("cmp")
       if cmp.visible() then
