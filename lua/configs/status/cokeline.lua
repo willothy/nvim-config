@@ -43,16 +43,19 @@ local Space = {
   truncation = { priority = 1 },
 }
 
-local Devicon = {
+local DeviconOrUnsaved = {
   text = function(buffer)
     if mappings.is_picking_focus() or mappings.is_picking_close() then
       return buffer.pick_letter .. " "
+    elseif buffer.is_modified then
+      return icons.misc.modified .. " "
     end
     return buffer.devicon.icon
   end,
   fg = function(buffer)
     return (mappings.is_picking_focus() and "DiagnosticWarn")
       or (mappings.is_picking_close() and "DiagnosticError")
+      or (vim.bo[buffer.number].modified and "DiagnosticInfo")
       or buffer.devicon.color
   end,
   italic = function(_)
@@ -369,12 +372,12 @@ local opts = {
       end,
     },
     Space,
-    Devicon,
+    DeviconOrUnsaved,
     UniquePrefix,
     Filename,
     Space,
     Diagnostics,
-    CloseOrUnsaved,
+    -- CloseOrUnsaved,
     -- Space,
     {
       text = function(buffer)
