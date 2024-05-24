@@ -197,7 +197,9 @@ return {
     event = "UiEnter",
   },
   {
-    "ahmedkhalf/project.nvim",
+    -- "ahmedkhalf/project.nvim",
+    "LennyPhoenix/project.nvim",
+    branch = "fix-get_clients",
     name = "project_nvim",
     event = "VeryLazy",
     config = function()

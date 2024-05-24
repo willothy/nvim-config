@@ -159,7 +159,11 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       "dmitmel/cmp-cmdline-history",
       "rcarriga/cmp-dap",
-      "zbirenbaum/copilot-cmp",
+      {
+        -- "zbirenbaum/copilot-cmp",
+        "tris203/copilot-cmp",
+        branch = "0.11_compat",
+      },
       -- {
       --   "jsongerber/nvim-px-to-rem",
       --   ft = { "css" },
