@@ -417,7 +417,7 @@ vim.api.nvim_create_autocmd("QuitPre", {
       -- opening the commit message in editor doesn't overwrite
       -- the project's session.
       -- I should refactor this though it's a mess
-      local only_commit = true
+      local only_commit = true -- FIXME: why did I use two variables?
       local nothing_else = true
       for buf in
         vim.iter(vim.api.nvim_list_bufs()):filter(function(buf)
@@ -448,43 +448,10 @@ vim.api.nvim_create_autocmd("QuitPre", {
           end
         end
       end
-      local modified = vim.fn.getbufinfo({
-        ---@diagnostic disable-next-line: assign-type-mismatch
-        bufmodified = true,
-        ---@diagnostic disable-next-line: assign-type-mismatch
-        buflisted = true,
-      })
       if is_last then
-        if modified and #modified > 0 then
-          -- don't try to quit if there are unsaved changes
-          local msg = "the following buffers have unsaved changes:\n"
-            .. table.concat(
-              vim.tbl_map(function(buf)
-                return vim.api.nvim_buf_get_name(buf.bufnr)
-              end, modified),
-              "\n"
-            )
-          vim.notify(msg, vim.log.levels.WARN)
-          return
-        end
+        -- vim.o.confirm = true -- ensures that we are prompted to save
         quitting = true
-        vim
-          .iter(vim.api.nvim_list_wins())
-          :filter(function(win)
-            return vim.api.nvim_win_get_config(win).relative ~= ""
-          end)
-          :each(function(win)
-            vim.api.nvim_win_close(win, true)
-          end)
-        vim.iter(vim.api.nvim_list_wins()):enumerate():each(function(i, win)
-          if i > 1 then
-            vim.api.nvim_win_close(win, true)
-          end
-        end)
-        -- vim.api.nvim_exec_autocmds("VimLeavePre", {})
-        -- vim.schedule(function()
         vim.cmd.quitall()
-        -- end)
       end
     end
   end,

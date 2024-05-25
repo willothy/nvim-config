@@ -125,6 +125,13 @@ require("mason-lspconfig").setup({
         root_dir = require("lspconfig.util").root_pattern(".git", ".zshrc"),
       })
     end,
+    bufls = function()
+      require("lspconfig").bufls.setup({
+        capabilities = capabilities,
+        filetypes = { "proto" },
+        root_dir = require("lspconfig.util").root_pattern(".git"),
+      })
+    end,
     intelephense = function()
       lspconfig.intelephense.setup({
         capabilities = capabilities,
@@ -203,9 +210,9 @@ vim.diagnostic.config({
   severity_sort = true,
   update_in_insert = true,
   underline = true,
-  warden = {
-    line_highlight = true,
-  },
+  -- warden = {
+  --   line_highlight = true,
+  -- },
   signs = {
     text = {
       [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,

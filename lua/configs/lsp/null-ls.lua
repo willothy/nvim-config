@@ -7,6 +7,9 @@ null_ls.setup({
     builtins.code_actions.gitrebase,
     builtins.hover.dictionary,
     builtins.hover.printenv,
+    builtins.diagnostics.buf.with({
+      args = { "lint" },
+    }),
   },
   should_attach = function(bufnr)
     local ignored = {
