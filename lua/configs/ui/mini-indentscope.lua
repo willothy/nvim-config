@@ -8,7 +8,6 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 
 require("ibl").setup({
   indent = {
-    -- highlight = "IndentScope",
     highlight = "IndentScope",
     char = "▏",
   },
