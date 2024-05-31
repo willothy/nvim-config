@@ -1,22 +1,22 @@
 return {
   -- EXTENRAL UIs --
-  {
-    "glacambre/firenvim",
-    cond = vim.g.started_by_firenvim == true,
-    lazy = false,
-    build = function()
-      vim.cmd("call firenvim#install(0)")
-    end,
-  },
+  -- {
+  --   "glacambre/firenvim",
+  --   cond = vim.g.started_by_firenvim == true,
+  --   lazy = false,
+  --   build = function()
+  --     vim.cmd("call firenvim#install(0)")
+  --   end,
+  -- },
   -- ??? --
-  {
-    "altermo/nwm",
-    enabled = false,
-    config = function()
-      require("configs.ui.nwm")
-    end,
-    event = "VeryLazy",
-  },
+  -- {
+  --   "altermo/nwm",
+  --   enabled = false,
+  --   config = function()
+  --     require("configs.ui.nwm")
+  --   end,
+  --   event = "VeryLazy",
+  -- },
   -- LAYOUT / CORE UI --
   {
     -- "folke/which-key.nvim",
@@ -139,7 +139,7 @@ return {
   },
   {
     "folke/trouble.nvim",
-    branch = "dev",
+    --branch = "dev",
     -- dir = "~/projects/lua/trouble.nvim/",
     -- "willothy/trouble.nvim",
     cmd = "Trouble",

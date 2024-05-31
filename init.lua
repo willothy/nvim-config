@@ -22,7 +22,6 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
-
 -- package.preload["sidecar"] = function()
 --   local path = conf_path .. "/lua/sidecar.so"
 --   local lib = package.loadlib(path, "luaopen_sidecar")
@@ -133,4 +132,3 @@ require("lazy").setup({
     },
   },
 })
-

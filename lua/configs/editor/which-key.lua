@@ -62,6 +62,7 @@ require("which-key").setup({
   window = {
     position = "bottom",
     border = "single",
+    title = "test",
     winblend = 0,
     margin = {
       0,
@@ -74,9 +75,9 @@ require("which-key").setup({
         )
       end,
     },
-    -- padding = { 1, 0, 1, 0 },
+    padding = { 1, 0, 1, 0 },
     padding = { 0, 0, 0, 0 },
-    zindex = 1000,
+    zindex = 200,
   },
   layout = {
     height = { min = 4, max = 30 }, -- min and max height of the columns
