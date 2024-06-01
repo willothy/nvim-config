@@ -386,11 +386,15 @@ return {
     end,
     cmd = "Hawtkeys",
   },
-  -- {
-  --   "tris203/precognition.nvim",
-  --   opts = {},
-  --   -- dir = "~/projects/lua/precognition.nvim/",
-  -- },
+  {
+    "tris203/precognition.nvim",
+    opts = {
+      startVisible = false,
+      showBlankVirtLine = false,
+    },
+    event = "VeryLazy",
+    -- dir = "~/projects/lua/precognition.nvim/",
+  },
   {
     "johmsalas/text-case.nvim",
     opts = {
