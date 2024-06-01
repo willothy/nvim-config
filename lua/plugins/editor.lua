@@ -389,7 +389,7 @@ return {
   {
     "tris203/precognition.nvim",
     opts = {
-      startVisible = false,
+      startVisible = true,
       showBlankVirtLine = false,
     },
     event = "VeryLazy",
