@@ -5,9 +5,14 @@ return {
     config = true,
     cmd = "Refactor",
   },
+  -- {
+  --   "folke/neodev.nvim",
+  --   config = true,
+  -- },
   {
-    "folke/neodev.nvim",
-    config = true,
+    "folke/lazydev.nvim",
+    ft = "lua",
+    opts = {},
   },
   {
     "nvim-neotest/neotest",

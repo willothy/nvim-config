@@ -1,6 +1,8 @@
 return {
   {
-    "folke/neoconf.nvim",
+    -- "folke/neoconf.nvim",
+    "willothy/neoconf.nvim",
+    branch = "0.10-deprecations",
     config = true,
     -- event = "VimEnter",
   },

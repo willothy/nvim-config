@@ -64,16 +64,22 @@ require("mason").setup()
 
 local lspconfig = require("lspconfig")
 
-require("neoconf").setup({})
+local neoconf = require("neoconf")
+neoconf.setup({})
 
-require("neodev").setup({
-  lspconfig = false,
-  pathStrict = true,
-})
+local function settings(server, default)
+  return neoconf.get("lspconfig." .. server, default or {}, { lsp = true })
+end
+
+-- require("neodev").setup({
+--   lspconfig = false,
+--   pathStrict = true,
+-- })
 
 lspconfig.rust_analyzer.setup({
   capabilities = capabilities,
   root_dir = require("lspconfig.util").root_pattern(".git", "Cargo.toml"),
+  settings = settings("rust_analyzer"),
   offsetEncoding = { "utf-8" },
   client_encoding = "utf-8",
   single_file_support = true,
@@ -81,6 +87,7 @@ lspconfig.rust_analyzer.setup({
 
 lspconfig.clangd.setup({
   capabilities = capabilities,
+  settings = settings("clangd"),
   on_attach = function(_client, bufnr)
     vim.keymap.set("n", "<leader>gh", "<cmd>ClangdSwitchSourceHeader<CR>", {
       silent = true,
@@ -100,6 +107,7 @@ require("mason-lspconfig").setup({
     function(server_name)
       lspconfig[server_name].setup({
         capabilities = capabilities,
+        settings = settings(server_name),
         root_dir = require("lspconfig.util").root_pattern(
           ".git",
           "package.json"
@@ -111,6 +119,7 @@ require("mason-lspconfig").setup({
     taplo = function()
       lspconfig.taplo.setup({
         capabilities = capabilities,
+        settings = settings("taplo"),
         root_dir = require("lspconfig.util").root_pattern(
           ".git",
           "Cargo.toml",
@@ -121,6 +130,7 @@ require("mason-lspconfig").setup({
     bashls = function()
       require("lspconfig").bashls.setup({
         capabilities = capabilities,
+        settings = settings("bashls"),
         filetypes = { "zsh", "sh", "bash" },
         root_dir = require("lspconfig.util").root_pattern(".git", ".zshrc"),
       })
@@ -129,11 +139,13 @@ require("mason-lspconfig").setup({
       require("lspconfig").bufls.setup({
         capabilities = capabilities,
         filetypes = { "proto" },
+        settings = settings("bufls"),
         root_dir = require("lspconfig.util").root_pattern(".git"),
       })
     end,
     intelephense = function()
       lspconfig.intelephense.setup({
+        settings = settings("intelephense"),
         capabilities = capabilities,
         root_dir = require("lspconfig.util").root_pattern(".git"),
       })
@@ -144,18 +156,23 @@ require("mason-lspconfig").setup({
 lspconfig.lua_ls.setup({
   capabilities = capabilities,
   root_dir = require("lspconfig.util").root_pattern(".git"),
-  before_init = function(params, config)
-    local libs = config.settings.Lua.workspace.library
-
-    for _, lib in ipairs({
-      -- "${3rd}/busted/library",
-      "${3rd}/luv/library",
-    }) do
-      table.insert(libs, lib)
-    end
-
-    return require("neodev.lsp").before_init(params, config)
-  end,
+  settings = require("neoconf").get("lspconfig.lua_ls", {
+    Lua = {},
+  }, {
+    lsp = true,
+  }),
+  -- before_init = function(params, config)
+  --   local libs = config.settings.Lua.workspace.library
+  --
+  --   for _, lib in ipairs({
+  --     -- "${3rd}/busted/library",
+  --     "${3rd}/luv/library",
+  --   }) do
+  --     table.insert(libs, lib)
+  --   end
+  --
+  --   return require("neodev.lsp").before_init(params, config)
+  -- end,
   single_file_support = false,
   filetypes = { "lua" },
 })
