@@ -84,7 +84,7 @@ local opts = {
     { name = "nvim_px_to_rem" },
     { name = "copilot", max_item_count = 1 },
     { name = "snippets" },
-    { name = "lazydev" },
+    { name = "lazydev", group_index = 0 },
     {
       name = "nvim_lsp" --[[ , max_item_count = 40 ]],
     },

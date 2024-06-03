@@ -20,6 +20,7 @@ local autocmds = {
           group = group,
           callback = vim.lsp.buf.document_highlight,
         })
+
         vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
           buffer = bufnr,
           group = group,

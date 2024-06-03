@@ -12,7 +12,14 @@ return {
   {
     "folke/lazydev.nvim",
     ft = "lua",
-    opts = {},
+    opts = {
+      library = {
+        "luvit-meta/library",
+      },
+    },
+  },
+  {
+    "Bilal2453/luvit-meta", -- type defs for vim.uv
   },
   {
     "nvim-neotest/neotest",
