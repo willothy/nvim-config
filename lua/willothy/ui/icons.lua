@@ -40,6 +40,7 @@ Icons.kinds = {
   TypeParameter = " ",
   Copilot = " ",
   Cody = " ",
+  Supermaven = " ",
 }
 
 Icons.diagnostics = {
