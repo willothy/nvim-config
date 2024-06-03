@@ -1,15 +1,5 @@
--- auto-create nested tables
-local mt
-mt = {
-  __index = function(self, k)
-    local v = setmetatable({}, mt)
-    self[k] = v
-    return v
-  end,
-}
-
 ---@type lsp.ClientCapabilities
-local capabilities = setmetatable({}, mt)
+local capabilities = vim.defaulttable()
 
 capabilities.textDocument.foldingRange = {
   dynamicRegistration = false,

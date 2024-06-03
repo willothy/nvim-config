@@ -58,6 +58,14 @@ return {
     event = "VeryLazy",
   },
   {
+    "kevinhwang91/nvim-ufo",
+    dependencies = {
+      "kevinhwang91/promise-async",
+    },
+    event = "VeryLazy",
+    config = true,
+  },
+  {
     "sourcegraph/sg.nvim",
     config = function()
       require("configs.lsp.sourcegraph")
