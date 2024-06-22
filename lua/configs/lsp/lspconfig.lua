@@ -117,8 +117,18 @@ require("mason-lspconfig").setup({
         ),
       })
     end,
+    basedpyright = function()
+      lspconfig.basedpyright.setup({
+        capabilities = capabilities,
+        settings = settings("basedpyright"),
+        root_dir = require("lspconfig.util").root_pattern(
+          "pyproject.toml",
+          ".git"
+        ),
+      })
+    end,
     bashls = function()
-      require("lspconfig").bashls.setup({
+      lspconfig.bashls.setup({
         capabilities = capabilities,
         settings = settings("bashls"),
         filetypes = { "zsh", "sh", "bash" },
@@ -126,7 +136,7 @@ require("mason-lspconfig").setup({
       })
     end,
     bufls = function()
-      require("lspconfig").bufls.setup({
+      lspconfig.bufls.setup({
         capabilities = capabilities,
         filetypes = { "proto" },
         settings = settings("bufls"),
