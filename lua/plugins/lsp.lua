@@ -180,9 +180,9 @@ return {
       "dmitmel/cmp-cmdline-history",
       "rcarriga/cmp-dap",
       {
-        -- "zbirenbaum/copilot-cmp",
-        "tris203/copilot-cmp",
-        branch = "0.11_compat",
+        "zbirenbaum/copilot-cmp",
+        -- "tris203/copilot-cmp",
+        -- branch = "0.11_compat",
       },
       -- {
       --   "jsongerber/nvim-px-to-rem",
