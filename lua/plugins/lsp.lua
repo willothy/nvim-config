@@ -64,14 +64,14 @@ return {
     end,
     event = "VeryLazy",
   },
-  {
-    "kevinhwang91/nvim-ufo",
-    dependencies = {
-      "kevinhwang91/promise-async",
-    },
-    event = "VeryLazy",
-    config = true,
-  },
+  -- {
+  --   "kevinhwang91/nvim-ufo",
+  --   dependencies = {
+  --     "kevinhwang91/promise-async",
+  --   },
+  --   event = "VeryLazy",
+  --   config = true,
+  -- },
   {
     "sourcegraph/sg.nvim",
     config = function()

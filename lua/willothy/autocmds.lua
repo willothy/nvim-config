@@ -109,13 +109,9 @@ local autocmds = {
   },
 }
 
-return {
-  setup = function()
-    for _, v in ipairs(autocmds) do
-      local event = v[1]
-      v[1] = nil
-      v.group = group
-      autocmd(event, v)
-    end
-  end,
-}
+for _, v in ipairs(autocmds) do
+  local event = v[1]
+  v[1] = nil
+  v.group = group
+  autocmd(event, v)
+end

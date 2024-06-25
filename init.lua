@@ -6,8 +6,6 @@ vim.g.maplocalleader = "," -- TODO: I don't use this much. I should.
 
 local lazy_path = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
-local conf_path = vim.fn.stdpath("config") --[[@as string]]
-
 vim.opt.rtp:prepend(lazy_path)
 
 -- Loading shada is SLOW, so we're going to load it manually,
@@ -43,48 +41,20 @@ vim.api.nvim_create_autocmd("User", {
 --   return lib()
 -- end
 
+require("willothy")
+require("willothy.settings")
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  callback = function()
+    require("willothy.autocmds")
+    require("willothy.keymap")
+    require("willothy.commands")
+  end,
+})
+
 require("lazy").setup({
   { import = "plugins" },
-  -- This is how I get Lazy to profile my config.
-  {
-    name = "willothy.init",
-    main = "willothy",
-    dir = conf_path,
-    lazy = false,
-    config = function()
-      require("willothy")
-    end,
-  },
-  {
-    name = "willothy.commands",
-    main = "willothy.commands",
-    dir = conf_path,
-    event = "VeryLazy",
-    config = true,
-  },
-  {
-    name = "willothy.autocmds",
-    main = "willothy.autocmds",
-    dir = conf_path,
-    event = "VeryLazy",
-    config = true,
-  },
-  {
-    name = "willothy.keymap",
-    main = "willothy.keymap",
-    dir = conf_path,
-    event = "VeryLazy",
-    config = true,
-  },
-  {
-    name = "willothy.settings",
-    main = "willothy.settings",
-    dir = conf_path,
-    priority = 10000,
-    config = true,
-    event = "VimEnter",
-    cond = true,
-  },
 }, {
   defaults = {
     lazy = true,
@@ -108,6 +78,17 @@ require("lazy").setup({
   --   loader = true,
   --   require = true,
   -- },
+  pkg = {
+    enabled = true,
+    -- dir = conf_path,
+    sources = {
+      "lazy",
+      "rockspec",
+    },
+  },
+  rocks = {
+    -- server = "https://nvim-neorocks.github.io/rocks-binaries",
+  },
   performance = {
     cache = {
       enabled = true,

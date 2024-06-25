@@ -10,6 +10,7 @@ null_ls.setup({
     builtins.diagnostics.buf.with({
       args = { "lint" },
     }),
+    -- builtins.diagnostics.mypy,
   },
   should_attach = function(bufnr)
     local ignored = {

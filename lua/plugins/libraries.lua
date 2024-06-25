@@ -1,6 +1,10 @@
 return {
   "famiu/bufdelete.nvim",
   {
+    "https://github.com/leafo/magick",
+    build = "rockspec",
+  },
+  {
     "MunifTanjim/nui.nvim",
     -- dir = "~/projects/lua/nui.nvim/",
   },

@@ -32,7 +32,7 @@ local function module(path, ...)
   })
 end
 
-willothy = metamodule("willothy", {
+_G.willothy = metamodule("willothy", {
   ui = metamodule("willothy.ui"),
   utils = metamodule("willothy.utils"),
   async = module("nio", "willothy", "async"),

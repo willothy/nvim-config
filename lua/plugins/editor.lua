@@ -79,24 +79,24 @@ return {
     config = true,
     event = "VeryLazy",
   },
-  {
-    "vhyrro/luarocks.nvim",
-    priority = 1000,
-    config = function()
-      require("luarocks-nvim").setup({
-        rocks = {
-          "magick",
-        },
-      })
-    end,
-    event = "VeryLazy",
-  },
+  -- {
+  --   "vhyrro/luarocks.nvim",
+  --   priority = 1000,
+  --   config = function()
+  --     require("luarocks-nvim").setup({
+  --       rocks = {
+  --         "magick",
+  --       },
+  --     })
+  --   end,
+  --   event = "VeryLazy",
+  -- },
   {
     "nvim-neorg/neorg",
     dependencies = {
       "pysan3/pathlib.nvim",
       "nvim-lua/plenary.nvim",
-      "vhyrro/luarocks.nvim",
+      -- "vhyrro/luarocks.nvim",
       "nvim-neorg/lua-utils.nvim",
       "nvim-treesitter/nvim-treesitter",
     },

@@ -75,7 +75,7 @@ return {
     "3rd/image.nvim",
     enabled = false,
     dependencies = {
-      "vhyrro/luarocks.nvim",
+      -- "vhyrro/luarocks.nvim",
     },
     config = function()
       require("image").setup({})
@@ -304,7 +304,6 @@ return {
       vim.cmd.colorscheme("minimus")
     end,
     event = "UiEnter",
-    -- dir = "~/projects/lua/minimus/",
   },
   {
     "rktjmp/lush.nvim",

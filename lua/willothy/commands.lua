@@ -180,12 +180,8 @@ local commands = {
   W = { "w", desc = ":w, common cmdline typo" },
 }
 
-return {
-  setup = function()
-    for name, cmd in pairs(commands) do
-      local command = cmd[1]
-      cmd[1] = nil
-      vim.api.nvim_create_user_command(name, command, cmd)
-    end
-  end,
-}
+for name, cmd in pairs(commands) do
+  local command = cmd[1]
+  cmd[1] = nil
+  vim.api.nvim_create_user_command(name, command, cmd)
+end
