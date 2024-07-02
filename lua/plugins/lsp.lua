@@ -184,6 +184,9 @@ return {
         -- "tris203/copilot-cmp",
         -- branch = "0.11_compat",
       },
+      {
+        "supermaven-inc/supermaven-nvim",
+      },
       -- {
       --   "jsongerber/nvim-px-to-rem",
       --   ft = { "css" },
@@ -213,6 +216,14 @@ return {
     config = function()
       require("configs.editor.copilot")
     end,
+  },
+  {
+    "supermaven-inc/supermaven-nvim",
+    opts = {
+      log_level = "off",
+      disable_keymaps = true,
+      disable_inline_completion = true,
+    },
   },
   {
     "kylechui/nvim-surround",

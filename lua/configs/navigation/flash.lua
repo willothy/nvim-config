@@ -309,7 +309,7 @@ flash.setup({
   modes = {
     char = {
       enabled = true,
-      jump_labels = true,
+      jump_labels = false,
       label = { exclude = "hjkliardc" },
       keys = {
         "f",

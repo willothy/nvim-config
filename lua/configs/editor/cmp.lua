@@ -82,12 +82,14 @@ local opts = {
   formatting = format,
   sources = cmp.config.sources({
     { name = "nvim_px_to_rem" },
-    { name = "copilot", max_item_count = 1 },
-    { name = "snippets" },
     { name = "lazydev", group_index = 0 },
     {
       name = "nvim_lsp" --[[ , max_item_count = 40 ]],
     },
+    { name = "copilot" },
+    { name = "supermaven" },
+    { name = "cody" },
+    { name = "snippets" },
     { name = "buffer", max_item_count = 4 },
     { name = "path" },
   }),
