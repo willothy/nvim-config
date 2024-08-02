@@ -95,12 +95,13 @@ require("statuscol").setup({
       condition = { is_normal_buf, is_normal_buf },
     },
     {
-      text = {
-        function(...)
-          return string.format("%4s", builtin.lnumfunc(...))
-        end,
-        " ",
+      sign = {
+        name = { "comfy" },
+        maxwidth = 1,
+        minwidth = 1,
+        colwidth = 3,
       },
+      text = { builtin.lnumfunc, " " },
       click = "v:lua.ScLa",
     },
     {

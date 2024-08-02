@@ -724,22 +724,24 @@ wk.add({
           desc = "indent: format",
         },
       },
-      {
-        "<Tab>",
-        function()
-          if vim.fn.pumvisible() == 1 then
-            require("stay-in-place").shift_right_visual()
-          end
-        end,
-      },
-      {
-        "<S-Tab>",
-        function()
-          if vim.fn.pumvisible() == 1 then
-            require("stay-in-place").shift_left_visual()
-          end
-        end,
-      },
+      -- {
+      --   "<Tab>",
+      --   function()
+      --     if vim.fn.pumvisible() == 1 then
+      --       require("stay-in-place").shift_right_visual()
+      --     end
+      --   end,
+      --   mode = "n",
+      -- },
+      -- {
+      --   "<S-Tab>",
+      --   function()
+      --     if vim.fn.pumvisible() == 1 then
+      --       require("stay-in-place").shift_left_visual()
+      --     end
+      --   end,
+      --   mode = "n",
+      -- },
     },
   },
 })

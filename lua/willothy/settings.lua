@@ -5,12 +5,17 @@ local icons = willothy.ui.icons
 o.cmdheight = 0
 o.scrolloff = 16
 
-o.shortmess = "filnxoOCFIsw"
-o.virtualedit = "block"
-o.signcolumn = "yes"
-o.wrap = false
 o.number = true
 o.relativenumber = true
+o.signcolumn = "yes"
+-- o.signcolumn = "number"
+-- o.relativenumber = false
+-- o.number = false
+
+o.shortmess = "filnxoOCFIsw"
+o.virtualedit = "block"
+
+o.wrap = false
 o.autoread = true
 o.showtabline = 2
 o.laststatus = 3

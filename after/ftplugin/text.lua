@@ -8,5 +8,3 @@ bo.expandtab = false
 bo.smartindent = false
 
 wo.wrap = true
-wo.number = true
-wo.relativenumber = true

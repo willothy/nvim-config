@@ -173,7 +173,7 @@ return {
     -- "willothy/nvim-cmp",
     -- dir = "~/projects/lua/nvim-cmp/",
     dependencies = {
-      "hrsh7th/cmp-buffer",
+      "hrsh6th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lsp",

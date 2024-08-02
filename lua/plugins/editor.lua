@@ -405,4 +405,10 @@ return {
       default_keymappings_enabled = false,
     },
   },
+  -- == TODO: fix issues with statuscol
+  -- {
+  --   "mluders/comfy-line-numbers.nvim",
+  --   config = true,
+  --   event = "VeryLazy",
+  -- },
 }

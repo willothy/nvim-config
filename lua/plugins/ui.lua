@@ -256,13 +256,6 @@ return {
       require("configs.status.statuscol")
     end,
   },
-  -- NOTE: This seems to be broken atm (likely from 0.10 sign extmark changes)
-  -- {
-  --   "lewis6991/foldsigns.nvim",
-  --   config = true,
-  --   --
-  --   event = "VeryLazy",
-  -- },
   {
     "b0o/incline.nvim",
     -- branch = "dev",
@@ -298,14 +291,6 @@ return {
     cmd = "ColorizerToggle",
   },
   {
-    "willothy/minimus",
-    priority = 100,
-    config = function()
-      vim.cmd.colorscheme("minimus")
-    end,
-    event = "UiEnter",
-  },
-  {
     "rktjmp/lush.nvim",
     cmd = "Lushify",
   },
@@ -321,8 +306,4 @@ return {
   {
     "tjdevries/colorbuddy.nvim",
   },
-  "loganswartz/polychrome.nvim",
-  "folke/tokyonight.nvim",
-  "rebelot/kanagawa.nvim",
-  "eldritch-theme/eldritch.nvim",
 }

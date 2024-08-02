@@ -55,6 +55,22 @@ vim.api.nvim_create_autocmd("User", {
 
 require("lazy").setup({
   { import = "plugins" },
+  {
+    "willothy/minimus",
+    priority = 100,
+    config = function()
+      vim.cmd.colorscheme("minimus")
+    end,
+    event = "UiEnter",
+  },
+  "loganswartz/polychrome.nvim",
+  "folke/tokyonight.nvim",
+  "rebelot/kanagawa.nvim",
+  "eldritch-theme/eldritch.nvim",
+  "diegoulloao/neofusion.nvim",
+  "comfysage/evergarden",
+  "ray-x/aurora",
+  "vague2k/vague.nvim",
 }, {
   defaults = {
     lazy = true,
