@@ -113,7 +113,7 @@ function M.group(mode, prefix, name, noleader)
   if not ok then
     return
   end
-  wk.register(
+  wk.add(
     { name = name },
     { mode = mode, prefix = noleader and prefix or ("<leader>" .. prefix) }
   )

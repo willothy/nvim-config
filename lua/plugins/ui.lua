@@ -19,8 +19,8 @@ return {
   -- },
   -- LAYOUT / CORE UI --
   {
-    -- "folke/which-key.nvim",
-    "willothy/which-key.nvim", -- fork with fixes and description sort
+    "folke/which-key.nvim",
+    -- "willothy/which-key.nvim", -- fork with fixes and description sort
     -- dir = "~/projects/lua/which-key.nvim/",
     config = function()
       require("configs.editor.which-key")

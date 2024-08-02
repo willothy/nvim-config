@@ -1,6 +1,6 @@
 require("hawtkeys").setup({
   customMaps = {
-    ["wk.register"] = {
+    ["wk.add"] = {
       method = "which_key",
     },
   },
