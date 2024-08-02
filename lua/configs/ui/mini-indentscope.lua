@@ -14,7 +14,7 @@ require("ibl").setup({
   whitespace = {
     highlight = "IndentScope",
   },
-  scope = { enabled = true },
+  scope = { enabled = false },
 })
 
 cached_hl = vim.api.nvim_get_hl(0, {

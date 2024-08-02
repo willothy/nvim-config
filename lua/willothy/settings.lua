@@ -7,8 +7,8 @@ o.scrolloff = 16
 
 o.number = true
 o.relativenumber = true
-o.signcolumn = "yes"
--- o.signcolumn = "number"
+-- o.signcolumn = "yes"
+o.signcolumn = "number"
 -- o.relativenumber = false
 -- o.number = false
 

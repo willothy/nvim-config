@@ -96,7 +96,7 @@ require("statuscol").setup({
     },
     {
       sign = {
-        name = { "comfy" },
+        namespace = { "comfy-.*" },
         maxwidth = 1,
         minwidth = 1,
         colwidth = 3,

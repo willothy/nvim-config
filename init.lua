@@ -50,6 +50,8 @@ vim.api.nvim_create_autocmd("User", {
     require("willothy.autocmds")
     require("willothy.keymap")
     require("willothy.commands")
+
+    require("willothy.line-numbers")
   end,
 })
 
