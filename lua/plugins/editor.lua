@@ -1,8 +1,8 @@
 return {
   {
-    -- "folke/neoconf.nvim",
-    "willothy/neoconf.nvim",
-    branch = "0.10-deprecations",
+    "folke/neoconf.nvim",
+    -- "willothy/neoconf.nvim",
+    -- branch = "0.10-deprecations",
     config = true,
     -- event = "VimEnter",
   },
@@ -50,7 +50,8 @@ return {
   -- TREESITTER --
   {
     "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
+    event = "VeryLazy",
+    -- build = ":TSUpdate",
     dependencies = {
       "nvim-treesitter/nvim-treesitter-textobjects",
       -- "IndianBoy42/tree-sitter-just",
@@ -58,6 +59,7 @@ return {
     },
     config = function()
       require("configs.editor.treesitter")
+      pcall(vim.treesitter.start)
     end,
   },
   {

@@ -19,7 +19,9 @@ local opts = {
     asm = { { "asmfmt" } },
     nix = { { "nixpkgs_fmt" } },
     just = { "just" },
-    python = { "black" },
+    -- python = { "black" },
+    python = { "blue" },
+    bzl = { "buildifier" },
   },
   -- format_on_save = {
   --   timeout_ms = 500,

@@ -225,6 +225,11 @@ return {
       disable_inline_completion = true,
     },
   },
+  -- {
+  --   "lsportal/lsportal.nvim",
+  --   config = true,
+  --   dir = "~/work/foss/lsportal/lsportal.nvim/",
+  -- },
   {
     "kylechui/nvim-surround",
     config = true,

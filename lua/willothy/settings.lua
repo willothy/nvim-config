@@ -47,6 +47,8 @@ o.foldmethod = "expr"
 o.foldexpr = "v:lua.willothy.ui.foldexpr()"
 o.foldtext = ""
 
+o.syntax = "off"
+
 -- o.splitkeep = "topline"
 o.splitkeep = "cursor"
 
