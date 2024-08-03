@@ -293,7 +293,7 @@ local Harpoon = {
         },
       }
 
-      if list:length() == list:append(item):length() then
+      if list:length() == list:add(item):length() then
         list:remove(item)
       end
     end,

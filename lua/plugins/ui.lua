@@ -154,7 +154,10 @@ return {
     -- "willothy/focus.nvim",
     -- branch = "float-config-preemptive-fix",
     dependencies = {
-      "echasnovski/mini.animate",
+      {
+        "echasnovski/mini.animate",
+        optional = true,
+      },
     },
     config = function()
       vim.api.nvim_create_autocmd("WinEnter", {
@@ -168,6 +171,7 @@ return {
   },
   {
     "echasnovski/mini.animate",
+    enabled = false,
     config = function()
       require("configs.windows.mini-animate")
     end,
@@ -293,17 +297,5 @@ return {
   {
     "rktjmp/lush.nvim",
     cmd = "Lushify",
-  },
-  {
-    "echasnovski/mini.colors",
-    config = true,
-    cmd = "Colorscheme",
-  },
-  {
-    "echasnovski/mini.hues",
-    config = true,
-  },
-  {
-    "tjdevries/colorbuddy.nvim",
   },
 }

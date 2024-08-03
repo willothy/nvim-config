@@ -221,10 +221,6 @@ function ScrollBarManager.setup(opts)
   vim.api.nvim_create_autocmd({
     "WinNew",
     "WinClosed",
-    "TabNew",
-    "TabClosed",
-    "TabEnter",
-    "TermEnter",
   }, {
     callback = ScrollBarManager.update,
   })

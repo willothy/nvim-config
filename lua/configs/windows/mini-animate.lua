@@ -82,10 +82,10 @@ anim.setup({
   },
   cursor = { enable = false },
   scroll = {
-    enable = false,
+    enable = true,
   },
   resize = {
-    enable = true,
+    enable = false,
     timing = duration(200),
     subresize = subresize(easing.ease_out),
   },

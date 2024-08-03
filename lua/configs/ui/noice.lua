@@ -1,14 +1,3 @@
-local border_style = {
-  left = { " ", "NoiceCmdlinePopupBorder" },
-  right = { " ", "NoiceCmdlinePopupBorder" },
-  top = { "▀", "NoiceCmdlinePopupBorder" },
-  top_left = { "▀", "NoiceCmdlinePopupBorder" },
-  top_right = { "▀", "NoiceCmdlinePopupBorder" },
-  bottom = { "▄", "NoiceCmdlinePopupBorder" },
-  bottom_left = { "▄", "NoiceCmdlinePopupBorder" },
-  bottom_right = { "▄", "NoiceCmdlinePopupBorder" },
-}
-
 local require = require("noice.util.lazy")
 
 local Util = require("noice.util")
@@ -141,11 +130,7 @@ require("noice").setup({
     view = "fidget",
   },
   views = {
-    split = {
-      win_options = {
-        winhighlight = "Normal:Normal",
-      },
-    },
+    split = {},
     mini = {
       win_options = {
         winblend = 0,
@@ -157,16 +142,13 @@ require("noice").setup({
         col = "50%",
       },
       border = {
-        style = border_style,
+        style = "solid",
         padding = { 0, 0 },
       },
       win_options = {
-        -- winblend = 100,
         winhighlight = {
           Normal = "NormalFloat",
-          FloatBorder = "NormalBorder",
         },
-        cursorline = false,
       },
       size = {
         width = "auto",
@@ -176,20 +158,14 @@ require("noice").setup({
     hover = {
       silent = true,
       border = {
-        style = border_style,
+        style = "solid",
         padding = { 0, 0 },
       },
     },
     popup = {
       border = {
-        style = border_style,
+        style = "solid",
         padding = { 0, 0 },
-      },
-      win_options = {
-        winhighlight = {
-          Normal = "NormalFloat",
-          FloatBorder = "NormalFloatInv",
-        },
       },
     },
     popupmenu = {
@@ -203,14 +179,8 @@ require("noice").setup({
         height = 10,
       },
       border = {
-        style = border_style,
+        style = "solid",
         padding = { 0, 0 },
-      },
-      win_options = {
-        winhighlight = {
-          Normal = "NormalFloat",
-          FloatBorder = "NormalFloatInv",
-        },
       },
     },
   },
@@ -238,7 +208,7 @@ require("noice").setup({
       silent = true,
       enabled = true,
       border = {
-        style = border_style,
+        style = "solid",
         padding = { 0, 0 },
       },
     },

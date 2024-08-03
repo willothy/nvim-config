@@ -25,7 +25,7 @@ local harpoon = function(buf)
       local cursor = vim.api.nvim_win_get_cursor(win)
       local file = files.get_fs_entry(buf, cursor[1])
       if file then
-        list:append({
+        list:add({
           value = Path:new(file.path):make_relative(root),
           context = {
             row = 1,
@@ -41,7 +41,7 @@ local harpoon = function(buf)
       for i = start, finish do
         local file = files.get_fs_entry(buf, i)
         if file then
-          list:append({
+          list:add({
             value = Path:new(file.path):make_relative(root),
             context = {
               row = 1,

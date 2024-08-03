@@ -115,6 +115,7 @@ require("statuscol").setup({
   },
   ft_ignore = {
     "trouble",
+    "noice",
   },
   clickhandlers = {
     FoldOther = false,

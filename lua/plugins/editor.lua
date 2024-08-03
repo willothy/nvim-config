@@ -51,15 +51,22 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     event = "VeryLazy",
-    -- build = ":TSUpdate",
+    build = ":TSUpdate",
+    commit = "9e1cda4e71a763ba1f1ac099498c7ce40edc6dd2",
     dependencies = {
+      -- {
+      --   "ray-x/go.nvim",
+      --   config = true,
+      --   ft = { "go", "gomod" },
+      --   build = ":lua require('go.install').update_all_sync()",
+      -- },
       "nvim-treesitter/nvim-treesitter-textobjects",
       -- "IndianBoy42/tree-sitter-just",
       "chrisgrieser/nvim-various-textobjs",
     },
     config = function()
       require("configs.editor.treesitter")
-      pcall(vim.treesitter.start)
+      -- pcall(vim.treesitter.start)
     end,
   },
   {
@@ -283,20 +290,13 @@ return {
   },
   {
     "ThePrimeagen/harpoon",
-    commit = "a38be6e0dd4c6db66997deab71fc4453ace97f9c",
+    -- commit = "a38be6e0dd4c6db66997deab71fc4453ace97f9c",
     branch = "harpoon2",
     -- "willothy/harpoon",
     -- dir = "~/projects/lua/harpoon/",
     config = function()
       require("configs.navigation.harpoon")
     end,
-  },
-  {
-    "cbochs/portal.nvim",
-    config = function()
-      require("configs.navigation.portal")
-    end,
-    cmd = "Portal",
   },
   {
     "chrisgrieser/nvim-spider",

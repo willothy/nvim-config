@@ -24,14 +24,13 @@ require("nvim-treesitter.configs").setup({
   },
   sync_install = false,
   auto_install = true,
-  -- starting highlight via this config is SO SLOW for some reason
   highlight = {
     enable = true,
-    disable = {
-      "css",
-      "scss",
-    },
-    additional_vim_regex_highlighting = false,
+    -- disable = {
+    --   "css",
+    --   "scss",
+    -- },
+    -- additional_vim_regex_highlighting = false,
   },
   indent = {
     enable = true,
@@ -70,3 +69,5 @@ require("nvim-treesitter.configs").setup({
     },
   },
 })
+
+vim.schedule(vim.treesitter.start)

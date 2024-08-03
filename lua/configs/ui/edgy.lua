@@ -75,9 +75,9 @@ local terminal = View.new({
   end,
 })
 
--- local trouble = bottom:extend({
---   ft = "trouble",
--- })
+local trouble = bottom:extend({
+  ft = "trouble",
+})
 
 local function get_rhs_width()
   if vim.o.columns > 120 then
@@ -431,7 +431,7 @@ local opts = {
     --     require("trouble").open("loclist")
     --   end,
     -- }),
-    -- trouble,
+    trouble,
   },
 
   options = {

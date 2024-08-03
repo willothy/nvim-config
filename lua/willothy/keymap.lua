@@ -28,7 +28,8 @@ wk.add({
     {
       "<leader>bb",
       function()
-        require("cokeline.mappings").pick("focus")
+        -- require("cokeline.mappings").pick("focus")
+        require("reach").buffers()
       end,
       desc = "pick & focus",
     },
@@ -565,7 +566,7 @@ wk.add({
         local harpoon = require("harpoon")
         local list = harpoon:list("files")
 
-        if list:length() == list:append():length() then
+        if list:length() == list:add():length() then
           list:remove()
         end
       end,
@@ -584,21 +585,21 @@ wk.add({
     {
       "Q",
       function()
-        require("NeoComposer").toggle_play_macro()
+        require("NeoComposer.macro").toggle_play_macro()
       end,
       desc = "macros: play",
     },
     {
       "q",
       function()
-        require("NeoComposer").toggle_record()
+        require("NeoComposer.macro").toggle_record()
       end,
       desc = "macros: record",
     },
     {
       "cq",
       function()
-        require("NeoComposer").halt_macro()
+        require("NeoComposer.macro").stop_macro()
       end,
       desc = "macros: stop",
     },

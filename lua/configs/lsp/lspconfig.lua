@@ -104,6 +104,13 @@ require("mason-lspconfig").setup({
         ),
       })
     end,
+    gopls = function()
+      lspconfig.gopls.setup({
+        capabilities = capabilities,
+        settings = settings("gopls"),
+        root_dir = require("lspconfig.util").root_pattern(".git", "go.mod"),
+      })
+    end,
     clangd = function() end,
     rust_analyzer = function() end,
     taplo = function()

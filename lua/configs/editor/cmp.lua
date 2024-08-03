@@ -88,7 +88,7 @@ local opts = {
     },
     { name = "copilot" },
     { name = "supermaven" },
-    -- { name = "cody" },
+    { name = "cody" },
     { name = "snippets" },
     { name = "buffer", max_item_count = 4 },
     { name = "path" },

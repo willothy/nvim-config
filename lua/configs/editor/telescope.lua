@@ -59,7 +59,7 @@ local function add_to_harpoon(prompt_bufnr)
 
   for file in iter do
     if file.filename and file.filename ~= "" then
-      list:append(file.filename)
+      list:add(file.filename)
     else
       vim.notify(
         "No filename found for " .. vim.inspect(file),
@@ -74,7 +74,7 @@ local function create_and_add_to_harpoon(prompt_bufnr)
   local fb_actions = telescope.extensions.file_browser.actions
   local path = fb_actions.create(prompt_bufnr)
   if path ~= nil then
-    require("harpoon"):list():append(path)
+    require("harpoon"):list():add(path)
   end
 end
 

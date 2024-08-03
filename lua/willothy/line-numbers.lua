@@ -42,21 +42,29 @@ local M = {
   },
 }
 
+local n_labels = #labels
+
 local function place_signs()
-  local current_file = vim.fn.expand("%")
-  if current_file == nil or current_file == "" then
+  local win = vim.api.nvim_get_current_win()
+  local bufnr = vim.api.nvim_win_get_buf(win)
+
+  if
+    vim.api.nvim_get_option_value("buftype", {
+      buf = bufnr,
+    }) ~= ""
+  then
     return
   end
 
-  vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
+  local current_line = vim.api.nvim_win_get_cursor(win)[1]
 
-  local current_line = vim.api.nvim_win_get_cursor(0)[1]
+  vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
 
-  for i = 1, #M.config.labels, 1 do
-    local label = M.config.labels[i]
+  for i = 1, n_labels, 1 do
+    local label = labels[i]
 
     if current_line - i > 0 then
-      vim.api.nvim_buf_set_extmark(0, ns, current_line - i - 1, 0, {
+      vim.api.nvim_buf_set_extmark(bufnr, ns, current_line - i - 1, 0, {
         sign_text = label,
         sign_hl_group = "LineNr",
         priority = 100,
@@ -64,10 +72,11 @@ local function place_signs()
     end
 
     local lnr = current_line + i - 1
-    if lnr <= vim.api.nvim_buf_line_count(0) then
-      vim.api.nvim_buf_set_extmark(0, ns, lnr, 0, {
+    if lnr <= vim.api.nvim_buf_line_count(bufnr) then
+      vim.api.nvim_buf_set_extmark(bufnr, ns, lnr, 0, {
         sign_text = label,
         sign_hl_group = "LineNr",
+        right_gravity = true,
         priority = 100,
       })
     end
@@ -78,6 +87,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved", "CursorMovedI" }, {
   group = vim.api.nvim_create_augroup("comfy-signs", {}),
   callback = vim.schedule_wrap(place_signs),
 })
+vim.schedule(place_signs)
 
 for index, label in ipairs(M.config.labels) do
   vim.keymap.set(
@@ -93,7 +103,5 @@ for index, label in ipairs(M.config.labels) do
     { noremap = true }
   )
 end
-
-vim.schedule(place_signs)
 
 return M

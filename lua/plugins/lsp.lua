@@ -161,7 +161,6 @@ return {
   },
   {
     "dgagn/diagflow.nvim",
-    -- "willothy/diagflow.nvim",
     config = function()
       require("configs.lsp.diagflow")
     end,
@@ -170,20 +169,14 @@ return {
   -- COMPLETION --
   {
     "hrsh7th/nvim-cmp",
-    -- "willothy/nvim-cmp",
-    -- dir = "~/projects/lua/nvim-cmp/",
     dependencies = {
-      "hrsh6th/cmp-buffer",
+      "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lsp",
       "dmitmel/cmp-cmdline-history",
       "rcarriga/cmp-dap",
-      {
-        "zbirenbaum/copilot-cmp",
-        -- "tris203/copilot-cmp",
-        -- branch = "0.11_compat",
-      },
+      "zbirenbaum/copilot-cmp",
       {
         "supermaven-inc/supermaven-nvim",
       },

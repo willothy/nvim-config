@@ -65,7 +65,7 @@ require("lazy").setup({
     end,
     event = "UiEnter",
   },
-  "loganswartz/polychrome.nvim",
+  -- "loganswartz/polychrome.nvim",
   "folke/tokyonight.nvim",
   "rebelot/kanagawa.nvim",
   "eldritch-theme/eldritch.nvim",
