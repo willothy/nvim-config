@@ -65,6 +65,12 @@ require("lazy").setup({
     end,
     event = "UiEnter",
   },
+  -- {
+  --   "willothy/libsql-lua",
+  --   -- dir = "~/projects/rust/libsql-lua/",
+  --   lazy = false,
+  --   build = "build.lua",
+  -- },
   -- "loganswartz/polychrome.nvim",
   "folke/tokyonight.nvim",
   "rebelot/kanagawa.nvim",
