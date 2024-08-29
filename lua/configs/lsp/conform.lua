@@ -1,23 +1,86 @@
 local opts = {
   formatters_by_ft = {
-    lua = { "stylua" },
-    c = { { "uncrustify", "clang_format" } },
-    cpp = { "clang_format" },
-    cuda = { "clang_format" },
-    rust = { "rustfmt" },
-    javascript = { { "prettier" } },
-    typescript = { { "prettier" } },
-    typescriptreact = { { "prettier" } },
-    tsx = { { "prettier" } },
-    css = { { "prettier" } },
-    scss = { { "prettier" } },
-    html = { { "prettier" } },
-    markdown = { { "markdownlint", "prettier" } },
-    json = { { "jq", "prettier" } },
-    proto = { { "buf", "protolint" } },
-    nasm = { { "asmfmt" } },
-    asm = { { "asmfmt" } },
-    nix = { { "nixpkgs_fmt" } },
+    lua = {
+      stop_after_first = true,
+      "stylua",
+    },
+    c = {
+      stop_after_first = true,
+      "uncrustify",
+      "clang_format",
+    },
+    cpp = {
+      stop_after_first = true,
+      "clang_format",
+    },
+    cuda = {
+      stop_after_first = true,
+      "clang_format",
+    },
+    rust = {
+      stop_after_first = true,
+      "rustfmt",
+    },
+    javascript = {
+      stop_after_first = true,
+      "prettier",
+    },
+    typescript = {
+      stop_after_first = true,
+      "prettier",
+    },
+    typescriptreact = {
+      stop_after_first = true,
+      "prettier",
+    },
+    tsx = {
+      stop_after_first = true,
+      "prettier",
+    },
+    css = {
+      stop_after_first = true,
+      "prettier",
+    },
+    scss = {
+      stop_after_first = true,
+      "prettier",
+    },
+    html = {
+      stop_after_first = true,
+      "prettier",
+    },
+    markdown = {
+      stop_after_first = true,
+      "markdownlint",
+      "prettier",
+    },
+    json = {
+      stop_after_first = true,
+      "jq",
+      "prettier",
+    },
+    jsonc = {
+      stop_after_first = true,
+      "jq",
+      "prettier",
+    },
+    proto = {
+      stop_after_first = true,
+      "buf",
+      "protolint",
+    },
+    nasm = {
+      stop_after_first = true,
+      "asmfmt",
+    },
+    asm = {
+      stop_after_first = true,
+      "asmfmt",
+    },
+    nix = {
+      stop_after_first = true,
+      "nixpkgs_fmt",
+    },
     just = { "just" },
     -- python = { "black" },
     python = { "blue" },

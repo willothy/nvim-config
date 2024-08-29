@@ -181,7 +181,18 @@
 		},
 		"gopls": {
 			"gopls": {
-				"semanticTokens": true
+				"semanticTokens": true,
+				"hints": {
+					"enabled": true,
+					"parameterNames": true,
+					"functionTypeParameters": true,
+					"rangeVariableTypes": true,
+					"constantValues": true,
+					"compositeLiteralTypes": true,
+					"compositeLiteralFields": true,
+					"assignVariableTypes": true
+				  // "types": ["implementation", "usage"],
+				}
 			}
 		},
 		"cssls": {}

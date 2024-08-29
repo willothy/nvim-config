@@ -69,5 +69,3 @@ require("nvim-treesitter.configs").setup({
     },
   },
 })
-
-vim.schedule(vim.treesitter.start)
