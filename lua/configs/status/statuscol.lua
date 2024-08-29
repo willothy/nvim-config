@@ -132,13 +132,13 @@ require("statuscol").setup({
   },
 })
 
-vim.api.nvim_create_autocmd("User", {
-  pattern = "ResessionLoadPost",
-  callback = function()
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-      if vim.bo[vim.api.nvim_win_get_buf(win)].buftype == "" then
-        vim.wo[win].stc = "%!v:lua.StatusCol()"
-      end
-    end
-  end,
-})
+-- vim.api.nvim_create_autocmd("User", {
+--   pattern = "ResessionLoadPost",
+--   callback = function()
+--     for _, win in ipairs(vim.api.nvim_list_wins()) do
+--       if vim.bo[vim.api.nvim_win_get_buf(win)].buftype == "" then
+--         vim.wo[win].stc = "%!v:lua.StatusCol()"
+--       end
+--     end
+--   end,
+-- })
