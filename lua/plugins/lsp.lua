@@ -203,6 +203,62 @@ return {
     config = true,
     event = "InsertEnter",
   },
+  -- AI
+  -- {
+  --   "yetone/avante.nvim",
+  --   event = "InsertEnter",
+  --   build = ":AvanteBuild",
+  --   config = function()
+  --     require("1password").read(
+  --       "op://Personal/Anthropic API Key/credential",
+  --       vim.schedule_wrap(function(res)
+  --         vim.env["ANTHROPIC_API_KEY"] = vim.trim(res)
+  --         require("avante").setup({
+  --           provider = "claude",
+  --           claude = {
+  --             endpoint = "https://api.anthropic.com",
+  --             model = "claude-3-5-sonnet-20240620",
+  --             temperature = 0,
+  --             max_tokens = 4096,
+  --           },
+  --         })
+  --       end)
+  --     )
+  --   end,
+  --   dependencies = {
+  --     "stevearc/dressing.nvim",
+  --     "nvim-lua/plenary.nvim",
+  --     "MunifTanjim/nui.nvim",
+  --     --- The below dependencies are optional,
+  --     "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+  --     "zbirenbaum/copilot.lua", -- for providers='copilot'
+  --     {
+  --       -- support for image pasting
+  --       "HakonHarnes/img-clip.nvim",
+  --       event = "VeryLazy",
+  --       opts = {
+  --         -- recommended settings
+  --         default = {
+  --           embed_image_as_base64 = false,
+  --           prompt_for_file_name = false,
+  --           drag_and_drop = {
+  --             insert_mode = true,
+  --           },
+  --           -- required for Windows users
+  --           use_absolute_path = true,
+  --         },
+  --       },
+  --     },
+  --     {
+  --       -- Make sure to setup it properly if you have lazy=true
+  --       "MeanderingProgrammer/render-markdown.nvim",
+  --       opts = {
+  --         file_types = { "markdown", "Avante" },
+  --       },
+  --       ft = { "markdown", "Avante" },
+  --     },
+  --   },
+  -- },
   {
     "zbirenbaum/copilot.lua",
     event = "InsertEnter",
@@ -210,14 +266,14 @@ return {
       require("configs.editor.copilot")
     end,
   },
-  {
-    "supermaven-inc/supermaven-nvim",
-    opts = {
-      log_level = "off",
-      disable_keymaps = true,
-      disable_inline_completion = true,
-    },
-  },
+  -- {
+  --   "supermaven-inc/supermaven-nvim",
+  --   opts = {
+  --     log_level = "off",
+  --     disable_keymaps = true,
+  --     disable_inline_completion = true,
+  --   },
+  -- },
   -- {
   --   "lsportal/lsportal.nvim",
   --   config = true,

@@ -20,7 +20,8 @@ trouble.setup({
     zindex = 50,
     wo = {
       -- winbar = "",
-      statuscolumn = "%!v:lua.StatusCol()",
+      -- statuscolumn = "%!v:lua.StatusCol()",
+      statuscolumn = "%!v:lua.require('statuscol').get_statuscol_string()",
       list = true,
       number = true,
       relativenumber = false,

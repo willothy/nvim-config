@@ -335,7 +335,14 @@ wk.add({
         vim.lsp.buf.references()
       end,
       desc = "references",
-      { "gr", proxy = "<leader>cr", desc = "goto references" },
+      {
+        "gr",
+        function()
+          vim.lsp.buf.references()
+        end,
+        proxy = "<leader>cr",
+        desc = "goto references",
+      },
     },
     {
       "<leader>cd",
@@ -343,7 +350,14 @@ wk.add({
         vim.lsp.buf.definition()
       end,
       desc = "definition",
-      { "gd", proxy = "<leader>cd", desc = "goto definition" },
+      {
+        "gd",
+        function()
+          vim.lsp.buf.definition()
+        end,
+        proxy = "<leader>cd",
+        desc = "goto definition",
+      },
     },
     {
       "<leader>cD",
@@ -351,7 +365,14 @@ wk.add({
         vim.lsp.buf.declaration()
       end,
       desc = "declaration",
-      { "gD", proxy = "<leader>cD", desc = "goto declaration" },
+      {
+        "gD",
+        function()
+          vim.lsp.buf.declaration()
+        end,
+        proxy = "<leader>cD",
+        desc = "goto declaration",
+      },
     },
     {
       "<leader>cn",
