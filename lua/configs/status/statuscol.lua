@@ -62,14 +62,6 @@ local function do_fold(win, line, open)
   op_fold_range(start, end_, open, false, false)
 end
 
-local function open_fold(win, line)
-  do_fold(win, line, true)
-end
-
-local function close_fold(win, line)
-  do_fold(win, line, false)
-end
-
 require("statuscol").setup({
   relculright = true,
   segments = {
