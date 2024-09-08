@@ -80,7 +80,6 @@ local function place_signs(win)
       vim.api.nvim_buf_set_extmark(bufnr, ns, lnr, 0, {
         sign_text = label,
         sign_hl_group = "LineNr",
-        right_gravity = true,
         priority = 100,
       })
     end

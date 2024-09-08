@@ -62,19 +62,21 @@ local function do_fold(win, line, open)
   op_fold_range(start, end_, open, false, false)
 end
 
-require("statuscol").setup({
+local statuscol = require("statuscol")
+
+statuscol.setup({
   relculright = true,
   segments = {
     {
       sign = {
-        name = { "GitSigns*" },
-        namespace = { "gitsigns*" },
+        -- name = { "GitSigns*" },
+        namespace = { "gitsigns.*" },
         maxwidth = 1,
         minwidth = 1,
-        colwidth = 2,
+        colwidth = 1,
       },
       click = "v:lua.ScSa",
-      condition = { is_normal_buf },
+      condition = { is_normal_buf, is_normal_buf },
     },
     {
       sign = {
@@ -124,13 +126,17 @@ require("statuscol").setup({
   },
 })
 
--- vim.api.nvim_create_autocmd("User", {
---   pattern = "ResessionLoadPost",
---   callback = function()
---     for _, win in ipairs(vim.api.nvim_list_wins()) do
---       if vim.bo[vim.api.nvim_win_get_buf(win)].buftype == "" then
---         vim.wo[win].stc = "%!v:lua.StatusCol()"
---       end
---     end
---   end,
--- })
+local function update_all()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.bo[vim.api.nvim_win_get_buf(win)].buftype == "" then
+      vim.wo[win].stc = "%!v:lua.require'statuscol'.get_statuscol_string()"
+    end
+  end
+end
+
+update_all()
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "ResessionLoadPost",
+  callback = update_all,
+})
