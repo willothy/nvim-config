@@ -44,8 +44,12 @@ local M = {
 
 local n_labels = #labels
 
-local function place_signs()
-  local win = vim.api.nvim_get_current_win()
+local function place_signs(win)
+  win = win or vim.api.nvim_get_current_win()
+  if not vim.api.nvim_win_is_valid(win) then
+    return
+  end
+
   local bufnr = vim.api.nvim_win_get_buf(win)
 
   if
@@ -83,11 +87,20 @@ local function place_signs()
   end
 end
 
-vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved", "CursorMovedI" }, {
-  group = vim.api.nvim_create_augroup("comfy-signs", {}),
-  callback = vim.schedule_wrap(place_signs),
-})
-vim.schedule(place_signs)
+local function update_all()
+  vim.iter(vim.api.nvim_list_wins()):each(place_signs)
+end
+
+vim.api.nvim_create_autocmd(
+  { "BufEnter", "CursorMoved", "CursorMovedI", "WinScrolled" },
+  {
+    group = vim.api.nvim_create_augroup("comfy-signs", {}),
+    callback = vim.schedule_wrap(function()
+      place_signs()
+    end),
+  }
+)
+vim.schedule(update_all)
 
 for index, label in ipairs(M.config.labels) do
   vim.keymap.set(

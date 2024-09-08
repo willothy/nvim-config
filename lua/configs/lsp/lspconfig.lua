@@ -92,12 +92,16 @@ lspconfig.clangd.setup({
   client_encoding = "utf-8",
 })
 
+local rename = {
+  tsserver = "ts_ls",
+}
+
 require("mason-lspconfig").setup({
   handlers = {
     function(server_name)
-      lspconfig[server_name].setup({
+      lspconfig[rename[server_name] or server_name].setup({
         capabilities = capabilities,
-        settings = settings(server_name),
+        settings = settings(rename[server_name] or server_name),
         root_dir = require("lspconfig.util").root_pattern(
           ".git",
           "package.json"

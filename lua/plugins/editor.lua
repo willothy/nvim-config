@@ -52,7 +52,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     event = "VeryLazy",
     build = ":TSUpdate",
-    commit = "9e1cda4e71a763ba1f1ac099498c7ce40edc6dd2",
+    -- commit = "9e1cda4e71a763ba1f1ac099498c7ce40edc6dd2",
     dependencies = {
       -- {
       --   "ray-x/go.nvim",
