@@ -62,6 +62,7 @@ return {
     config = function()
       require("configs.lsp.lspconfig")
     end,
+    -- config = true,
     event = "VeryLazy",
   },
   -- {

@@ -1,5 +1,7 @@
 ---@type lsp.ClientCapabilities
-local capabilities = vim.defaulttable()
+-- local capabilities = vim.defaulttable()
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 capabilities.textDocument.foldingRange = {
   dynamicRegistration = false,
@@ -44,10 +46,6 @@ capabilities.experimental = {
     "editor.action.triggerParameterHints",
   },
 }
-
-local default_capabilities = vim.lsp.protocol.make_client_capabilities()
-
-capabilities = vim.tbl_deep_extend("force", default_capabilities, capabilities)
 
 local icons = willothy.ui.icons
 require("mason").setup()
@@ -201,6 +199,7 @@ for nvim_name, trouble_name in pairs({
     })
   end
 end
+
 
 local signs = {
   DapBreakpoint = {

@@ -56,7 +56,11 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 require("lazy").setup({
-  { import = "plugins" },
+  { import = "plugins.editor" },
+  { import = "plugins.ui" },
+  { import = "plugins.libraries" },
+  { import = "plugins.lsp" },
+  { import = "plugins.util" },
   {
     "willothy/minimus",
     priority = 100,
@@ -71,7 +75,7 @@ require("lazy").setup({
   --   lazy = false,
   --   build = "build.lua",
   -- },
-  -- "loganswartz/polychrome.nvim",
+  "loganswartz/polychrome.nvim",
   "folke/tokyonight.nvim",
   "rebelot/kanagawa.nvim",
   "eldritch-theme/eldritch.nvim",
@@ -108,15 +112,16 @@ require("lazy").setup({
     sources = {
       "lazy",
       "rockspec",
+      "packspec",
     },
   },
-  rocks = {
-    -- server = "https://nvim-neorocks.github.io/rocks-binaries",
-  },
+  -- rocks = {
+  --   -- server = "https://nvim-neorocks.github.io/rocks-binaries",
+  -- },
   performance = {
     cache = {
       enabled = true,
-      disable_events = { "UiEnter" },
+      -- disable_events = { "UiEnter" },
     },
     reset_packpath = true,
     rtp = {
