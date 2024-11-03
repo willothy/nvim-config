@@ -238,7 +238,7 @@ return {
               module = "blink.copilot",
               enabled = true,
 
-              score_offset = -3,
+              score_offset = 1,
             },
           },
         },

@@ -48,13 +48,26 @@ function Copilot:get_completions(ctx, callback)
           .iter(res.completions)
           :map(function(item)
             return {
-              label = ctx.line .. item.displayText,
+              label = vim.split(
+                vim.trim(item.text),
+                "\n",
+                { trimempty = true }
+              )[1],
+
               kind = require("blink.cmp.types").CompletionItemKind.TypeParameter,
               insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
               insertTextMode = 2,
+              documentation = vim
+                .iter(vim.split(item.text, "\n"))
+                :map(function(s)
+                  local x = s:gsub("^%s%s", "")
+
+                  return x
+                end)
+                :join("\n"),
               textEdit = {
                 range = item.range,
-                newText = item.text,
+                newText = item.text:gsub("%s+$", ""),
               },
             }
           end)
