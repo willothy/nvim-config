@@ -126,6 +126,15 @@ return {
     end,
   },
   {
+    "jackMort/tide.nvim",
+    config = function()
+      require("tide").setup({
+        animation_duration = 150,
+      })
+    end,
+    event = "VeryLazy",
+  },
+  {
     "stevearc/aerial.nvim",
     opts = function()
       return require("configs.ui.sidebars").aerial

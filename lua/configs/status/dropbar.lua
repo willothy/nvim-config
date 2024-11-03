@@ -47,17 +47,6 @@ local close = function()
 end
 
 dropbar.setup({
-  general = {
-    enable = enable,
-    attach_events = {
-      -- "OptionSet",
-      "BufWinEnter",
-      "BufWritePost",
-      "FileType",
-      "BufEnter",
-      -- "TermEnter",
-    },
-  },
   sources = {
     terminal = {
       name = function(buf)
@@ -80,7 +69,7 @@ dropbar.setup({
   },
   icons = {
     kinds = {
-      use_devicons = true,
+      -- use_devicons = true,
       symbols = icons.kinds,
     },
     ui = {
@@ -91,6 +80,17 @@ dropbar.setup({
     },
   },
   bar = {
+    general = {
+      enable = enable,
+      attach_events = {
+        -- "OptionSet",
+        "BufWinEnter",
+        "BufWritePost",
+        "FileType",
+        "BufEnter",
+        -- "TermEnter",
+      },
+    },
     padding = {
       left = 0,
       right = 1,

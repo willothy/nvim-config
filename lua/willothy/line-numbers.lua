@@ -52,6 +52,8 @@ local function place_signs(win)
 
   local bufnr = vim.api.nvim_win_get_buf(win)
 
+  vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+
   if
     vim.api.nvim_get_option_value("buftype", {
       buf = bufnr,
@@ -60,22 +62,20 @@ local function place_signs(win)
     return
   end
 
-  local current_line = vim.api.nvim_win_get_cursor(win)[1]
-
-  vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+  local current_line = vim.api.nvim_win_get_cursor(win)[1] - 1
 
   for i = 1, n_labels, 1 do
     local label = labels[i]
 
-    if current_line - i > 0 then
-      vim.api.nvim_buf_set_extmark(bufnr, ns, current_line - i - 1, 0, {
+    if current_line - i + 1 > 0 then
+      vim.api.nvim_buf_set_extmark(bufnr, ns, current_line - i, 0, {
         sign_text = label,
         sign_hl_group = "LineNr",
         priority = 100,
       })
     end
 
-    local lnr = current_line + i - 1
+    local lnr = current_line + i
     if lnr <= vim.api.nvim_buf_line_count(bufnr) then
       vim.api.nvim_buf_set_extmark(bufnr, ns, lnr, 0, {
         sign_text = label,
@@ -94,9 +94,9 @@ vim.api.nvim_create_autocmd(
   { "BufEnter", "CursorMoved", "CursorMovedI", "WinScrolled" },
   {
     group = vim.api.nvim_create_augroup("comfy-signs", {}),
-    callback = vim.schedule_wrap(function()
+    callback = function()
       place_signs()
-    end),
+    end,
   }
 )
 vim.schedule(update_all)
@@ -114,6 +114,78 @@ for index, label in ipairs(M.config.labels) do
     index .. "j",
     { noremap = true }
   )
+end
+
+M.ns = function()
+  return ns
+end
+
+function M.hints(buf, win)
+  -- vim.api.nvim_buf_set_extmark(bufnr, ns, current_line - i - 1, 0, {
+  --   sign_text = label,
+  --   sign_hl_group = "LineNr",
+  --   priority = 100,
+  -- })
+
+  -- lnum    cursor line number
+  -- col    cursor column (Note: the first column
+  --     zero, as opposed to what |getcurpos()|
+  --     returns)
+  -- coladd    cursor column offset for 'virtualedit'
+  -- curswant  column for vertical movement (Note:
+  --     the first column is zero, as opposed
+  --     to what |getcurpos()| returns).  After
+  --     |$| command it will be a very large
+  --     number equal to |v:maxcol|.
+  -- topline    first line in the window
+  -- topfill    filler lines, only in diff mode
+  -- leftcol    first column displayed; only used when
+  --     'wrap' is off
+  -- skipcol    columns skipped
+  local view = vim.api.nvim_win_call(win, vim.fn.winsaveview)
+  local height = vim.api.nvim_win_get_height(win)
+
+  local start = view.topline
+  local final = start + height
+
+  --  - limit:  Maximum number of marks to return
+  --  - details: Whether to include the details dict
+  --  - hl_name: Whether to include highlight group name instead of id, true if omitted
+  --  - overlap: Also include marks which overlap the range, even if
+  --             their start position is less than `start`
+  --  - type: Filter marks by type: "highlight", "sign", "virt_text" and "virt_lines"
+  --
+  -- @*return* — List of `[extmark_id, row, col]` tuples in "traversal order".
+
+  local extmarks = vim.api.nvim_buf_get_extmarks(
+    buf,
+    ns,
+    { start - 1, 0 },
+    { final - 1, -1 },
+    {
+      type = "sign",
+      details = true,
+      hl_name = true,
+    }
+  )
+
+  local res = vim
+    .iter(extmarks)
+    :map(function(extmark)
+      return extmark
+    end)
+    :fold({}, function(acc, val)
+      local _, row, _col, details = unpack(val)
+      acc[row] = details
+      return acc
+    end)
+
+  -- if _G.X == nil and next(res) ~= nil then
+  --   vim.print(res)
+  --   _G.X = true
+  -- end
+
+  return res
 end
 
 return M

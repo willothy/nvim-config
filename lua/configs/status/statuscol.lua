@@ -62,6 +62,84 @@ local function do_fold(win, line, open)
   op_fold_range(start, end_, open, false, false)
 end
 
+local _line_nrs = require("willothy.line-numbers")
+
+local buf_sign_cache = {}
+
+local function comfy_line_nrs(args)
+  if args.relnum == 0 then
+    return args.lnum
+  end
+
+  local buf, win = args.buf, args.win
+
+  local version = vim.api.nvim_buf_get_changedtick(buf)
+  local lnum = args.lnum - 1
+
+  local entry = buf_sign_cache[buf]
+  if entry and entry[1] == version and entry[2][lnum] then
+    return entry[2][lnum].sign_text
+  end
+
+  local res = _line_nrs.hints(buf, win)
+
+  if entry then
+    entry[1] = version
+    entry[2] = res
+    buf_sign_cache[buf] = entry
+  else
+    buf_sign_cache[buf] = { version, res }
+  end
+
+  if not buf_sign_cache[buf][2][lnum] then
+    return ""
+  end
+
+  return buf_sign_cache[buf][2][lnum].sign_text
+end
+
+local function lnumfunc(args)
+  if args.virtnum < 0 then
+    return " ──"
+  end
+
+  -- Calculate the actual buffer width, accounting for splits, number columns, and other padding
+  local wrapped_lines = vim.api.nvim_win_call(0, function()
+    local winid = vim.api.nvim_get_current_win()
+
+    -- get the width of the buffer
+    local winwidth = vim.api.nvim_win_get_width(winid)
+    local numberwidth = vim.wo.number and vim.wo.numberwidth or 0
+    local signwidth = vim.fn.exists("*sign_define") == 1
+        and vim.fn.sign_getdefined()
+        and 2
+      or 0
+    local foldwidth = vim.wo.foldcolumn or 0
+
+    -- subtract the number of empty spaces in your statuscol. I have
+    -- four extra spaces in mine, to enhance readability for me
+    --
+    --four extra spaces in mine, to enhance readability for mefour extra spaces in mine, to enhance readability for mefour extra spaces in mine, to enhance readability for me for mefour extra spaces in mine, to enhance readability for me
+    local bufferwidth = winwidth - numberwidth - signwidth - foldwidth - 4
+
+    -- fetch the line and calculate its display width
+    local line = vim.fn.getline(vim.v.lnum)
+    local line_length = vim.fn.strdisplaywidth(line)
+
+    return math.floor(line_length / bufferwidth)
+  end)
+
+  if args.virtnum > 0 and (vim.wo.number or vim.wo.relativenumber) then
+    if args.virtnum == wrapped_lines then
+      return " └─"
+    end
+    return " │ " -- ├
+  end
+
+  -- return original_lnumfunc(args, ...)
+  return comfy_line_nrs(args)
+end
+
 local statuscol = require("statuscol")
 
 statuscol.setup({
@@ -89,13 +167,7 @@ statuscol.setup({
       condition = { is_normal_buf, is_normal_buf },
     },
     {
-      sign = {
-        namespace = { "comfy-.*" },
-        maxwidth = 1,
-        minwidth = 1,
-        colwidth = 3,
-      },
-      text = { builtin.lnumfunc, " " },
+      text = { lnumfunc, " " },
       click = "v:lua.ScLa",
     },
     {

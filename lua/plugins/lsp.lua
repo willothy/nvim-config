@@ -89,14 +89,14 @@ return {
     event = "InsertEnter",
     -- build = "nvim -l build/init.lua",
   },
-  {
-    "garymjr/nvim-snippets",
-    config = true,
-    event = "InsertEnter",
-    dependencies = {
-      "rafamadriz/friendly-snippets",
-    },
-  },
+  -- {
+  --   "garymjr/nvim-snippets",
+  --   config = true,
+  --   event = "InsertEnter",
+  --   dependencies = {
+  --     "rafamadriz/friendly-snippets",
+  --   },
+  -- },
   -- {
   --   "vxpm/ferris.nvim",
   --   config = function()
@@ -168,28 +168,88 @@ return {
     event = "DiagnosticChanged",
   },
   -- COMPLETION --
+  -- {
+  --   "hrsh7th/nvim-cmp",
+  --   dependencies = {
+  --     "hrsh7th/cmp-buffer",
+  --     "hrsh7th/cmp-path",
+  --     "hrsh7th/cmp-cmdline",
+  --     "hrsh7th/cmp-nvim-lsp",
+  --     "dmitmel/cmp-cmdline-history",
+  --     "rcarriga/cmp-dap",
+  --     "zbirenbaum/copilot-cmp",
+  --     {
+  --       "supermaven-inc/supermaven-nvim",
+  --     },
+  --     -- {
+  --     --   "jsongerber/nvim-px-to-rem",
+  --     --   ft = { "css" },
+  --     --   config = true,
+  --     -- },
+  --   },
+  --   event = { "CmdlineEnter", "InsertEnter" },
+  --   config = function()
+  --     require("configs.editor.cmp")
+  --   end,
+  -- },
   {
-    "hrsh7th/nvim-cmp",
+    "saghen/blink.cmp",
     dependencies = {
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "hrsh7th/cmp-cmdline",
-      "hrsh7th/cmp-nvim-lsp",
-      "dmitmel/cmp-cmdline-history",
-      "rcarriga/cmp-dap",
-      "zbirenbaum/copilot-cmp",
-      {
-        "supermaven-inc/supermaven-nvim",
-      },
+      "rafamadriz/friendly-snippets",
       -- {
-      --   "jsongerber/nvim-px-to-rem",
-      --   ft = { "css" },
-      --   config = true,
+      --   "saghen/blink.compat",
+      --   opts = {
+      --     impersonate_nvim_cmp = true,
+      --   },
+      -- },
+      -- {
+      --   "zbirenbaum/copilot-cmp",
+      --   dependencies = {
+      --     "zbirenbaum/copilot.lua",
+      --   },
       -- },
     },
-    event = { "CmdlineEnter", "InsertEnter" },
+    lazy = true,
+    event = "InsertEnter",
+    build = "cargo build --release",
     config = function()
-      require("configs.editor.cmp")
+      require("blink.cmp").setup({
+        sources = {
+          -- add lazydev to your completion providers
+          completion = {
+            enabled_providers = {
+              "lsp",
+              "path",
+              "snippets",
+              "buffer",
+              "lazydev",
+            },
+          },
+          providers = {
+            -- dont show LuaLS require statements when lazydev has items
+            lsp = { fallback_for = { "lazydev" } },
+            lazydev = {
+              name = "LazyDev",
+              module = "lazydev.integrations.blink",
+            },
+          },
+        },
+        keymap = "super-tab",
+        highlight = {},
+        trigger = {
+          signature_help = {
+            enabled = true,
+          },
+        },
+        windows = {
+          documentation = {
+            auto_show = true,
+          },
+          ghost_text = {
+            enabled = false,
+          },
+        },
+      })
     end,
   },
   {
@@ -262,13 +322,13 @@ return {
   -- },
   {
     "zbirenbaum/copilot.lua",
-    event = "InsertEnter",
     config = function()
       require("configs.editor.copilot")
     end,
   },
   -- {
   --   "supermaven-inc/supermaven-nvim",
+  --   event = "InsertEnter",
   --   opts = {
   --     log_level = "off",
   --     disable_keymaps = true,

@@ -95,18 +95,6 @@ local autocmds = {
       end
     end,
   },
-  {
-    "InsertLeave",
-    callback = function()
-      if vim.snippet.active() then
-        vim.snippet.stop()
-      end
-      local cmp = require("cmp")
-      if cmp.visible() then
-        cmp.close()
-      end
-    end,
-  },
 }
 
 for _, v in ipairs(autocmds) do

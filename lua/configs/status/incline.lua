@@ -86,7 +86,7 @@ require("incline").setup({
     },
     placement = {
       horizontal = "right",
-      vertical = "top",
+      vertical = "bottom",
     },
     overlap = {
       winbar = false,

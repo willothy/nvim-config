@@ -26,26 +26,6 @@ local B = function(self)
   return o
 end
 
--- local transformed = {}
--- ---@param path string?
--- ---@return string
--- local function make_cwd(path)
---   local cwd = path or vim.fn.getcwd(-1)
---   if not cwd then
---     return ""
---   end
---
---   if transformed[cwd] then
---     return transformed[cwd]
---   end
---
---   local rel = vim.fn.fnamemodify(cwd, ":~")
---   local short = vim.fn.pathshorten(rel, 3)
---   ---@cast short string
---   transformed[cwd] = short
---   return short
--- end
-
 local Separator = {
   Left = {
     provider = icons.blocks.left[4],
@@ -73,7 +53,7 @@ local Mode = {
   A(Separator.Left),
   {
     provider = function()
-      return willothy.ui.mode.get_short_name()
+      return string.char(willothy.ui.mode.get_short_name():byte(1))
     end,
     hl = function()
       local col = willothy.ui.mode.get_color()
@@ -96,7 +76,6 @@ local Mode = {
 }
 
 local Location = {
-  A(Separator.Left),
   -- B(Space),
   {
     update = {
@@ -109,13 +88,13 @@ local Location = {
         self.pos = vim.api.nvim_win_get_cursor(0)
       end,
     },
-    hl = function()
-      local col = willothy.ui.mode.get_color()
-      return {
-        fg = get_hex("StatusLine", "bg"),
-        bg = col.fg,
-      }
-    end,
+    -- hl = function()
+    --   local col = willothy.ui.mode.get_color()
+    --   return {
+    --     fg = get_hex("StatusLine", "bg"),
+    --     bg = col.fg,
+    --   }
+    -- end,
     provider = function(self)
       if not self.pos then
         self.update.callback(self)
@@ -123,8 +102,27 @@ local Location = {
       return string.format("%03d:%02d", self.pos[1], self.pos[2])
     end,
   },
-  -- B(Space),
-  A(Separator.Right),
+  Space,
+  {
+    static = {
+      -- sbar = { "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" },
+
+      sbar = { "▔", "🮂", "🮃", "▀", "🮄", "🮅", "🮆", "█" },
+    },
+    provider = function(self)
+      local curr_line = vim.api.nvim_win_get_cursor(0)[1]
+      local lines = vim.api.nvim_buf_line_count(0)
+      local i = math.floor((curr_line - 1) / lines * #self.sbar) + 1
+      return string.rep(self.sbar[i], 3)
+    end,
+    hl = function()
+      local col = willothy.ui.mode.get_color()
+      return {
+        -- bg = get_hex("StatusLine", "bg"),
+        fg = col.fg,
+      }
+    end,
+  },
 }
 
 local Env = function(var)
@@ -204,15 +202,6 @@ local Devicon = {
   condition = function(self)
     return package.loaded["nvim-web-devicons"] ~= nil
   end,
-  static = {
-    -- buftypes = {
-    --   [""] = true,
-    --   ["terminal"] = true,
-    -- },
-    -- filetypes = {
-    --   ["oil"] = true,
-    -- },
-  },
   update = {
     "User",
     pattern = {
