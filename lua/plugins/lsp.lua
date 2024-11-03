@@ -218,6 +218,7 @@ return {
           -- add lazydev to your completion providers
           completion = {
             enabled_providers = {
+              "copilot",
               "lsp",
               "path",
               "snippets",
@@ -232,6 +233,18 @@ return {
               name = "LazyDev",
               module = "lazydev.integrations.blink",
             },
+            copilot = {
+              name = "copilot",
+              module = "blink.copilot",
+              enabled = true,
+
+              score_offset = -3,
+            },
+          },
+        },
+        accept = {
+          auto_brackets = {
+            enabled = true,
           },
         },
         keymap = "super-tab",
@@ -246,7 +259,7 @@ return {
             auto_show = true,
           },
           ghost_text = {
-            enabled = false,
+            enabled = true,
           },
         },
       })
