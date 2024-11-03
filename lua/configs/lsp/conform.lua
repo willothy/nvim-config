@@ -1,5 +1,9 @@
 local opts = {
   formatters_by_ft = {
+    sql = {
+      stop_after_first = true,
+      "sql-formatter",
+    },
     lua = {
       stop_after_first = true,
       "stylua",
@@ -57,6 +61,11 @@ local opts = {
     json = {
       stop_after_first = true,
       "jq",
+      "prettier",
+    },
+    toml = {
+      stop_after_first = true,
+      "taplo",
       "prettier",
     },
     jsonc = {

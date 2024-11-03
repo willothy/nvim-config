@@ -22,6 +22,7 @@ return {
     "nvim-neotest/nvim-nio",
     name = "nio",
   },
+  { "nvchad/volt", lazy = true },
   -- {
   --   "willothy/libsql-lua",
   --   -- name = "libsql-lua",

@@ -79,10 +79,14 @@ return {
     config = true,
     event = "VeryLazy",
   },
+  -- {
+  --   "neph-iap/easycolor.nvim",
+  --   opts = { ui = { border = "solid" } },
+  --   cmd = "EasyColor",
+  -- },
   {
-    "neph-iap/easycolor.nvim",
-    opts = { ui = { border = "solid" } },
-    cmd = "EasyColor",
+    "nvchad/minty",
+    lazy = true,
   },
   {
     "krady21/compiler-explorer.nvim",

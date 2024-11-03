@@ -216,6 +216,13 @@ function ScrollBarManager.update()
   end)
 end
 
+function ScrollBarManager.clear()
+  vim.iter(ScrollBarManager.bars):each(function(w, bar)
+    ScrollBarManager.bars[w] = nil
+    bar:unmount()
+  end)
+end
+
 function ScrollBarManager.setup(opts)
   ScrollBarManager.options = opts or {}
   vim.api.nvim_create_autocmd({

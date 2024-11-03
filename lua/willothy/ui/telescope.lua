@@ -202,7 +202,7 @@ end
 
 function M.flexible(picker)
   local function get_configs()
-    local width = math.min(math.floor(vim.o.columns / 6) * 5, 120)
+    local width = math.floor(vim.o.columns / 6) * 5
     local height = math.floor((vim.o.lines / 3) + 0.5) * 2
 
     local preview_ratio =

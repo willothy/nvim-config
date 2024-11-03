@@ -178,6 +178,12 @@ local commands = {
   },
   Q = { "q", desc = ":q, common cmdline typo" },
   W = { "w", desc = ":w, common cmdline typo" },
+  Color = {
+    function()
+      require("minty.huefy").open()
+    end,
+    desc = "Color picker",
+  },
 }
 
 for name, cmd in pairs(commands) do

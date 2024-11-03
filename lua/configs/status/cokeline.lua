@@ -1,8 +1,6 @@
 local icons = willothy.ui.icons
 local ns = vim.api.nvim_create_namespace("cokeline_diagnostics")
 
-local mappings = require("cokeline.mappings")
-
 local separators = {
   left = icons.blocks.left[4],
   right = icons.blocks.left[4],
@@ -45,7 +43,10 @@ local Space = {
 
 local DeviconOrUnsaved = {
   text = function(buffer)
-    if mappings.is_picking_focus() or mappings.is_picking_close() then
+    if
+      require("cokeline.mappings").is_picking_focus()
+      or require("cokeline.mappings").is_picking_close()
+    then
       return buffer.pick_letter .. " "
     elseif buffer.is_modified then
       return icons.misc.modified .. " "
@@ -53,16 +54,20 @@ local DeviconOrUnsaved = {
     return buffer.devicon.icon
   end,
   fg = function(buffer)
-    return (mappings.is_picking_focus() and "DiagnosticWarn")
-      or (mappings.is_picking_close() and "DiagnosticError")
+    return (
+      require("cokeline.mappings").is_picking_focus() and "DiagnosticWarn"
+    )
+      or (require("cokeline.mappings").is_picking_close() and "DiagnosticError")
       or (vim.bo[buffer.number].modified and "DiagnosticInfo")
       or buffer.devicon.color
   end,
   italic = function(_)
-    return mappings.is_picking_focus() or mappings.is_picking_close()
+    return require("cokeline.mappings").is_picking_focus()
+      or require("cokeline.mappings").is_picking_close()
   end,
   bold = function(_)
-    return mappings.is_picking_focus() or mappings.is_picking_close()
+    return require("cokeline.mappings").is_picking_focus()
+      or require("cokeline.mappings").is_picking_close()
   end,
   truncation = { priority = 1 },
 }
