@@ -206,7 +206,7 @@ return {
           -- add lazydev to your completion providers
           completion = {
             enabled_providers = {
-              "copilot",
+              -- "copilot",
               "lsp",
               "path",
               "snippets",
@@ -221,15 +221,15 @@ return {
               name = "LazyDev",
               module = "lazydev.integrations.blink",
             },
-            copilot = {
-              name = "copilot",
-              module = "blink.copilot",
-              enabled = true,
-              kind = "Copilot",
-              max_items = 2,
-
-              score_offset = 1,
-            },
+            -- copilot = {
+            --   name = "copilot",
+            --   module = "blink.copilot",
+            --   enabled = true,
+            --   kind = "Copilot",
+            --   max_items = 2,
+            --
+            --   score_offset = 1,
+            -- },
           },
         },
         accept = {
@@ -241,11 +241,14 @@ return {
         highlight = {
           use_nvim_cmp_as_default = true,
         },
+        nerd_font_variant = "normal",
         trigger = {
           signature_help = {
             enabled = true,
           },
         },
+        -- kind_icons = willothy.ui.icons.kinds,
+
         windows = {
           autocomplete = {
             draw = function(ctx)
