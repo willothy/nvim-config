@@ -44,9 +44,10 @@ capabilities.experimental = {
   },
 }
 
-capabilities = require("blink.cmp").get_lsp_capabilities(capabilities, false)
+-- capabilities = require("blink.cmp").get_lsp_capabilities(capabilities, false)
 
 local icons = willothy.ui.icons
+
 require("mason").setup()
 
 local lspconfig = require("lspconfig")

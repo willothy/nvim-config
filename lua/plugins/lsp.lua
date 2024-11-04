@@ -196,18 +196,6 @@ return {
     "saghen/blink.cmp",
     dependencies = {
       "rafamadriz/friendly-snippets",
-      -- {
-      --   "saghen/blink.compat",
-      --   opts = {
-      --     impersonate_nvim_cmp = true,
-      --   },
-      -- },
-      -- {
-      --   "zbirenbaum/copilot-cmp",
-      --   dependencies = {
-      --     "zbirenbaum/copilot.lua",
-      --   },
-      -- },
     },
     lazy = true,
     event = "InsertEnter",
@@ -237,6 +225,8 @@ return {
               name = "copilot",
               module = "blink.copilot",
               enabled = true,
+              kind = "Copilot",
+              max_items = 2,
 
               score_offset = 1,
             },
@@ -248,13 +238,47 @@ return {
           },
         },
         keymap = "super-tab",
-        highlight = {},
+        highlight = {
+          use_nvim_cmp_as_default = true,
+        },
         trigger = {
           signature_help = {
             enabled = true,
           },
         },
         windows = {
+          autocomplete = {
+            draw = function(ctx)
+              local hl = require("blink.cmp.utils").try_get_tailwind_hl(ctx)
+                or ("BlinkCmpKind" .. ctx.kind)
+
+              return {
+                " ",
+                {
+                  ctx.kind_icon,
+                  hl_group = hl,
+                },
+                " ",
+                {
+                  ctx.label,
+                  ctx.kind == "Snippet" and "~" or nil,
+                  (ctx.item.labelDetails and ctx.item.labelDetails.detail)
+                      and ctx.item.labelDetails.detail
+                    or "",
+                  fill = true,
+                  hl_group = ctx.deprecated and "BlinkCmpLabelDeprecated"
+                    or "BlinkCmpLabel",
+                  max_width = 50,
+                },
+                " ",
+                {
+                  ctx.kind,
+                  hl_group = hl,
+                },
+                " ",
+              }
+            end,
+          },
           documentation = {
             auto_show = true,
           },

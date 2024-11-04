@@ -54,7 +54,7 @@ function Copilot:get_completions(ctx, callback)
                 { trimempty = true }
               )[1],
 
-              kind = require("blink.cmp.types").CompletionItemKind.TypeParameter,
+              kind = "Copilot",
               insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet,
               insertTextMode = 2,
               documentation = vim
