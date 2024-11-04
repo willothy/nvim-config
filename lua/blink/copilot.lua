@@ -86,7 +86,7 @@ function Copilot:get_completions(ctx, callback)
       })
     end)
 
-  -- TODO: cancel run_async
+  -- TODO: cancel inflight requests
   return function() end
 end
 

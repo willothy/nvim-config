@@ -25,6 +25,7 @@ local deserializers = setmetatable({
       },
     })
   end,
+  ["nil"] = function() end,
 }, {
   __index = function(_, k)
     error(string.format("Unsupported type %s", k))
@@ -41,6 +42,7 @@ local serializers = setmetatable({
   table = function(tbl)
     return vim.json.encode(tbl)
   end,
+  ["nil"] = function() end,
 }, {
   __index = function(_, k)
     error(string.format("Unsupported type %s", k))
@@ -130,19 +132,22 @@ end
 function M.kv_init()
   db:open(db_path)
   db:execute([[
-    CREATE TABLE if not exists willothy_kv (
-      key       text not null,
-      namespace text not null,
-      value     text,
-      ltype     text,
-      primary key (key, namespace)
+    CREATE TABLE IF NOT EXISTS willothy_kv (
+      key       TEXT NOT NULL,
+      namespace TEXT NOT NULL,
+      ltype     TEXT NOT NULL,
+      value     TEXT,
+      PRIMARY KEY (key, namespace)
     );
+
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_kv_key_ns ON willothy_kv(key, namespace);
   ]])
-  db:execute(
-    "CREATE UNIQUE INDEX IF NOT EXISTS idx_kv_key ON willothy_kv(key, namespace)"
-  )
 end
 
+---@generic T
+---@param name string
+---@param impl T
+---@return T
 function M.persist(name, impl)
   local ns = string.format("objects_%s", string.gsub(name, "%W", "_"))
 
@@ -151,13 +156,27 @@ function M.persist(name, impl)
       return M.kv_get(k, ns)
     end,
     __newindex = function(_self, k, v)
-      M.kv_set(k, v, ns)
+      if v == nil then
+        M.kv_del(k, ns)
+      else
+        M.kv_set(k, v, ns)
+      end
     end,
   })
 end
 
 M.kv_init()
 
-M.kv_set("nvim-opened", tonumber(M.kv_get("nvim-opened") or 0) + 1)
+---@class Willothy.Statistics.Usage
+---@field launch_count number
+local Usage = {}
+
+function Usage:record_launch()
+  self.launch_count = (self.launch_count or 0) + 1
+end
+
+M.stats = M.persist("usage-stats", Usage)
+
+M.stats:record_launch()
 
 return M
