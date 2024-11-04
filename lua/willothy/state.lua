@@ -87,6 +87,7 @@ function M.kv_get(key, ns)
     error("expected string key")
   end
   ns = ns or "__GLOBAL__"
+
   local res = db:select("willothy_kv", {
     where = {
       key = key,

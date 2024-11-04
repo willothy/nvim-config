@@ -137,7 +137,12 @@ local function lnumfunc(args)
   end
 
   -- return original_lnumfunc(args, ...)
-  return comfy_line_nrs(args)
+  local res = comfy_line_nrs(args) or ""
+  local len = string.len(res)
+  if len < 3 then
+    return string.rep(" ", 3 - len) .. res
+  end
+  return res
 end
 
 local statuscol = require("statuscol")
