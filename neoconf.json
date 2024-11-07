@@ -1,200 +1,163 @@
 {
-	"neodev": {
-		"library": {
-			"enabled": true,
-			"runtime": true,
-			"types": true,
-			"plugins": [
-				// "mason-lspconfig",
-				// "mason.nvim",
-				// "rust-tools.nvim",
-				"telescope.nvim",
-				"pathlib.nvim",
-				"polychrome.nvim",
-				"trouble.nvim",
-				"libsql-lua",
-				// "nvim-cokeline",
-				"lazy.nvim",
-				"nio",
-				// "oil.nvim",
-				"fidget.nvim",
-				"plenary.nvim",
-				"edgy.nvim",
-				"nvim-treesitter",
-				"nvim-lspconfig",
-				"which-key.nvim",
-				// "flatten.nvim",
-				"wezterm.nvim",
-				"nui.nvim",
-				"nui-components.nvim",
-				"bufdelete.nvim",
-				"mini.files",
-				"mini.colors",
-				"harpoon",
-				"sqlite.lua",
-				"resession.nvim",
-				"noice.nvim",
-				"sg.nvim",
-				"nvim-cmp",
-				"toggleterm.nvim",
-				"overseer.nvim",
-				"dropbar.nvim",
-				"micro-async.nvim"
-			]
-		}
-	},
-	"neoconf": {
-		"plugins": {
-			"lua_ls": {
-				"enabled": true
-			},
-			"lspconfig": {
-				"enabled": true
-			}
-		}
-	},
-	"lspconfig": {
-		"lua_ls": {
-			"Lua": {
-				"workspace.checkThirdParty": false,
-				"diagnostics": {
-					"enable": true,
-					"unusedLocalExclude": ["_*"],
-					"globals": ["vim", "willothy"]
-				},
-				"completion": {
-					"autoRequire": true,
-					"callSnippet": "Disable",
-					"displayContext": 2
-				},
-				"format": {
-					"enable": false
-				},
-				"hint": {
-					"enable": true,
-					"setType": true,
-					"arrayIndex": "Disable",
-					"await": true,
-					"paramName": "All",
-					"paramType": true,
-					"semicolon": "SameLine"
-				}
-			}
-		},
-		"rust_analyzer": {
-			"check": {
-				"allTargets": false
-			},
-			"imports": {
-				"granularity": {
-					"enforce": true,
-					"group": "crate"
-				},
-				"merge": {
-					"glob": true
-				},
-				"group": {
-					"enable": true
-				}
-			},
-			"diagnostics": {
-				"experimental": {
-					"enable": true
-				}
-			},
-			"completion": {
-				"callable": {
-					"snippets": "fill_arguments"
-				},
-				"fullFunctionSignatures": {
-					"enable": true
-				}
-			},
-			"inlayHints": {
-				"bindingModeHints": {
-					"enable": true
-				},
-				"closureCaptureHints": {
-					"enable": true
-				},
-				"closureReturnTypeHints": {
-					"enable": "always"
-				},
-				"discriminantHints": {
-					"enable": "always"
-				},
-				"lifetimeElisionHints": {
-					"useParameterNames": false,
-					"enable": "always"
-				},
-				"expressionAdjustmentHints": {
-					"enable": "always",
-					"hideOutsideUnsafe": false
-				}
-			},
-			"procMacro": {
-				"enable": true
-			},
-			"hover": {
-				"memoryLayout": {
-					"niches": true
-				},
-				"actions": {
-					"run": {
-						"enable": true
-					},
-					"documentation": {
-						"enable": true
-					},
-					"references": {
-						"enable": true
-					}
-				}
-			},
-			"lens": {
-				"enable": true,
-				"references": {
-					"method": {
-						"enable": true
-					},
-					"adt": {
-						"enable": true
-					},
-					"enumVariant": {
-						"enable": true
-					},
-					"trait": {
-						"enable": true
-					}
-				}
-			}
-		},
-		"asm-lsp": {},
-		"clangd": {
-			"single_file_support": false,
-			"semanticHighlighting": true
-		},
-		"bashls": {
-			"bashIde": {
-				"includeAllWorkspaceSymbols": true
-			}
-		},
-		"gopls": {
-			"gopls": {
-				"semanticTokens": true,
-				"hints": {
-					"enabled": true,
-					"parameterNames": true,
-					"functionTypeParameters": true,
-					"rangeVariableTypes": true,
-					"constantValues": true,
-					"compositeLiteralTypes": true,
-					"compositeLiteralFields": true,
-					"assignVariableTypes": true
-				  // "types": ["implementation", "usage"],
-				}
-			}
-		},
-		"cssls": {}
-	}
+  "neoconf": {
+    "plugins": {
+      "lua_ls": {
+        "enabled": true
+      },
+      "lspconfig": {
+        "enabled": true
+      }
+    }
+  },
+  "lspconfig": {
+    "lua_ls": {
+      "Lua": {
+        "workspace": {
+          "checkThirdParty": false,
+          "ignoreDir": []
+        },
+        "diagnostics": {
+          "enable": true,
+          "unusedLocalExclude": [
+            "_*"
+          ],
+          "globals": [
+            "vim",
+            "willothy"
+          ]
+        },
+        "completion": {
+          "autoRequire": true,
+          "callSnippet": "Disable",
+          "displayContext": 2
+        },
+        "format": {
+          "enable": false
+        },
+        "hint": {
+          "enable": true,
+          "setType": true,
+          "arrayIndex": "Disable",
+          "await": true,
+          "paramName": "All",
+          "paramType": true,
+          "semicolon": "SameLine"
+        }
+      }
+    },
+    "rust_analyzer": {
+      "check": {
+        "allTargets": false
+      },
+      "imports": {
+        "granularity": {
+          "enforce": true,
+          "group": "crate"
+        },
+        "merge": {
+          "glob": true
+        },
+        "group": {
+          "enable": true
+        }
+      },
+      "diagnostics": {
+        "experimental": {
+          "enable": true
+        }
+      },
+      "completion": {
+        "callable": {
+          "snippets": "fill_arguments"
+        },
+        "fullFunctionSignatures": {
+          "enable": true
+        }
+      },
+      "inlayHints": {
+        "bindingModeHints": {
+          "enable": true
+        },
+        "closureCaptureHints": {
+          "enable": true
+        },
+        "closureReturnTypeHints": {
+          "enable": "always"
+        },
+        "discriminantHints": {
+          "enable": "always"
+        },
+        "lifetimeElisionHints": {
+          "useParameterNames": false,
+          "enable": "always"
+        },
+        "expressionAdjustmentHints": {
+          "enable": "always",
+          "hideOutsideUnsafe": false
+        }
+      },
+      "procMacro": {
+        "enable": true
+      },
+      "hover": {
+        "memoryLayout": {
+          "niches": true
+        },
+        "actions": {
+          "run": {
+            "enable": true
+          },
+          "documentation": {
+            "enable": true
+          },
+          "references": {
+            "enable": true
+          }
+        }
+      },
+      "lens": {
+        "enable": true,
+        "references": {
+          "method": {
+            "enable": true
+          },
+          "adt": {
+            "enable": true
+          },
+          "enumVariant": {
+            "enable": true
+          },
+          "trait": {
+            "enable": true
+          }
+        }
+      }
+    },
+    "asm-lsp": {},
+    "clangd": {
+      "single_file_support": false,
+      "semanticHighlighting": true
+    },
+    "bashls": {
+      "bashIde": {
+        "includeAllWorkspaceSymbols": true
+      }
+    },
+    "gopls": {
+      "gopls": {
+        "semanticTokens": true,
+        "hints": {
+          "enabled": true,
+          "parameterNames": true,
+          "functionTypeParameters": true,
+          "rangeVariableTypes": true,
+          "constantValues": true,
+          "compositeLiteralTypes": true,
+          "compositeLiteralFields": true,
+          "assignVariableTypes": true
+        }
+      }
+    },
+    "cssls": {}
+  }
 }

@@ -4,7 +4,6 @@ return {
     -- "willothy/neoconf.nvim",
     -- branch = "0.10-deprecations",
     config = true,
-    -- event = "VimEnter",
   },
   {
     -- "anuvyklack/hydra.nvim" -- original author

@@ -12,11 +12,22 @@ return {
   {
     "folke/lazydev.nvim",
     ft = "lua",
-    opts = {
-      library = {
-        "luvit-meta/library",
-      },
-    },
+    -- commit = "cea5d0fb556cdc35122d9cae772e7e0ed65b4505",
+
+    -- event="LspAttach",
+    config = function()
+      local lazydev = require("lazydev")
+      -- require("lazydev.config").lua_root = false
+
+      lazydev.setup({
+        integrations = {
+          cmp = false,
+        },
+        library = {
+          "luvit-meta/library",
+        },
+      })
+    end,
   },
   {
     "Bilal2453/luvit-meta", -- type defs for vim.uv
@@ -59,11 +70,20 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
+    -- commit = "8ab8f4cf48425dcb4845a61d3caa2d2a7e3d9df7",
     config = function()
       require("configs.lsp.lspconfig")
     end,
     -- config = true,
     event = "VeryLazy",
+  },
+  {
+    "willothy/durable.nvim",
+    dir = "~/projects/lua/durable.nvim/",
+    event = "VeryLazy",
+    config = function()
+      require("durable").setup()
+    end,
   },
   -- {
   --   "kevinhwang91/nvim-ufo",
@@ -168,32 +188,43 @@ return {
     event = "DiagnosticChanged",
   },
   -- COMPLETION --
-  -- {
-  --   "hrsh7th/nvim-cmp",
-  --   dependencies = {
-  --     "hrsh7th/cmp-buffer",
-  --     "hrsh7th/cmp-path",
-  --     "hrsh7th/cmp-cmdline",
-  --     "hrsh7th/cmp-nvim-lsp",
-  --     "dmitmel/cmp-cmdline-history",
-  --     "rcarriga/cmp-dap",
-  --     "zbirenbaum/copilot-cmp",
-  --     {
-  --       "supermaven-inc/supermaven-nvim",
-  --     },
-  --     -- {
-  --     --   "jsongerber/nvim-px-to-rem",
-  --     --   ft = { "css" },
-  --     --   config = true,
-  --     -- },
-  --   },
-  --   event = { "CmdlineEnter", "InsertEnter" },
-  --   config = function()
-  --     require("configs.editor.cmp")
-  --   end,
-  -- },
   {
-    "saghen/blink.cmp",
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-cmdline",
+      "hrsh7th/cmp-nvim-lsp",
+      "dmitmel/cmp-cmdline-history",
+      "rcarriga/cmp-dap",
+      "zbirenbaum/copilot-cmp",
+      -- {
+      --   "jsongerber/nvim-px-to-rem",
+      --   ft = { "css" },
+      --   config = true,
+      -- },
+    },
+    event = { "CmdlineEnter", "InsertEnter" },
+    config = function()
+      require("configs.editor.cmp")
+    end,
+  },
+  {
+    "Saghen/blink.cmp",
+    enabled = false,
+    -- How would I do a completion plugin?
+    --
+    -- - Fully async - users should never need to wait for the menu to open
+    --   - Task-driven or callback-driven; don't mix the two
+    -- - Sources push completions to an "epoch" (group of items from the same request context)
+    -- - Things are added to the menu as they come, but discarded if they're from a previous epoch
+    -- - Increment the epoch with every outgoing request + cancel inflight requests for prev. epoch
+    -- - Maybe server-side fuzzy matching?
+    -- - Menu components = fun(item: CompletionItem, ctx: Context): VirtTextChunk[]
+    -- "willothy/blink.cmp",
+    -- enabled = false,
+    -- branch = "willothy/scrollbar",
+    -- dir = "~/projects/lua/blink.cmp/",
     dependencies = {
       "rafamadriz/friendly-snippets",
     },
@@ -206,21 +237,24 @@ return {
           -- add lazydev to your completion providers
           completion = {
             enabled_providers = {
-              -- "copilot",
               "lsp",
               "path",
+              -- "copilot",
               "snippets",
               "buffer",
-              "lazydev",
+              -- "lazydev",
             },
           },
           providers = {
             -- dont show LuaLS require statements when lazydev has items
-            lsp = { fallback_for = { "lazydev" } },
-            lazydev = {
-              name = "LazyDev",
-              module = "lazydev.integrations.blink",
+            lsp = {
+              -- fallback_for = { "lazydev" },
             },
+            -- lazydev = {
+            --   name = "LazyDev",
+            --   module = "lazydev.integrations.blink",
+            -- },
+            --
             -- copilot = {
             --   name = "copilot",
             --   module = "blink.copilot",
@@ -237,7 +271,36 @@ return {
             enabled = true,
           },
         },
-        keymap = "super-tab",
+        keymap = {
+          -- preset = "super-tab",
+          ["<C-space>"] = {
+            "show",
+            "show_documentation",
+            "hide_documentation",
+          },
+          ["<C-e>"] = { "hide", "fallback" },
+
+          ["<Tab>"] = {
+            function(cmp)
+              if cmp.is_in_snippet() then
+                return cmp.accept()
+              else
+                return cmp.select_and_accept()
+              end
+            end,
+            "snippet_forward",
+            "fallback",
+          },
+          ["<S-Tab>"] = { "snippet_backward", "fallback" },
+
+          ["<Up>"] = { "select_prev", "fallback" },
+          ["<Down>"] = { "select_next", "fallback" },
+          ["<C-p>"] = { "select_prev", "fallback" },
+          ["<C-n>"] = { "select_next", "fallback" },
+
+          ["<C-u>"] = { "scroll_documentation_up", "fallback" },
+          ["<C-d>"] = { "scroll_documentation_down", "fallback" },
+        },
         highlight = {
           use_nvim_cmp_as_default = true,
         },
@@ -247,7 +310,9 @@ return {
             enabled = true,
           },
         },
-        -- kind_icons = willothy.ui.icons.kinds,
+        kind_icons = {
+          Copilot = "",
+        },
 
         windows = {
           autocomplete = {
@@ -268,10 +333,10 @@ return {
                   (ctx.item.labelDetails and ctx.item.labelDetails.detail)
                       and ctx.item.labelDetails.detail
                     or "",
-                  fill = true,
                   hl_group = ctx.deprecated and "BlinkCmpLabelDeprecated"
                     or "BlinkCmpLabel",
                   max_width = 50,
+                  fill = true,
                 },
                 " ",
                 {
@@ -290,6 +355,11 @@ return {
           },
         },
       })
+
+      local kinds = require("blink.cmp.types").CompletionItemKind
+      local k = #kinds + 1
+      kinds[k] = "Copilot"
+      kinds["Copilot"] = k
     end,
   },
   {

@@ -45,7 +45,7 @@ M.hl_id = vim.api.nvim_get_hl_id_by_name
 M.hl_by_id = vim.api.nvim_get_hl
 
 ---@param group string | integer
----@return vim.api.keyset.highlight
+---@return vim.api.keyset.get_hl_info
 function M.hl(group)
   if not group then
     error("hl: group is required")
@@ -63,8 +63,8 @@ function M.hl(group)
   return hl
 end
 
----@param hl vim.api.keyset.highlight | table
----@return vim.api.keyset.highlight
+---@param hl vim.api.keyset.get_hl_info | table
+---@return vim.api.keyset.get_hl_info
 function M.sanitize(hl)
   for k, v in pairs(hl) do
     if type(v) == "number" then

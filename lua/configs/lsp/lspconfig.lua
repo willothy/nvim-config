@@ -90,6 +90,10 @@ lspconfig.clangd.setup({
   client_encoding = "utf-8",
 })
 
+lspconfig.gleam.setup({
+  capabilities = capabilities,
+})
+
 local rename = {
   tsserver = "ts_ls",
 }
@@ -104,6 +108,50 @@ require("mason-lspconfig").setup({
           ".git",
           "package.json"
         ),
+      })
+    end,
+    lua_ls = function()
+      local lua_settings = require("neoconf").get("lspconfig.lua_ls", {
+        Lua = {
+          workspace = {
+            ignoreDir = {},
+            library = {},
+          },
+        },
+      }, {
+        lsp = true,
+      })
+
+      lua_settings.Lua.workspace.ignoreDir = {}
+
+      lspconfig.lua_ls.setup({
+        capabilities = capabilities,
+        root_dir = require("lspconfig.util").root_pattern(
+          ".luarc.json",
+          ".luarc.jsonc",
+          ".luacheckrc",
+          ".stylua.toml",
+          "stylua.toml",
+          "selene.toml",
+          "selene.yml",
+          ".git"
+        ),
+        settings = { Lua = { workspace = { ignoreDir = {} } } },
+        -- settings = lua_settings,
+        -- before_init = function(params, config)
+        --   local libs = config.settings.Lua.workspace.library
+        --
+        --   for _, lib in ipairs({
+        --     -- "${3rd}/busted/library",
+        --     "${3rd}/luv/library",
+        --   }) do
+        --     table.insert(libs, lib)
+        --   end
+        --
+        --   return require("neodev.lsp").before_init(params, config)
+        -- end,
+        -- single_file_support = false,
+        filetypes = { "lua" },
       })
     end,
     gopls = function()
@@ -160,30 +208,6 @@ require("mason-lspconfig").setup({
       })
     end,
   },
-})
-
-lspconfig.lua_ls.setup({
-  capabilities = capabilities,
-  root_dir = require("lspconfig.util").root_pattern(".git"),
-  settings = require("neoconf").get("lspconfig.lua_ls", {
-    Lua = {},
-  }, {
-    lsp = true,
-  }),
-  -- before_init = function(params, config)
-  --   local libs = config.settings.Lua.workspace.library
-  --
-  --   for _, lib in ipairs({
-  --     -- "${3rd}/busted/library",
-  --     "${3rd}/luv/library",
-  --   }) do
-  --     table.insert(libs, lib)
-  --   end
-  --
-  --   return require("neodev.lsp").before_init(params, config)
-  -- end,
-  single_file_support = false,
-  filetypes = { "lua" },
 })
 
 for nvim_name, trouble_name in pairs({
