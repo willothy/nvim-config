@@ -153,6 +153,9 @@ function M.persist(name, impl)
   local ns = string.format("objects_%s", string.gsub(name, "%W", "_"))
 
   return setmetatable(impl, {
+    __call = function(_self)
+      return M.kv_list(ns)
+    end,
     __index = function(_self, k)
       return M.kv_get(k, ns)
     end,
@@ -174,6 +177,17 @@ local Usage = {}
 
 function Usage:record_launch()
   self.launch_count = (self.launch_count or 0) + 1
+end
+
+function Usage:inspect()
+  local values = self()
+
+  local results = {}
+  for _, v in ipairs(values) do
+    results[v.key] = deserialize(v.value, v.ltype)
+  end
+
+  vim.print(results)
 end
 
 M.stats = M.persist("usage-stats", Usage)

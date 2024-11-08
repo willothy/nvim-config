@@ -188,30 +188,30 @@ return {
     event = "DiagnosticChanged",
   },
   -- COMPLETION --
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "hrsh7th/cmp-cmdline",
-      "hrsh7th/cmp-nvim-lsp",
-      "dmitmel/cmp-cmdline-history",
-      "rcarriga/cmp-dap",
-      "zbirenbaum/copilot-cmp",
-      -- {
-      --   "jsongerber/nvim-px-to-rem",
-      --   ft = { "css" },
-      --   config = true,
-      -- },
-    },
-    event = { "CmdlineEnter", "InsertEnter" },
-    config = function()
-      require("configs.editor.cmp")
-    end,
-  },
+  -- {
+  --   "hrsh7th/nvim-cmp",
+  --   dependencies = {
+  --     "hrsh7th/cmp-buffer",
+  --     "hrsh7th/cmp-path",
+  --     "hrsh7th/cmp-cmdline",
+  --     "hrsh7th/cmp-nvim-lsp",
+  --     "dmitmel/cmp-cmdline-history",
+  --     "rcarriga/cmp-dap",
+  --     "zbirenbaum/copilot-cmp",
+  --     -- {
+  --     --   "jsongerber/nvim-px-to-rem",
+  --     --   ft = { "css" },
+  --     --   config = true,
+  --     -- },
+  --   },
+  --   event = { "CmdlineEnter", "InsertEnter" },
+  --   config = function()
+  --     require("configs.editor.cmp")
+  --   end,
+  -- },
   {
     "Saghen/blink.cmp",
-    enabled = false,
+    -- enabled = false,
     -- How would I do a completion plugin?
     --
     -- - Fully async - users should never need to wait for the menu to open
@@ -316,36 +316,111 @@ return {
 
         windows = {
           autocomplete = {
-            draw = function(ctx)
-              local hl = require("blink.cmp.utils").try_get_tailwind_hl(ctx)
-                or ("BlinkCmpKind" .. ctx.kind)
+            draw = {
+              padding = 1,
+              gap = 1,
+              columns = {
+                { "kind_icon" },
+                { "label", "label_description", gap = 1 },
+                { "kind" },
+              },
+              components = {
+                kind_icon = {
+                  ellipsis = false,
+                  text = function(ctx)
+                    return ctx.kind_icon .. " "
+                  end,
+                  highlight = function(ctx)
+                    return "BlinkCmpKind" .. ctx.kind
+                  end,
+                },
 
-              return {
-                " ",
-                {
-                  ctx.kind_icon,
-                  hl_group = hl,
+                kind = {
+                  ellipsis = false,
+                  text = function(ctx)
+                    return ctx.kind .. " "
+                  end,
+                  highlight = function(ctx)
+                    return "BlinkCmpKind" .. ctx.kind
+                  end,
                 },
-                " ",
-                {
-                  ctx.label,
-                  ctx.kind == "Snippet" and "~" or nil,
-                  (ctx.item.labelDetails and ctx.item.labelDetails.detail)
-                      and ctx.item.labelDetails.detail
-                    or "",
-                  hl_group = ctx.deprecated and "BlinkCmpLabelDeprecated"
-                    or "BlinkCmpLabel",
-                  max_width = 50,
-                  fill = true,
+
+                label = {
+                  width = { fill = true, max = 60 },
+                  text = function(ctx)
+                    return ctx.label .. (ctx.label_detail or "")
+                  end,
+                  highlight = function(ctx)
+                    -- label and label details
+                    local highlights = {
+                      {
+                        0,
+                        #ctx.label,
+                        group = ctx.deprecated and "BlinkCmpLabelDeprecated"
+                          or "BlinkCmpLabel",
+                      },
+                    }
+                    if ctx.label_detail then
+                      table.insert(highlights, {
+                        #ctx.label + 1,
+                        #ctx.label + #ctx.label_detail,
+                        group = "BlinkCmpLabelDetail",
+                      })
+                    end
+
+                    -- characters matched on the label by the fuzzy matcher
+                    if ctx.label_matched_indices ~= nil then
+                      for _, idx in ipairs(ctx.label_matched_indices) do
+                        table.insert(
+                          highlights,
+                          { idx, idx + 1, group = "BlinkCmpLabelMatch" }
+                        )
+                      end
+                    end
+
+                    return highlights
+                  end,
                 },
-                " ",
-                {
-                  ctx.kind,
-                  hl_group = hl,
+
+                label_description = {
+                  width = { max = 30 },
+                  text = function(ctx)
+                    return ctx.label_description or ""
+                  end,
+                  highlight = "BlinkCmpLabelDescription",
                 },
-                " ",
-              }
-            end,
+              },
+            },
+            -- draw = function(ctx)
+            --   local hl = require("blink.cmp.utils").try_get_tailwind_hl(ctx)
+            --     or ("BlinkCmpKind" .. ctx.kind)
+            --
+            --   return {
+            --     " ",
+            --     {
+            --       ctx.kind_icon,
+            --       hl_group = hl,
+            --     },
+            --     " ",
+            --     {
+            --       ctx.label,
+            --       ctx.kind == "Snippet" and "~" or nil,
+            --       (ctx.item.labelDetails and ctx.item.labelDetails.detail)
+            --           and ctx.item.labelDetails.detail
+            --         or "",
+            --       hl_group = ctx.deprecated and "BlinkCmpLabelDeprecated"
+            --         or "BlinkCmpLabel",
+            --       max_width = 50,
+            --       fill = true,
+            --     },
+            --     " ",
+            --     {
+            --       ctx.kind,
+            --       hl_group = hl,
+            --     },
+            --     " ",
+            --   }
+            -- end,
           },
           documentation = {
             auto_show = true,
