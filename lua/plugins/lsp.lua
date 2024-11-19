@@ -242,18 +242,19 @@ return {
               -- "copilot",
               "snippets",
               "buffer",
-              -- "lazydev",
+              "lazydev",
             },
           },
           providers = {
             -- dont show LuaLS require statements when lazydev has items
             lsp = {
-              -- fallback_for = { "lazydev" },
+              name = "lsp",
+              fallback_for = { "lazydev" },
             },
-            -- lazydev = {
-            --   name = "LazyDev",
-            --   module = "lazydev.integrations.blink",
-            -- },
+            lazydev = {
+              name = "LazyDev",
+              module = "lazydev.integrations.blink",
+            },
             --
             -- copilot = {
             --   name = "copilot",
@@ -450,61 +451,69 @@ return {
     event = "InsertEnter",
   },
   -- AI
-  -- {
-  --   "yetone/avante.nvim",
-  --   event = "InsertEnter",
-  --   build = ":AvanteBuild",
-  --   config = function()
-  --     require("1password").read(
-  --       "op://Personal/Anthropic API Key/credential",
-  --       vim.schedule_wrap(function(res)
-  --         vim.env["ANTHROPIC_API_KEY"] = vim.trim(res)
-  --         require("avante").setup({
-  --           provider = "claude",
-  --           claude = {
-  --             endpoint = "https://api.anthropic.com",
-  --             model = "claude-3-5-sonnet-20240620",
-  --             temperature = 0,
-  --             max_tokens = 4096,
-  --           },
-  --         })
-  --       end)
-  --     )
-  --   end,
-  --   dependencies = {
-  --     "stevearc/dressing.nvim",
-  --     "nvim-lua/plenary.nvim",
-  --     "MunifTanjim/nui.nvim",
-  --     --- The below dependencies are optional,
-  --     "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-  --     "zbirenbaum/copilot.lua", -- for providers='copilot'
-  --     {
-  --       -- support for image pasting
-  --       "HakonHarnes/img-clip.nvim",
-  --       event = "VeryLazy",
-  --       opts = {
-  --         -- recommended settings
-  --         default = {
-  --           embed_image_as_base64 = false,
-  --           prompt_for_file_name = false,
-  --           drag_and_drop = {
-  --             insert_mode = true,
-  --           },
-  --           -- required for Windows users
-  --           use_absolute_path = true,
-  --         },
-  --       },
-  --     },
-  --     {
-  --       -- Make sure to setup it properly if you have lazy=true
-  --       "MeanderingProgrammer/render-markdown.nvim",
-  --       opts = {
-  --         file_types = { "markdown", "Avante" },
-  --       },
-  --       ft = { "markdown", "Avante" },
-  --     },
-  --   },
-  -- },
+  {
+    "yetone/avante.nvim",
+    event = "InsertEnter",
+    build = "make",
+    config = function()
+      local function setup(key)
+        vim.env["ANTHROPIC_API_KEY"] = key
+        require("avante").setup({
+          provider = "claude",
+          claude = {},
+          behavior = {},
+        })
+      end
+
+      local key = require("durable").kv.get("anthropic-api-key")
+      if key ~= nil then
+        setup(key)
+        return
+      end
+
+      require("1password").read(
+        "op://Personal/Anthropic API Key/credential",
+        vim.schedule_wrap(function(res)
+          res = vim.trim(res)
+          setup(res)
+          require("durable").kv.set("anthropic-api-key", res)
+        end)
+      )
+    end,
+    dependencies = {
+      -- "stevearc/dressing.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      --- The below dependencies are optional,
+      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+      "zbirenbaum/copilot.lua", -- for providers='copilot'
+      {
+        -- support for image pasting
+        "HakonHarnes/img-clip.nvim",
+        event = "VeryLazy",
+        opts = {
+          -- recommended settings
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = false,
+            drag_and_drop = {
+              insert_mode = true,
+            },
+            -- required for Windows users
+            use_absolute_path = true,
+          },
+        },
+      },
+      {
+        -- Make sure to setup it properly if you have lazy=true
+        "MeanderingProgrammer/render-markdown.nvim",
+        opts = {
+          file_types = { "markdown", "Avante" },
+        },
+        ft = { "markdown", "Avante" },
+      },
+    },
+  },
   {
     "zbirenbaum/copilot.lua",
     config = function()
