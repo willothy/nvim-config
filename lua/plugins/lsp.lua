@@ -5,56 +5,47 @@ return {
     config = true,
     cmd = "Refactor",
   },
-  -- {
-  --   "folke/neodev.nvim",
-  --   config = true,
-  -- },
   {
     "willothy/lazydev.nvim",
+    dependencies = {
+      "Bilal2453/luvit-meta", -- type defs for vim.uv
+    },
     ft = "lua",
-    -- dir = "~/projects/lua/lazydev.nvim/",
-    -- commit = "cea5d0fb556cdc35122d9cae772e7e0ed65b4505",
-
-    -- event = "LspAttach",
-    config = function()
-      local lazydev = require("lazydev")
-
-      -- require("lazydev.config").lua_root = false
-
-      lazydev.setup({
-        exclude = {
-          "/Users/willothy/projects/lua",
-        },
-        integrations = {
-          -- lspconfig = false,
-        },
-        library = {
-          "luvit-meta/library",
-        },
-      })
-    end,
-  },
-  {
-    "Bilal2453/luvit-meta", -- type defs for vim.uv
+    opts = {
+      exclude = {
+        "/Users/willothy/projects/lua",
+      },
+      integrations = {
+        -- lspconfig = false,
+      },
+      library = {
+        "luvit-meta/library",
+      },
+    },
   },
   {
     "nvim-neotest/neotest",
-    -- branch = "feat/use-external-nio",
     config = function()
       require("configs.editor.neotest")
     end,
     dependencies = {
       "rouge8/neotest-rust",
-      "nvim-neotest/neotest-plenary",
     },
     cmd = "Neotest",
   },
   -- LSP UI --
   {
     "j-hui/fidget.nvim",
-    config = function()
-      require("configs.lsp.fidget")
-    end,
+    opts = {
+      progress = {
+        display = {
+          overrides = {
+            rust_analyzer = { name = "rust-analyzer" },
+            lua_ls = { name = "lua-ls" },
+          },
+        },
+      },
+    },
     event = "LspAttach",
   },
   {
@@ -75,21 +66,15 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    -- commit = "8ab8f4cf48425dcb4845a61d3caa2d2a7e3d9df7",
     config = function()
       require("configs.lsp.lspconfig")
     end,
-    -- config = true,
     event = "VeryLazy",
   },
   {
     "willothy/durable.nvim",
-    dir = "~/projects/lua/durable.nvim/",
-    -- dev = true,
     event = "VeryLazy",
-    config = function()
-      require("durable").setup()
-    end,
+    config = true,
   },
   -- {
   --   "kevinhwang91/nvim-ufo",
@@ -100,348 +85,61 @@ return {
   --   config = true,
   -- },
   {
-    "sourcegraph/sg.nvim",
-    config = function()
-      require("configs.lsp.sourcegraph")
-    end,
-    cmd = {
-      "CodyTask",
-      "CodyAsk",
-      "CodyChat",
-      "CodyToggle",
-      "SourcegraphSearch",
-      "SourcegraphLink",
-    },
-    event = "InsertEnter",
-    -- build = "nvim -l build/init.lua",
-  },
-  -- {
-  --   "garymjr/nvim-snippets",
-  --   config = true,
-  --   event = "InsertEnter",
-  --   dependencies = {
-  --     "rafamadriz/friendly-snippets",
-  --   },
-  -- },
-  -- {
-  --   "vxpm/ferris.nvim",
-  --   config = function()
-  --     require("ferris").setup()
-  --
-  --     local function cmd(name, module, opts)
-  --       vim.api.nvim_create_user_command(name, function(...)
-  --         require(module)(...)
-  --       end, opts or {})
-  --     end
-  --
-  --     cmd("FerrisExpandMacro", "ferris.methods.expand_macro")
-  --     cmd("FerrisViewHIR", "ferris.methods.view_hir")
-  --     cmd("FerrisViewMIR", "ferris.methods.view_mir")
-  --     cmd("FerrisViewMemoryLayout", "ferris.methods.view_memory_layout")
-  --     cmd("FerrisOpenCargoToml", "ferris.methods.open_cargo_toml")
-  --     cmd("FerrisOpenParentModule", "ferris.methods.open_parent_module")
-  --     cmd("FerrisOpenDocumentation", "ferris.methods.open_documentation")
-  --     cmd("FerrisReloadWorkspace", "ferris.methods.reload_workspace")
-  --   end,
-  --   opts = {},
-  --   cmd = {
-  --     "FerrisViewHIR",
-  --     "FerrisViewMIR",
-  --     "FerrisViewMemoryLayout",
-  --     -- "FerrisViewSyntaxTree",
-  --     -- "FerrisViewItemTree",
-  --     "FerrisOpenCargoToml",
-  --     "FerrisOpenParentModule",
-  --     "FerrisOpenDocumentation",
-  --     "FerrisReloadWorkspace",
-  --     -- "FerrisExpandMacro",
-  --     -- "FerrisJoinLines",
-  --     -- "FerrisRebuildMacros"
-  --   },
-  -- },
-  {
     "p00f/clangd_extensions.nvim",
     config = true,
     event = "LspAttach",
   },
   -- DIAGNOSTICS & FORMATTING --
   {
-    "nvimtools/none-ls.nvim",
-    config = function()
-      require("configs.lsp.null-ls")
-    end,
-    event = "VeryLazy",
-  },
-  {
     "stevearc/conform.nvim",
     config = function()
-      require("configs.lsp.conform")
+      require("configs.formatting")
     end,
     event = "BufWritePre",
   },
   {
     "mfussenegger/nvim-lint",
     config = function()
-      require("configs.lsp.nvim-lint")
+      require("configs.linting")
     end,
     event = "VeryLazy",
   },
   {
     "dgagn/diagflow.nvim",
     config = function()
-      require("configs.lsp.diagflow")
+      require("configs.diagnostics")
     end,
     event = "DiagnosticChanged",
   },
-  -- {
-  --   "nanotee/sqls.nvim",
-  --   config = function()
-  --     require("sqls")
-  --   end,
-  --   ft = { "sql" },
-  -- },
   -- COMPLETION --
   {
     "Saghen/blink.cmp",
-    -- enabled = false,
-    -- How would I do a completion plugin?
-    --
-    -- - Fully async - users should never need to wait for the menu to open
-    --   - Task-driven or callback-driven; don't mix the two
-    -- - Sources push completions to an "epoch" (group of items from the same request context)
-    -- - Things are added to the menu as they come, but discarded if they're from a previous epoch
-    -- - Increment the epoch with every outgoing request + cancel inflight requests for prev. epoch
-    -- - Maybe server-side fuzzy matching?
-    -- - Menu components = fun(item: CompletionItem, ctx: Context): VirtTextChunk[]
-    -- "willothy/blink.cmp",
-    -- enabled = false,
-    -- branch = "willothy/scrollbar",
-    -- dir = "~/projects/lua/blink.cmp/",
     dependencies = {
+      "Saghen/blink.compat",
+
       "rafamadriz/friendly-snippets",
       "giuxtaposition/blink-cmp-copilot",
-      "Saghen/blink.compat",
       "Saecki/crates.nvim",
+      "windwp/nvim-ts-autotag",
     },
     lazy = true,
     event = { "InsertEnter", "CmdlineEnter" },
     build = "cargo build --release",
     config = function()
-      vim.cmd("hi link BlinkCmpGhostText Comment")
-
-      require("configs.editor.crates")
-
-      require("blink.cmp").setup({
-        keymap = {
-          -- preset = "super-tab",
-          ["<C-space>"] = {
-            "show",
-            "show_documentation",
-            "hide_documentation",
-          },
-          ["<C-e>"] = { "hide", "fallback" },
-
-          ["<Tab>"] = {
-            function(cmp)
-              if cmp.snippet_active() then
-                return cmp.accept()
-              end
-              return cmp.select_and_accept()
-            end,
-            "snippet_forward",
-            "fallback",
-          },
-          ["<S-Tab>"] = { "snippet_backward", "fallback" },
-
-          ["<Up>"] = { "select_prev", "fallback" },
-          ["<Down>"] = { "select_next", "fallback" },
-          ["<C-p>"] = { "select_prev", "fallback" },
-          ["<C-n>"] = { "select_next", "fallback" },
-
-          ["<C-u>"] = { "scroll_documentation_up", "fallback" },
-          ["<C-d>"] = { "scroll_documentation_down", "fallback" },
-        },
-        appearance = {
-          use_nvim_cmp_as_default = true,
-          nerd_font_variant = "normal",
-          kind_icons = willothy.ui.icons.kinds,
-        },
-        sources = {
-          default = {
-            "lsp",
-            "path",
-            "copilot",
-            "snippets",
-            "buffer",
-          },
-          per_filetype = {
-            toml = {
-              "crates",
-              -- "lsp",
-              -- "path",
-              -- "copilot",
-              -- "snippets",
-              -- "buffer",
-            },
-            lua = {
-              "lazydev",
-              "lsp",
-              "path",
-              "copilot",
-              "snippets",
-              "buffer",
-            },
-          },
-          providers = {
-            lazydev = {
-              name = "LazyDev",
-              module = "lazydev.integrations.blink",
-              score_offset = 100,
-              fallbacks = { "lsp" },
-            },
-            copilot = {
-              name = "copilot",
-              module = "blink-cmp-copilot",
-              score_offset = 100,
-              async = true,
-            },
-            crates = {
-              name = "crates",
-              module = "blink.compat.source",
-              score_offset = 100,
-              -- async = true,
-            },
-          },
-        },
-        completion = {
-          -- trigger = {},
-          -- list = {},
-          -- accept = {},
-
-          menu = {
-            draw = {
-              treesitter = { "lsp", "copilot" },
-              padding = 1,
-              gap = 1,
-              columns = {
-                { "kind_icon" },
-                { "label", "label_description", gap = 1 },
-                { "kind" },
-              },
-              components = {
-                kind_icon = {
-                  ellipsis = false,
-                  text = function(ctx)
-                    if ctx.item.source_name == "copilot" then
-                      return willothy.ui.icons.kinds.Copilot .. " "
-                    end
-                    return ctx.kind_icon .. " "
-                  end,
-                  highlight = function(ctx)
-                    if ctx.item.source_name == "copilot" then
-                      return "BlinkCmpKindCopilot"
-                    end
-                    return "BlinkCmpKind" .. ctx.kind
-                  end,
-                },
-
-                kind = {
-                  ellipsis = false,
-                  text = function(ctx)
-                    if ctx.item.source_name == "copilot" then
-                      local name = ctx.item.source_name
-                      return name:sub(1, 1):upper() .. name:sub(2) .. " "
-                    end
-                    return ctx.kind .. " "
-                  end,
-                  highlight = function(ctx)
-                    if ctx.item.source_name == "copilot" then
-                      return "BlinkCmpKindCopilot"
-                    end
-                    return "BlinkCmpKind" .. ctx.kind
-                  end,
-                },
-
-                label = {
-                  width = { fill = true, max = 60 },
-                  text = function(ctx)
-                    return ctx.label .. (ctx.label_detail or "")
-                  end,
-                  highlight = function(ctx)
-                    -- label and label details
-                    local highlights = {
-                      {
-                        0,
-                        #ctx.label,
-                        group = ctx.deprecated and "BlinkCmpLabelDeprecated"
-                          or "BlinkCmpLabel",
-                      },
-                    }
-                    if ctx.label_detail then
-                      table.insert(highlights, {
-                        #ctx.label + 1,
-                        #ctx.label + #ctx.label_detail,
-                        group = "BlinkCmpLabelDetail",
-                      })
-                    end
-
-                    -- characters matched on the label by the fuzzy matcher
-                    if ctx.label_matched_indices ~= nil then
-                      for _, idx in ipairs(ctx.label_matched_indices) do
-                        table.insert(
-                          highlights,
-                          { idx, idx + 1, group = "BlinkCmpLabelMatch" }
-                        )
-                      end
-                    end
-
-                    return highlights
-                  end,
-                },
-
-                label_description = {
-                  width = { max = 30 },
-                  text = function(ctx)
-                    return ctx.label_description or ""
-                  end,
-                  highlight = "BlinkCmpLabelDescription",
-                },
-              },
-            },
-          },
-
-          documentation = {
-            auto_show = true,
-            auto_show_delay_ms = 50,
-          },
-
-          ghost_text = {
-            enabled = true,
-          },
-        },
-        signature = {
-          enabled = false,
-          -- window = {}
-        },
-      })
+      require("configs.completion")
     end,
   },
   {
     "windwp/nvim-autopairs",
-    config = function()
-      require("configs.editor.autopairs")
-    end,
-    event = "InsertEnter",
-  },
-  {
-    "windwp/nvim-ts-autotag",
-    config = true,
+    opts = {
+      disable_filetype = { "TelescopePrompt" },
+    },
     event = "InsertEnter",
   },
   -- AI
   {
     "yetone/avante.nvim",
-    event = "InsertEnter",
+    event = "CmdlineEnter",
     build = "make",
     config = function()
       local function setup(key)
@@ -470,68 +168,29 @@ return {
       )
     end,
     dependencies = {
-      -- "stevearc/dressing.nvim",
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
-      --- The below dependencies are optional,
-      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-      "zbirenbaum/copilot.lua", -- for providers='copilot'
-      {
-        -- support for image pasting
-        "HakonHarnes/img-clip.nvim",
-        event = "VeryLazy",
-        opts = {
-          -- recommended settings
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = {
-              insert_mode = true,
-            },
-            -- required for Windows users
-            use_absolute_path = true,
-          },
-          -- auto_suggestions_provider = "copilot",
-          behaviour = {
-            auto_suggestions = false,
-            auto_set_keymaps = false,
-          },
-        },
-      },
-      {
-        -- Make sure to setup it properly if you have lazy=true
-        "MeanderingProgrammer/render-markdown.nvim",
-        opts = {
-          file_types = { "markdown", "Avante" },
-        },
-        ft = { "markdown", "Avante" },
-      },
+      "nvim-tree/nvim-web-devicons",
+      "zbirenbaum/copilot.lua",
+
+      -- support for image pasting
+      "HakonHarnes/img-clip.nvim",
+      "MeanderingProgrammer/render-markdown.nvim",
     },
   },
   {
     "zbirenbaum/copilot.lua",
-    config = function()
-      require("configs.editor.copilot")
-    end,
+    opts = {
+      suggestion = {
+        auto_trigger = false,
+        hide_during_completion = true,
+      },
+    },
   },
-  -- {
-  --   "supermaven-inc/supermaven-nvim",
-  --   event = "InsertEnter",
-  --   opts = {
-  --     log_level = "off",
-  --     disable_keymaps = true,
-  --     disable_inline_completion = true,
-  --   },
-  -- },
-  -- {
-  --   "lsportal/lsportal.nvim",
-  --   config = true,
-  --   dir = "~/work/foss/lsportal/lsportal.nvim/",
-  -- },
   {
     "kylechui/nvim-surround",
     config = true,
-    event = "InsertEnter",
+    event = "VeryLazy",
   },
   -- DEBUGGING --
   {

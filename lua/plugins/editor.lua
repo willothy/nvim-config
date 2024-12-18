@@ -28,18 +28,6 @@ return {
     event = "VeryLazy",
   },
   {
-    "nvim-pack/nvim-spectre",
-    opts = {
-      is_block_ui_break = true,
-    },
-  },
-  {
-    "willothy/moveline.nvim",
-    -- branch = "oxi",
-    event = "VeryLazy",
-    build = "make build",
-  },
-  {
     "gbprod/substitute.nvim",
     opts = {
       yank_substituted_text = true,
@@ -69,13 +57,6 @@ return {
     end,
   },
   {
-    "lukas-reineke/headlines.nvim",
-    ft = "markdown",
-    config = function()
-      require("configs.editor.headlines")
-    end,
-  },
-  {
     "jmbuhr/otter.nvim",
     ft = "markdown",
     config = function()
@@ -87,33 +68,6 @@ return {
     config = true,
     event = "VeryLazy",
   },
-  -- {
-  --   "vhyrro/luarocks.nvim",
-  --   priority = 1000,
-  --   config = function()
-  --     require("luarocks-nvim").setup({
-  --       rocks = {
-  --         "magick",
-  --       },
-  --     })
-  --   end,
-  --   event = "VeryLazy",
-  -- },
-  {
-    "nvim-neorg/neorg",
-    dependencies = {
-      "pysan3/pathlib.nvim",
-      "nvim-lua/plenary.nvim",
-      -- "vhyrro/luarocks.nvim",
-      "nvim-neorg/lua-utils.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
-    cmd = "Neorg",
-    ft = "norg",
-    config = function()
-      require("configs.editor.neorg")
-    end,
-  },
   -- DEFAULT FEATURE EXTENSIONS --
   {
     "folke/snacks.nvim",
@@ -124,7 +78,7 @@ return {
       words = { enabled = true },
       terminal = {
         enabled = true,
-      }
+      },
     },
   },
   {
@@ -132,35 +86,15 @@ return {
     dependencies = {
       "kkharji/sqlite.lua",
     },
-    -- commit = "590a713b0372485f595eea36e7e3ab2069946794",
-    event = "VeryLazy",
-    config = function()
-      require("configs.editor.yanky")
-    end,
-  },
-  {
-    "willothy/marks.nvim",
     event = "VeryLazy",
     opts = {
-      refresh_interval = 1000,
+      ring = { storage = "sqlite" },
     },
-  },
-  {
-    "nacro90/numb.nvim",
-    config = true,
-    event = "CmdlineEnter",
   },
   {
     "utilyre/sentiment.nvim",
     event = "VeryLazy",
-    opts = {
-      delay = 30,
-      pairs = {
-        { "(", ")" },
-        { "{", "}" },
-        { "[", "]" },
-      },
-    },
+    config = true,
   },
   -- FILE MANAGERS & FUZZY FINDERS --
   {
@@ -168,14 +102,11 @@ return {
     config = function()
       require("configs.editor.telescope")
     end,
-    -- event = "VeryLazy",
     cmd = "Telescope",
     dependencies = {
-      "nvim-telescope/telescope-file-browser.nvim",
       "dhruvmanila/browser-bookmarks.nvim",
       "nvim-telescope/telescope-frecency.nvim",
       --"nvim-telescope/telescope-smart-history.nvim", -- cool but causes sqlite error atm
-      "polirritmico/telescope-lazy-plugins.nvim",
       {
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "make",
@@ -184,21 +115,10 @@ return {
   },
   {
     "stevearc/oil.nvim",
-    -- "willothy/oil.nvim",
-    -- branch = "feat-select-win",
-    -- dir = "~/projects/lua/oil.nvim/",
     config = function()
       require("configs.editor.oil")
     end,
     cmd = "Oil",
-  },
-  {
-    "echasnovski/mini.files",
-    -- "willothy/mini.files",
-    config = function()
-      require("configs.editor.mini-files")
-    end,
-    cmd = "MiniFiles",
   },
   {
     "echasnovski/mini.visits",
@@ -208,30 +128,43 @@ return {
   -- SESSIONS / PROJECTS --
   {
     "stevearc/resession.nvim",
-    -- dir = "~/projects/lua/resession.nvim/",
     dependencies = {
-      "tiagovla/scope.nvim",
+      {
+        "tiagovla/scope.nvim",
+        config = true,
+        event = "VeryLazy",
+      },
       "stevearc/oil.nvim",
     },
     config = function()
-      require("configs.projects.resession")
+      require("configs.sessions")
     end,
     event = "UiEnter",
   },
   {
-    -- "ahmedkhalf/project.nvim",
-    "LennyPhoenix/project.nvim",
-    branch = "fix-get_clients",
+    "ahmedkhalf/project.nvim",
     name = "project_nvim",
     event = "VeryLazy",
-    config = function()
-      require("configs.projects.project")
-    end,
-  },
-  {
-    "tiagovla/scope.nvim",
-    config = true,
-    event = "VeryLazy",
+    opts = {
+      detection_methods = {
+        "lsp",
+        "pattern",
+      },
+      patterns = {
+        ".git",
+        "package.json",
+        "Cargo.toml",
+        "Makefile",
+      },
+      exclude_dirs = {
+        "~/.local/",
+        "~/.cargo/",
+      },
+      ignore_lsp = { "savior", "copilot" },
+      silent_chdir = true,
+      show_hidden = true,
+      scope_chdir = "tab",
+    },
   },
   {
     "willothy/savior.nvim",
@@ -251,7 +184,6 @@ return {
     "willothy/flatten.nvim",
     branch = "guest-data",
     -- dir = "~/projects/lua/flatten/",
-    -- cond = true,
     lazy = false,
     priority = 1000,
     config = function()
@@ -279,13 +211,6 @@ return {
     },
   },
   -- NAVIGATION --
-  -- {
-  --   "LeonHeidelbach/trailblazer.nvim",
-  --   config = function()
-  --     require("configs.navigation.trailblazer")
-  --   end,
-  --   event = "VeryLazy",
-  -- },
   {
     "folke/flash.nvim",
     config = function()
@@ -297,11 +222,9 @@ return {
       { "t", desc = "flash" },
       { "T", desc = "flash" },
     },
-    -- event = "VeryLazy",
   },
   {
     "ThePrimeagen/harpoon",
-    -- commit = "a38be6e0dd4c6db66997deab71fc4453ace97f9c",
     branch = "harpoon2",
     -- "willothy/harpoon",
     -- dir = "~/projects/lua/harpoon/",
@@ -312,13 +235,6 @@ return {
   {
     "chrisgrieser/nvim-spider",
     config = true,
-  },
-  {
-    "toppair/reach.nvim",
-    config = function()
-      require("configs.editor.reach")
-    end,
-    cmd = "ReachOpen",
   },
   {
     "abecodes/tabout.nvim",
@@ -368,13 +284,6 @@ return {
       require("configs.git.neogit")
     end,
   },
-  {
-    "linrongbin16/gitlinker.nvim",
-    opts = {
-      message = true,
-    },
-    cmd = "GitLink",
-  },
   -- MISC --
   {
     "echasnovski/mini.trailspace",
@@ -389,26 +298,12 @@ return {
     event = "TermEnter",
   },
   {
-    "LhKipp/nvim-nu",
-    config = true,
-    ft = "nu",
-  },
-  {
-    "tris203/hawtkeys.nvim",
-    -- dir = "~/projects/lua/hawtkeys.nvim/",
-    config = function()
-      require("configs.editor.hawtkeys")
-    end,
-    cmd = "Hawtkeys",
-  },
-  {
     "tris203/precognition.nvim",
     opts = {
       startVisible = false,
       showBlankVirtLine = false,
     },
     event = "VeryLazy",
-    -- dir = "~/projects/lua/precognition.nvim/",
   },
   {
     "johmsalas/text-case.nvim",
@@ -416,10 +311,4 @@ return {
       default_keymappings_enabled = false,
     },
   },
-  -- == TODO: fix issues with statuscol
-  -- {
-  --   "mluders/comfy-line-numbers.nvim",
-  --   config = true,
-  --   event = "VeryLazy",
-  -- },
 }

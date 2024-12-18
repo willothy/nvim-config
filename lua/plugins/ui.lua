@@ -1,36 +1,12 @@
 return {
-  -- EXTENRAL UIs --
-  -- {
-  --   "glacambre/firenvim",
-  --   cond = vim.g.started_by_firenvim == true,
-  --   lazy = false,
-  --   build = function()
-  --     vim.cmd("call firenvim#install(0)")
-  --   end,
-  -- },
-  -- ??? --
-  -- {
-  --   "altermo/nwm",
-  --   enabled = false,
-  --   config = function()
-  --     require("configs.ui.nwm")
-  --   end,
-  --   event = "VeryLazy",
-  -- },
   -- LAYOUT / CORE UI --
   {
     "folke/which-key.nvim",
-    -- "willothy/which-key.nvim", -- fork with fixes and description sort
-    -- dir = "~/projects/lua/which-key.nvim/",
     config = function()
       require("configs.editor.which-key")
     end,
     event = "VeryLazy",
   },
-  -- {
-  --   "tamton-aquib/keys.nvim",
-  --   cmd = "KeysToggle",
-  -- },
   {
     "nvim-tree/nvim-web-devicons",
     config = function()
@@ -38,22 +14,12 @@ return {
     end,
   },
   {
-    -- "folke/edgy.nvim",
-    "willothy/edgy.nvim",
+    "folke/edgy.nvim",
+    -- "willothy/edgy.nvim",
     -- event = "VeryLazy",
     config = function()
       require("configs.ui.edgy")
     end,
-  },
-  {
-    "folke/zen-mode.nvim",
-    opts = {
-      on_open = function(win)
-        vim.wo[win].fillchars = vim.go.fillchars
-        vim.wo[win].winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"
-      end,
-    },
-    cmd = "ZenMode",
   },
   -- {
   --   "sphamba/smear-cursor.nvim",
@@ -64,30 +30,38 @@ return {
   -- },
   {
     "folke/noice.nvim",
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "folke/snacks.nvim",
-    },
+    dependencies = { "folke/snacks.nvim" },
     event = "UiEnter",
     config = function()
       require("configs.ui.noice")
     end,
   },
-  -- {
-  --   "rcarriga/nvim-notify",
-  --   config = function()
-  --     require("configs.ui.notify")
-  --   end,
-  -- },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    opts = {
+      file_types = { "markdown", "Avante" },
+    },
+    ft = { "markdown", "Avante" },
+  },
   {
     "3rd/image.nvim",
     enabled = false,
-    dependencies = {
-      -- "vhyrro/luarocks.nvim",
-    },
     config = function()
       require("image").setup({})
     end,
+  },
+  {
+    "HakonHarnes/img-clip.nvim",
+    event = "VeryLazy",
+    opts = {
+      default = {
+        embed_image_as_base64 = false,
+        prompt_for_file_name = false,
+        drag_and_drop = {
+          insert_mode = true,
+        },
+      },
+    },
   },
   -- SCOPE / CURSORWORD --
   {
@@ -113,27 +87,6 @@ return {
   },
   -- SIDEBARS --
   {
-    "sidebar-nvim/sidebar.nvim",
-    cmd = {
-      "SidebarNvimOpen",
-      "SidebarNvimToggle",
-    },
-    opts = function()
-      return require("configs.ui.sidebars").sidebar
-    end,
-  },
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "main",
-    dependencies = {
-      "mrbjarksen/neo-tree-diagnostics.nvim",
-    },
-    cmd = "Neotree",
-    opts = function()
-      return require("configs.ui.sidebars").neotree
-    end,
-  },
-  {
     "jackMort/tide.nvim",
     config = function()
       require("tide").setup({
@@ -143,24 +96,8 @@ return {
     event = "VeryLazy",
   },
   {
-    "stevearc/aerial.nvim",
-    opts = function()
-      return require("configs.ui.sidebars").aerial
-    end,
-    cmd = {
-      "AerialToggle",
-      "AerialOpen",
-      "AerialNavToggle",
-      "AerialNavOpen",
-    },
-  },
-  {
     "folke/trouble.nvim",
-    --branch = "dev",
-    -- dir = "~/projects/lua/trouble.nvim/",
-    -- "willothy/trouble.nvim",
     cmd = "Trouble",
-    -- branch = "fix-fillchars",
     config = function()
       require("configs.editor.trouble")
     end,
@@ -168,8 +105,6 @@ return {
   -- WINDOWS --
   {
     "nvim-focus/focus.nvim",
-    -- "willothy/focus.nvim",
-    -- branch = "float-config-preemptive-fix",
     dependencies = {
       {
         "echasnovski/mini.animate",
@@ -214,11 +149,6 @@ return {
     end,
   },
   {
-    "tummetott/winshift.nvim",
-    config = true,
-    cmd = "WinShift",
-  },
-  {
     "stevearc/stickybuf.nvim",
     event = "VeryLazy",
     opts = {
@@ -239,14 +169,9 @@ return {
   -- STATUS --
   {
     "willothy/nvim-cokeline",
-    -- branch = "incremental-truncate",
     config = function()
       require("configs.status.cokeline")
     end,
-
-    -- dir = "~/projects/lua/cokeline2/",
-    -- config = function() end,
-
     priority = 100,
     event = "UiEnter",
   },
@@ -260,8 +185,6 @@ return {
   },
   {
     "Bekaboo/dropbar.nvim",
-    -- "willothy/dropbar.nvim",
-    -- dir = "~/projects/lua/dropbar.nvim/",
     config = function()
       require("configs.status.dropbar")
     end,
@@ -269,9 +192,6 @@ return {
   },
   {
     "luukvbaal/statuscol.nvim",
-    -- dir = "~/projects/lua/statuscol.nvim/",
-    -- "willothy/statuscol.nvim",
-    -- branch = "wip",
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },
@@ -282,22 +202,10 @@ return {
   },
   {
     "b0o/incline.nvim",
-    -- branch = "dev",
-    -- dir = "~/projects/lua/incline.nvim/",
     event = "VeryLazy",
     config = function()
       require("configs.status.incline")
     end,
-  },
-  {
-    "goolord/alpha-nvim",
-    dependencies = {
-      "stevearc/resession.nvim",
-    },
-    config = function()
-      require("configs.status.alpha")
-    end,
-    cmd = "Alpha",
   },
   -- COLORS --
   {

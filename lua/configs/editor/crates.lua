@@ -13,12 +13,4 @@ require("crates").setup({
   --   completion = true,
   --   hover = true,
   -- },
-  null_ls = {
-    enabled = true,
-    name = "crates.nvim",
-  },
 })
-
--- require("crates.completion.cmp").setup()
-
--- require("cmp").setup.buffer({ sources = { { name = "crates" } } })

@@ -2,18 +2,8 @@ vim.g.nvim_ghost_autostart = 0
 
 return {
   {
-    "willothy/strat-hero.nvim",
-    config = true,
-    cmd = "StratHero",
-  },
-  {
     "jbyuki/venn.nvim",
     cmd = "VBox",
-  },
-  {
-    "ellisonleao/glow.nvim",
-    config = true,
-    cmd = "Glow",
   },
   {
     "rafcamlet/nvim-luapad",
@@ -21,6 +11,7 @@ return {
     cmd = "Luapad",
   },
   {
+    -- TODO: Look for Lua-based and automatic alternative
     "lambdalisue/suda.vim",
     cmd = { "SudaRead", "SudaWrite" },
   },
@@ -29,6 +20,7 @@ return {
     cmd = { "UndotreeToggle", "UndotreeShow" },
   },
   {
+    -- FIXME: This doesn't really work
     "ecthelionvi/NeoComposer.nvim",
     dependencies = { "kkharji/sqlite.lua" },
     config = function()
@@ -68,22 +60,10 @@ return {
     event = "BufRead Cargo.toml",
   },
   {
-    "tomiis4/Hypersonic.nvim",
-    cmd = "Hypersonic",
-    config = function()
-      require("configs.editor.hypersonic")
-    end,
-  },
-  {
     "tzachar/highlight-undo.nvim",
     config = true,
     event = "VeryLazy",
   },
-  -- {
-  --   "neph-iap/easycolor.nvim",
-  --   opts = { ui = { border = "solid" } },
-  --   cmd = "EasyColor",
-  -- },
   {
     "nvchad/minty",
     lazy = true,
@@ -97,40 +77,14 @@ return {
     },
   },
   {
-    "Tyler-Barham/floating-help.nvim",
-    config = function()
-      require("configs.editor.floating-help")
-    end,
-    cmd = "FloatingHelp",
-  },
-  {
     "jokajak/keyseer.nvim",
     config = true,
     cmd = "KeySeer",
   },
   {
-    "chrisgrieser/nvim-scissors",
-    opts = {
-      editSnippetPopup = {
-        border = "solid",
-      },
-      jsonFormatter = "jq",
-    },
-  },
-  {
     "pwntester/octo.nvim",
     config = true,
     cmd = "Octo",
-  },
-  -- TODO: re-enable this
-  -- {
-  --   "subnut/nvim-ghost.nvim",
-  --   event = "VeryLazy",
-  -- },
-  {
-    "mong8se/actually.nvim",
-    config = true,
-    event = "VeryLazy",
   },
   {
     "gbprod/stay-in-place.nvim",
