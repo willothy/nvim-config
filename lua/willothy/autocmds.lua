@@ -14,7 +14,13 @@ local autocmds = {
         return
       end
 
-      if client.supports_method("textDocument/documentHighlight") then
+      if client:supports_method("textDocument/foldingRange") then
+        vim.api.nvim_set_option_value("foldexpr", "v:lua.vim.lsp.foldexpr()", {
+          scope = "local",
+        })
+      end
+
+      if client:supports_method("textDocument/documentHighlight") then
         vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
           buffer = bufnr,
           group = group,
@@ -30,7 +36,7 @@ local autocmds = {
 
       if
         vim.lsp.inlay_hint
-        and client.supports_method("textDocument/inlayHint")
+        and client:supports_method("textDocument/inlayHint")
       then
         vim.lsp.inlay_hint.enable(true, {
           bufnr = bufnr,

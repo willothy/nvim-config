@@ -3,13 +3,22 @@ require("crates").setup({
     cmp = {
       enabled = true,
     },
+    crates = {
+      enabled = true,
+    },
   },
+  -- lsp = {
+  --   enabled = true,
+  --   actions = true,
+  --   completion = true,
+  --   hover = true,
+  -- },
   null_ls = {
     enabled = true,
     name = "crates.nvim",
   },
 })
 
--- require("creates.src.cmp").setup()
+-- require("crates.completion.cmp").setup()
 
-require("cmp").setup.buffer({ sources = { { name = "crates" } } })
+-- require("cmp").setup.buffer({ sources = { { name = "crates" } } })

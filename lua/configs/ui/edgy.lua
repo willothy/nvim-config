@@ -467,12 +467,12 @@ A.schedule = function()
   if not (timer and timer:is_active()) then
     timer = vim.defer_fn(function()
       if A.animate() then
-        require("focus").focus_disable()
+        -- require("focus").focus_disable()
         vim.g.minianimate_disable = true
         A.schedule()
       else
         vim.g.minianimate_disable = false
-        require("focus").focus_enable()
+        -- require("focus").focus_enable()
       end
     end, 1000 / opts.animate.fps)
   end

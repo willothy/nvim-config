@@ -143,19 +143,31 @@ local commands = {
   },
   Scratch = {
     function(args)
-      local f = vim.fn.tempname()
-      if not f then
+      local scratch = require("snacks").scratch
+      if #args.fargs == 0 then
+        scratch()
         return
       end
-      local buf = vim.api.nvim_create_buf(false, true)
-      vim.api.nvim_buf_set_name(buf, f)
-      vim.bo[buf].filetype = (args.args and (#args.args > 1)) and args.args[1]
-        or "lua"
-      vim.bo[buf].buftype = ""
-      vim.bo["bufhidden"] = "wipe"
-      vim.bo["swapfile"] = false
-      vim.api.nvim_set_current_buf(buf)
+      local cmd = {
+        list = function()
+          scratch.list()
+        end,
+        select = function()
+          scratch.select()
+        end,
+        open = function(open_args)
+          local kv = {}
+          for _, str in ipairs(open_args) do
+            local k, v = str:match("([^=]+)=(.*)")
+            kv[k] = v
+          end
+
+          scratch.open(kv)
+        end,
+      }
+      cmd[args.fargs[1]]({ unpack(args.fargs, 2) })
     end,
+    nargs = "*",
     desc = "Open a scratch buffer",
   },
   BrowserSwitch = {

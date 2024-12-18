@@ -55,22 +55,30 @@ return {
     },
     cmd = "ZenMode",
   },
+  -- {
+  --   "sphamba/smear-cursor.nvim",
+  --   event = "VeryLazy",
+  --   opts = {
+  --     legacy_computing_symbols_support = true,
+  --   },
+  -- },
   {
     "folke/noice.nvim",
     dependencies = {
       "MunifTanjim/nui.nvim",
+      "folke/snacks.nvim",
     },
     event = "UiEnter",
     config = function()
       require("configs.ui.noice")
     end,
   },
-  {
-    "rcarriga/nvim-notify",
-    config = function()
-      require("configs.ui.notify")
-    end,
-  },
+  -- {
+  --   "rcarriga/nvim-notify",
+  --   config = function()
+  --     require("configs.ui.notify")
+  --   end,
+  -- },
   {
     "3rd/image.nvim",
     enabled = false,

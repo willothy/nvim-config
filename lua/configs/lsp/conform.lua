@@ -1,9 +1,9 @@
 local opts = {
   formatters_by_ft = {
-    sql = {
-      stop_after_first = true,
-      "sql-formatter",
-    },
+    -- sql = {
+    --   stop_after_first = true,
+    --   "sqlfmt",
+    -- },
     lua = {
       stop_after_first = true,
       "stylua",

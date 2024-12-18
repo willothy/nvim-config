@@ -101,7 +101,8 @@ require("lazy").setup({
     border = "solid",
   },
   dev = {
-    path = "~/projects/lua/",
+    -- fallback = true,
+    -- path = "~/projects/lua/",
   },
   -- profiling = {
   --   loader = true,

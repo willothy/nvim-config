@@ -66,7 +66,7 @@ end
 
 lspconfig.rust_analyzer.setup({
   capabilities = capabilities,
-  root_dir = require("lspconfig.util").root_pattern(".git", "Cargo.toml"),
+  -- root_dir = require("lspconfig.util").root_pattern(".git", "Cargo.toml"),
   settings = settings("rust_analyzer"),
   offsetEncoding = { "utf-8" },
   client_encoding = "utf-8",
@@ -110,6 +110,14 @@ require("mason-lspconfig").setup({
         ),
       })
     end,
+    -- sqls = function()
+    --   lspconfig.sqls.setup({
+    --     on_attach = function(client, bufnr)
+    --       require("sqls").on_attach(client, bufnr)
+    --     end,
+    --     settings = settings("sqls"),
+    --   })
+    -- end,
     lua_ls = function()
       local lua_settings = require("neoconf").get("lspconfig.lua_ls", {
         Lua = {

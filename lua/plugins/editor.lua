@@ -116,6 +116,18 @@ return {
   },
   -- DEFAULT FEATURE EXTENSIONS --
   {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      notifier = { enabled = true },
+      words = { enabled = true },
+      terminal = {
+        enabled = true,
+      }
+    },
+  },
+  {
     "gbprod/yanky.nvim",
     dependencies = {
       "kkharji/sqlite.lua",

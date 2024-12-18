@@ -10,18 +10,23 @@ return {
   --   config = true,
   -- },
   {
-    "folke/lazydev.nvim",
+    "willothy/lazydev.nvim",
     ft = "lua",
+    -- dir = "~/projects/lua/lazydev.nvim/",
     -- commit = "cea5d0fb556cdc35122d9cae772e7e0ed65b4505",
 
-    -- event="LspAttach",
+    -- event = "LspAttach",
     config = function()
       local lazydev = require("lazydev")
+
       -- require("lazydev.config").lua_root = false
 
       lazydev.setup({
+        exclude = {
+          "/Users/willothy/projects/lua",
+        },
         integrations = {
-          cmp = false,
+          -- lspconfig = false,
         },
         library = {
           "luvit-meta/library",
@@ -80,6 +85,7 @@ return {
   {
     "willothy/durable.nvim",
     dir = "~/projects/lua/durable.nvim/",
+    -- dev = true,
     event = "VeryLazy",
     config = function()
       require("durable").setup()
@@ -187,28 +193,14 @@ return {
     end,
     event = "DiagnosticChanged",
   },
-  -- COMPLETION --
   -- {
-  --   "hrsh7th/nvim-cmp",
-  --   dependencies = {
-  --     "hrsh7th/cmp-buffer",
-  --     "hrsh7th/cmp-path",
-  --     "hrsh7th/cmp-cmdline",
-  --     "hrsh7th/cmp-nvim-lsp",
-  --     "dmitmel/cmp-cmdline-history",
-  --     "rcarriga/cmp-dap",
-  --     "zbirenbaum/copilot-cmp",
-  --     -- {
-  --     --   "jsongerber/nvim-px-to-rem",
-  --     --   ft = { "css" },
-  --     --   config = true,
-  --     -- },
-  --   },
-  --   event = { "CmdlineEnter", "InsertEnter" },
+  --   "nanotee/sqls.nvim",
   --   config = function()
-  --     require("configs.editor.cmp")
+  --     require("sqls")
   --   end,
+  --   ft = { "sql" },
   -- },
+  -- COMPLETION --
   {
     "Saghen/blink.cmp",
     -- enabled = false,
@@ -227,51 +219,19 @@ return {
     -- dir = "~/projects/lua/blink.cmp/",
     dependencies = {
       "rafamadriz/friendly-snippets",
+      "giuxtaposition/blink-cmp-copilot",
+      "Saghen/blink.compat",
+      "Saecki/crates.nvim",
     },
     lazy = true,
-    event = "InsertEnter",
+    event = { "InsertEnter", "CmdlineEnter" },
     build = "cargo build --release",
     config = function()
+      vim.cmd("hi link BlinkCmpGhostText Comment")
+
+      require("configs.editor.crates")
+
       require("blink.cmp").setup({
-        sources = {
-          -- add lazydev to your completion providers
-          completion = {
-            enabled_providers = {
-              "lsp",
-              "path",
-              -- "copilot",
-              "snippets",
-              "buffer",
-              "lazydev",
-            },
-          },
-          providers = {
-            -- dont show LuaLS require statements when lazydev has items
-            lsp = {
-              name = "lsp",
-              fallback_for = { "lazydev" },
-            },
-            lazydev = {
-              name = "LazyDev",
-              module = "lazydev.integrations.blink",
-            },
-            --
-            -- copilot = {
-            --   name = "copilot",
-            --   module = "blink.copilot",
-            --   enabled = true,
-            --   kind = "Copilot",
-            --   max_items = 2,
-            --
-            --   score_offset = 1,
-            -- },
-          },
-        },
-        accept = {
-          auto_brackets = {
-            enabled = true,
-          },
-        },
         keymap = {
           -- preset = "super-tab",
           ["<C-space>"] = {
@@ -283,11 +243,10 @@ return {
 
           ["<Tab>"] = {
             function(cmp)
-              if cmp.is_in_snippet() then
+              if cmp.snippet_active() then
                 return cmp.accept()
-              else
-                return cmp.select_and_accept()
               end
+              return cmp.select_and_accept()
             end,
             "snippet_forward",
             "fallback",
@@ -302,22 +261,66 @@ return {
           ["<C-u>"] = { "scroll_documentation_up", "fallback" },
           ["<C-d>"] = { "scroll_documentation_down", "fallback" },
         },
-        highlight = {
+        appearance = {
           use_nvim_cmp_as_default = true,
+          nerd_font_variant = "normal",
+          kind_icons = willothy.ui.icons.kinds,
         },
-        nerd_font_variant = "normal",
-        trigger = {
-          signature_help = {
-            enabled = true,
+        sources = {
+          default = {
+            "lsp",
+            "path",
+            "copilot",
+            "snippets",
+            "buffer",
+          },
+          per_filetype = {
+            toml = {
+              "crates",
+              -- "lsp",
+              -- "path",
+              -- "copilot",
+              -- "snippets",
+              -- "buffer",
+            },
+            lua = {
+              "lazydev",
+              "lsp",
+              "path",
+              "copilot",
+              "snippets",
+              "buffer",
+            },
+          },
+          providers = {
+            lazydev = {
+              name = "LazyDev",
+              module = "lazydev.integrations.blink",
+              score_offset = 100,
+              fallbacks = { "lsp" },
+            },
+            copilot = {
+              name = "copilot",
+              module = "blink-cmp-copilot",
+              score_offset = 100,
+              async = true,
+            },
+            crates = {
+              name = "crates",
+              module = "blink.compat.source",
+              score_offset = 100,
+              -- async = true,
+            },
           },
         },
-        kind_icons = {
-          Copilot = "",
-        },
+        completion = {
+          -- trigger = {},
+          -- list = {},
+          -- accept = {},
 
-        windows = {
-          autocomplete = {
+          menu = {
             draw = {
+              treesitter = { "lsp", "copilot" },
               padding = 1,
               gap = 1,
               columns = {
@@ -329,9 +332,15 @@ return {
                 kind_icon = {
                   ellipsis = false,
                   text = function(ctx)
+                    if ctx.item.source_name == "copilot" then
+                      return willothy.ui.icons.kinds.Copilot .. " "
+                    end
                     return ctx.kind_icon .. " "
                   end,
                   highlight = function(ctx)
+                    if ctx.item.source_name == "copilot" then
+                      return "BlinkCmpKindCopilot"
+                    end
                     return "BlinkCmpKind" .. ctx.kind
                   end,
                 },
@@ -339,9 +348,16 @@ return {
                 kind = {
                   ellipsis = false,
                   text = function(ctx)
+                    if ctx.item.source_name == "copilot" then
+                      local name = ctx.item.source_name
+                      return name:sub(1, 1):upper() .. name:sub(2) .. " "
+                    end
                     return ctx.kind .. " "
                   end,
                   highlight = function(ctx)
+                    if ctx.item.source_name == "copilot" then
+                      return "BlinkCmpKindCopilot"
+                    end
                     return "BlinkCmpKind" .. ctx.kind
                   end,
                 },
@@ -392,50 +408,22 @@ return {
                 },
               },
             },
-            -- draw = function(ctx)
-            --   local hl = require("blink.cmp.utils").try_get_tailwind_hl(ctx)
-            --     or ("BlinkCmpKind" .. ctx.kind)
-            --
-            --   return {
-            --     " ",
-            --     {
-            --       ctx.kind_icon,
-            --       hl_group = hl,
-            --     },
-            --     " ",
-            --     {
-            --       ctx.label,
-            --       ctx.kind == "Snippet" and "~" or nil,
-            --       (ctx.item.labelDetails and ctx.item.labelDetails.detail)
-            --           and ctx.item.labelDetails.detail
-            --         or "",
-            --       hl_group = ctx.deprecated and "BlinkCmpLabelDeprecated"
-            --         or "BlinkCmpLabel",
-            --       max_width = 50,
-            --       fill = true,
-            --     },
-            --     " ",
-            --     {
-            --       ctx.kind,
-            --       hl_group = hl,
-            --     },
-            --     " ",
-            --   }
-            -- end,
           },
+
           documentation = {
             auto_show = true,
+            auto_show_delay_ms = 50,
           },
+
           ghost_text = {
             enabled = true,
           },
         },
+        signature = {
+          enabled = false,
+          -- window = {}
+        },
       })
-
-      local kinds = require("blink.cmp.types").CompletionItemKind
-      local k = #kinds + 1
-      kinds[k] = "Copilot"
-      kinds["Copilot"] = k
     end,
   },
   {
@@ -458,6 +446,7 @@ return {
     config = function()
       local function setup(key)
         vim.env["ANTHROPIC_API_KEY"] = key
+        ---@diagnostic disable-next-line: missing-fields
         require("avante").setup({
           provider = "claude",
           claude = {},
@@ -501,6 +490,11 @@ return {
             },
             -- required for Windows users
             use_absolute_path = true,
+          },
+          -- auto_suggestions_provider = "copilot",
+          behaviour = {
+            auto_suggestions = false,
+            auto_set_keymaps = false,
           },
         },
       },
