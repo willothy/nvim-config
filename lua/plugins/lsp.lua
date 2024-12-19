@@ -198,9 +198,6 @@ return {
     dependencies = {
       "theHamsta/nvim-dap-virtual-text",
     },
-    config = function()
-      require("configs.debugging.dap")
-    end,
   },
   {
     "rcarriga/nvim-dap-ui",
@@ -208,7 +205,7 @@ return {
       "mfussenegger/nvim-dap",
     },
     config = function()
-      require("configs.debugging.dap-ui")
+      require("configs.debugging")
     end,
   },
   -- Individual debugger plugins
