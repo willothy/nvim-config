@@ -4,7 +4,11 @@ require("configs.editor.crates")
 
 require("blink.cmp").setup({
   keymap = {
-    -- preset = "super-tab",
+    ["<C-h>"] = {
+      "show",
+      "show_documentation",
+      "hide_documentation",
+    },
     ["<C-space>"] = {
       "show",
       "show_documentation",
@@ -48,11 +52,11 @@ require("blink.cmp").setup({
     per_filetype = {
       toml = {
         "crates",
-        -- "lsp",
-        -- "path",
-        -- "copilot",
-        -- "snippets",
-        -- "buffer",
+        "lsp",
+        "path",
+        "copilot",
+        "snippets",
+        "buffer",
       },
       lua = {
         "lazydev",
@@ -192,6 +196,5 @@ require("blink.cmp").setup({
   },
   signature = {
     enabled = false,
-    -- window = {}
   },
 })

@@ -711,6 +711,7 @@ wk.add({
         require("flash").toggle()
       end,
       desc = "flash: toggle",
+      mode = "c",
     },
   },
   {
