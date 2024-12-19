@@ -94,19 +94,28 @@ function M.save_selected()
   if state ~= State.Idle and state ~= State.Selecting then
     vim.notify(
       string.format("Cannot save while %s", state),
-      vim.log.levels.WARN
+      vim.log.levels.WARN,
+      {
+        id = string.format("no-save-while-%s", state),
+      }
     )
     return
   end
   if selected == nil then
-    vim.notify("No macro selected", vim.log.levels.WARN)
+    vim.notify("No macro selected", vim.log.levels.WARN, {
+      id = "no-macro-selected",
+    })
     return
   end
   if selected.sequence == nil then
-    vim.notify("No macro sequence found", vim.log.levels.WARN)
+    vim.notify("No macro sequence found", vim.log.levels.WARN, {
+      id = "no-macro-sequence",
+    })
     return
   elseif selected.sequence == "" then
-    vim.notify("Empty macro sequence", vim.log.levels.WARN)
+    vim.notify("Empty macro sequence", vim.log.levels.WARN, {
+      id = "no-macro-sequence",
+    })
     return
   end
 
@@ -118,11 +127,15 @@ function M.save_selected()
     },
     vim.schedule_wrap(function(input)
       if input == "" or input == nil then
-        vim.notify("Macro name cannot be empty.", vim.log.levels.WARN)
+        vim.notify("Macro name cannot be empty.", vim.log.levels.WARN, {
+          id = "empty-macro-name",
+        })
         return
       end
       if selected == nil or selected.sequence == nil then
-        vim.notify("No macro selected.", vim.log.levels.WARN)
+        vim.notify("No macro selected.", vim.log.levels.WARN, {
+          id = "no-macro-selected",
+        })
         return
       end
       M.insert_macro(input, selected.sequence)
@@ -142,7 +155,10 @@ function M.select_macro(title)
   else
     vim.notify(
       string.format("Macro '%s' not found", title),
-      vim.log.levels.WARN
+      vim.log.levels.WARN,
+      {
+        id = string.format("macro-not-found-%s", title),
+      }
     )
   end
 end
@@ -170,7 +186,10 @@ local function get_cursor_selected(snacks_win)
   if not res then
     vim.notify(
       "invalid selection - this is probably a bug",
-      vim.log.levels.ERROR
+      vim.log.levels.ERROR,
+      {
+        id = "invalid-selection",
+      }
     )
   end
   return res
@@ -334,8 +353,10 @@ function M.setup()
         sequence = M.get_macro(selected.title)
       end
     end
-    if not sequence then
-      vim.notify("No macro selected", vim.log.levels.WARN)
+    if sequence == nil or sequence == "" then
+      vim.notify("No macro selected", vim.log.levels.WARN, {
+        id = "no-macro-selected",
+      })
       return
     end
 
