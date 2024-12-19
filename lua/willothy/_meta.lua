@@ -18,7 +18,6 @@ willothy.terminal = require("willothy.terminal")
 
 willothy.async = require("nio")
 
-willothy.net = require("willothy.net")
 willothy.graphql = require("willothy.graphql")
 willothy.event = require("willothy.event")
 willothy.fs = require("willothy.fs")

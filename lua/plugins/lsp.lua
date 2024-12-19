@@ -16,7 +16,7 @@ return {
         "/Users/willothy/projects/lua",
       },
       integrations = {
-        -- lspconfig = false,
+        lspconfig = false,
       },
       library = {
         "luvit-meta/library",

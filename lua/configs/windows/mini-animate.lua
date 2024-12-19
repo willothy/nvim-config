@@ -71,7 +71,7 @@ anim.setup({
     }),
   },
   close = {
-    enable = true,
+    enable = false,
     winconfig = anim.gen_winconfig.wipe(),
     winblend = anim.gen_winblend.linear({ from = 40, to = 100 }),
     timing = anim.gen_timing.quartic({
@@ -82,11 +82,11 @@ anim.setup({
   },
   cursor = { enable = false },
   scroll = {
-    enable = true,
+    enable = false,
   },
   resize = {
-    enable = false,
-    timing = duration(200),
+    enable = true,
+    timing = duration(20),
     subresize = subresize(easing.ease_out),
   },
 })

@@ -1,11 +1,6 @@
 ---@diagnostic disable: missing-fields
 -- require("tree-sitter-just").setup({})
 
-vim.hl.priorities.semantic_tokens = 100
-vim.hl.priorities.treesitter = 125
-
-
-
 require("nvim-treesitter.configs").setup({
   -- A list of parser names, or "all"
   ensure_installed = {

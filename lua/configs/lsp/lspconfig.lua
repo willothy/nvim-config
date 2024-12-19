@@ -44,12 +44,13 @@ capabilities.experimental = {
   },
 }
 
--- capabilities = require("blink.cmp").get_lsp_capabilities(capabilities, false)
+-- capabilities = require("blink.cmp").get_lsp_capabilities(capabilities, true)
 
-local icons = willothy.ui.icons
+vim.lsp.config("*", {
+  capabilities = capabilities,
+})
 
 require("mason").setup()
-
 local lspconfig = require("lspconfig")
 
 local neoconf = require("neoconf")
@@ -59,14 +60,9 @@ local function settings(server, default)
   return neoconf.get("lspconfig." .. server, default or {}, { lsp = true })
 end
 
--- require("neodev").setup({
---   lspconfig = false,
---   pathStrict = true,
--- })
-
 lspconfig.rust_analyzer.setup({
   capabilities = capabilities,
-  -- root_dir = require("lspconfig.util").root_pattern(".git", "Cargo.toml"),
+  root_dir = require("lspconfig.util").root_pattern(".git", "Cargo.toml"),
   settings = settings("rust_analyzer"),
   offsetEncoding = { "utf-8" },
   client_encoding = "utf-8",
@@ -110,30 +106,11 @@ require("mason-lspconfig").setup({
         ),
       })
     end,
-    -- sqls = function()
-    --   lspconfig.sqls.setup({
-    --     on_attach = function(client, bufnr)
-    --       require("sqls").on_attach(client, bufnr)
-    --     end,
-    --     settings = settings("sqls"),
-    --   })
-    -- end,
     lua_ls = function()
-      local lua_settings = require("neoconf").get("lspconfig.lua_ls", {
-        Lua = {
-          workspace = {
-            ignoreDir = {},
-            library = {},
-          },
-        },
-      }, {
-        lsp = true,
-      })
-
-      lua_settings.Lua.workspace.ignoreDir = {}
-
-      lspconfig.lua_ls.setup({
+      -- vim.lsp.enable("lua_ls", true)
+      require("lspconfig").lua_ls.setup({
         capabilities = capabilities,
+        settings = settings("lua_ls"),
         root_dir = require("lspconfig.util").root_pattern(
           ".luarc.json",
           ".luarc.jsonc",
@@ -144,22 +121,6 @@ require("mason-lspconfig").setup({
           "selene.yml",
           ".git"
         ),
-        settings = { Lua = { workspace = { ignoreDir = {} } } },
-        -- settings = lua_settings,
-        -- before_init = function(params, config)
-        --   local libs = config.settings.Lua.workspace.library
-        --
-        --   for _, lib in ipairs({
-        --     -- "${3rd}/busted/library",
-        --     "${3rd}/luv/library",
-        --   }) do
-        --     table.insert(libs, lib)
-        --   end
-        --
-        --   return require("neodev.lsp").before_init(params, config)
-        -- end,
-        -- single_file_support = false,
-        filetypes = { "lua" },
       })
     end,
     gopls = function()
@@ -231,70 +192,3 @@ for nvim_name, trouble_name in pairs({
     })
   end
 end
-
-local signs = {
-  DapBreakpoint = {
-    text = icons.dap.breakpoint.data,
-    icon = icons.dap.breakpoint.data,
-    texthl = "DiagnosticSignError",
-  },
-  DapBreakpointCondition = {
-    text = icons.dap.breakpoint.conditional,
-    icon = icons.dap.breakpoint.conditional,
-    texthl = "DiagnosticSignWarn",
-  },
-  DapLogPoint = {
-    text = icons.dap.breakpoint.log,
-    icon = icons.dap.breakpoint.log,
-    texthl = "DiagnosticSignInfo",
-  },
-  DapStopped = {
-    text = icons.dap.action.stop,
-    icon = icons.dap.action.stop,
-    texthl = "DiagnosticSignInfo",
-  },
-  DapBreakpointRejected = {
-    text = icons.dap.breakpoint.unsupported,
-    icon = icons.dap.breakpoint.unsupported,
-    texthl = "DiagnosticSignWarn",
-  },
-}
-
-for name, def in pairs(signs) do
-  vim.fn.sign_define(name, def)
-end
-
-vim.diagnostic.config({
-  severity_sort = true,
-  update_in_insert = true,
-  underline = true,
-  -- warden = {
-  --   line_highlight = true,
-  -- },
-  signs = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
-      [vim.diagnostic.severity.WARN] = icons.diagnostics.Warn,
-      [vim.diagnostic.severity.INFO] = icons.diagnostics.Info,
-      [vim.diagnostic.severity.HINT] = icons.diagnostics.Hint,
-    },
-  },
-  float = {
-    header = setmetatable({}, {
-      __index = function(_, k)
-        local arr = {
-          string.format(
-            "Diagnostics: %s %s",
-            require("nvim-web-devicons").get_icon_by_filetype(vim.bo.filetype),
-            vim.bo.filetype
-          ),
-          "Title",
-        }
-        return arr[k]
-      end,
-    }),
-    source = true,
-    border = "solid",
-    focusable = false,
-  },
-})

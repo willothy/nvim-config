@@ -17,11 +17,9 @@ local function _str_byteindex_enc(line, index, encoding)
       return #line
     end
   elseif encoding == "utf-16" then
-    ---@diagnostic disable-next-line: return-type-mismatch
-    return vim.str_byteindex(line, index, true)
+    return vim.str_byteindex(line, encoding, index, true)
   elseif encoding == "utf-32" then
-    ---@diagnostic disable-next-line: return-type-mismatch
-    return vim.str_byteindex(line, index)
+    return vim.str_byteindex(line, encoding, index)
   else
     error("Invalid encoding: " .. vim.inspect(encoding))
   end
@@ -242,7 +240,7 @@ local function apply_code_action(action, client, ctx)
   local util = vim.lsp.util
   if action.edit then
     util.apply_workspace_edit(
-      action.edit,
+      action.edit --[[@as lsp.WorkspaceEdit]],
       client.server_capabilities.positionEncoding or "utf-8"
     )
   end
@@ -251,6 +249,7 @@ local function apply_code_action(action, client, ctx)
       or action
     if type(command) == "string" then
       command = {
+        title = action.title,
         command = command,
         arguments = {},
       }
@@ -273,7 +272,7 @@ local function apply_code_action(action, client, ctx)
     if res and type(res) == "table" then
       if res.edit then
         util.apply_workspace_edit(
-          action.edit,
+          action.edit --[[@as lsp.WorkspaceEdit]],
           client.server_capabilities.positionEncoding or "utf-8"
         )
       end
@@ -418,6 +417,7 @@ end
 
 ---@param symbol dropbar_symbol_t
 local function preview_open_win(symbol, preview_buf, max_line_len)
+  ---@diagnostic disable-next-line: undefined-field
   local win = symbol.entry.menu.preview_win
   if not win or not vim.api.nvim_win_is_valid(win) then
     local zindex = 99
@@ -489,6 +489,7 @@ local function preview_item(symbol, item, bufnr)
     local max_line_len = preview_render_buf(
       preview_buf,
       item[2].edit,
+      ---@diagnostic disable-next-line: deprecated
       vim.lsp.util._get_offset_encoding(bufnr)
     )
     if
@@ -531,14 +532,19 @@ M.code_actions = function(options)
     })
 
     ---@type nio.lsp.types.CodeActionParams
-    local params = util.make_range_params()
+    local params = util.make_range_params(
+      nil,
+      clients[1] and clients[1].server_capabilities.positionEncoding or "utf-8"
+    )
     ---@type nio.lsp.types.CodeActionContext
     local context = {
       ---@type nio.lsp.types.Diagnostic[]
       diagnostics = {},
     }
     context.triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Invoked
-    context.diagnostics = vim.lsp.diagnostic.get_line_diagnostics(bufnr)
+    context.diagnostics = vim.diagnostic.get(bufnr, {
+      lnum = params.range.start.line,
+    })
     params.context = context
 
     local opts = {

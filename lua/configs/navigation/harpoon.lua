@@ -1,5 +1,83 @@
 local harpoon = require("harpoon")
 
+local List = require("harpoon.list")
+
+---@param items any[]
+---@param element any
+---@param config HarpoonPartialConfigItem?
+local function index_of(items, element, config)
+  local equals = config and config.equals
+    or function(a, b)
+      return a == b
+    end
+  local index = -1
+  for i, item in ipairs(items) do
+    if equals(element, item) then
+      index = i
+      break
+    end
+  end
+
+  return index
+end
+
+--- Resolve the displayed items with the current list
+---@param displayed string[] The list of items to be displayed
+---@param length number The length of the displayed list
+function List:resolve_displayed(displayed, length)
+  local Extensions = require("harpoon.extensions")
+  local new_list = {}
+  local current_display = self:display()
+
+  -- Track items to be removed
+  local to_remove = {}
+  for i = 1, self._length do
+    local current_item = self.items[i]
+    if index_of(displayed, current_item) == -1 then
+      table.insert(to_remove, { item = current_item, idx = i })
+    end
+  end
+
+  -- Process removals
+  for _, removal in ipairs(to_remove) do
+    Extensions.extensions:emit(
+      Extensions.event_names.REMOVE,
+      { list = self, item = removal.item, idx = removal.idx }
+    )
+  end
+
+  -- Process new list
+  for i = 1, length do
+    local display_item = displayed[i]
+    if display_item == "" then
+      new_list[i] = nil
+    else
+      local current_index = index_of(current_display, display_item)
+
+      if current_index == -1 then
+        -- New item
+        new_list[i] = self.config.create_list_item(self.config, display_item)
+        Extensions.extensions:emit(
+          Extensions.event_names.ADD,
+          { list = self, item = new_list[i], idx = i }
+        )
+      else
+        -- Existing item
+        if current_index ~= i then
+          Extensions.extensions:emit(
+            Extensions.event_names.REORDER,
+            { list = self, item = self.items[current_index], idx = i }
+          )
+        end
+        new_list[i] = self.items[current_index]
+      end
+    end
+  end
+
+  self.items = new_list
+  self._length = length
+end
+
 local Extensions = require("harpoon.extensions")
 
 local tmux = {
@@ -36,6 +114,41 @@ local tmux = {
       {},
       function() end
     )
+  end,
+}
+
+local macros = {
+  autocmds = {},
+  BufLeave = function() end,
+  VimLeavePre = function() end,
+  automated = true,
+  encode = false,
+  prepopulate = function(cb)
+    local macros = require("configs.macros").list_macros()
+
+    cb(vim
+      .iter(macros)
+      :map(function(macro)
+        return {
+          value = macro.title,
+        }
+      end)
+      :totable())
+  end,
+  remove = function(list_item, _list)
+    if not list_item then
+      return
+    end
+    require("configs.macros").delete_macro(list_item.value)
+  end,
+  select = function(list_item, _list, _opts)
+    if not list_item then
+      return
+    end
+    require("configs.macros").select_macro(list_item.value)
+  end,
+  equals = function(a, b)
+    return a.value == b.value
   end,
 }
 
@@ -153,8 +266,8 @@ local files = {
 local wezterm = require("wezterm")
 
 local harpoon_wezterm = {
-  automated = true,
-  encode = false,
+  -- automated = true,
+  -- encode = false,
   -- select_with_nil = true,
   prepopulate = function(cb)
     local tabs = wezterm.list_tabs()
@@ -231,6 +344,7 @@ harpoon:setup({
   terminals = terminals,
   files = files,
   wezterm = harpoon_wezterm,
+  macros = macros,
   default = {},
 })
 
@@ -243,13 +357,13 @@ local titles = {
 }
 
 local function notify(event, cx)
-  if not cx then
+  if cx == nil or cx.item == nil then
     return
   end
 
-  -- if cx.list and cx.list.config.automated then
-  --   return
-  -- end
+  if cx.list and cx.list.config.automated then
+    return
+  end
   local path = Path:new(cx.item.value) --[[@as Path]]
 
   local display = path:make_relative(vim.uv.cwd())
@@ -325,7 +439,9 @@ end
 ---@param list HarpoonList
 local function prepopulate(list)
   ---@diagnostic disable-next-line: undefined-field
-  if list.config.prepopulate and list:length() == 0 then
+  if
+    list.config.prepopulate and (list:length() == 0 or list.config.automated)
+  then
     -- async via callback, or sync via return value
     local sync_items =
       ---@diagnostic disable-next-line: undefined-field
@@ -362,6 +478,9 @@ harpoon:extend({
       cx.list.config.remove(cx.item, cx.list)
     end
   end,
+  -- LIST_CHANGE = function(...)
+  --
+  -- end,
   UI_CREATE = function(cx)
     local win = cx.win_id
     vim.wo[win].cursorline = true

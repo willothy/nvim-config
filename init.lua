@@ -20,27 +20,6 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
--- package.preload["sidecar"] = function()
---   local path = conf_path .. "/lua/sidecar.so"
---   local lib = package.loadlib(path, "luaopen_sidecar")
---   if not lib then
---     vim.notify("sidecar.so not found.", vim.log.levels.WARN)
---     return
---     -- this could get annoying. I'd rather have an error I think.
---     -- once this module is more developed I will move it into a "plugin"
---     -- so lazy can manage it.
---     -- vim
---     --   .system({ "cargo", "build", "--release" }, {
---     --     cwd = conf_path,
---     --     timeout = 60000,
---     --   })
---     --   :wait()
---     -- vim.uv.fs_rename(conf_path .. "/target/release/libsidecar.so", path)
---     -- lib = package.loadlib(path, "luaopen_sidecar")
---   end
---   return lib()
--- end
-
 require("willothy")
 require("willothy.settings")
 
@@ -53,6 +32,8 @@ vim.api.nvim_create_autocmd("User", {
     require("willothy.state")
 
     require("willothy.line-numbers")
+
+    require("configs.macros").setup()
   end,
 })
 

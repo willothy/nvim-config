@@ -11,9 +11,9 @@ resession.setup({
     overseer = {
       enable_in_tab = true,
     },
-    aerial = {
-      enable_in_tab = true,
-    },
+    -- aerial = {
+    --   enable_in_tab = true,
+    -- },
     oil = {
       enable_in_tab = true,
     },

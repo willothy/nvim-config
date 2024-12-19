@@ -341,18 +341,14 @@ local Recording = (
     provider = function(self)
       return self.status or ""
     end,
-    condition = function()
-      return package.loaded["NeoComposer"]
-    end,
     update = {
       "User",
       pattern = {
-        "NeoComposerRecordingSet",
-        "NeoComposerPlayingSet",
-        "NeoComposerDelaySet",
+        "MacroStateChanged",
       },
       callback = function(self)
-        self.status = require("NeoComposer.ui").status_recording()
+        self.status = require("configs.macros").statusline()
+        vim.cmd.redrawstatus()
       end,
     },
     {
