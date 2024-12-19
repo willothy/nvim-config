@@ -1,6 +1,3 @@
--- This may be done automatically in the future (see https://github.com/neovim/neovim/pull/24044)
-vim.loader.enable()
-
 vim.g.mapleader = " "
 vim.g.maplocalleader = "," -- TODO: I don't use this much. I should.
 

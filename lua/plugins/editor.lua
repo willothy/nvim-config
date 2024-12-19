@@ -41,13 +41,7 @@ return {
     build = ":TSUpdate",
     -- commit = "9e1cda4e71a763ba1f1ac099498c7ce40edc6dd2",
     dependencies = {
-      -- {
-      --   "ray-x/go.nvim",
-      --   config = true,
-      --   ft = { "go", "gomod" },
-      --   build = ":lua require('go.install').update_all_sync()",
-      -- },
-      "nvim-treesitter/nvim-treesitter-textobjects",
+      -- "nvim-treesitter/nvim-treesitter-textobjects",
       -- "IndianBoy42/tree-sitter-just",
       "chrisgrieser/nvim-various-textobjs",
     },

@@ -49,8 +49,17 @@ o.foldenable = true
 -- o.foldopen = "block,hor,mark,percent,quickfix,search,tag,undo"
 o.foldopen = "block,mark,percent,quickfix,search,tag,undo"
 o.foldmethod = "expr"
-o.foldexpr = "v:lua.willothy.ui.foldexpr()"
+
 o.foldtext = ""
+
+vim.api.nvim_create_autocmd("User", {
+  once = true,
+  pattern = "VeryLazy",
+  callback = function()
+    -- just to keep treesitter lazy-loaded
+    o.foldexpr = "v:lua.willothy.ui.foldexpr()"
+  end,
+})
 
 o.syntax = "off"
 
