@@ -31,13 +31,3 @@ willothy.fn = require("willothy.fn")
 
 willothy.utils.debug = require("willothy.utils.debug")
 willothy.utils.plugins = require("willothy.utils.plugins")
-
-willothy.hydras = require("willothy.hydras")
-willothy.hydras.git = require("willothy.hydras.git")
-willothy.hydras.buffers = require("willothy.hydras.buffers")
-willothy.hydras.diagrams = require("willothy.hydras.diagrams")
-willothy.hydras.git = require("willothy.hydras.git")
-willothy.hydras.options = require("willothy.hydras.options")
-willothy.hydras.swap = require("willothy.hydras.swap")
-willothy.hydras.telescope = require("willothy.hydras.telescope")
-willothy.hydras.windows = require("willothy.hydras.windows")

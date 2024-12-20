@@ -182,12 +182,6 @@ local commands = {
     end,
     desc = "Update plugins",
   },
-  DrawDiagram = {
-    function()
-      require("willothy.keymap.hydras.diagrams"):activate()
-    end,
-    desc = "Draw a diagram",
-  },
   Q = { "q", desc = ":q, common cmdline typo" },
   W = { "w", desc = ":w, common cmdline typo" },
   Color = {

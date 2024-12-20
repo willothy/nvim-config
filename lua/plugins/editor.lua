@@ -5,19 +5,10 @@ return {
     -- branch = "0.10-deprecations",
     config = true,
   },
-  {
-    -- "anuvyklack/hydra.nvim" -- original author
-    -- "nvimtools/hydra.nvim", -- active fork
-    "willothy/hydra.nvim",
-    -- dir = "~/projects/lua/hydra.nvim/",
-  },
   -- COMMANDS --
   {
     "smjonas/live-command.nvim",
-    config = function()
-      require("configs.editor.live_cmd")
-    end,
-    cmd = "Norm",
+    config = true,
   },
   -- EDITING --
   {

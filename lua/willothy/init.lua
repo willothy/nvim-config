@@ -38,53 +38,6 @@ _G.willothy = metamodule("willothy", {
   async = module("nio", "willothy", "async"),
 })
 
--- TODO: Modules should just load automatically,
--- TODO: I want to organize this whole config better.
---
--- WIP
---
--- My idea is a structure like this:
---
--- .config/nvim/
--- ├── lua/
--- │   ├── willothy/ # exposed as global 'willothy'
--- │   │   ├── ui/
--- │   │   │   ├── status/
--- │   │   │   │   ├── statusline.lua # heirline config
--- │   │   │   │   ├── statuscol.lua  # statuscol config
--- │   │   │   │   ├── tabline.lua    # cokeline config
--- │   │   │   │   └── winbar.lua     # dropbar config
--- │   │   │   ├── fold/
--- │   │   │   │   ├── text.lua
--- │   │   │   │   └── expr.lua
--- │   │   │   ├── scroll/
--- │   │   │   │   ├── scrollbar.lua
--- │   │   │   │   └── scrolleof.lua
--- │   │   │   ├── code_actions.lua
--- │   │   │   ├── float_drag.lua
--- │   │   │   ├── intro.lua
--- │   │   │   ├── player.lua
--- │   │   │   ├── icons.lua
--- │   │   │   ├── cursor.lua
--- │   │   │   └── mode.lua
--- │   │   ├── utils/
--- │   │   │   ├── debug.lua
--- │   │   │   └── plugins.lua
--- │   │   ├── fn/ (todo: split fn.lua into multiple files)
--- │   │   │   └── ...
--- │   │   ├── hydras/ (todo: make hydras fully lazy)
--- │   │   │   └── ...
--- │   │   ├── fs.lua       # filesystem utils
--- │   │   ├── hl.lua       # highlighting
--- │   │   ├── keymap.lua   # keymap utils
--- │   │   ├── terminal.lua # terminals
--- │   │   ├── event.lua    # autocmd and event utils
--- │   │   ├── win.lua      # window utils
--- │   │   ├── buf.lua      # buffer utils
--- │   │   ├── tab.lua      # tabpage utils
--- │   │   ├── str.lua      # string lib
--- │   │   └── graphql.lua  # integrate my Lua graphql client
-
 vim.api.nvim_create_autocmd("UiEnter", {
   once = true,
   callback = function()

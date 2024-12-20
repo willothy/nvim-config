@@ -34,9 +34,12 @@ return {
   },
   {
     "kawre/leetcode.nvim",
-    config = function()
-      require("configs.editor.leetcode")
-    end,
+    opts = {
+      lang = "rust",
+      plugins = {
+        non_standalone = true,
+      },
+    },
     cmd = "Leet",
   },
   {

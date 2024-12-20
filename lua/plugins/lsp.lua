@@ -76,14 +76,6 @@ return {
     event = "VeryLazy",
     config = true,
   },
-  -- {
-  --   "kevinhwang91/nvim-ufo",
-  --   dependencies = {
-  --     "kevinhwang91/promise-async",
-  --   },
-  --   event = "VeryLazy",
-  --   config = true,
-  -- },
   {
     "p00f/clangd_extensions.nvim",
     config = true,
@@ -150,6 +142,7 @@ return {
           claude = {},
           behavior = {},
         })
+        vim.cmd("highlight default link AvanteSuggestion PmenuSel")
       end
 
       local key = require("durable").kv.get("anthropic-api-key")

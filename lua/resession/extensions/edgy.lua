@@ -130,10 +130,12 @@ function M.on_post_load(data)
       end
       vim.api.nvim_win_call(vim.api.nvim_tabpage_get_win(tab), function()
         if not pcall(f) then
-          vim.notify(
-            "[resession] Failed to open " .. win_info.ft,
-            vim.log.levels.WARN
-          )
+          vim.schedule(function()
+            vim.notify(
+              "[resession] Failed to open " .. win_info.ft,
+              vim.log.levels.WARN
+            )
+          end)
         end
       end)
     end

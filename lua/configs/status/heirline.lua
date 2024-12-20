@@ -67,8 +67,6 @@ local Mode = {
       pattern = {
         "VeryLazy",
         "UpdateHeirlineComponents",
-        "HydraEnter",
-        "HydraLeave",
       },
     },
   },
@@ -566,8 +564,6 @@ require("heirline").setup({
 
 willothy.event.on({
   "ModeChanged",
-  "HydraEnter",
-  "HydraLeave",
   "BufEnter",
 }, function()
   willothy.event.emit("UpdateHeirlineComponents")

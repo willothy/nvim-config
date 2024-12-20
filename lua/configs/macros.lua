@@ -20,7 +20,7 @@ local selected
 local M = {}
 
 function M.insert_macro(title, sequence)
-  require("durable").kv.set(sequence, title, "macros")
+  require("durable").kv.set(title, sequence, "macros")
   M.update_menu()
 end
 
