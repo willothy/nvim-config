@@ -20,20 +20,6 @@ local autocmds = {
         })
       end
 
-      if client:supports_method("textDocument/documentHighlight") then
-        vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-          buffer = bufnr,
-          group = group,
-          callback = vim.lsp.buf.document_highlight,
-        })
-
-        vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-          buffer = bufnr,
-          group = group,
-          callback = vim.lsp.buf.clear_references,
-        })
-      end
-
       if
         vim.lsp.inlay_hint
         and client:supports_method("textDocument/inlayHint")

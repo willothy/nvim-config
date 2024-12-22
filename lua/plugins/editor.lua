@@ -58,13 +58,24 @@ return {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
-    opts = {
-      notifier = { enabled = true },
-      words = { enabled = true },
-      terminal = {
-        enabled = true,
-      },
-    },
+    config = function()
+      require("snacks").setup({
+        notifier = { enabled = true },
+        words = {},
+        indent = {
+          enabled = true,
+          indent = {
+            char = "▏",
+            hl = "IndentScope",
+          },
+          scope = {
+            char = "▏",
+            hl = "Function",
+            only_current = true,
+          },
+        },
+      })
+    end,
   },
   {
     "gbprod/yanky.nvim",
