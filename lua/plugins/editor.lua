@@ -179,7 +179,7 @@ return {
   {
     "willothy/flatten.nvim",
     branch = "guest-data",
-    -- dir = "~/projects/lua/flatten/",
+    dir = "~/projects/lua/flatten.nvim/",
     lazy = false,
     priority = 1000,
     config = function()

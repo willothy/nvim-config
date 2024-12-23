@@ -381,6 +381,21 @@ wk.add({
       },
     },
     {
+      "<leader>ct",
+      function()
+        vim.lsp.buf.type_definition()
+      end,
+      desc = "declaration",
+      {
+        "gt",
+        function()
+          vim.lsp.buf.type_definition()
+        end,
+        proxy = "<leader>ct",
+        desc = "goto type definition",
+      },
+    },
+    {
       "<leader>cn",
       function()
         require("inc_rename") -- ensure increname is loaded
