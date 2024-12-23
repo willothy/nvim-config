@@ -54,7 +54,7 @@ function _G._edgywb()
     vim.b[buf].__dropbar_ready = true
   end
   -- _G.edgy_winbar() ..
-  return _G.dropbar.get_dropbar_str():gsub(" %s+", "")
+  return _G.dropbar():gsub(" %s+", "")
 end
 
 local function is_float(win)

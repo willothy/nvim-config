@@ -106,6 +106,7 @@ return {
   -- COMPLETION --
   {
     "Saghen/blink.cmp",
+    commit = "129e422175d0e0bd25a0bc32e34455f76b9130ee",
     dependencies = {
       "Saghen/blink.compat",
 
@@ -190,7 +191,6 @@ return {
     "mfussenegger/nvim-dap",
     dependencies = {
       "theHamsta/nvim-dap-virtual-text",
-      
     },
   },
   {
