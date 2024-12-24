@@ -91,11 +91,14 @@ require("flatten").setup({
       -- If the file is a git commit, create one-shot autocmd to delete its buffer on write
       -- If you just want the toggleable terminal integration, ignore this bit
       if ft == "gitcommit" or ft == "gitrebase" then
+        local version = vim.api.nvim_buf_get_changedtick(bufnr)
         -- vim.schedule(vim.cmd.startinsert)
         vim.api.nvim_create_autocmd("BufWritePost", {
           buffer = bufnr,
-          once = true,
           callback = vim.schedule_wrap(function()
+            if vim.api.nvim_buf_get_changedtick(bufnr) == version then
+              return
+            end
             require("bufdelete").bufdelete(bufnr, true)
           end),
         })
