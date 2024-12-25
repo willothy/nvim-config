@@ -161,14 +161,14 @@ require("mason-lspconfig").setup({
         root_dir = require("lspconfig.util").root_pattern(".git", ".zshrc"),
       })
     end,
-    bufls = function()
-      lspconfig.bufls.setup({
-        capabilities = capabilities,
-        filetypes = { "proto" },
-        settings = settings("bufls"),
-        root_dir = require("lspconfig.util").root_pattern(".git"),
-      })
-    end,
+    -- bufls = function()
+    --   lspconfig.bufls.setup({
+    --     capabilities = capabilities,
+    --     filetypes = { "proto" },
+    --     settings = settings("bufls"),
+    --     root_dir = require("lspconfig.util").root_pattern(".git"),
+    --   })
+    -- end,
     intelephense = function()
       lspconfig.intelephense.setup({
         settings = settings("intelephense"),
