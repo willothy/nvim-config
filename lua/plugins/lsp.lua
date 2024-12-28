@@ -114,7 +114,6 @@ return {
       "Saecki/crates.nvim",
       "windwp/nvim-ts-autotag",
     },
-    lazy = true,
     event = { "InsertEnter", "CmdlineEnter" },
     build = "cargo build --release",
     config = function()

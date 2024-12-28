@@ -1,1 +1,0 @@
-{"autocmd":{"prefix":"autocmd","body":["vim.api.nvim_create_autocmd(\"$1\", {","  group = $2,","  callback = function(ev)","    $3","  end","})"]}}
