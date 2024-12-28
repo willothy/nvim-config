@@ -225,15 +225,6 @@ return {
     },
   },
   {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    -- "willothy/harpoon",
-    -- dir = "~/projects/lua/harpoon/",
-    config = function()
-      require("configs.navigation.harpoon")
-    end,
-  },
-  {
     "chrisgrieser/nvim-spider",
     config = true,
   },

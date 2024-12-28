@@ -286,68 +286,11 @@ local Padding = {
 --   end,
 -- }
 
-local function harpoon_sorter()
-  local cache = {}
-  local setup = false
-
-  local function marknum(buf, force)
-    local harpoon = require("harpoon")
-    local b = cache[buf.number]
-    if b == nil or force then
-      local path =
-        require("plenary.path"):new(buf.path):make_relative(vim.uv.cwd())
-      for i, mark in ipairs(harpoon:list("files"):display()) do
-        if mark == path then
-          b = i
-          cache[buf.number] = b
-          break
-        end
-      end
-    end
-    return b
-  end
-
-  -- Use this in `config.buffers.new_buffers_position`
-  return function(a, b)
-    -- Only run this if harpoon is loaded, otherwise just use the default sorting.
-    -- This could be used to only run if a user has harpoon installed, but
-    -- I'm mainly using it to avoid loading harpoon on UiEnter.
-    local has_harpoon = package.loaded["harpoon"] ~= nil
-    if not has_harpoon then
-      ---@diagnostic disable-next-line: undefined-field
-      return a._valid_index < b._valid_index
-    elseif not setup then
-      local refresh = function()
-        cache = {}
-      end
-      require("harpoon"):extend({
-        ADD = refresh,
-        REMOVE = refresh,
-        REORDER = refresh,
-      })
-      setup = true
-    end
-    -- switch the a and b._valid_index to place non-harpoon buffers on the left
-    -- side of the tabline - this puts them on the right.
-    local ma = marknum(a)
-    local mb = marknum(b)
-    if ma and not mb then
-      return true
-    elseif mb and not ma then
-      return false
-    elseif ma == nil and mb == nil then
-      ma = a._valid_index
-      mb = b._valid_index
-    end
-    return ma < mb
-  end
-end
-
 local opts = {
   show_if_buffers_are_at_least = 0,
   buffers = {
     focus_on_delete = "next",
-    new_buffers_position = harpoon_sorter(),
+    -- new_buffers_position = harpoon_sorter(),
     -- new_buffers_position = "next",
     delete_on_right_click = false,
   },

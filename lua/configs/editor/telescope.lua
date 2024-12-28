@@ -41,43 +41,6 @@ local function mouse_move(prompt_bufnr)
   end
 end
 
-local function add_to_harpoon(prompt_bufnr)
-  local action_state = require("telescope.actions.state")
-
-  local picker = action_state.get_current_picker(prompt_bufnr)
-
-  local multi_selection = picker:get_multi_selection()
-
-  local iter
-  if #multi_selection > 0 then
-    iter = vim.iter(multi_selection)
-  else
-    iter = vim.iter({ picker:get_selection() })
-  end
-
-  local list = require("harpoon"):list()
-
-  for file in iter do
-    if file.filename and file.filename ~= "" then
-      list:add(file.filename)
-    else
-      vim.notify(
-        "No filename found for " .. vim.inspect(file),
-        vim.log.levlels.ERROR,
-        {}
-      )
-    end
-  end
-end
-
-local function create_and_add_to_harpoon(prompt_bufnr)
-  local fb_actions = telescope.extensions.file_browser.actions
-  local path = fb_actions.create(prompt_bufnr)
-  if path ~= nil then
-    require("harpoon"):list():add(path)
-  end
-end
-
 local trouble = require("trouble.sources.telescope")
 
 telescope.setup({
@@ -127,13 +90,9 @@ telescope.setup({
     file_browser = {
       mappings = {
         ["i"] = {
-          ["<C-a>"] = add_to_harpoon,
-          ["<C-n>"] = create_and_add_to_harpoon,
           ["<C-t>"] = trouble.open,
         },
         ["n"] = {
-          ["c"] = create_and_add_to_harpoon,
-          ["<C-a>"] = add_to_harpoon,
           ["<C-t>"] = trouble.open,
         },
       },

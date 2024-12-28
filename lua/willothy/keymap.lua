@@ -49,13 +49,6 @@ wk.add({
       proxy = "]",
     },
     {
-      "]h",
-      function()
-        require("harpoon"):list("files"):next()
-      end,
-      desc = "harpoon mark",
-    },
-    {
       "]t",
       function()
         require("willothy.tab").switch_by_step(1)
@@ -96,13 +89,6 @@ wk.add({
       "<leader>h",
       group = "prev",
       proxy = "[",
-    },
-    {
-      "[h",
-      function()
-        require("harpoon"):list("files"):prev()
-      end,
-      desc = "harpoon mark",
     },
     {
       "[t",
@@ -530,81 +516,6 @@ wk.add({
         require("spider").motion("w")
       end,
       desc = "spider: prev end of word",
-    },
-  },
-  {
-    group = "harpoon",
-    {
-      "<C-e>",
-      function()
-        local harpoon = require("harpoon")
-        local list = harpoon:list("files")
-        local width_ratio = 0.45
-        if vim.o.columns > 130 then
-          width_ratio = 0.35
-        elseif vim.o.columns < 100 then
-          width_ratio = 0.55
-        end
-
-        require("harpoon").ui:toggle_quick_menu(list, {
-          ui_width_ratio = width_ratio,
-          border = "solid",
-          title_pos = "center",
-          footer_pos = "center",
-        })
-      end,
-      desc = "harpoon: marks",
-    },
-    {
-      "<C-c>",
-      function()
-        local harpoon = require("harpoon")
-        local list = harpoon:list("terminals")
-        local width_ratio = 0.45
-        if vim.o.columns > 130 then
-          width_ratio = 0.35
-        elseif vim.o.columns < 100 then
-          width_ratio = 0.55
-        end
-        harpoon.ui:toggle_quick_menu(list, {
-          ui_width_ratio = width_ratio,
-          border = "solid",
-          title_pos = "center",
-          footer_pos = "center",
-        })
-      end,
-      desc = "harpoon: commands",
-    },
-    {
-      "<C-t>",
-      function()
-        local harpoon = require("harpoon")
-        local list = harpoon:list("wezterm")
-        local width_ratio = 0.45
-        if vim.o.columns > 130 then
-          width_ratio = 0.35
-        elseif vim.o.columns < 100 then
-          width_ratio = 0.55
-        end
-        harpoon.ui:toggle_quick_menu(list, {
-          ui_width_ratio = width_ratio,
-          border = "solid",
-          title_pos = "center",
-          footer_pos = "center",
-        })
-      end,
-    },
-    {
-      "<C-a>",
-      function()
-        local harpoon = require("harpoon")
-        local list = harpoon:list("files")
-
-        if list:length() == list:add():length() then
-          list:remove()
-        end
-      end,
-      desc = "harpoon: add",
     },
   },
   {

@@ -227,113 +227,6 @@ local Devicon = {
   Space,
 }
 
-local Harpoon = {
-  condition = function()
-    return package.loaded["harpoon"]
-  end,
-  {
-    fallthrough = false,
-    {
-      provider = icons.misc.hook,
-      condition = function(self)
-        return self.nfiles ~= nil and self.current ~= nil
-      end,
-      Space,
-    },
-    {
-      provider = icons.misc.hook_disabled,
-      Space,
-    },
-  },
-  {
-    condition = function(self)
-      return self.nfiles ~= nil and self.current ~= nil
-    end,
-    {
-      provider = function(self)
-        return self.current
-      end,
-    },
-    { provider = "/" },
-  },
-  {
-    provider = function(self)
-      return self.nfiles
-    end,
-    condition = function(self)
-      return self.nfiles ~= nil and self.nfiles > 0
-    end,
-  },
-  on_click = {
-    callback = function()
-      local buf = vim.api.nvim_buf_get_name(0)
-      local path = require("plenary.path"):new(buf)
-      local list = require("harpoon"):list("files")
-
-      local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-
-      local item = {
-        value = path:make_relative(vim.uv.cwd()),
-        context = {
-          row = row,
-          col = col,
-        },
-      }
-
-      if list:length() == list:add(item):length() then
-        list:remove(item)
-      end
-    end,
-    name = "__heirline_harpoon_click",
-  },
-  update = {
-    "User",
-    pattern = {
-      "UpdateHarpoonStatus",
-      "UpdateHeirlineComponents",
-    },
-    callback = function(self)
-      local harpoon = require("harpoon")
-      local list = harpoon:list("files")
-
-      local bufnr = 0
-      if vim.bo.filetype == "harpoon" then
-        -- keep current harpoon file while menu is open
-        -- since the alternate file will be the buffer open
-        -- in the previous window
-        bufnr = vim.fn.bufnr("#") --[[@as integer]]
-      end
-
-      local buf = require("plenary.path")
-        :new(vim.api.nvim_buf_get_name(bufnr))
-        :make_relative(vim.uv.cwd())
-      local idx
-      local items = list:display()
-      for i, v in ipairs(items) do
-        if v == buf then
-          idx = i
-          break
-        end
-      end
-      self.current = idx
-      self.nfiles = list:length()
-      if not self._init then
-        local update = function()
-          willothy.event.emit("UpdateHeirlineComponents")
-        end
-        local schedule = vim.schedule_wrap(update)
-        harpoon:extend({
-          ADD = schedule,
-          REMOVE = schedule,
-          REORDER = schedule,
-          UI_CREATE = update,
-        })
-        self._init = true
-      end
-    end,
-  },
-}
-
 local Recording = (
   B({
     provider = function(self)
@@ -544,7 +437,6 @@ local StatusLine = {
     Mode,
     Space,
     Git,
-    Harpoon,
     Overseer,
   },
   Align,

@@ -45,7 +45,6 @@ cached_hl = vim.api.nvim_get_hl(0, {
 --   },
 -- })
 -- local disabled = {
---   "harpoon",
 --   "help",
 --   "terminal",
 -- }

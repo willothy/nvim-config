@@ -6,7 +6,6 @@ local active_win
 
 require("murmur").setup({
   exclude_filetypes = {
-    "harpoon",
     "neo-tree",
     "noice",
     "SidebarNvim",
