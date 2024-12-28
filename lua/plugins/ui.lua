@@ -185,13 +185,6 @@ return {
       require("configs.status.statuscol")
     end,
   },
-  {
-    "b0o/incline.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("configs.status.incline")
-    end,
-  },
   -- COLORS --
   {
     "willothy/nvim-colorizer.lua",

@@ -1,6 +1,5 @@
 local icons = willothy.ui.icons
 local dropbar = require("dropbar")
-local utils = require("dropbar.utils")
 
 local enable = function(buf, win)
   -- if
@@ -63,13 +62,20 @@ dropbar.setup({
       end,
       name_hl = "Normal",
     },
+    lsp = {
+      valid_symbols = {
+        "Class",
+        "Method",
+        "Function",
+      },
+    },
     path = {
       preview = "previous",
+      max_depth = 1,
     },
   },
   icons = {
     kinds = {
-      -- use_devicons = true,
       symbols = icons.kinds,
     },
     ui = {
@@ -97,67 +103,17 @@ dropbar.setup({
     },
   },
   menu = {
-    -- ui_select = true,
     keymaps = {
       q = close,
       ["<Esc>"] = close,
     },
     quick_navigation = true,
     scrollbar = {
-      -- enabled=false,
       background = false,
-    },
-    win_configs = {
-      -- border = {
-      --   -- "/",
-      --   -- "-",
-      --   -- "\\",
-      --   -- "|",
-      --   "",
-      --   "",
-      --   "",
-      --   "",
-      -- },
-      -- lower
-      -- border = { "│", "─", "│", "│", "┘", "─", "└", "│" },
-      -- upper
-      -- border = { "┌", "─", "┐", "│", "┤", "─", "├", "│" },
-      -- border = function(self)
-      --   if self.fzf_state then
-      --     return {
-      --       "┌",
-      --       "─",
-      --       "┐",
-      --       "│",
-      --       "┤",
-      --       "─",
-      --       "├",
-      --       "│",
-      --     }
-      --   end
-      --   return "single"
-      -- end,
     },
   },
   fzf = {
     prompt = "%#GitSignsAdd# ",
-    win_configs = {
-      -- border = {
-      --   -- "│", --topleft
-      --   -- "├", --topleft
-      --   "",
-      --   "",
-      --   -- "─", --top
-      --   -- "┤", --topright
-      --   -- "│", --topright
-      --   "",
-      --   "│",
-      --   "┘",
-      --   "─",
-      --   "└",
-      --   "│",
-      -- },
-    },
     keymaps = {
       ["<C-j>"] = function()
         require("dropbar.api").fuzzy_find_navigate("down")
@@ -170,33 +126,3 @@ dropbar.setup({
 })
 
 vim.ui.select = require("dropbar.utils.menu").select
-
--- local colors = willothy.ui.colors
--- local Color = colors.Color
--- local Group = colors.Group
-
--- willothy.ui.colors.register("dropbar", {
---   Group.new("WinBar", {
---     fg = Color.new_link("Normal", "fg"):darken(10),
---   }),
---   Group.new("WinBarNC", {
---     fg = Color.new_link("Normal", "fg"):darken(10),
---   }),
---   Group.new("DropBarIconUISeparator", {
---     fg = Color.new_link("Normal", "fg"):darken(50),
---   }),
--- })
-
--- willothy.event.on("ResessionLoadPost", function()
---   vim
---     .iter(vim.api.nvim_list_wins())
---     :map(function(win)
---       return vim.api.nvim_win_get_buf(win), win
---     end)
---     :filter(enable)
---     :each(function(_, win)
---       vim.wo[win].winbar = "%{%v:lua.dropbar.get_dropbar_str()%}"
---     end)
---   utils.bar.exec("update", {}, {})
--- end)
--- willothy.event.emit("ResessionLoadPost")

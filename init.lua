@@ -59,6 +59,10 @@ require("lazy").setup({
   "comfysage/evergarden",
   "ray-x/aurora",
   "vague2k/vague.nvim",
+  {
+    "0xstepit/flow.nvim",
+    config = true,
+  },
 }, {
   defaults = {
     lazy = true,
