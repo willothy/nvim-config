@@ -60,6 +60,11 @@ return {
     lazy = false,
     config = function()
       require("snacks").setup({
+        -- dashboard = {
+        --   sections = {
+        --     { section = "startup" },
+        --   },
+        -- },
         notifier = { enabled = true },
         words = {},
         indent = {
