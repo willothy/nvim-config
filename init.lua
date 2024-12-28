@@ -27,7 +27,7 @@ vim.api.nvim_create_autocmd("User", {
     require("willothy.keymap")
     require("willothy.commands")
 
-    require("configs.macros").setup()
+    require("willothy.macros").setup()
   end,
 })
 

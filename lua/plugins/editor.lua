@@ -138,7 +138,7 @@ return {
       "stevearc/oil.nvim",
     },
     config = function()
-      require("configs.sessions")
+      require("willothy.sessions")
     end,
     event = "UiEnter",
   },

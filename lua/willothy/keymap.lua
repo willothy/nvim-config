@@ -523,21 +523,21 @@ wk.add({
     {
       "<C-q>",
       function()
-        require("configs.macros").toggle_menu()
+        require("willothy.macros").toggle_menu()
       end,
       desc = "macros: menu",
     },
     {
       "Q",
       function()
-        require("configs.macros").play_selected()
+        require("willothy.macros").play_selected()
       end,
       desc = "macros: play",
     },
     {
       "q",
       function()
-        require("configs.macros").toggle_recording()
+        require("willothy.macros").toggle_recording()
       end,
       desc = "macros: record",
     },

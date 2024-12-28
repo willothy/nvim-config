@@ -238,7 +238,7 @@ local Recording = (
         "MacroStateChanged",
       },
       callback = function(self)
-        self.status = require("configs.macros").statusline()
+        self.status = require("willothy.macros").statusline()
         vim.cmd.redrawstatus()
       end,
     },

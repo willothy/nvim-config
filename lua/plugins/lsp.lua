@@ -85,21 +85,21 @@ return {
   {
     "stevearc/conform.nvim",
     config = function()
-      require("configs.formatting")
+      require("willothy.formatting")
     end,
     event = "BufWritePre",
   },
   {
     "mfussenegger/nvim-lint",
     config = function()
-      require("configs.linting")
+      require("willothy.linting")
     end,
     event = "VeryLazy",
   },
   {
     "dgagn/diagflow.nvim",
     config = function()
-      require("configs.diagnostics")
+      require("willothy.diagnostics")
     end,
     event = "DiagnosticChanged",
   },
@@ -117,7 +117,7 @@ return {
     event = { "InsertEnter", "CmdlineEnter" },
     build = "cargo build --release",
     config = function()
-      require("configs.completion")
+      require("willothy.completion")
     end,
   },
   {
@@ -197,7 +197,7 @@ return {
       "mfussenegger/nvim-dap",
     },
     config = function()
-      require("configs.debugging")
+      require("willothy.debugging")
     end,
   },
   -- Individual debugger plugins
