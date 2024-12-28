@@ -117,41 +117,6 @@ local tmux = {
   end,
 }
 
-local macros = {
-  autocmds = {},
-  BufLeave = function() end,
-  VimLeavePre = function() end,
-  automated = true,
-  encode = false,
-  prepopulate = function(cb)
-    local macros = require("configs.macros").list_macros()
-
-    cb(vim
-      .iter(macros)
-      :map(function(macro)
-        return {
-          value = macro.title,
-        }
-      end)
-      :totable())
-  end,
-  remove = function(list_item, _list)
-    if not list_item then
-      return
-    end
-    require("configs.macros").delete_macro(list_item.value)
-  end,
-  select = function(list_item, _list, _opts)
-    if not list_item then
-      return
-    end
-    require("configs.macros").select_macro(list_item.value)
-  end,
-  equals = function(a, b)
-    return a.value == b.value
-  end,
-}
-
 local terminals = {
   automated = true,
   encode = false,
@@ -344,7 +309,6 @@ harpoon:setup({
   terminals = terminals,
   files = files,
   wezterm = harpoon_wezterm,
-  macros = macros,
   default = {},
 })
 

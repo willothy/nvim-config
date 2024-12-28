@@ -13,7 +13,7 @@ return {
     ft = "lua",
     opts = {
       exclude = {
-        "/Users/willothy/projects/lua",
+        "~/projects/lua",
       },
       integrations = {
         lspconfig = false,

@@ -43,13 +43,12 @@ return {
     },
     ft = { "markdown", "Avante" },
   },
-  {
-    "3rd/image.nvim",
-    enabled = false,
-    config = function()
-      require("image").setup({})
-    end,
-  },
+  -- {
+  --   "3rd/image.nvim",
+  --   config = function()
+  --     require("image").setup({})
+  --   end,
+  -- },
   {
     "HakonHarnes/img-clip.nvim",
     event = "VeryLazy",

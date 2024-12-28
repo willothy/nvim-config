@@ -221,8 +221,6 @@ M.autocmd = {
   UILeave = "UILeave",
   --- user defined autocommand
   User = "User",
-  --- whenthe user presses the same key 42 times
-  UserGettingBored = "UserGettingBored",
   --- after starting Vim
   VimEnter = "VimEnter",
   --- before exiting Vim

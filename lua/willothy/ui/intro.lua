@@ -185,6 +185,19 @@ function M.show()
   saved_opts.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
   willothy.ui.cursor.hide_cursor()
 
+  vim.api.nvim_create_autocmd({ "CmdlineEnter", "CmdlineLeave" }, {
+    group = augroup,
+    callback = vim.schedule_wrap(function()
+      if vim.api.nvim_get_mode().mode == "c" then
+        vim.go.guicursor = saved_opts.guicursor
+        willothy.ui.cursor.show_cursor()
+      else
+        vim.go.guicursor = "a:NoiceHiddenCursor"
+        willothy.ui.cursor.hide_cursor()
+      end
+    end),
+  })
+
   -- Clear the intro when the user does something
   autocmd = vim.api.nvim_create_autocmd({
     "BufModifiedSet",
@@ -212,6 +225,7 @@ function M.hide()
   end
   winid = nil
 
+  augroup = vim.api.nvim_create_augroup("NvimIntro", { clear = true })
   if autocmd then
     vim.api.nvim_del_autocmd(autocmd)
     autocmd = nil

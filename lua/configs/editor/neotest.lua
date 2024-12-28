@@ -1,7 +1,7 @@
 require("neotest").setup({
   adapters = {
     require("neotest-rust"),
-    require("neotest-plenary"),
+    -- require("neotest-plenary"),
   },
   consumers = {
     overseer = require("neotest.consumers.overseer"),

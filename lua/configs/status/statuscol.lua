@@ -62,43 +62,8 @@ local function do_fold(win, line, open)
   op_fold_range(start, end_, open, false, false)
 end
 
-local _line_nrs = require("willothy.line-numbers")
-
-local buf_sign_cache = {}
-
-local function comfy_line_nrs(args)
-  if args.relnum == 0 then
-    return args.lnum
-  end
-
-  local buf, win = args.buf, args.win
-
-  local version = vim.api.nvim_buf_get_changedtick(buf)
-  local lnum = args.lnum - 1
-
-  local entry = buf_sign_cache[buf]
-  if entry and entry[1] == version and entry[2][lnum] then
-    return entry[2][lnum].sign_text
-  end
-
-  local res = _line_nrs.hints(buf, win)
-
-  if entry then
-    entry[1] = version
-    entry[2] = res
-    buf_sign_cache[buf] = entry
-  else
-    buf_sign_cache[buf] = { version, res }
-  end
-
-  if not buf_sign_cache[buf][2][lnum] then
-    return ""
-  end
-
-  return buf_sign_cache[buf][2][lnum].sign_text
-end
-
-local function lnumfunc(args)
+local original_lnumfunc = builtin.lnumfunc
+local function lnumfunc(args, segment)
   if args.virtnum < 0 then
     return " ──"
   end
@@ -136,18 +101,10 @@ local function lnumfunc(args)
     return " │ " -- ├
   end
 
-  -- return original_lnumfunc(args, ...)
-  local res = comfy_line_nrs(args) or ""
-  local len = string.len(res)
-  if len < 3 then
-    return string.rep(" ", 3 - len) .. res
-  end
-  return res
+  return original_lnumfunc(args, segment)
 end
 
-local statuscol = require("statuscol")
-
-statuscol.setup({
+require("statuscol").setup({
   relculright = true,
   segments = {
     {
