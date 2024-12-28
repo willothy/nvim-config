@@ -138,7 +138,8 @@ return {
     event = "UiEnter",
   },
   {
-    "ahmedkhalf/project.nvim",
+    -- "ahmedkhalf/project.nvim",
+    "DrKJeff16/project.nvim",
     name = "project_nvim",
     event = "VeryLazy",
     opts = {

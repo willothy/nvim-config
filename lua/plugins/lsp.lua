@@ -76,11 +76,11 @@ return {
     event = "VeryLazy",
     config = true,
   },
-  {
-    "p00f/clangd_extensions.nvim",
-    config = true,
-    event = "LspAttach",
-  },
+  -- {
+  --   "p00f/clangd_extensions.nvim",
+  --   config = true,
+  --   event = "LspAttach",
+  -- },
   -- DIAGNOSTICS & FORMATTING --
   {
     "stevearc/conform.nvim",
