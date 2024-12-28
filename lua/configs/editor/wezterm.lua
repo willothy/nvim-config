@@ -2,7 +2,7 @@ local wezterm = require("wezterm")
 
 wezterm.setup({})
 
-willothy.fn.create_command("Wezterm", {
+require("willothy.lib.fn").create_command("Wezterm", {
   command = function()
     vim.notify("Wezterm {zoom, spawn}", vim.log.levels.INFO, {
       title = "Usage",

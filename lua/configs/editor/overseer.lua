@@ -78,8 +78,8 @@ vim.api.nvim_create_user_command("OverseerFloat", function(args)
     noautocmd = true,
   }, true)
   vim.api.nvim_set_hl(0, "EdgyFloatTitle", {
-    fg = willothy.hl.get("EdgyTitle", "fg"),
-    bg = willothy.hl.get("NormalFloat", "bg"),
+    fg = require("willothy.lib.hl").get("EdgyTitle", "fg"),
+    bg = require("willothy.lib.hl").get("NormalFloat", "bg"),
   })
   vim.wo[win].winhl = vim
     .iter({
@@ -91,8 +91,8 @@ vim.api.nvim_create_user_command("OverseerFloat", function(args)
     end)
     :sub(1, -2)
   vim.wo[win].winbar = "%#EdgyFloatTitle#Overseer "
-    .. willothy.fn.make_clickable(
-      willothy.fn.debounce_leading(function()
+    .. require("willothy.lib.fn").make_clickable(
+      require("willothy.lib.fn").debounce_leading(function()
         require("overseer").run_template()
       end, 200),
       "󰒐"

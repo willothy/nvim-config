@@ -80,7 +80,8 @@ function M.bottom_pane(picker)
   local function get_configs()
     local hide_preview = vim.o.columns < 80
     local height = math.floor((vim.o.lines / 2) + 0.5) - 2
-    local preview_ratio = willothy.fn.map_range(80, 150, 3, 2, vim.o.columns)
+    local preview_ratio =
+      require("willothy.lib.fn").map_range(80, 150, 3, 2, vim.o.columns)
 
     local preview_width = math.floor(vim.o.columns / preview_ratio) - 2
     local results_width = hide_preview and vim.o.columns
@@ -206,7 +207,7 @@ function M.flexible(picker)
     local height = math.floor((vim.o.lines / 3) + 0.5) * 2
 
     local preview_ratio =
-      willothy.fn.map_range(100, 150, 3, 2.2, vim.o.columns)
+      require("willothy.lib.fn").map_range(100, 150, 3, 2.2, vim.o.columns)
 
     if vim.o.columns > 120 then
       local row = math.floor((vim.o.lines / 2) - (height / 2))

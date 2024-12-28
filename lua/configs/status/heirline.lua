@@ -1,7 +1,7 @@
 local p = require("minimus").hex
 local icons = willothy.ui.icons
 
-local get_hex = willothy.hl.get
+local get_hex = require("willothy.lib.hl").get
 
 local A = function(self)
   local o = vim.deepcopy(self)
@@ -454,14 +454,16 @@ require("heirline").setup({
   statusline = StatusLine,
 })
 
-willothy.event.on({
+local event = require("willothy.lib.event")
+
+event.on({
   "ModeChanged",
   "BufEnter",
 }, function()
-  willothy.event.emit("UpdateHeirlineComponents")
+  event.emit("UpdateHeirlineComponents")
 end)
 
-willothy.event.on(
+event.on(
   {
     "BufLeave",
     "DirChanged",
@@ -472,21 +474,21 @@ willothy.event.on(
     "ColorScheme",
     "VeryLazy",
   },
-  vim.schedule_wrap(willothy.fn.throttle(function()
-    willothy.event.emit("UpdateHeirlineComponents")
+  vim.schedule_wrap(require("willothy.lib.fn").throttle(function()
+    event.emit("UpdateHeirlineComponents")
   end, 250))
 )
 
-willothy.event.on({
+event.on({
   "BufEnter",
   "BufNew",
   "CursorMoved",
   "CursorMovedI",
 }, function()
-  willothy.event.emit("UpdateHeirlineLocation")
+  event.emit("UpdateHeirlineLocation")
 end)
 
-willothy.event.on("ColorScheme", function()
+event.on("ColorScheme", function()
   require("heirline.highlights").reset_highlights()
   require("heirline.highlights").clear_colors()
 end)

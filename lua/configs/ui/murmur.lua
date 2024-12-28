@@ -92,7 +92,7 @@ docs.get = function(name)
   return get(name)
 end
 
-willothy.fn.create_command("DiagnosticFloat", {
+require("willothy.lib.fn").create_command("DiagnosticFloat", {
   command = M.toggle,
   subcommands = {
     enable = {

@@ -51,7 +51,7 @@ wk.add({
     {
       "]t",
       function()
-        require("willothy.tab").switch_by_step(1)
+        require("willothy.lib.tab").switch_by_step(1)
       end,
       desc = "tab",
     },
@@ -93,7 +93,7 @@ wk.add({
     {
       "[t",
       function()
-        require("willothy.tab").switch_by_step(-1)
+        require("willothy.lib.tab").switch_by_step(-1)
       end,
       desc = "tab",
     },
@@ -130,21 +130,21 @@ wk.add({
     {
       "<leader>pv",
       function()
-        require("willothy.fs").browse(vim.fn.getcwd(-1))
+        require("willothy.lib.fs").browse(vim.fn.getcwd(-1))
       end,
       desc = "current dir",
     },
     {
       "<leader>pf",
       function()
-        require("willothy.fs").browse("~/projects")
+        require("willothy.lib.fs").browse("~/projects")
       end,
       desc = "projects dir",
     },
     {
       "<leader>pw",
       function()
-        require("willothy.fs").browse("~/work")
+        require("willothy.lib.fs").browse("~/work")
       end,
       desc = "work dir",
     },
@@ -284,21 +284,21 @@ wk.add({
     {
       "<leader>wf",
       function()
-        require("willothy.win").pick_focus()
+        require("willothy.lib.win").pick_focus()
       end,
       desc = "pick: focus",
     },
     {
       "<leader>wx",
       function()
-        require("willothy.win").pick_swap()
+        require("willothy.lib.win").pick_swap()
       end,
       desc = "pick: swap",
     },
     {
       "<leader>wq",
       function()
-        require("willothy.win").pick_close()
+        require("willothy.lib.win").pick_close()
       end,
       desc = "pick: close",
     },

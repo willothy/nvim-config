@@ -151,7 +151,7 @@ return {
         return
       end
 
-      require("willothy.1password").read(
+      require("willothy.lib.1password").read(
         "op://Personal/Anthropic API Key/credential",
         vim.schedule_wrap(function(res)
           res = vim.trim(res)

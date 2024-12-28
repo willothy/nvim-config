@@ -49,4 +49,4 @@ vim.api.nvim_create_autocmd("UiEnter", {
   end),
 })
 
-require("willothy.fs").hijack_netrw()
+require("willothy.lib.fs").hijack_netrw()

@@ -174,11 +174,11 @@ local function complete_session_name(arg, line)
   end
 
   -- Extra completion filtering with tries because why not
-  return require("willothy.trie").from_iter(resession.list()):matches(arg)
+  return require("willothy.lib.trie").from_iter(resession.list()):matches(arg)
 end
 
 -- Session management commands
-willothy.fn.create_command("Session", {
+require("willothy.lib.fn").create_command("Session", {
   desc = "Manage sessions",
   command = function()
     vim.cmd.Session("load")

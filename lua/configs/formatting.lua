@@ -140,7 +140,7 @@ conform.formatters.uncrustify = {
   end,
 }
 
-willothy.fn.create_command("Format", {
+require("willothy.lib.fn").create_command("Format", {
   desc = "Manage formatting",
   bang = true,
   command = function()

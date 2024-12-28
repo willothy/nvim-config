@@ -16,7 +16,7 @@ vim.api.nvim_create_autocmd({
   "InsertLeave",
 }, {
   group = group,
-  callback = willothy.fn.debounce_trailing(function()
+  callback = require("willothy.lib.fn").debounce_trailing(function()
     lint.try_lint()
   end, 1000),
 })
