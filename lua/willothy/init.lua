@@ -38,15 +38,4 @@ _G.willothy = metamodule("willothy", {
   async = module("nio", "willothy", "async"),
 })
 
-vim.api.nvim_create_autocmd("UiEnter", {
-  once = true,
-  callback = vim.schedule_wrap(function()
-    -- setup ui
-    willothy.ui.scrollbar.setup()
-    willothy.ui.scrolleof.setup()
-    willothy.ui.code_actions.setup()
-    willothy.ui.mode.setup()
-  end),
-})
-
 require("willothy.lib.fs").hijack_netrw()

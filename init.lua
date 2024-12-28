@@ -17,26 +17,73 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
-require("willothy")
-require("willothy.settings")
-
-vim.api.nvim_create_autocmd("User", {
-  pattern = "VeryLazy",
-  callback = function()
-    require("willothy.autocmds")
-    require("willothy.keymap")
-    require("willothy.commands")
-
-    require("willothy.macros").setup()
-  end,
-})
-
 require("lazy").setup({
+  {
+    "configuration",
+    virtual = true,
+    config = function()
+      require("willothy")
+    end,
+  },
+  {
+    "settings",
+    virtual = true,
+    lazy = false,
+    config = function()
+      require("willothy.settings")
+    end,
+    dependencies = { "configuration" },
+  },
+  {
+    "autocmds",
+    event = "VeryLazy",
+    virtual = true,
+    config = function()
+      require("willothy.autocmds")
+    end,
+  },
+  {
+    "keymap",
+    event = "VeryLazy",
+    virtual = true,
+    config = function()
+      require("willothy.keymap")
+    end,
+  },
+  {
+    "commands",
+    event = "VeryLazy",
+    main = "willothy.commands",
+    virtual = true,
+    config = function()
+      require("willothy.commands")
+    end,
+  },
+  {
+    "macros",
+    main = "willothy.macros",
+    event = "VeryLazy",
+    virtual = true,
+    config = true,
+  },
+  {
+    "ui",
+    virtual = true,
+    event = "UiEnter",
+    config = function()
+      require("willothy.ui.scrollbar").setup()
+      require("willothy.ui.scrolleof").setup()
+      require("willothy.ui.code_actions").setup()
+      require("willothy.ui.mode").setup()
+    end,
+  },
+
   { import = "plugins.editor" },
   { import = "plugins.ui" },
   { import = "plugins.libraries" },
   { import = "plugins.lsp" },
   { import = "plugins.util" },
+
   {
     "willothy/minimus",
     priority = 100,
@@ -45,12 +92,6 @@ require("lazy").setup({
     end,
     event = "UiEnter",
   },
-  -- {
-  --   "willothy/libsql-lua",
-  --   -- dir = "~/projects/rust/libsql-lua/",
-  --   lazy = false,
-  --   build = "build.lua",
-  -- },
   "loganswartz/polychrome.nvim",
   "folke/tokyonight.nvim",
   "rebelot/kanagawa.nvim",
