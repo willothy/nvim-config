@@ -1,3 +1,4 @@
+
 <div align="center">
   <h1>nvim-config</h1>
   <p>My personal Neovim config</p>

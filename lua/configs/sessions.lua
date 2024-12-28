@@ -174,7 +174,7 @@ local function complete_session_name(arg, line)
   end
 
   -- Extra completion filtering with tries because why not
-  return require("types.trie").from_iter(resession.list()):matches(arg)
+  return require("willothy.trie").from_iter(resession.list()):matches(arg)
 end
 
 -- Session management commands

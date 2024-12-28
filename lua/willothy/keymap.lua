@@ -26,14 +26,6 @@ wk.add({
       desc = "dropbar select",
     },
     {
-      "<leader>bb",
-      function()
-        -- require("cokeline.mappings").pick("focus")
-        require("reach").buffers()
-      end,
-      desc = "pick & focus",
-    },
-    {
       "<leader>bx",
       function()
         require("cokeline.mappings").pick("close")
@@ -615,41 +607,35 @@ wk.add({
       desc = "harpoon: add",
     },
   },
-  -- {
-  --   group = "macros",
-  --   {
-  --     "<C-q>",
-  --     function()
-  --       local buf = vim.fn.bufnr("neocomposer-menu")
-  --       if buf ~= -1 and vim.fn.bufwinid(buf) == -1 then
-  --         vim.api.nvim_buf_delete(buf, { force = true })
-  --       end
-  --       require("NeoComposer.ui").toggle_macro_menu()
-  --     end,
-  --     desc = "macros: menu",
-  --   },
-  --   {
-  --     "Q",
-  --     function()
-  --       require("NeoComposer.macro").toggle_play_macro()
-  --     end,
-  --     desc = "macros: play",
-  --   },
-  --   {
-  --     "q",
-  --     function()
-  --       require("NeoComposer.macro").toggle_record()
-  --     end,
-  --     desc = "macros: record",
-  --   },
-  --   {
-  --     "cq",
-  --     function()
-  --       require("NeoComposer.macro").stop_macro()
-  --     end,
-  --     desc = "macros: stop",
-  --   },
-  -- },
+  {
+    group = "macros",
+    {
+      "<C-q>",
+      function()
+        require("configs.macros").toggle_menu()
+      end,
+      desc = "macros: menu",
+    },
+    {
+      "Q",
+      function()
+        require("configs.macros").play_selected()
+      end,
+      desc = "macros: play",
+    },
+    {
+      "q",
+      function()
+        require("configs.macros").toggle_recording()
+      end,
+      desc = "macros: record",
+    },
+    -- {
+    --   "cq",
+    --   function() end,
+    --   desc = "macros: stop",
+    -- },
+  },
   {
     "<leader>m",
     group = "marks",

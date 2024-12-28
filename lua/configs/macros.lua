@@ -313,6 +313,52 @@ function M.toggle_menu()
   end
 end
 
+function M.toggle_recording()
+  if state == State.Recording then
+    M.stop_recording()
+  elseif state == State.Idle then
+    M.start_recording()
+  end
+end
+
+function M.play_selected()
+  local sequence
+  if selected then
+    if selected.sequence then
+      sequence = selected.sequence
+    elseif selected.title then
+      sequence = M.get_macro(selected.title)
+    end
+  end
+  if sequence == nil or sequence == "" then
+    vim.notify("No macro selected", vim.log.levels.WARN, {
+      id = "no-macro-selected",
+    })
+    return
+  end
+
+  local mode = vim.api.nvim_get_mode()
+
+  state = State.Playing
+
+  vim.api.nvim_exec_autocmds("User", {
+    pattern = "MacroStateChanged",
+    data = { state = state },
+  })
+
+  vim.api.nvim_feedkeys(sequence, mode.mode, false)
+
+  vim.schedule(function()
+    if state == State.Playing then
+      state = State.Idle
+    end
+    vim.api.nvim_exec_autocmds("User", {
+      pattern = "MacroStateChanged",
+      data = { state = state },
+    })
+  end)
+end
+
 local did_setup = false
 function M.setup()
   if did_setup then
@@ -324,73 +370,6 @@ function M.setup()
   })
   vim.api.nvim_set_hl(0, "MacroPlaying", {
     fg = "#00ff00",
-  })
-
-  vim.keymap.set({ "n", "x", "v" }, "q", function()
-    if state == State.Recording then
-      M.stop_recording()
-    elseif state == State.Idle then
-      M.start_recording()
-    end
-    ---@diagnostic disable-next-line: missing-fields
-  end, {
-    desc = "Start/stop recording macro",
-  })
-
-  vim.keymap.set("n", "<leader>qs", function()
-    M.save_selected()
-    ---@diagnostic disable-next-line: missing-fields
-  end, {
-    desc = "Save recorded macro",
-  })
-
-  vim.keymap.set({ "n", "x", "v" }, "Q", function()
-    local sequence
-    if selected then
-      if selected.sequence then
-        sequence = selected.sequence
-      elseif selected.title then
-        sequence = M.get_macro(selected.title)
-      end
-    end
-    if sequence == nil or sequence == "" then
-      vim.notify("No macro selected", vim.log.levels.WARN, {
-        id = "no-macro-selected",
-      })
-      return
-    end
-
-    local mode = vim.api.nvim_get_mode()
-
-    state = State.Playing
-
-    vim.api.nvim_exec_autocmds("User", {
-      pattern = "MacroStateChanged",
-      data = { state = state },
-    })
-
-    vim.api.nvim_feedkeys(sequence, mode.mode, false)
-
-    vim.schedule(function()
-      if state == State.Playing then
-        state = State.Idle
-      end
-      vim.api.nvim_exec_autocmds("User", {
-        pattern = "MacroStateChanged",
-        data = { state = state },
-      })
-    end)
-
-    ---@diagnostic disable-next-line: missing-fields
-  end, {
-    desc = "Play macro",
-  })
-
-  vim.keymap.set("n", "<c-q>", function()
-    M.toggle_menu()
-    ---@diagnostic disable-next-line: missing-fields
-  end, {
-    desc = "Toggle macro menu",
   })
 end
 

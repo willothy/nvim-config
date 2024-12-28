@@ -297,7 +297,7 @@ function M.create_command(name, opts)
 
     local names = vim.tbl_keys(subcommands) --[[ @as string[] ]]
 
-    local trie = require("types.trie").from_iter(names)
+    local trie = require("willothy.trie").from_iter(names)
 
     function opts.complete(arg, line)
       local res = vim.api.nvim_parse_cmd(line, {})

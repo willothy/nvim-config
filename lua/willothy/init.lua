@@ -44,7 +44,7 @@ vim.api.nvim_create_autocmd("UiEnter", {
     -- setup ui
     willothy.ui.scrollbar.setup()
     willothy.ui.scrolleof.setup()
-    willothy.ui.float_drag.setup()
+    -- willothy.ui.float_drag.setup()
     willothy.ui.code_actions.setup()
     willothy.ui.mode.setup()
     willothy.ui.colors.setup()
