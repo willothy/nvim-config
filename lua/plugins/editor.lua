@@ -59,6 +59,14 @@ return {
         --     { section = "startup" },
         --   },
         -- },
+        styles = {
+          notification = {
+            ft = "markdown",
+            bo = {
+              filetype = "markdown",
+            },
+          },
+        },
         terminal = {},
         notifier = {
           enabled = true,
@@ -68,16 +76,6 @@ return {
               filetype = "markdown",
             },
           },
-          -- style = "notification",
-          -- style = {
-          --   ft = "markdown",
-          --   bo = {
-          --     filetype = "markdown",
-          --   },
-          --   wo = {
-          --     conceallevel = 3,
-          --   },
-          -- },
         },
         words = {},
         indent = {
