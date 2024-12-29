@@ -548,17 +548,6 @@ wk.add({
     -- },
   },
   {
-    "<leader>m",
-    group = "marks",
-    {
-      "<leader>md",
-      function()
-        require("marks").delete()
-      end,
-      desc = "marks: delete",
-    },
-  },
-  {
     group = "yanky",
     {
       "p",
