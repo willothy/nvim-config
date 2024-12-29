@@ -1,11 +1,15 @@
-local defaults = require("lspconfig.configs.basedpyright").default_config
-local settings = require("neoconf").get(
-  "lspconfig.basedpyright",
-  {},
-  { lsp = true }
-)
-
-vim.lsp.config.basedpyright = vim.tbl_extend("force", defaults, {
-  settings = settings,
+vim.lsp.config.basedpyright = {
+  cmd = { "basedpyright-langserver", "--stdio" },
+  filetypes = { "python" },
   root_markers = { "pyproject.toml", ".git" },
-})
+  single_file_support = true,
+  settings = {
+    basedpyright = {
+      analysis = {
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true,
+        diagnosticMode = "openFilesOnly",
+      },
+    },
+  },
+}

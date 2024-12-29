@@ -7,6 +7,7 @@ return {
   },
   {
     "willothy/lazydev.nvim",
+    -- enabled = false,
     dependencies = {
       "Bilal2453/luvit-meta", -- type defs for vim.uv
     },
@@ -16,10 +17,11 @@ return {
         "~/projects/lua",
       },
       integrations = {
-        lspconfig = false,
+        lspconfig = true,
       },
       library = {
         "luvit-meta/library",
+        vim.env.VIMRUNTIME,
       },
     },
   },
@@ -51,7 +53,33 @@ return {
   {
     "smjonas/inc-rename.nvim",
     config = function()
-      require("configs.lsp.increname")
+      require("inc_rename").setup({
+        show_message = false,
+        post_hook = function(opts)
+          local nrenames, nfiles = unpack(vim
+            .iter(opts)
+            :map(function(_, renames)
+              return vim.tbl_count(renames)
+            end)
+            :fold({ 0, 0 }, function(acc, val)
+              acc[1] = acc[1] + val
+              acc[2] = acc[2] + 1
+              return acc
+            end))
+          vim.notify(
+            string.format(
+              "%d instance%s in %d files",
+              nrenames,
+              nrenames == 1 and "" or "s",
+              nfiles
+            ),
+            vim.log.levels.INFO,
+            {
+              title = "RENAMED",
+            }
+          )
+        end,
+      })
     end,
     cmd = "IncRename",
   },
@@ -67,7 +95,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     config = function()
-      require("configs.lsp.lspconfig")
+      require("willothy.lsp")
     end,
     event = "VeryLazy",
   },

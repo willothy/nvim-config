@@ -68,7 +68,6 @@ resession.add_hook("pre_load", function()
   else
     lazy_open = false
   end
-  require("lspconfig") -- make sure LSP starts automatically
 end)
 
 resession.add_hook("post_load", function()
@@ -99,28 +98,21 @@ resession.add_hook("post_load", function()
       lazy_open = false
     end
 
-    -- local function do_bufread()
-    --   vim
-    --     .iter(vim.api.nvim_list_bufs())
-    --     :filter(function(buf)
-    --       return vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == ""
-    --     end)
-    --     :each(function(buf)
-    --       vim.api.nvim_exec_autocmds("BufReadPost", {
-    --         buffer = buf,
-    --       })
-    --     end)
-    -- end
-    --
-    -- if vim.g.did_very_lazy then
-    --   do_bufread()
-    -- else
-    --   vim.api.nvim_create_autocmd("User", {
-    --     pattern = "VeryLazy",
-    --     once = true,
-    --     callback = do_bufread,
-    --   })
-    -- end
+    local function do_bufread()
+      vim.api.nvim_exec_autocmds("BufReadPost", {
+        buffer = vim.api.nvim_get_current_buf(),
+      })
+    end
+
+    if vim.g.did_very_lazy then
+      do_bufread()
+    else
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        once = true,
+        callback = vim.schedule_wrap(do_bufread),
+      })
+    end
   end)
 end)
 
@@ -194,7 +186,7 @@ require("willothy.lib.fn").create_command("Session", {
         end
         local ok = pcall(resession.load, session, {})
         if not ok then
-          vim.notify("Unknown session: " .. session, "warn")
+          vim.notify("Unknown session: " .. session, vim.log.levels.WARN)
         end
       end,
     },
@@ -204,7 +196,7 @@ require("willothy.lib.fn").create_command("Session", {
         session = session and vim.trim(session)
         local ok = pcall(resession.delete, session)
         if not ok then
-          vim.notify("Unknown session: " .. session, "warn")
+          vim.notify("Unknown session: " .. session, vim.log.levels.WARN)
         end
       end,
     },
@@ -333,14 +325,10 @@ if
   -- Don't load in nested sessions
   and not require("flatten").is_guest()
 then
-  resession.load(
-    ---@diagnostic disable-next-line: param-type-mismatch
-    vim.fn.getcwd():gsub("/", "_"),
-    {
-      silence_errors = true,
-      reset = true,
-    }
-  )
+  resession.load(vim.fn.getcwd():gsub("/", "_"), {
+    silence_errors = true,
+    reset = true,
+  })
   vim.schedule(function()
     if is_empty() then
       willothy.ui.intro.show()
@@ -354,7 +342,7 @@ local uv = vim.uv or vim.loop
 
 -- autosave once per minute
 local SAVE_INTERVAL = 60000
-local save_timer = uv.new_timer() --[[@as uv_timer_t]]
+local save_timer = assert(uv.new_timer())
 save_timer:start(
   SAVE_INTERVAL,
   SAVE_INTERVAL,

@@ -1,7 +1,5 @@
-local defaults = require("lspconfig.configs.gleam").default_config
-local settings = require("neoconf").get("lspconfig.gleam", {}, { lsp = true })
-
-vim.lsp.config.gleam = vim.tbl_extend("force", defaults, {
-  settings = settings,
+vim.lsp.config.gleam = {
+  cmd = { "gleam", "lsp" },
+  filetypes = { "gleam" },
   root_markers = { ".git", "gleam.toml" },
-})
+}

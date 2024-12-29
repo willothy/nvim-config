@@ -1,10 +1,4 @@
 return {
-  {
-    "folke/neoconf.nvim",
-    -- "willothy/neoconf.nvim",
-    -- branch = "0.10-deprecations",
-    config = true,
-  },
   -- COMMANDS --
   {
     "smjonas/live-command.nvim",

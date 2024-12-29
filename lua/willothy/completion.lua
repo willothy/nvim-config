@@ -59,7 +59,7 @@ require("blink.cmp").setup({
         "buffer",
       },
       lua = {
-        "lazydev",
+        -- "lazydev",
         "lsp",
         "path",
         "copilot",
@@ -68,12 +68,12 @@ require("blink.cmp").setup({
       },
     },
     providers = {
-      lazydev = {
-        name = "LazyDev",
-        module = "lazydev.integrations.blink",
-        score_offset = 100,
-        fallbacks = { "lsp" },
-      },
+      -- lazydev = {
+      --   name = "LazyDev",
+      --   module = "lazydev.integrations.blink",
+      --   score_offset = 100,
+      --   fallbacks = { "lsp" },
+      -- },
       copilot = {
         name = "copilot",
         module = "blink-cmp-copilot",

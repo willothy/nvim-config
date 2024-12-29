@@ -1,7 +1,6 @@
-local defaults = require("lspconfig.configs.bufls").default_config
-local settings = require("neoconf").get("lspconfig.bufls", {}, { lsp = true })
-
-vim.lsp.config.bufls = vim.tbl_extend("force", defaults, {
+vim.lsp.config.bufls = {
+  cmd = { "bufls", "serve" },
   filetypes = { "proto" },
-  settings = settings,
-})
+  root_markers = { "buf.work.yaml", ".git" },
+  single_file_support = true,
+}

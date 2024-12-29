@@ -1,10 +1,9 @@
-local defaults = require("lspconfig.configs.taplo").default_config
-local settings = require("neoconf").get("lspconfig.taplo", {}, { lsp = true })
-
-vim.lsp.config.taplo = vim.tbl_extend("force", defaults, {
-  settings = settings,
+vim.lsp.config.taplo = {
+  cmd = { "taplo", "lsp", "stdio" },
+  filetypes = { "toml" },
+  single_file_support = true,
   root_markers = {
     ".git",
     "Cargo.toml",
   },
-})
+}
