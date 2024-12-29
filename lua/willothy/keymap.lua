@@ -618,13 +618,6 @@ wk.add({
   {
     group = "misc",
     {
-      "<C-f>",
-      function()
-        require("spectre").toggle()
-      end,
-      desc = "spectre: search/replace",
-    },
-    {
       "u",
       desc = "edit: undo",
     },

@@ -59,7 +59,26 @@ return {
         --     { section = "startup" },
         --   },
         -- },
-        notifier = { enabled = true },
+        terminal = {},
+        notifier = {
+          enabled = true,
+          style = "compact",
+          notification = {
+            bo = {
+              filetype = "markdown",
+            },
+          },
+          -- style = "notification",
+          -- style = {
+          --   ft = "markdown",
+          --   bo = {
+          --     filetype = "markdown",
+          --   },
+          --   wo = {
+          --     conceallevel = 3,
+          --   },
+          -- },
+        },
         words = {},
         indent = {
           enabled = true,

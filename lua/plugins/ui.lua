@@ -38,10 +38,17 @@ return {
   },
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    opts = {
-      file_types = { "markdown", "Avante" },
-    },
-    ft = { "markdown", "Avante" },
+    config = function()
+      require("render-markdown").setup({
+        file_types = { "markdown", "Avante", "snacks_notif" },
+        on = {
+          attach = vim.schedule_wrap(function()
+            require("render-markdown").enable()
+          end),
+        },
+      })
+    end,
+    ft = { "markdown", "Avante", "snacks_notif" },
   },
   -- {
   --   "3rd/image.nvim",

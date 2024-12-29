@@ -404,38 +404,23 @@ local opts = {
   },
 }
 
--- local A = require("edgy.animate")
---
--- local timer
--- ---@diagnostic disable-next-line: duplicate-set-field
--- A.schedule = function()
---   if not (timer and timer:is_active()) then
---     timer = vim.defer_fn(function()
---       if A.animate() then
---         -- require("focus").focus_disable()
---         vim.g.minianimate_disable = true
---         A.schedule()
---       else
---         vim.g.minianimate_disable = false
---         -- require("focus").focus_enable()
---       end
---     end, 1000 / opts.animate.fps)
---   end
--- end
---
--- local V = require("edgy.view")
--- ---@param view Edgy.View.Opts
--- ---@diagnostic disable: duplicate-set-field
--- ---@diagnostic disable: inject-field
--- function V.new(view, edgebar)
---   local mt = getmetatable(view)
---   local self = mt and view or setmetatable(view, V)
---   self.edgebar = edgebar
---   self.wins = {}
---   self.title = self.title or self.ft:sub(1, 1):upper() .. self.ft:sub(2)
---   self.size = self.size or {}
---   self.opening = false
---   return self
--- end
+for _, pos in ipairs({ "top", "bottom", "left", "right" }) do
+  opts[pos] = opts[pos] or {}
+  table.insert(opts[pos] --[[@as table]], {
+    ft = "snacks_terminal",
+    size = { height = 0.4 },
+    -- title = "%{b:snacks_terminal.id}: %{b:term_title}",
+    title = "%{%v:lua.dropbar()%}: %{b:term_title}",
+    title = function(...)
+      return _G.dropbar(...)
+    end,
+    filter = function(_buf, win)
+      return vim.w[win].snacks_win
+        and vim.w[win].snacks_win.position == pos
+        and vim.w[win].snacks_win.relative == "editor"
+        and not vim.w[win].trouble_preview
+    end,
+  })
+end
 
 require("edgy").setup(opts)
