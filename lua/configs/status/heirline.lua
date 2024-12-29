@@ -426,7 +426,7 @@ local Overseer = {
       end,
       hl = function(self)
         local hl = vim.api.nvim_get_hl(0, { name = self.color, link = false })
-        return { fg = hl and willothy.hl.hex(hl.fg) or "gray" }
+        return { fg = hl and require("willothy.lib.hl").hex(hl.fg) or "gray" }
       end,
     },
   },
