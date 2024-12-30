@@ -9,7 +9,7 @@ require("flatten").setup({
   integrations = {
     wezterm = true,
   },
-  callbacks = {
+  hooks = {
     pipe_path = function()
       -- If running in a terminal inside Neovim:
       local nvim = vim.env.NVIM
@@ -31,7 +31,7 @@ require("flatten").setup({
           .. "-"
           .. vim.fn.getcwd(-1):gsub("/", "_")
       )
-      if not vim.loop.fs_stat(addr) then
+      if not vim.uv.fs_stat(addr) then
         vim.fn.serverstart(addr)
       end
 
