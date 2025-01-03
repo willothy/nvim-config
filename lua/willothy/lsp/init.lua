@@ -4,21 +4,6 @@ vim.lsp.config("*", {
 
 require("mason").setup()
 
--- require("lspconfig").lua_ls.setup({
---   capabilities = capabilities,
---   -- settings = settings("lua_ls"),
---   root_dir = require("lspconfig.util").root_pattern(
---     ".luarc.json",
---     ".luarc.jsonc",
---     ".luacheckrc",
---     ".stylua.toml",
---     "stylua.toml",
---     "selene.toml",
---     "selene.yml",
---     ".git"
---   ),
--- })
-
 local rename = {
   tsserver = "ts_ls",
 }
@@ -35,14 +20,6 @@ require("mason-lspconfig").setup({
         ) > 0
       then
         vim.lsp.enable(rename[server_name] or server_name)
-        -- else
-        --   vim.notify(
-        --     string.format("LSP server not found: %s", server_name),
-        --     vim.log.levels.WARN,
-        --     {
-        --       title = "LSP",
-        --     }
-        --   )
       end
     end,
   },
@@ -50,6 +27,21 @@ require("mason-lspconfig").setup({
 
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("lua_ls")
+
+require("lspconfig").lua_ls.setup({
+  capabilities = require("willothy.lsp.capabilities").make_capabilities(),
+  settings = vim.lsp.config.lua_ls.settings,
+  root_dir = require("lspconfig.util").root_pattern(
+    ".luarc.json",
+    ".luarc.jsonc",
+    ".luacheckrc",
+    ".stylua.toml",
+    "stylua.toml",
+    "selene.toml",
+    "selene.yml",
+    ".git"
+  ),
+})
 
 for nvim_name, trouble_name in pairs({
   references = "lsp_references",

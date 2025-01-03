@@ -6,7 +6,8 @@ return {
     cmd = "Refactor",
   },
   {
-    "willothy/lazydev.nvim",
+    -- "willothy/lazydev.nvim",
+    "folke/lazydev.nvim",
     -- enabled = false,
     dependencies = {
       "Bilal2453/luvit-meta", -- type defs for vim.uv
