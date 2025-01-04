@@ -17,6 +17,14 @@ return {
     "kkharji/sqlite.lua",
     -- dir = "~/projects/lua/sqlite.lua/",
   },
+  {
+    "willothy/durable.nvim",
+    dependencies = {
+      "kkharji/sqlite.lua",
+    },
+    event = "VeryLazy",
+    config = true,
+  },
   "nvim-lua/plenary.nvim",
   {
     "nvim-neotest/nvim-nio",

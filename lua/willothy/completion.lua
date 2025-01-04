@@ -59,7 +59,7 @@ require("blink.cmp").setup({
         "buffer",
       },
       lua = {
-        -- "lazydev",
+        "lazydev",
         "lsp",
         "path",
         "copilot",
@@ -68,12 +68,12 @@ require("blink.cmp").setup({
       },
     },
     providers = {
-      -- lazydev = {
-      --   name = "LazyDev",
-      --   module = "lazydev.integrations.blink",
-      --   score_offset = 100,
-      --   fallbacks = { "lsp" },
-      -- },
+      lazydev = {
+        name = "LazyDev",
+        module = "lazydev.integrations.blink",
+        score_offset = 100,
+        fallbacks = { "lsp" },
+      },
       copilot = {
         name = "copilot",
         module = "blink-cmp-copilot",
@@ -100,7 +100,7 @@ require("blink.cmp").setup({
         gap = 1,
         columns = {
           { "kind_icon" },
-          { "label", "label_description", gap = 1 },
+          { "label", gap = 1 },
           { "kind" },
         },
         components = {
@@ -173,14 +173,42 @@ require("blink.cmp").setup({
               return highlights
             end,
           },
-
-          label_description = {
-            width = { max = 30 },
-            text = function(ctx)
-              return ctx.label_description or ""
-            end,
-            highlight = "BlinkCmpLabelDescription",
-          },
+          -- label = {
+          --   width = { fill = true, max = 60 },
+          --   text = function(ctx)
+          --     local highlights_info =
+          --       require("colorful-menu").highlights(ctx.item, vim.bo.filetype)
+          --     if highlights_info ~= nil and highlights_info.text ~= nil then
+          --       local s = highlights_info.text:gsub("\n", " ")
+          --       return s
+          --     else
+          --       local s = ctx.label:gsub("\n", " ")
+          --       return s
+          --     end
+          --   end,
+          --   highlight = function(ctx)
+          --     local highlights_info =
+          --       require("colorful-menu").highlights(ctx.item, vim.bo.filetype)
+          --     local highlights = {}
+          --     if highlights_info ~= nil then
+          --       for _, info in ipairs(highlights_info.highlights or {}) do
+          --         table.insert(highlights, {
+          --           info.range[1],
+          --           info.range[2],
+          --           group = ctx.deprecated and "BlinkCmpLabelDeprecated"
+          --             or info[1],
+          --         })
+          --       end
+          --     end
+          --     for _, idx in ipairs(ctx.label_matched_indices) do
+          --       table.insert(
+          --         highlights,
+          --         { idx, idx + 1, group = "BlinkCmpLabelMatch" }
+          --       )
+          --     end
+          --     return highlights
+          --   end,
+          -- },
         },
       },
     },

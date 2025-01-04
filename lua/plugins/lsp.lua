@@ -100,11 +100,6 @@ return {
     end,
     event = "VeryLazy",
   },
-  {
-    "willothy/durable.nvim",
-    event = "VeryLazy",
-    config = true,
-  },
   -- {
   --   "p00f/clangd_extensions.nvim",
   --   config = true,
@@ -134,9 +129,14 @@ return {
   },
   -- COMPLETION --
   {
+    "xzbdmw/colorful-menu.nvim",
+    config = true,
+  },
+  {
     "Saghen/blink.cmp",
     dependencies = {
       "Saghen/blink.compat",
+      "xzbdmw/colorful-menu.nvim",
 
       "rafamadriz/friendly-snippets",
       "giuxtaposition/blink-cmp-copilot",
