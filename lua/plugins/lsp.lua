@@ -13,18 +13,21 @@ return {
       "Bilal2453/luvit-meta", -- type defs for vim.uv
     },
     ft = "lua",
-    opts = {
-      exclude = {
-        "~/projects/lua",
-      },
-      integrations = {
-        lspconfig = true,
-      },
-      library = {
-        "luvit-meta/library",
-        vim.env.VIMRUNTIME,
-      },
-    },
+    config = function()
+      require("lazydev").setup({
+        exclude = {
+          "~/projects/lua",
+        },
+        integrations = {
+          lspconfig = false,
+        },
+        library = {
+          "luvit-meta/library",
+          vim.env.VIMRUNTIME,
+          unpack(vim.api.nvim_get_runtime_file("lua/vim", true)),
+        },
+      })
+    end,
   },
   {
     "nvim-neotest/neotest",
@@ -89,9 +92,6 @@ return {
     "williamboman/mason.nvim",
     cmd = "Mason",
     config = true,
-    dependencies = {
-      "williamboman/mason-lspconfig.nvim",
-    },
   },
   {
     "neovim/nvim-lspconfig",

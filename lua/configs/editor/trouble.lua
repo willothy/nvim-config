@@ -46,3 +46,17 @@ trouble.setup({
 vim.api.nvim_set_hl(0, "TroubleNormalNC", {
   link = "TroubleNormal",
 })
+
+for nvim_name, trouble_name in pairs({
+  references = "lsp_references",
+  definition = "lsp_definitions",
+  type_definition = "lsp_type_definitions",
+  implementation = "lsp_implementations",
+  document_symbol = "lsp_document_symbols",
+}) do
+  vim.lsp.buf[nvim_name] = function()
+    require("trouble").open({
+      mode = trouble_name,
+    })
+  end
+end
