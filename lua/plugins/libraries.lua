@@ -17,6 +17,16 @@ return {
     "kkharji/sqlite.lua",
     -- dir = "~/projects/lua/sqlite.lua/",
   },
+  -- {
+  --   "relua",
+  --   dir = "~/projects/lua/relua/",
+  --   config = function()
+  --     require("relua").setup({
+  --       db_path = vim.fn.stdpath("data") .. "/databases/relua.db",
+  --     })
+  --   end,
+  --   event = "VeryLazy",
+  -- },
   {
     "willothy/durable.nvim",
     dependencies = {
