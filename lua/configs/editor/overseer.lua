@@ -68,7 +68,7 @@ vim.api.nvim_create_user_command("OverseerFloat", function(args)
     win = nil
     return
   end
-  win = willothy.win.open(buf, {
+  win = require("willothy.lib.win").open(buf, {
     relative = "editor",
     width = width,
     height = height,
