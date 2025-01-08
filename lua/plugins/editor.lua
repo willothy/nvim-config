@@ -54,13 +54,9 @@ return {
     lazy = false,
     config = function()
       require("snacks").setup({
-        -- dashboard = {
-        --   sections = {
-        --     { section = "startup" },
-        --   },
-        -- },
         styles = {
           notification = {
+            relative = "editor",
             ft = "markdown",
             bo = {
               filetype = "markdown",
@@ -82,7 +78,7 @@ return {
           enabled = true,
           indent = {
             char = "▏",
-            hl = "IndentScope",
+            hl = "WinSeparator",
           },
           scope = {
             char = "▏",

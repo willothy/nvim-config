@@ -4,6 +4,8 @@ local au = vim.api.nvim_create_augroup("murmur_au", { clear = true })
 local enabled = true
 local active_win
 
+vim.api.nvim_set_hl(0, "Cursorword", {})
+
 require("murmur").setup({
   exclude_filetypes = {
     "neo-tree",
@@ -13,7 +15,7 @@ require("murmur").setup({
     "trouble",
   },
   cursor_rgb = "Cursorword",
-  cursor_rgb_current = "CursorwordCurrent",
+  cursor_rgb_current = "Cursorword",
   cursor_rgb_always_use_config = true,
   callbacks = {
     function()

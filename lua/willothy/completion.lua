@@ -99,18 +99,17 @@ require("blink.cmp").setup({
         padding = 1,
         gap = 1,
         columns = {
-          { "kind_icon" },
           { "label", gap = 1 },
-          { "kind" },
+          { "kind_icon", "kind" },
         },
         components = {
           kind_icon = {
             ellipsis = false,
             text = function(ctx)
               if ctx.item.source_name == "copilot" then
-                return willothy.ui.icons.kinds.Copilot .. " "
+                return willothy.ui.icons.kinds.Copilot
               end
-              return ctx.kind_icon .. " "
+              return ctx.kind_icon
             end,
             highlight = function(ctx)
               if ctx.item.source_name == "copilot" then
@@ -142,73 +141,7 @@ require("blink.cmp").setup({
             text = function(ctx)
               return ctx.label .. (ctx.label_detail or "")
             end,
-            highlight = function(ctx)
-              -- label and label details
-              local highlights = {
-                {
-                  0,
-                  #ctx.label,
-                  group = ctx.deprecated and "BlinkCmpLabelDeprecated"
-                    or "BlinkCmpLabel",
-                },
-              }
-              if ctx.label_detail then
-                table.insert(highlights, {
-                  #ctx.label + 1,
-                  #ctx.label + #ctx.label_detail,
-                  group = "BlinkCmpLabelDetail",
-                })
-              end
-
-              -- characters matched on the label by the fuzzy matcher
-              if ctx.label_matched_indices ~= nil then
-                for _, idx in ipairs(ctx.label_matched_indices) do
-                  table.insert(
-                    highlights,
-                    { idx, idx + 1, group = "BlinkCmpLabelMatch" }
-                  )
-                end
-              end
-
-              return highlights
-            end,
           },
-          -- label = {
-          --   width = { fill = true, max = 60 },
-          --   text = function(ctx)
-          --     local highlights_info =
-          --       require("colorful-menu").highlights(ctx.item, vim.bo.filetype)
-          --     if highlights_info ~= nil and highlights_info.text ~= nil then
-          --       local s = highlights_info.text:gsub("\n", " ")
-          --       return s
-          --     else
-          --       local s = ctx.label:gsub("\n", " ")
-          --       return s
-          --     end
-          --   end,
-          --   highlight = function(ctx)
-          --     local highlights_info =
-          --       require("colorful-menu").highlights(ctx.item, vim.bo.filetype)
-          --     local highlights = {}
-          --     if highlights_info ~= nil then
-          --       for _, info in ipairs(highlights_info.highlights or {}) do
-          --         table.insert(highlights, {
-          --           info.range[1],
-          --           info.range[2],
-          --           group = ctx.deprecated and "BlinkCmpLabelDeprecated"
-          --             or info[1],
-          --         })
-          --       end
-          --     end
-          --     for _, idx in ipairs(ctx.label_matched_indices) do
-          --       table.insert(
-          --         highlights,
-          --         { idx, idx + 1, group = "BlinkCmpLabelMatch" }
-          --       )
-          --     end
-          --     return highlights
-          --   end,
-          -- },
         },
       },
     },

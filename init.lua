@@ -86,7 +86,7 @@ require("lazy").setup({
 
   {
     "willothy/minimus",
-    priority = 100,
+    virtual = true,
     config = function()
       vim.cmd.colorscheme("minimus")
     end,
@@ -100,6 +100,7 @@ require("lazy").setup({
   "comfysage/evergarden",
   "ray-x/aurora",
   "vague2k/vague.nvim",
+  "echasnovski/mini.colors",
   {
     "0xstepit/flow.nvim",
     config = true,

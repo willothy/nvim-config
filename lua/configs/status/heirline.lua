@@ -1,4 +1,3 @@
-local p = require("minimus").hex
 local icons = willothy.ui.icons
 
 local get_hex = require("willothy.lib.hl").get
@@ -333,7 +332,7 @@ local Git = (
       condition = function(self)
         return self.head ~= nil
       end,
-      hl = { fg = p.cool_gray },
+      hl = { link = "DiffText" },
       Space,
     },
     {
@@ -343,7 +342,7 @@ local Git = (
       condition = function(self)
         return self:added() > 0
       end,
-      hl = { fg = p.pale_turquoise },
+      hl = { link = "DiffAdd" },
       Space,
     },
     {
@@ -353,7 +352,7 @@ local Git = (
       condition = function(self)
         return self:removed() > 0
       end,
-      hl = { fg = p.red },
+      hl = { link = "DiffDelete" },
       Space,
     },
     {
@@ -363,7 +362,7 @@ local Git = (
       condition = function(self)
         return self:modified() > 0
       end,
-      hl = { fg = p.lemon_chiffon },
+      hl = { link = "DiffChange" },
       Space,
     },
   })

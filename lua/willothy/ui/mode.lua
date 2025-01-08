@@ -121,13 +121,18 @@ end
 
 local function highlight()
   cache = {}
-  local p = require("minimus").hex
-  vim.api.nvim_set_hl(0, "NormalMode", { fg = p.turquoise })
-  vim.api.nvim_set_hl(0, "InsertMode", { fg = p.pale_azure })
-  vim.api.nvim_set_hl(0, "VisualMode", { fg = p.lemon_chiffon })
-  vim.api.nvim_set_hl(0, "ReplaceMode", { fg = p.lavender_pink })
-  vim.api.nvim_set_hl(0, "TerminalMode", { fg = p.peach })
-  vim.api.nvim_set_hl(0, "CommandMode", { fg = p.peach })
+  local turquoise = "#5de4c7"
+  local pale_azure = "#89ddff"
+  local lemon_chiffon = "#fffac2"
+  local lavender_pink = "#fcc5e9"
+  local peach = "#FAB387"
+
+  vim.api.nvim_set_hl(0, "NormalMode", { fg = turquoise })
+  vim.api.nvim_set_hl(0, "InsertMode", { fg = pale_azure })
+  vim.api.nvim_set_hl(0, "VisualMode", { fg = lemon_chiffon })
+  vim.api.nvim_set_hl(0, "ReplaceMode", { fg = lavender_pink })
+  vim.api.nvim_set_hl(0, "TerminalMode", { fg = peach })
+  vim.api.nvim_set_hl(0, "CommandMode", { fg = peach })
 
   vim.api.nvim_set_hl(0, "CursorLineNr", { link = "CurrentMode" })
 
