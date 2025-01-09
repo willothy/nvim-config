@@ -129,14 +129,9 @@ return {
   },
   -- COMPLETION --
   {
-    "xzbdmw/colorful-menu.nvim",
-    config = true,
-  },
-  {
     "Saghen/blink.cmp",
     dependencies = {
       "Saghen/blink.compat",
-      "xzbdmw/colorful-menu.nvim",
 
       "rafamadriz/friendly-snippets",
       "giuxtaposition/blink-cmp-copilot",

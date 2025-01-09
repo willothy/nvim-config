@@ -144,7 +144,9 @@ require("mini.colors")
       },
 
       IncSearch = {
-        link = "PmenuSel",
+        -- link = "PmenuSel",
+        bg = palette.lemon_chiffon,
+        fg = palette.raisin_black,
       },
       Search = {
         bg = palette.lemon_chiffon,
@@ -188,22 +190,18 @@ require("mini.colors")
         sp = spec.diagnostic.error,
       },
       DiagnoticUnderlineInfo = {
-        fg = spec.diagnostic.info,
         sp = spec.diagnostic.info,
         underline = true,
       },
       DiagnosticUnderlineHint = {
-        fg = spec.diagnostic.hint,
         sp = spec.diagnostic.hint,
         underline = true,
       },
       DiagnosticUnderlineWarn = {
-        fg = spec.diagnostic.warn,
         sp = spec.diagnostic.warn,
         underline = true,
       },
       DiagnosticUnderlineError = {
-        fg = spec.diagnostic.error,
         sp = spec.diagnostic.error,
         underline = true,
       },
@@ -374,12 +372,15 @@ require("mini.colors")
       Structure = {
         fg = palette.lemon_chiffon,
       },
-      -- TypeDef = {
-      --   fg = palette.lemon_chiffon,
-      -- },
-      -- Typedef = {
-      --   fg = palette.lemon_chiffon,
-      -- },
+      Type = {
+        fg = palette.lemon_chiffon,
+      },
+      TypeDef = {
+        fg = palette.lemon_chiffon,
+      },
+      Typedef = {
+        fg = palette.lemon_chiffon,
+      },
 
       LspReferenceRead = { bg = palette.dark_blue },
       LspReferenceWrite = { bg = palette.dark_blue },
@@ -429,6 +430,8 @@ require("mini.colors")
       ["@boolean"] = { link = "Boolean" }, -- Boolean
       ["@float"] = { link = "Float" }, -- Float
 
+      ["@type.builtin.typescript"] = { link = "Type" }, -- Float
+
       ["@keyword"] = { link = "Keyword" }, -- Keyword
       -- Rust
       ["@lsp.type.formatSpecifier"] = { link = "SpecialChar" },
@@ -476,6 +479,33 @@ require("mini.colors")
       -- ['@type'] = { fg = p.cool_gray }, -- Type
       -- sym('@debug')             { }, -- Debug
       -- sym('@tag')               { }, -- Tag
+
+      BlinkCmpKindSnippet = { fg = palette.mauve },
+      BlinkCmpKindKeyword = { fg = palette.red },
+      BlinkCmpKindText = { fg = palette.teal },
+      BlinkCmpKindMethod = { fg = palette.blue },
+      BlinkCmpKindConstructor = { fg = palette.blue },
+      BlinkCmpKindFunction = { fg = palette.blue },
+      BlinkCmpKindFolder = { fg = palette.blue },
+      BlinkCmpKindModule = { fg = palette.blue },
+      BlinkCmpKindConstant = { fg = palette.peach },
+      BlinkCmpKindField = { fg = palette.lemon_chiffon },
+      BlinkCmpKindProperty = { fg = palette.lemon_chiffon },
+      BlinkCmpKindEnum = { fg = palette.lemon_chiffon },
+      BlinkCmpKindUnit = { fg = palette.lemon_chiffon },
+      BlinkCmpKindClass = { fg = palette.yellow },
+      BlinkCmpKindVariable = { fg = palette.flamingo },
+      BlinkCmpKindFile = { fg = palette.blue },
+      BlinkCmpKindInterface = { fg = palette.lemon_chiffon },
+      BlinkCmpKindColor = { fg = palette.red },
+      BlinkCmpKindReference = { fg = palette.red },
+      BlinkCmpKindEnumMember = { fg = palette.red },
+      BlinkCmpKindStruct = { fg = palette.blue },
+      BlinkCmpKindValue = { fg = palette.peach },
+      BlinkCmpKindEvent = { fg = palette.blue },
+      BlinkCmpKindOperator = { fg = palette.blue },
+      BlinkCmpKindTypeParameter = { fg = palette.blue },
+      BlinkCmpKindCopilot = { fg = palette.turquoise },
     },
     terminal = {},
   })

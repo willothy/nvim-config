@@ -61,66 +61,34 @@ local mode_short_names = {
 
 local cache = {}
 
-function M.get_color(evt)
-  evt = evt or ""
-
-  local hl
-  local hydra = package.loaded.hydra and require("hydra.statusline")
-  if hydra and hydra.is_active() and evt ~= "HydraLeave" then
-    local color = hydra.get_color()
-    if color == "pink" then
-      hl = "HydraPink"
-    elseif color == "red" then
-      hl = "HydraRed"
-    elseif color == "blue" then
-      hl = "HydraBlue"
-    elseif color == "teal" then
-      hl = "HydraTeal"
-    elseif color == "amaranth" then
-      hl = "HydraAmaranth"
-    end
-  else
-    local mode = mode_names[api.nvim_get_mode().mode] or "Normal"
-    hl = mode .. "Mode"
-  end
+function M.get_color()
+  local mode = mode_names[api.nvim_get_mode().mode] or "Normal"
+  local hl = mode .. "Mode"
 
   if cache[hl] then
     return cache[hl]
   end
 
-  cache[hl] = vim.api.nvim_get_hl(0, { name = hl, link = false })
+  cache[hl] = vim.api.nvim_get_hl(0, {
+    name = hl,
+    link = false,
+    create = false,
+  })
 
   return cache[hl]
 end
 
 function M.get_name()
-  local hydra = package.loaded.hydra and require("hydra.statusline")
-  if hydra and hydra.is_active() then
-    return hydra.get_name()
-  else
-    return mode_names[api.nvim_get_mode().mode] or "Normal"
-  end
+  return mode_names[api.nvim_get_mode().mode] or "Normal"
 end
 
 function M.get_short_name()
-  local hydra = package.loaded.hydra and require("hydra.statusline")
-  if hydra and hydra.is_active() then
-    if _G["Hydra"] and _G["Hydra"].short_name then
-      return _G["Hydra"].short_name
-    end
-    return hydra.get_name()
-  else
-    return mode_short_names[api.nvim_get_mode().mode] or "NO"
-  end
-end
-
-local function update_mode(ev)
-  local hl = M.get_color(ev and ev.file)
-  vim.api.nvim_set_hl(0, "CurrentMode", hl)
+  return mode_short_names[api.nvim_get_mode().mode] or "NO"
 end
 
 local function highlight()
   cache = {}
+
   local turquoise = "#5de4c7"
   local pale_azure = "#89ddff"
   local lemon_chiffon = "#fffac2"
@@ -135,39 +103,30 @@ local function highlight()
   vim.api.nvim_set_hl(0, "CommandMode", { fg = peach })
 
   vim.api.nvim_set_hl(0, "CursorLineNr", { link = "CurrentMode" })
-
-  vim.api.nvim_set_hl(0, "HydraRed", { fg = "#ff5733", bold = true })
-  vim.api.nvim_set_hl(0, "HydraBlue", { fg = "#5ebcf6", bold = true })
-  vim.api.nvim_set_hl(0, "HydraAmaranth", { fg = "#ff1757", bold = true })
-  vim.api.nvim_set_hl(0, "HydraTeal", { fg = "#00a1a1", bold = true })
-  vim.api.nvim_set_hl(0, "HydraPink", { fg = "#ff55de", bold = true })
-
-  vim.api.nvim_set_hl(0, "HydraHint", { link = "NormalFloat" })
-  vim.api.nvim_set_hl(0, "HydraBorder", { link = "CurrentMode" })
 end
 
 function M.setup()
   local group = vim.api.nvim_create_augroup("willothy/mode", { clear = true })
 
   highlight()
-  update_mode()
 
-  vim.api.nvim_create_autocmd({ "ModeChanged" }, {
-    group = group,
-    callback = update_mode,
-  })
-  vim.api.nvim_create_autocmd("User", {
-    pattern = { "HydraEnter", "HydraLeave" },
-    group = group,
-    callback = update_mode,
-  })
-  vim.api.nvim_create_autocmd("ColorScheme", {
-    group = group,
-    callback = function()
-      highlight()
-      update_mode()
-    end,
-  })
+  vim.schedule(function()
+    vim.api.nvim_create_autocmd({ "ModeChanged" }, {
+      group = group,
+      callback = function(_args)
+        -- local from, to = unpack(vim.split(args.match, ":"))
+
+        local hl = M.get_color()
+        vim.api.nvim_set_hl(0, "CurrentMode", hl)
+      end,
+    })
+    vim.api.nvim_create_autocmd("ColorScheme", {
+      group = group,
+      callback = function()
+        highlight()
+      end,
+    })
+  end)
 end
 
 return M

@@ -99,8 +99,9 @@ require("blink.cmp").setup({
         padding = 1,
         gap = 1,
         columns = {
+          { "kind_icon" },
           { "label", gap = 1 },
-          { "kind_icon", "kind" },
+          { "kind" },
         },
         components = {
           kind_icon = {

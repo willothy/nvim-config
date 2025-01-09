@@ -70,6 +70,9 @@ require("lazy").setup({
     "ui",
     virtual = true,
     event = "UiEnter",
+    dependencies = {
+      "willothy/minimus",
+    },
     config = function()
       require("willothy.ui.scrollbar").setup()
       require("willothy.ui.scrolleof").setup()
@@ -92,14 +95,11 @@ require("lazy").setup({
     end,
     event = "UiEnter",
   },
-  "loganswartz/polychrome.nvim",
   "folke/tokyonight.nvim",
-  "rebelot/kanagawa.nvim",
   "eldritch-theme/eldritch.nvim",
   "diegoulloao/neofusion.nvim",
   "comfysage/evergarden",
   "ray-x/aurora",
-  "vague2k/vague.nvim",
   "echasnovski/mini.colors",
   {
     "0xstepit/flow.nvim",
@@ -114,7 +114,6 @@ require("lazy").setup({
     missing = true,
     colorscheme = { "minimus" },
   },
-  browser = "brave",
   diff = {
     cmd = "diffview.nvim",
   },

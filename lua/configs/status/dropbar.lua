@@ -71,7 +71,7 @@ dropbar.setup({
     },
     path = {
       preview = "previous",
-      max_depth = 1,
+      -- max_depth = 1,
     },
   },
   icons = {

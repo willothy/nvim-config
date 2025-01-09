@@ -55,7 +55,7 @@ local Mode = {
       return string.char(willothy.ui.mode.get_short_name():byte(1))
     end,
     hl = function()
-      local col = willothy.ui.mode.get_color()
+      local col = require("willothy.ui.mode").get_color()
       return {
         fg = "#0f0f0f",
         bg = col.fg,

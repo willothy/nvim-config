@@ -135,6 +135,15 @@ wk.add({
       desc = "current dir",
     },
     {
+      "<leader>pp",
+      function()
+        require("willothy.lib.fs").browse(
+          vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+        )
+      end,
+      desc = "file parent dir",
+    },
+    {
       "<leader>pf",
       function()
         require("willothy.lib.fs").browse("~/projects")
