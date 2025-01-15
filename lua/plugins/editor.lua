@@ -1,4 +1,9 @@
 return {
+  {
+    "nvim-pack/nvim-spectre",
+    config = true,
+    cmd = "Spectre",
+  },
   -- COMMANDS --
   {
     "smjonas/live-command.nvim",
@@ -237,18 +242,6 @@ return {
   },
   {
     "abecodes/tabout.nvim",
-    dependencies = {
-      "hrsh7th/nvim-cmp",
-    },
-    opts = {
-      tabkey = "",
-      backwards_tabkey = "",
-      act_as_tab = true,
-      ignore_beginning = true,
-      act_as_shift_tab = false,
-      default_tab = "",
-      default_shift_tab = "",
-    },
   },
   -- GIT --
   {

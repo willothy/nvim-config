@@ -51,7 +51,7 @@ telescope.setup({
       path = vim.fn.stdpath("data") .. "/databases/telescope_history.sqlite3",
       limit = 200,
     },
-    create_layout = willothy.ui.telescope.flexible,
+    create_layout = require("willothy.ui.telescope").flexible,
     find_command = { "fd", "--type", "f", "--strip-cwd-prefix" },
     dynamic_preview_title = true,
     -- get_status_text = function(self, opts)
@@ -113,8 +113,8 @@ telescope.setup({
       case_mode = "smart_case",
     },
     bookmarks = {
-      selected_browser = "brave",
-      url_open_command = "xdg-open",
+      -- selected_browser = "brave",
+      url_open_command = "open",
     },
     frecency = {
       ignore_patterns = {

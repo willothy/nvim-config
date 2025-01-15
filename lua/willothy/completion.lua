@@ -35,6 +35,13 @@ require("blink.cmp").setup({
 
     ["<C-u>"] = { "scroll_documentation_up", "fallback" },
     ["<C-d>"] = { "scroll_documentation_down", "fallback" },
+
+    cmdline = {
+      ["<Up>"] = { "fallback" },
+      ["<Down>"] = { "fallback" },
+      ["<C-p>"] = { "select_prev", "fallback" },
+      ["<C-n>"] = { "select_next", "fallback" },
+    },
   },
   appearance = {
     use_nvim_cmp_as_default = true,
@@ -159,4 +166,10 @@ require("blink.cmp").setup({
   signature = {
     enabled = false,
   },
+})
+
+---@diagnostic disable-next-line: missing-fields
+require("tabout").setup({
+  completion = true,
+  act_as_shift_tab = true,
 })

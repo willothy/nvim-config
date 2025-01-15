@@ -94,20 +94,23 @@ require("mini.colors")
       },
 
       NormalFloat = {
-        bg = spec.background_dark,
         fg = spec.text,
+        bg = spec.background_dark,
       },
       NormalFloatNC = {
         link = "NormalFloat",
       },
       FloatBorder = {
         fg = spec.separator,
+        bg = spec.background_dark,
       },
       FloatTitle = {
         fg = spec.text_light,
+        bg = spec.background_dark,
       },
       FloatFooter = {
         fg = spec.text_light,
+        bg = spec.background_dark,
       },
 
       Title = {
@@ -430,7 +433,8 @@ require("mini.colors")
       ["@boolean"] = { link = "Boolean" }, -- Boolean
       ["@float"] = { link = "Float" }, -- Float
 
-      ["@type.builtin.typescript"] = { link = "Type" }, -- Float
+      ["@type.builtin"] = { link = "Type" },
+      ["@type.builtin.typescript"] = { link = "Type" },
 
       ["@keyword"] = { link = "Keyword" }, -- Keyword
       -- Rust
@@ -506,6 +510,19 @@ require("mini.colors")
       BlinkCmpKindOperator = { fg = palette.blue },
       BlinkCmpKindTypeParameter = { fg = palette.blue },
       BlinkCmpKindCopilot = { fg = palette.turquoise },
+
+      DropBarMenuHoverEntry = { link = "PmenuSel" },
+
+      TelescopeSelectionCaret = {
+        fg = palette.flamingo,
+        bg = spec.background_light,
+      },
+      TelescopeSelection = {
+        fg = palette.flamingo,
+        bg = spec.background_light,
+      },
+      TelescopeMatching = { fg = palette.blue },
+      TelescopeNormal = { bg = spec.background_dark },
     },
     terminal = {},
   })

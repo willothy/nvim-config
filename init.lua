@@ -105,6 +105,11 @@ require("lazy").setup({
     "0xstepit/flow.nvim",
     config = true,
   },
+  -- {
+  --   "willothy/luafetch",
+  --   name = "luafetch",
+  --   dir = "~/projects/lua/luafetch/",
+  -- },
 }, {
   defaults = {
     lazy = true,
@@ -130,16 +135,17 @@ require("lazy").setup({
   -- },
   pkg = {
     enabled = true,
-    -- dir = conf_path,
     sources = {
       "lazy",
       "rockspec",
       "packspec",
     },
   },
-  -- rocks = {
-  --   -- server = "https://nvim-neorocks.github.io/rocks-binaries",
-  -- },
+  rocks = {
+    enabled = true,
+    hererocks = true,
+    -- server = "https://nvim-neorocks.github.io/rocks-binaries",
+  },
   performance = {
     cache = {
       enabled = true,

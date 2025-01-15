@@ -332,7 +332,7 @@ local Git = (
       condition = function(self)
         return self.head ~= nil
       end,
-      hl = { link = "DiffText" },
+      hl = "StatusLine",
       Space,
     },
     {
@@ -342,7 +342,7 @@ local Git = (
       condition = function(self)
         return self:added() > 0
       end,
-      hl = { link = "DiffAdd" },
+      hl = "DiffAdd",
       Space,
     },
     {
@@ -352,7 +352,7 @@ local Git = (
       condition = function(self)
         return self:removed() > 0
       end,
-      hl = { link = "DiffDelete" },
+      hl = "DiffDelete",
       Space,
     },
     {
@@ -362,7 +362,7 @@ local Git = (
       condition = function(self)
         return self:modified() > 0
       end,
-      hl = { link = "DiffChange" },
+      hl = "DiffChange",
       Space,
     },
   })

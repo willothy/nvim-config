@@ -45,6 +45,12 @@ local close = function()
   menu:close()
 end
 
+-- vim.api.nvim_set_hl(0, "DropBarHover", {
+--   link = "Visual",
+--   -- italic = true,
+--   -- underline = true,
+-- })
+
 dropbar.setup({
   sources = {
     terminal = {
@@ -126,3 +132,5 @@ dropbar.setup({
 })
 
 vim.ui.select = require("dropbar.utils.menu").select
+
+vim.o.winbar = "%!v:lua.dropbar()"

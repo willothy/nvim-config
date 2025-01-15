@@ -15,7 +15,7 @@ local Layout = lazy("telescope.pickers.layout")
 ---@param enter boolean
 ---@param opts vim.api.keyset.win_config
 ---@return TelescopeWindow
-local open_win = function(enter, opts)
+local function open_win(enter, opts)
   local bufnr = vim.api.nvim_create_buf(false, true)
 
   vim.bo[bufnr].bufhidden = "wipe"
