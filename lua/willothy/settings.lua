@@ -5,6 +5,8 @@ local icons = willothy.ui.icons
 o.cmdheight = 0
 o.scrolloff = 16
 
+o.shell = "fish"
+
 o.number = true
 o.relativenumber = true
 -- o.signcolumn = "yes"
