@@ -2,9 +2,13 @@ return {
   -- LAYOUT / CORE UI --
   {
     "folke/which-key.nvim",
-    config = function()
-      require("configs.editor.which-key")
-    end,
+    opts = {
+      delay = 0,
+      preset = "helix",
+      win = {
+        border = "single",
+      },
+    },
     event = "VeryLazy",
   },
   {
@@ -21,13 +25,14 @@ return {
       require("configs.ui.edgy")
     end,
   },
-  -- {
-  --   "sphamba/smear-cursor.nvim",
-  --   event = "VeryLazy",
-  --   opts = {
-  --     legacy_computing_symbols_support = true,
-  --   },
-  -- },
+  {
+    "sphamba/smear-cursor.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    opts = {
+      -- legacy_computing_symbols_support = true,
+    },
+  },
   {
     "folke/noice.nvim",
     dependencies = { "folke/snacks.nvim" },

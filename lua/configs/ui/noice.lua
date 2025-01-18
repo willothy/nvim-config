@@ -1,117 +1,6 @@
 local require = require("noice.util.lazy")
 
-local Util = require("noice.util")
-local View = require("noice.view")
-
----@class NoiceFidgetOptions
----@field timeout integer
----@field reverse? boolean
-local defaults = { timeout = 5000 }
-
----@class FidgetView: NoiceView
----@field active table<number, NoiceMessage>
----@field super NoiceView
----@field handles table<number, ProgressHandle>
----@field timers table<number, uv_timer_t>
----@diagnostic disable-next-line: undefined-field
-local FidgetView = View:extend("MiniView")
-
-function FidgetView:init(opts)
-  FidgetView.super.init(self, opts)
-  self.active = {}
-  self.timers = {}
-  self._instance = "view"
-  self.handles = {}
-end
-
-function FidgetView:update_options()
-  self._opts = vim.tbl_deep_extend("force", defaults, self._opts)
-end
-
----@param message NoiceMessage
-function FidgetView:can_hide(message)
-  if message.opts.keep and message.opts.keep() then
-    return false
-  end
-  return not Util.is_blocking()
-end
-
-function FidgetView:autohide(id)
-  if not id then
-    return
-  end
-  if not self.timers[id] then
-    self.timers[id] = vim.loop.new_timer()
-  end
-  self.timers[id]:start(self._opts.timeout, 0, function()
-    if not self.active[id] then
-      return
-    end
-    if not self:can_hide(self.active[id]) then
-      return self:autohide(id)
-    end
-    self.active[id] = nil
-    self.timers[id] = nil
-    vim.schedule(function()
-      self:update()
-    end)
-  end)
-end
-
-function FidgetView:show()
-  for _, message in ipairs(self._messages) do
-    -- we already have debug info,
-    -- so make sure we dont regen it in the child view
-    message._debug = true
-    self.active[message.id] = message
-    self:autohide(message.id)
-  end
-  self:clear()
-  self:update()
-end
-
-function FidgetView:dismiss()
-  self:clear()
-  self.active = {}
-  self:update()
-end
-
-function FidgetView:update()
-  ---@type NoiceMessage[]
-  local active = vim.tbl_values(self.active)
-  table.sort(
-    active,
-    ---@param a NoiceMessage
-    ---@param b NoiceMessage
-    function(a, b)
-      local ret = a.id < b.id
-      if self._opts.reverse then
-        return not ret
-      end
-      return ret
-    end
-  )
-  for _, message in pairs(active) do
-    require("fidget").notify(
-      message:content(),
-      message.level or vim.log.levels.INFO,
-      {
-        id = message.id,
-        group = "noice",
-        annote = message.opts.title,
-      }
-    )
-  end
-end
-
-function FidgetView:hide()
-  -- for _, handle in pairs(self.handles) do
-  --   handle:finish()
-  -- end
-end
-
-package.loaded["noice.view.backend.fidget"] = FidgetView
-
+---@diagnostic disable-next-line: missing-fields
 require("noice").setup({
   status = {
     -- progress = {
@@ -253,7 +142,6 @@ require("noice").setup({
           { find = "^[^%s]+%s(%d+)L, (%d+)B%s+%[w%]$" },
         },
       },
-      view = "fidget",
       opts = {
         stop = true,
         skip = true, -- change to false to show

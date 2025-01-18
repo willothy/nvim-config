@@ -41,9 +41,9 @@ local autocmds = {
   {
     "FileType",
     callback = function(ev)
-      if vim.bo[ev.buf].buftype ~= "" then
-        vim.api.nvim_buf_call(ev.buf, require("mini.trailspace").unhighlight)
-      end
+      -- if vim.bo[ev.buf].buftype ~= "" then
+      --   vim.api.nvim_buf_call(ev.buf, require("mini.trailspace").unhighlight)
+      -- end
       if vim.bo[ev.buf].buftype ~= "" then
         return
       end

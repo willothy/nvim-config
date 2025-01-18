@@ -58,16 +58,46 @@ return {
     priority = 1000,
     lazy = false,
     config = function()
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        callback = function()
+          for k, v in pairs({
+            print = function(...)
+              Snacks.debug.inspect(...)
+              return ...
+            end,
+          }) do
+            vim[k] = v
+          end
+
+          local Snacks = Snacks
+
+          Snacks.toggle
+            .option("spell", { name = "Spelling" })
+            :map("<leader>us")
+          Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
+          Snacks.toggle
+            .option("relativenumber", { name = "Relative Number" })
+            :map("<leader>uL")
+          Snacks.toggle.diagnostics():map("<leader>ud")
+          Snacks.toggle.inlay_hints():map("<leader>uh")
+          Snacks.toggle.indent():map("<leader>ui")
+          Snacks.toggle.dim():map("<leader>uD")
+          Snacks.toggle.zoom():map("<leader>wz")
+          Snacks.toggle.scroll():map("<leader>wS")
+
+          Snacks.toggle.new({
+            id = "trailspace",
+            name = "Mini Trailspace",
+            get = function()
+              require("mini.trailspace")
+            end,
+          })
+        end,
+      })
+
       require("snacks").setup({
-        styles = {
-          notification = {
-            relative = "editor",
-            ft = "markdown",
-            bo = {
-              filetype = "markdown",
-            },
-          },
-        },
+        toggle = {},
         picker = {
           ui_select = false,
           actions = require("trouble.sources.snacks").actions,
@@ -103,6 +133,39 @@ return {
             char = "▏",
             hl = "Function",
             only_current = true,
+          },
+        },
+        styles = {
+          notification = {
+            relative = "editor",
+            ft = "markdown",
+            bo = {
+              filetype = "markdown",
+            },
+          },
+          float = {
+            relative = "editor",
+            border = "single",
+          },
+          input = {
+            relative = "editor",
+            border = "single",
+          },
+          minimal = {
+            relative = "editor",
+            border = "single",
+          },
+          scratch = {
+            relative = "editor",
+            border = "single",
+          },
+          zen = {
+            relative = "editor",
+            border = "none",
+          },
+          zoom_indicator = {
+            relative = "win",
+            border = "none",
           },
         },
       })
@@ -277,8 +340,10 @@ return {
   -- MISC --
   {
     "echasnovski/mini.trailspace",
-    config = true,
-    event = { "TextChanged", "TextChangedI" },
+    config = function()
+      require("mini.trailspace").setup()
+    end,
+    event = { "VimEnter" },
   },
   {
     "chomosuke/term-edit.nvim",

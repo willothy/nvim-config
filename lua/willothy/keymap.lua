@@ -224,6 +224,13 @@ wk.add({
     "<leader>w",
     group = "window",
     {
+      "<leader>wz",
+      function()
+        require("snacks").zen.zoom()
+      end,
+      desc = "zen mode",
+    },
+    {
       "<leader>w=",
       function()
         require("focus").focus_equalize()
@@ -426,6 +433,32 @@ wk.add({
   {
     "<leader>a",
     group = "ai",
+  },
+  {
+    "<leader>u",
+    group = "toggle",
+  },
+  {
+    "<leader>r",
+    group = "read",
+    {
+      "<leader>rN",
+      desc = "Neovim News",
+      function()
+        Snacks.win({
+          file = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1],
+          width = 0.6,
+          height = 0.6,
+          wo = {
+            spell = false,
+            wrap = false,
+            signcolumn = "yes",
+            statuscolumn = " ",
+            conceallevel = 3,
+          },
+        })
+      end,
+    },
   },
   {
     "<leader>t",
