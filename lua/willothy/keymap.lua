@@ -164,25 +164,44 @@ wk.add({
     {
       "<leader>ff",
       function()
-        require("telescope").extensions.frecency.frecency({
-          sorter = require("telescope").extensions.fzf.native_fzf_sorter(),
-        })
+        require("snacks").picker.files()
       end,
       desc = "files",
     },
     {
-      "<leader>fs",
+      "<leader>fh",
       function()
-        require("telescope.builtin").live_grep()
+        require("snacks").picker.help()
       end,
-      desc = "live grep",
+      desc = "help",
     },
     {
-      "<leader>fp",
+      "<leader>fH",
       function()
-        require("telescope").extensions.projects.projects()
+        require("snacks").picker.man()
       end,
-      desc = "projects",
+      desc = "manpages",
+    },
+    {
+      "<leader>fr",
+      function()
+        require("snacks").picker.resume()
+      end,
+      desc = "resume",
+    },
+    {
+      "<leader>fz",
+      function()
+        require("snacks").picker.zoxide()
+      end,
+      desc = "zoxide",
+    },
+    {
+      "<leader>fs",
+      function()
+        require("snacks").picker.grep()
+      end,
+      desc = "live grep",
     },
     {
       "<leader>fu",
@@ -194,9 +213,11 @@ wk.add({
     {
       "<leader>fP",
       function()
-        require("telescope.builtin").pickers()
+        require("snacks").picker.pickers({
+          layout = "vscode",
+        })
       end,
-      desc = "telescope pickers",
+      desc = "pickers",
     },
   },
   {
@@ -447,6 +468,7 @@ wk.add({
       function()
         require("willothy.terminal").toggle_float()
       end,
+      desc = "terminal: floating",
     },
     {
       "<leader>ts",

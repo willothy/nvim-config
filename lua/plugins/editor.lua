@@ -68,6 +68,20 @@ return {
             },
           },
         },
+        picker = {
+          ui_select = false,
+          actions = require("trouble.sources.snacks").actions,
+          win = {
+            input = {
+              keys = {
+                ["<C-t>"] = {
+                  "trouble_open",
+                  mode = { "n", "i" },
+                },
+              },
+            },
+          },
+        },
         terminal = {},
         notifier = {
           enabled = true,
@@ -109,23 +123,7 @@ return {
     event = "VeryLazy",
     config = true,
   },
-  -- FILE MANAGERS & FUZZY FINDERS --
-  {
-    "nvim-telescope/telescope.nvim",
-    config = function()
-      require("configs.editor.telescope")
-    end,
-    cmd = "Telescope",
-    dependencies = {
-      "dhruvmanila/browser-bookmarks.nvim",
-      "nvim-telescope/telescope-frecency.nvim",
-      --"nvim-telescope/telescope-smart-history.nvim", -- cool but causes sqlite error atm
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make",
-      },
-    },
-  },
+  -- FILE MANAGEMENT --
   {
     "stevearc/oil.nvim",
     config = function()

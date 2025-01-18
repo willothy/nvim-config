@@ -82,8 +82,6 @@ local autocmds = {
     callback = function(ev)
       if vim.bo[ev.buf].filetype == "lazy" then
         require("lazy.view").view:close({})
-      elseif vim.bo[ev.buf].filetype == "TelescopePrompt" then
-        vim.api.nvim_exec2("silent! stopinsert!", {})
       end
     end,
   },

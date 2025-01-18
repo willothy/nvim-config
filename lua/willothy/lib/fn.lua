@@ -1,28 +1,5 @@
 local M = {}
 
-local function _telescope(_, picker)
-  return function(...)
-    local t = require("telescope")
-    local ext = t.extensions
-    if require("telescope.builtin")[picker] then
-      require("telescope.builtin")[picker](...)
-    elseif
-      pcall(function()
-        return ext[picker]
-      end) and ext[picker][picker]
-    then
-      ext[picker][picker](...)
-    else
-      vim.notify(string.format("unknown picker %s", picker))
-    end
-  end
-end
-
-M.telescope = setmetatable({}, {
-  __call = _telescope,
-  __index = _telescope,
-})
-
 ---@param msg string
 function M.notify_mini(msg, opts)
   local title = opts.title

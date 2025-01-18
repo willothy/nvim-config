@@ -2,21 +2,11 @@ local M = {}
 
 ---@type table<string, fun(target: string?)>
 M.browsers = {
-  telescope = function(target)
-    require("telescope").extensions.file_browser.file_browser({
-      cwd = target,
-      display_stat = {
-        size = true,
-        date = true,
-      },
-    })
-  end,
   mini = function(target)
     require("mini.files").open(target)
   end,
   oil = function(target)
     -- TODO: maybe upstream this into Oil? I think it would be nice to have.
-    -- require("oil")
     require("oil").open(target)
 
     -- if
@@ -234,7 +224,10 @@ function M.is_root(path)
 end
 
 function M.project_root()
-  return require("lspconfig.util").find_git_ancestor(vim.fn.getcwd(-1))
+  return vim.fs.dirname(vim.fs.find(".git", {
+    path = vim.fn.getcwd(-1),
+    upward = true,
+  })[1])
 end
 
 ---@param dir string?

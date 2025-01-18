@@ -77,7 +77,7 @@ function M.get_geometry(target_win)
   local config = vim.api.nvim_win_get_config(target_win)
   local width = config.width
   local height = assert(config.height)
-  local zindex = config.zindex or 50
+  local zindex = config.zindex or 30
 
   local buf_height = get_win_buf_height(target_win)
   local thumb_height =

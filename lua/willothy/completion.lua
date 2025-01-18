@@ -37,6 +37,7 @@ require("blink.cmp").setup({
     ["<C-d>"] = { "scroll_documentation_down", "fallback" },
 
     cmdline = {
+      preset = "super-tab",
       ["<Up>"] = { "fallback" },
       ["<Down>"] = { "fallback" },
       ["<C-p>"] = { "select_prev", "fallback" },
