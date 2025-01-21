@@ -256,6 +256,7 @@ require("mini.colors")
 
       WinBar = {
         fg = spec.text,
+        bg = spec.background,
       },
       WinBarNC = {
         link = "WinBar",

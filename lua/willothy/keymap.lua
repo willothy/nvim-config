@@ -641,13 +641,6 @@ wk.add({
       end,
       desc = "yanky: put",
     },
-    {
-      "y",
-      function()
-        require("yanky").yank()
-      end,
-      desc = "yanky: yank",
-    },
   },
   {
     group = "flash",

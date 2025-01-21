@@ -95,21 +95,23 @@ require("lazy").setup({
     end,
     event = "UiEnter",
   },
-  "folke/tokyonight.nvim",
-  "eldritch-theme/eldritch.nvim",
-  "diegoulloao/neofusion.nvim",
-  "comfysage/evergarden",
-  "ray-x/aurora",
-  "echasnovski/mini.colors",
   {
-    "0xstepit/flow.nvim",
-    config = true,
+    "colorschemes",
+    virtual = true,
+    event = "VeryLazy",
+    dependencies = {
+      "folke/tokyonight.nvim",
+      "eldritch-theme/eldritch.nvim",
+      "diegoulloao/neofusion.nvim",
+      "comfysage/evergarden",
+      "ray-x/aurora",
+      {
+        "0xstepit/flow.nvim",
+        config = true,
+      },
+    },
   },
-  -- {
-  --   "willothy/luafetch",
-  --   name = "luafetch",
-  --   dir = "~/projects/lua/luafetch/",
-  -- },
+  "echasnovski/mini.colors",
 }, {
   defaults = {
     lazy = true,
@@ -126,13 +128,8 @@ require("lazy").setup({
     border = "solid",
   },
   dev = {
-    -- fallback = true,
-    -- path = "~/projects/lua/",
+    path = "~/projects/lua/",
   },
-  -- profiling = {
-  --   loader = true,
-  --   require = true,
-  -- },
   pkg = {
     enabled = true,
     sources = {
@@ -144,12 +141,10 @@ require("lazy").setup({
   rocks = {
     enabled = true,
     hererocks = true,
-    -- server = "https://nvim-neorocks.github.io/rocks-binaries",
   },
   performance = {
     cache = {
       enabled = true,
-      -- disable_events = { "UiEnter" },
     },
     reset_packpath = true,
     rtp = {
@@ -164,7 +159,6 @@ require("lazy").setup({
         "tutor",
         "zipPlugin",
         "man",
-        "osc52", -- Wezterm doesn't support osc52 yet
         "spellfile",
       },
     },

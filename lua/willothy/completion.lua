@@ -2,6 +2,121 @@ vim.cmd("hi link BlinkCmpGhostText Comment")
 
 require("configs.editor.crates")
 
+---VSCode-like smart indent.
+---
+---@param cmp blink.cmp.API
+---@return boolean | nil
+local function smart_indent(cmp)
+  -- if cmp.snippet_active() then
+  --   return cmp.accept()
+  -- end
+
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  local ok, indent = pcall(require("nvim-treesitter.indent").get_indent, row)
+  if not ok then
+    indent = 0
+  end
+
+  local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
+  if cmp.is_visible() then
+    return cmp.select_and_accept()
+  elseif col < indent and line:sub(1, col):gsub("^%s+", "") == "" then
+    -- smart indent like VSCode - indent to the correct level when
+    -- pressing tab at the beginning of a line.
+
+    vim.schedule(function()
+      vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
+        string.rep(" ", indent or 0) .. line:sub(col),
+      })
+
+      vim.api.nvim_win_set_cursor(0, { row, math.max(0, indent) })
+    end)
+
+    return true
+  elseif col >= indent then
+    vim.schedule(function()
+      require("tabout").taboutMulti()
+    end)
+    return true
+  end
+end
+
+---IntelliJ-like smart backspace
+---
+---@param cmp blink.cmp.API
+---@return boolean | nil
+local function smart_backspace(cmp)
+  -- TODO: check if we are trying to de-indent at the end of a block or the end of a comment.
+  --
+  -- allow deleting (maybe even quick-delete) the beginning of the line in those cases.
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+
+  if row == 1 and col == 0 then
+    return
+  end
+
+  if cmp.is_visible() then
+    cmp.hide()
+  end
+
+  local ts = require("nvim-treesitter.indent")
+  local ok, indent = pcall(ts.get_indent, row)
+  if not ok then
+    indent = 0
+  end
+
+  local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
+  if
+    vim.fn.strcharpart(line, indent - 1, col - indent + 1):gsub("%s+", "")
+    ~= ""
+  then
+    return
+  end
+
+  if indent > 0 and col > indent then
+    local new_line = vim.fn.strcharpart(line, 0, indent)
+      .. vim.fn.strcharpart(line, col)
+    vim.schedule(function()
+      vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
+        new_line,
+      })
+      vim.api.nvim_win_set_cursor(
+        0,
+        { row, math.min(indent or 0, vim.fn.strcharlen(new_line)) }
+      )
+    end)
+    return true
+  elseif row > 1 and (indent > 0 and col + 1 > indent) then
+    local prev_line = vim.api.nvim_buf_get_lines(0, row - 2, row - 1, true)[1]
+    if vim.trim(prev_line) == "" then
+      local prev_indent = ts.get_indent(row - 1) or 0
+      local new_line = vim.fn.strcharpart(line, 0, prev_indent)
+        .. vim.fn.strcharpart(line, col)
+      vim.schedule(function()
+        vim.api.nvim_buf_set_lines(0, row - 2, row, true, {
+          new_line,
+        })
+
+        vim.api.nvim_win_set_cursor(0, {
+          row - 1,
+          math.max(0, math.min(prev_indent, vim.fn.strcharlen(new_line))),
+        })
+      end)
+      return true
+    else
+      local len = vim.fn.strcharlen(prev_line)
+      local new_line = prev_line .. vim.fn.strcharpart(line, col)
+      vim.schedule(function()
+        vim.api.nvim_buf_set_lines(0, row - 2, row, true, {
+          new_line,
+        })
+        vim.api.nvim_win_set_cursor(0, { row - 1, math.max(0, len) })
+      end)
+      return true
+    end
+  end
+end
+
 require("blink.cmp").setup({
   keymap = {
     ["<C-h>"] = {
@@ -17,16 +132,16 @@ require("blink.cmp").setup({
     ["<C-e>"] = { "hide", "fallback" },
 
     ["<Tab>"] = {
-      function(cmp)
-        if cmp.snippet_active() then
-          return cmp.accept()
-        end
-        return cmp.select_and_accept()
-      end,
+      smart_indent,
       "snippet_forward",
       "fallback",
     },
     ["<S-Tab>"] = { "snippet_backward", "fallback" },
+
+    ["<BS>"] = {
+      smart_backspace,
+      "fallback",
+    },
 
     ["<Up>"] = { "select_prev", "fallback" },
     ["<Down>"] = { "select_next", "fallback" },
@@ -171,6 +286,8 @@ require("blink.cmp").setup({
 
 ---@diagnostic disable-next-line: missing-fields
 require("tabout").setup({
-  completion = true,
+  tabkey = "",
+  -- backwards_tabkey = "<S-Tab>",
+  -- completion = true,
   act_as_shift_tab = true,
 })

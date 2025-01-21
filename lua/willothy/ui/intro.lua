@@ -162,6 +162,11 @@ function M.update()
       chunk_offset = chunk_offset + chunk.len
     end
   end
+
+  vim.api.nvim__redraw({
+    win = winid,
+    valid = true,
+  })
 end
 
 function M.show()

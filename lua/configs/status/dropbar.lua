@@ -159,7 +159,7 @@ dropbar.setup({
       max_depth = 6,
     },
     path = {
-      preview = false,
+      preview = "previous",
     },
   },
   icons = {
@@ -214,3 +214,5 @@ dropbar.setup({
 })
 
 vim.ui.select = require("dropbar.utils.menu").select
+
+vim.go.winbar = "%{%v:lua.dropbar()%}"
