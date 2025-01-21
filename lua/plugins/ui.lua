@@ -3,7 +3,7 @@ return {
   {
     "folke/which-key.nvim",
     opts = {
-      delay = 0,
+      delay = 5,
       preset = "helix",
       win = {
         border = "single",
@@ -182,9 +182,14 @@ return {
   },
   {
     "Bekaboo/dropbar.nvim",
+    dependencies = {
+      "nvim-telescope/telescope-fzf-native.nvim",
+    },
+    -- version = "10",
     config = function()
       require("configs.status.dropbar")
     end,
+    -- config = true,
     event = "UiEnter",
   },
   {

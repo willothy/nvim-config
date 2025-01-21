@@ -5,6 +5,7 @@ end
 local augroup = vim.api.nvim_create_augroup("NvimIntro", { clear = true })
 
 local winid
+local bg_winid
 
 ---@class intro_chunk_t
 ---@field text string
@@ -260,6 +261,20 @@ function M.show()
   vim.wo[win].winhl = "NormalFloat:Normal"
 
   winid = win
+  bg_winid =
+    vim.api.nvim_open_win(vim.api.nvim_create_buf(false, true), false, {
+      relative = "editor",
+      style = "minimal",
+      row = 0,
+      col = 0,
+      width = vim.o.columns,
+      height = vim.o.lines - 1,
+      focusable = false,
+      mouse = false,
+      noautocmd = true,
+      zindex = 1,
+    })
+  vim.wo[bg_winid].winhl = "NormalFloat:Normal"
 
   save_opts({
     -- laststatus = 0,
@@ -316,7 +331,11 @@ function M.hide()
   if winid and vim.api.nvim_win_is_valid(winid) then
     vim.api.nvim_win_close(winid, true)
   end
+  if bg_winid and vim.api.nvim_win_is_valid(bg_winid) then
+    vim.api.nvim_win_close(bg_winid, true)
+  end
   winid = nil
+  bg_winid = nil
 
   augroup = vim.api.nvim_create_augroup("NvimIntro", { clear = true })
 end

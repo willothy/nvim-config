@@ -1,6 +1,10 @@
 return {
   "famiu/bufdelete.nvim",
   {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = "make",
+  },
+  {
     "https://github.com/leafo/magick",
     build = "rockspec",
   },
