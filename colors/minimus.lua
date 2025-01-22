@@ -511,6 +511,7 @@ require("mini.colors")
       BlinkCmpKindOperator = { fg = palette.blue },
       BlinkCmpKindTypeParameter = { fg = palette.blue },
       BlinkCmpKindCopilot = { fg = palette.turquoise },
+      BlinkCmpGhostText = { link = "Comment" },
 
       DropBarMenuHoverEntry = { link = "PmenuSel" },
     },

@@ -1,15 +1,28 @@
-vim.cmd("hi link BlinkCmpGhostText Comment")
-
-require("configs.editor.crates")
+require("crates").setup({
+  completion = {
+    cmp = {
+      enabled = true,
+    },
+    crates = {
+      enabled = true,
+    },
+  },
+  -- lsp = {
+  --   enabled = true,
+  --   actions = true,
+  --   completion = true,
+  --   hover = true,
+  -- },
+})
 
 ---VSCode-like smart indent.
 ---
 ---@param cmp blink.cmp.API
 ---@return boolean | nil
 local function smart_indent(cmp)
-  -- if cmp.snippet_active() then
-  --   return cmp.accept()
-  -- end
+  if cmp.snippet_active() then
+    return cmp.accept()
+  end
 
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
   local ok, indent = pcall(require("nvim-treesitter.indent").get_indent, row)
@@ -34,9 +47,7 @@ local function smart_indent(cmp)
 
     return true
   elseif col >= indent then
-    vim.schedule(function()
-      require("tabout").taboutMulti()
-    end)
+    vim.schedule(require("tabout").taboutMulti)
     return true
   end
 end
@@ -136,7 +147,18 @@ require("blink.cmp").setup({
       "snippet_forward",
       "fallback",
     },
-    ["<S-Tab>"] = { "snippet_backward", "fallback" },
+    ["<S-Tab>"] = {
+      function(cmp)
+        if cmp.snippet_active({ direction = -1 }) then
+          return false
+        end
+
+        vim.schedule(require("tabout").taboutBackMulti)
+        return true
+      end,
+      "snippet_backward",
+      "fallback",
+    },
 
     ["<BS>"] = {
       smart_backspace,
@@ -287,7 +309,7 @@ require("blink.cmp").setup({
 ---@diagnostic disable-next-line: missing-fields
 require("tabout").setup({
   tabkey = "",
-  -- backwards_tabkey = "<S-Tab>",
+  backwards_tabkey = "",
   -- completion = true,
-  act_as_shift_tab = true,
+  -- act_as_shift_tab = true,
 })

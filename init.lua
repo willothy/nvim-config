@@ -81,6 +81,11 @@ require("lazy").setup({
     end,
   },
 
+  -- {
+  --   "ziglang/zig.vim",
+  --   event = "BufRead *.zig",
+  -- },
+
   { import = "plugins.editor" },
   { import = "plugins.ui" },
   { import = "plugins.libraries" },

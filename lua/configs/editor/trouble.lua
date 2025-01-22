@@ -1,5 +1,6 @@
 local trouble = require("trouble")
 
+---@diagnostic disable-next-line: missing-fields
 trouble.setup({
   pinned = true,
   focus = true,

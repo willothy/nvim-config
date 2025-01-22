@@ -65,8 +65,8 @@ vim.api.nvim_create_autocmd("User", {
 
 o.syntax = "off"
 
--- o.splitkeep = "topline"
-o.splitkeep = "cursor"
+o.splitkeep = "topline"
+-- o.splitkeep = "cursor"
 
 -- Pcall to avoid errors on older versions of nvim
 o.smoothscroll = true

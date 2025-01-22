@@ -8,5 +8,3 @@ bo.expandtab = true
 bo.smartindent = false
 
 wo.wrap = false
-
-vim.api.nvim_del_augroup_by_name("vim-zig")

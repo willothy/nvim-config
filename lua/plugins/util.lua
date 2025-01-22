@@ -19,14 +19,6 @@ return {
     "mbbill/undotree",
     cmd = { "UndotreeToggle", "UndotreeShow" },
   },
-  -- {
-  --   -- FIXME: This doesn't really work
-  --   "ecthelionvi/NeoComposer.nvim",
-  --   dependencies = { "kkharji/sqlite.lua" },
-  --   config = function()
-  --     require("configs.editor.neocomposer")
-  --   end,
-  -- },
   {
     "nmac427/guess-indent.nvim",
     opts = { auto_cmd = true },
@@ -57,9 +49,6 @@ return {
   },
   {
     "Saecki/crates.nvim",
-    config = function()
-      require("configs.editor.crates")
-    end,
     event = "BufRead Cargo.toml",
   },
   {
