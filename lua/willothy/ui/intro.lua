@@ -169,7 +169,7 @@ function M.update()
   })
 end
 
-function M.show()
+local function show()
   if winid and vim.api.nvim_win_is_valid(winid) then
     return
   end
@@ -330,7 +330,7 @@ function M.show()
   })
 end
 
-function M.hide()
+local function hide()
   restore_opts()
   willothy.ui.cursor.show_cursor()
   if winid and vim.api.nvim_win_is_valid(winid) then
@@ -343,6 +343,16 @@ function M.hide()
   bg_winid = nil
 
   augroup = vim.api.nvim_create_augroup("NvimIntro", { clear = true })
+end
+
+function M.show()
+  -- Snacks.dashboard()
+  show()
+end
+
+function M.hide()
+  -- Snacks.dashboard.Dashboard:action("close")
+  hide()
 end
 
 return M

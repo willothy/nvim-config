@@ -61,20 +61,6 @@ local function is_float(win)
   return vim.api.nvim_win_get_config(win).zindex ~= nil
 end
 
-local terminal = View.new({
-  ft = "terminal",
-  -- title = "%{%v:lua._edgywb()%}",
-  wo = {
-    -- winbar = "%{%v:lua.__edgy_term_title()%}",
-    number = false,
-    relativenumber = false,
-    winhighlight = "Normal:Normal",
-  },
-  filter = function(buf, win)
-    return vim.bo[buf].buftype == "terminal" and not is_float(win)
-  end,
-})
-
 local trouble = bottom:extend({
   ft = "trouble",
 })
@@ -95,38 +81,6 @@ local neogit = View.new({
 
 local opts = {
   -- right = {
-  --   neogit:extend({
-  --     ft = "NeogitStatus",
-  --     title = "Neogit",
-  --     open = function()
-  --       require("neogit").open()
-  --     end,
-  --   }),
-  --   neogit:extend({
-  --     ft = "NeogitPopup",
-  --     title = "Neogit",
-  --     open = function()
-  --       require("neogit").open()
-  --     end,
-  --   }),
-  --   neogit:extend({
-  --     ft = "NeogitCommitMessage",
-  --     title = "Commit message",
-  --   }),
-  --   neogit:extend({
-  --     ft = "NeogitLogView",
-  --     title = "Neogit log",
-  --     open = function()
-  --       require("neogit").open({ "log" })
-  --     end,
-  --   }),
-  --   neogit:extend({
-  --     ft = "NeogitReflogView",
-  --     title = "Neogit log",
-  --     open = function()
-  --       require("neogit").open({ "log" })
-  --     end,
-  --   }),
   --   terminal:extend({
   --     open = function()
   --       willothy.terminal.vertical:open()
@@ -145,148 +99,8 @@ local opts = {
   --       width = get_rhs_width,
   --     },
   --   }),
-  --   -- sidebar:extend({
-  --   --   ft = "markdown.cody_history",
-  --   --   filter = function(buf, win)
-  --   --     return vim.api.nvim_win_get_config(win).zindex == nil
-  --   --   end,
-  --   --   size = {
-  --   --     height = 0.8,
-  --   --   },
-  --   -- }),
-  --   -- sidebar:extend({
-  --   --   ft = "markdown.cody_prompt",
-  --   --   filter = function(buf, win)
-  --   --     return vim.api.nvim_win_get_config(win).zindex == nil
-  --   --   end,
-  --   --   size = {
-  --   --     height = 0.2,
-  --   --   },
-  --   -- }),
   -- },
   -- left = {
-  --   sidebar:extend({
-  --     ft = "OverseerList",
-  --     title = "Overseer",
-  --     filter = function(_buf, win)
-  --       return vim.api.nvim_win_get_config(win).zindex == nil
-  --     end,
-  --     wo = {
-  --       winhighlight = "WinBar:WinBar",
-  --     },
-  --     open = function()
-  --       require("overseer").open()
-  --     end,
-  --   }),
-  --   -- sidebar:extend({
-  --   --   ft = "oil",
-  --   --   -- open = function()
-  --   --   --   require("oil").open()
-  --   --   -- end,
-  --   --   wo = {
-  --   --     winbar = "%{%v:lua.require('oil').winbar()%}",
-  --   --   },
-  --   --   size = {
-  --   --     width = function()
-  --   --       if vim.o.columns > 140 then
-  --   --         return 35
-  --   --       else
-  --   --         return math.floor(vim.o.columns * 0.25)
-  --   --       end
-  --   --     end,
-  --   --   },
-  --   -- }),
-  --   sidebar:extend({
-  --     ft = "SidebarNvim",
-  --     title = "Sidebar",
-  --     open = function()
-  --       require("sidebar-nvim").open()
-  --     end,
-  --   }),
-  --   sidebar:extend({
-  --     ft = "aerial",
-  --     title = "Document Symbols",
-  --     open = function()
-  --       require("aerial").open()
-  --     end,
-  --   }),
-  --   sidebar:extend({
-  --     title = "Neotest Summary",
-  --     ft = "neotest-summary",
-  --     open = function()
-  --       require("neotest").summary.open()
-  --     end,
-  --   }),
-  --   sidebar:extend({
-  --     title = "Files",
-  --     ft = "neo-tree",
-  --     filter = function(buf, win)
-  --       return vim.b[buf].neo_tree_source == "filesystem" and not is_float(win)
-  --     end,
-  --     open = function()
-  --       vim.cmd.Neotree("filesystem")
-  --     end,
-  --   }),
-  --   sidebar:extend({
-  --     title = "Diagnostics",
-  --     ft = "neo-tree",
-  --     filter = function(buf, win)
-  --       return vim.b[buf].neo_tree_source == "diagnostics"
-  --         and not is_float(win)
-  --     end,
-  --     open = function()
-  --       vim.cmd.Neotree("diagnostics")
-  --     end,
-  --   }),
-  --   sidebar:extend({
-  --     title = "Git",
-  --     ft = "neo-tree",
-  --     filter = function(buf, win)
-  --       return vim.b[buf].neo_tree_source == "git_status" and not is_float(win)
-  --     end,
-  --     open = function()
-  --       vim.cmd.Neotree("git_status")
-  --     end,
-  --   }),
-  --   sidebar:extend({
-  --     title = "Buffers",
-  --     ft = "neo-tree",
-  --     filter = function(buf, win)
-  --       return vim.b[buf].neo_tree_source == "buffers" and not is_float(win)
-  --     end,
-  --     open = function()
-  --       vim.cmd.Neotree("buffers")
-  --     end,
-  --   }),
-  --   sidebar:extend({
-  --     ft = "dapui_watches",
-  --     wo = { winbar = " Watches" },
-  --     open = function()
-  --       require("dapui").open()
-  --     end,
-  --   }),
-  --   sidebar:extend({
-  --     ft = "dapui_stacks",
-  --     wo = { winbar = " Stacks" },
-  --     open = function()
-  --       require("dapui").open()
-  --     end,
-  --   }),
-  --   sidebar:extend({
-  --     ft = "dapui_breakpoints",
-  --     wo = { winbar = " Breakpoints" },
-  --     open = function()
-  --       require("dapui").open()
-  --     end,
-  --   }),
-  --   sidebar:extend({
-  --     ft = "dapui_scopes",
-  --     wo = { winbar = " Scopes" },
-  --     size = { height = get_height },
-  --     open = function()
-  --       require("dapui").open()
-  --     end,
-  --   }),
   -- },
   bottom = {
     {
@@ -313,71 +127,56 @@ local opts = {
       end,
       size = { height = get_height },
     },
-    -- bottom:extend({
-    --   ft = "norg",
-    --   size = {
-    --     height = 14,
-    --     width = 1.0,
-    --   },
-    --   wo = {
-    --     winbar = false,
-    --     statuscolumn = "",
-    --     foldcolumn = "0",
-    --   },
-    --   filter = function(buf)
-    --     return vim.bo[buf].buftype == "nofile"
-    --   end,
-    -- }),
-    -- bottom:extend({
-    --   ft = "dapui_console",
-    --   title = "Debug Console",
-    --   wo = { winbar = " Debug Console" },
-    --   open = function()
-    --     require("dapui").open()
-    --   end,
-    -- }),
-    -- bottom:extend({
-    --   ft = "dap-repl",
-    --   title = "Debug REPL",
-    --   wo = { winbar = false, statuscolumn = "" },
-    --   open = function()
-    --     require("dapui").open()
-    --   end,
-    -- }),
-    -- bottom:extend({
-    --   ft = "neotest-output-panel",
-    --   title = "Neotest output",
-    --   open = function()
-    --     require("neotest").output_panel.open()
-    --   end,
-    -- }),
+    bottom:extend({
+      ft = "dapui_console",
+      title = "Debug Console",
+      wo = { winbar = " Debug Console" },
+      open = function()
+        require("dapui").open()
+      end,
+    }),
+    bottom:extend({
+      ft = "dap-repl",
+      title = "Debug REPL",
+      wo = { winbar = false, statuscolumn = "" },
+      open = function()
+        require("dapui").open()
+      end,
+    }),
+    bottom:extend({
+      ft = "neotest-output-panel",
+      title = "Neotest output",
+      open = function()
+        require("neotest").output_panel.open()
+      end,
+    }),
     -- bottom:extend({
     --   ft = "noice",
     --   open = function()
     --     vim.cmd.Noice()
     --   end,
     -- }),
-    -- bottom:extend({
-    --   ft = "qf",
-    --   title = "QuickFix",
-    --   wo = {
-    --     winhighlight = "Normal:Normal",
-    --   },
-    --   open = function()
-    --     vim.cmd.copen()
-    --   end,
-    -- }),
-    -- bottom:extend({
-    --   ft = "spectre_panel",
-    --   title = "Spectre",
-    --   wo = {
-    --     number = false,
-    --     relativenumber = false,
-    --   },
-    --   open = function()
-    --     require("spectre").open()
-    --   end,
-    -- }),
+    bottom:extend({
+      ft = "qf",
+      title = "QuickFix",
+      wo = {
+        winhighlight = "Normal:Normal",
+      },
+      open = function()
+        vim.cmd.copen()
+      end,
+    }),
+    bottom:extend({
+      ft = "spectre_panel",
+      title = "Spectre",
+      wo = {
+        number = false,
+        relativenumber = false,
+      },
+      open = function()
+        require("spectre").open()
+      end,
+    }),
     trouble,
   },
 
@@ -408,12 +207,17 @@ for _, pos in ipairs({ "top", "bottom", "left", "right" }) do
   opts[pos] = opts[pos] or {}
   table.insert(opts[pos] --[[@as table]], {
     ft = "snacks_terminal",
-    size = { height = 0.4 },
+    size = { height = get_height },
     -- title = "%{b:snacks_terminal.id}: %{b:term_title}",
     title = "%{%v:lua.dropbar()%}: %{b:term_title}",
-    title = function(...)
-      return _G.dropbar(...)
-    end,
+
+    -- title = "%{%v:lua._edgywb()%}",
+    wo = {
+      number = false,
+      relativenumber = false,
+      cursorline = false,
+      winhighlight = "Normal:Normal",
+    },
     filter = function(_buf, win)
       return vim.w[win].snacks_win
         and vim.w[win].snacks_win.position == pos

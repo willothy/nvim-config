@@ -110,7 +110,7 @@ oil.setup({
         local win = vim.api.nvim_get_current_win()
         local entry = oil.get_cursor_entry()
         local vertical, split, tgt_win
-        if entry.type == "file" then
+        if entry and entry.type == "file" then
           tgt_win = require("flatten.core").smart_open()
           if not tgt_win then
             vertical = true

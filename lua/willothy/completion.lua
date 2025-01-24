@@ -24,6 +24,10 @@ local function smart_indent(cmp)
     return cmp.accept()
   end
 
+  if cmp.is_visible() then
+    return cmp.select_and_accept()
+  end
+
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
   local ok, indent = pcall(require("nvim-treesitter.indent").get_indent, row)
   if not ok then
@@ -31,9 +35,7 @@ local function smart_indent(cmp)
   end
 
   local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1]
-  if cmp.is_visible() then
-    return cmp.select_and_accept()
-  elseif col < indent and line:sub(1, col):gsub("^%s+", "") == "" then
+  if col < indent and line:sub(1, col):gsub("^%s+", "") == "" then
     -- smart indent like VSCode - indent to the correct level when
     -- pressing tab at the beginning of a line.
 
@@ -221,9 +223,12 @@ require("blink.cmp").setup({
       },
       copilot = {
         name = "copilot",
-        module = "blink-cmp-copilot",
+        module = "blink-copilot",
         score_offset = 100,
         async = true,
+        opts = {
+          max_completions = 1,
+        },
       },
       crates = {
         name = "crates",

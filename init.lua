@@ -91,6 +91,7 @@ require("lazy").setup({
   { import = "plugins.libraries" },
   { import = "plugins.lsp" },
   { import = "plugins.util" },
+  { import = "plugins.fun" },
 
   {
     "willothy/minimus",

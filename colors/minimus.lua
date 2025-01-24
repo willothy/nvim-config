@@ -117,7 +117,6 @@ require("mini.colors")
         fg = spec.text_light,
       },
 
-      -- test
       WinSeparator = {
         fg = spec.separator,
       },

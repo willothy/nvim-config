@@ -331,11 +331,11 @@ then
   })
   vim.schedule(function()
     if is_empty() then
-      willothy.ui.intro.show()
+      require("willothy.ui.intro").show()
     end
   end)
 elseif argc == 0 and is_empty() then
-  willothy.ui.intro.show()
+  require("willothy.ui.intro").show()
 end
 
 local uv = vim.uv or vim.loop

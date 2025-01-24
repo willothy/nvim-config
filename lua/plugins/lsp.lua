@@ -132,9 +132,10 @@ return {
     "Saghen/blink.cmp",
     dependencies = {
       "Saghen/blink.compat",
+      -- "giuxtaposition/blink-cmp-copilot",
+      "fang2hou/blink-copilot",
 
       "rafamadriz/friendly-snippets",
-      "giuxtaposition/blink-cmp-copilot",
       "Saecki/crates.nvim",
       "windwp/nvim-ts-autotag",
     },

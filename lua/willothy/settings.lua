@@ -65,7 +65,7 @@ vim.api.nvim_create_autocmd("User", {
 
 o.syntax = "off"
 
-o.splitkeep = "topline"
+o.splitkeep = "screen"
 -- o.splitkeep = "cursor"
 
 -- Pcall to avoid errors on older versions of nvim

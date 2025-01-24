@@ -176,6 +176,16 @@ wk.add({
       desc = "help",
     },
     {
+      "<leader>fd",
+      function()
+        ---@diagnostic disable-next-line: missing-fields
+        require("snacks").picker.lsp_symbols({
+          workspace = true,
+        })
+      end,
+      desc = "document symbols",
+    },
+    {
       "<leader>fH",
       function()
         require("snacks").picker.man()
@@ -207,6 +217,16 @@ wk.add({
       "<leader>fu",
       function()
         vim.cmd.UndotreeToggle()
+        -- require("snacks").picker.pick({
+        --   source = "undo",
+        --   layout = {
+        --     preview = false,
+        --     fullscreen = false,
+        --     layout = {
+        --       noautocmd = true,
+        --     },
+        --   },
+        -- })
       end,
       desc = "undo history",
     },
@@ -447,7 +467,25 @@ wk.add({
       function()
         Snacks.win({
           file = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1],
-          width = 0.6,
+          width = vim.o.columns > 140 and 0.6 or 0.85,
+          height = 0.6,
+          wo = {
+            spell = false,
+            wrap = false,
+            signcolumn = "yes",
+            statuscolumn = " ",
+            conceallevel = 3,
+          },
+        })
+      end,
+    },
+    {
+      "<leader>rH",
+      desc = "Neovim Help",
+      function()
+        Snacks.win({
+          file = vim.api.nvim_get_runtime_file("doc/help.txt", false)[1],
+          width = vim.o.columns > 140 and 0.6 or 0.85,
           height = 0.6,
           wo = {
             spell = false,

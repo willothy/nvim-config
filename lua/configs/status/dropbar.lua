@@ -117,7 +117,7 @@ dropbar.setup({
         "enum_member",
         -- "event",
         -- "for_statement",
-        -- "function",
+        "function",
         -- "h1_marker",
         -- "h2_marker",
         -- "h3_marker",

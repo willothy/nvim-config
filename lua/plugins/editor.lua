@@ -12,6 +12,12 @@ return {
   -- EDITING --
   {
     "numToStr/Comment.nvim",
+    dependencies = {
+      {
+        "folke/ts-comments.nvim",
+        config = true,
+      },
+    },
     config = function()
       require("configs.editor.comment")
     end,
@@ -83,24 +89,55 @@ return {
           Snacks.toggle.inlay_hints():map("<leader>uh")
           Snacks.toggle.indent():map("<leader>ui")
           Snacks.toggle.dim():map("<leader>uD")
-          Snacks.toggle.zoom():map("<leader>wz")
-          Snacks.toggle.scroll():map("<leader>wS")
-
-          Snacks.toggle.new({
-            id = "trailspace",
-            name = "Mini Trailspace",
-            get = function()
-              require("mini.trailspace")
-            end,
-          })
+          Snacks.toggle.zoom():map("<leader>uz")
+          Snacks.toggle.scroll():map("<leader>uS")
         end,
       })
 
+      local indent_disabled = {
+        markdown = true,
+        txt = true,
+        text = true,
+        help = true,
+      }
+
       require("snacks").setup({
         toggle = {},
+        dashboard = {
+          enabled = true,
+
+          sections = {
+            {
+              align = "center",
+              text = {
+                { "Neovim", hl = "Identifier" },
+                { " :: ", hl = "Comment" },
+                { tostring(vim.version()), hl = "Identifier" },
+              },
+            },
+            {
+              align = "center",
+              section = "startup",
+            },
+          },
+        },
         picker = {
+          sources = {
+            files = {
+              ---@diagnostic disable-next-line: missing-fields
+              matcher = {
+                frecency = true,
+                sort_empty = true,
+              },
+            },
+          },
           ui_select = false,
           actions = require("trouble.sources.snacks").actions,
+          layout = {
+            layout = {
+              border = "solid",
+            },
+          },
           win = {
             input = {
               keys = {
@@ -112,7 +149,9 @@ return {
             },
           },
         },
-        terminal = {},
+        terminal = {
+          bo = {},
+        },
         notifier = {
           enabled = true,
           style = "compact",
@@ -134,8 +173,26 @@ return {
             hl = "Function",
             only_current = true,
           },
+          animate = {
+            style = "out",
+            fps = 120,
+          },
+          filter = function(buf)
+            return vim.g.snacks_indent ~= false
+              and vim.b[buf].snacks_indent ~= false
+              and vim.bo[buf].buftype == ""
+              and not indent_disabled[vim.bo[buf].filetype]
+          end,
         },
         styles = {
+          dashboard = {
+            relative = "editor",
+            layout = {
+              layout = {
+                border = "none",
+              },
+            },
+          },
           notification = {
             relative = "editor",
             ft = "markdown",
@@ -145,7 +202,7 @@ return {
           },
           float = {
             relative = "editor",
-            border = "single",
+            border = "solid",
           },
           input = {
             relative = "editor",
@@ -153,7 +210,7 @@ return {
           },
           minimal = {
             relative = "editor",
-            border = "single",
+            border = "solid",
           },
           scratch = {
             relative = "editor",
