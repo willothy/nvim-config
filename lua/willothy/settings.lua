@@ -10,7 +10,8 @@ o.shell = "fish"
 o.number = true
 o.relativenumber = true
 -- o.signcolumn = "yes"
-o.signcolumn = "number"
+-- o.signcolumn = "number"
+o.signcolumn = "auto"
 -- o.relativenumber = false
 -- o.number = false
 

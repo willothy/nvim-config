@@ -1,7 +1,6 @@
 return {
   {
     "nvzone/typr",
-    branch = "dev",
     dependencies = {
       "nvzone/volt",
     },

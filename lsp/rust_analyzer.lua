@@ -36,12 +36,57 @@ vim.lsp.config.rust_analyzer = {
   cmd = { "rust-analyzer" },
   filetypes = { "rust" },
   single_file_support = true,
-  root_markers = { "Cargo.toml", "Cargo.lock", ".git" },
+  root_markers = { "Cargo.lock", "Cargo.toml", ".git" },
   capabilities = {
     experimental = {
       serverStatusNotification = true,
     },
   },
+  root_dir = function(callback)
+    coroutine.resume(coroutine.create(function()
+      local fname = vim.api.nvim_buf_get_name(0)
+
+      local reuse_active = is_library(fname)
+      if reuse_active then
+        callback(reuse_active)
+        return
+      end
+
+      local cargo_crate_dir =
+        require("lspconfig.util").root_pattern("Cargo.toml")(fname)
+      local cargo_workspace_root
+
+      if cargo_crate_dir ~= nil then
+        local cmd = {
+          "cargo",
+          "metadata",
+          "--no-deps",
+          "--format-version",
+          "1",
+          "--manifest-path",
+          cargo_crate_dir .. "/Cargo.toml",
+        }
+
+        local result = require("lspconfig.async").run_command(cmd)
+
+        if result and result[1] then
+          result = vim.json.decode(table.concat(result, ""))
+          if result["workspace_root"] then
+            cargo_workspace_root = vim.fs.normalize(result["workspace_root"])
+          end
+        end
+      end
+
+      callback(
+        cargo_workspace_root
+          or cargo_crate_dir
+          or require("lspconfig.util").root_pattern("rust-project.json")(fname)
+          or vim.fs.dirname(
+            vim.fs.find(".git", { path = fname, upward = true })[1]
+          )
+      )
+    end))
+  end,
   before_init = function(init_params, config)
     -- See https://github.com/rust-lang/rust-analyzer/blob/eb5da56d839ae0a9e9f50774fa3eb78eb0964550/docs/dev/lsp-extensions.md?plain=1#L26
     if config.settings and config.settings["rust-analyzer"] then

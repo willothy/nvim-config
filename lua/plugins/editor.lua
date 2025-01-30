@@ -121,6 +121,13 @@ return {
             },
           },
         },
+        statuscolumn = {
+          left = { "mark", "sign", "git" },
+          right = { "fold" },
+          folds = {
+            open = true,
+          },
+        },
         picker = {
           sources = {
             files = {
@@ -133,12 +140,58 @@ return {
           },
           ui_select = false,
           actions = require("trouble.sources.snacks").actions,
-          layout = {
-            layout = {
-              border = "solid",
+          layouts = {
+            default = {
+              layout = {
+                box = "horizontal",
+                width = 0.8,
+                min_width = 120,
+                height = 0.8,
+                border = "single",
+                {
+                  box = "vertical",
+                  border = "solid",
+                  title = "{title} {live} {flags}",
+                  { win = "input", height = 1, border = "bottom" },
+                  { win = "list", border = "none" },
+                },
+                {
+                  win = "preview",
+                  title = "{preview}",
+                  border = "left",
+                  width = 0.5,
+                },
+              },
+            },
+            vertical = {
+              layout = {
+                backdrop = false,
+                width = 0.5,
+                min_width = 80,
+                height = 0.8,
+                min_height = 30,
+                box = "vertical",
+                border = "single",
+                title = "{title} {live} {flags}",
+                title_pos = "center",
+                { win = "input", height = 1, border = "bottom" },
+                { win = "list", border = "none" },
+                {
+                  win = "preview",
+                  title = "{preview}",
+                  height = 0.4,
+                  border = "top",
+                },
+              },
             },
           },
           win = {
+            list = {
+              border = "none",
+            },
+            preview = {
+              border = "none",
+            },
             input = {
               keys = {
                 ["<C-t>"] = {
@@ -272,32 +325,32 @@ return {
     end,
     event = "UiEnter",
   },
-  {
-    -- "ahmedkhalf/project.nvim",
-    "DrKJeff16/project.nvim",
-    name = "project_nvim",
-    event = "VeryLazy",
-    opts = {
-      detection_methods = {
-        "lsp",
-        "pattern",
-      },
-      patterns = {
-        ".git",
-        "package.json",
-        "Cargo.toml",
-        "Makefile",
-      },
-      exclude_dirs = {
-        "~/.local/",
-        "~/.cargo/",
-      },
-      ignore_lsp = { "savior", "copilot" },
-      silent_chdir = true,
-      show_hidden = true,
-      scope_chdir = "tab",
-    },
-  },
+  -- {
+  --   -- "ahmedkhalf/project.nvim",
+  --   "DrKJeff16/project.nvim",
+  --   name = "project_nvim",
+  --   event = "VeryLazy",
+  --   opts = {
+  --     detection_methods = {
+  --       "lsp",
+  --       "pattern",
+  --     },
+  --     patterns = {
+  --       ".git",
+  --       "package.json",
+  --       "Cargo.toml",
+  --       "Makefile",
+  --     },
+  --     exclude_dirs = {
+  --       "~/.local/",
+  --       "~/.cargo/",
+  --     },
+  --     ignore_lsp = { "savior", "copilot" },
+  --     silent_chdir = true,
+  --     show_hidden = true,
+  --     scope_chdir = "tab",
+  --   },
+  -- },
   {
     "willothy/savior.nvim",
     config = true,

@@ -22,7 +22,7 @@ trouble.setup({
     wo = {
       -- winbar = "",
       -- statuscolumn = "%!v:lua.StatusCol()",
-      statuscolumn = "%!v:lua.require('statuscol').get_statuscol_string()",
+      -- statuscolumn = "%!v:lua.require('statuscol').get_statuscol_string()",
       list = true,
       number = true,
       relativenumber = false,

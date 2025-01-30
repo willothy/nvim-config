@@ -28,7 +28,7 @@ wk.add({
     {
       "<leader>bx",
       function()
-        require("cokeline.mappings").pick("close")
+        require("cokeline.mappings").pick("close-multiple")
       end,
       desc = "pick & close",
     },

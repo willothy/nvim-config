@@ -165,7 +165,9 @@ return {
   },
   -- STATUS --
   {
-    "willothy/nvim-cokeline",
+    -- "willothy/nvim-cokeline",
+    "plax-00/nvim-cokeline",
+    branch = "pick-close-multiple",
     config = function()
       require("configs.status.cokeline")
     end,
@@ -191,16 +193,6 @@ return {
     end,
     -- config = true,
     event = "UiEnter",
-  },
-  {
-    "luukvbaal/statuscol.nvim",
-    dependencies = {
-      "lewis6991/gitsigns.nvim",
-    },
-    event = "UiEnter",
-    config = function()
-      require("configs.status.statuscol")
-    end,
   },
   -- COLORS --
   {

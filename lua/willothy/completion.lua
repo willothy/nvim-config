@@ -59,9 +59,6 @@ end
 ---@param cmp blink.cmp.API
 ---@return boolean | nil
 local function smart_backspace(cmp)
-  -- TODO: check if we are trying to de-indent at the end of a block or the end of a comment.
-  --
-  -- allow deleting (maybe even quick-delete) the beginning of the line in those cases.
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
 
   if row == 1 and col == 0 then
@@ -169,8 +166,8 @@ require("blink.cmp").setup({
 
     ["<Up>"] = { "select_prev", "fallback" },
     ["<Down>"] = { "select_next", "fallback" },
-    ["<C-p>"] = { "select_prev", "fallback" },
-    ["<C-n>"] = { "select_next", "fallback" },
+    ["<C-p>"] = { "select_prev", "show", "fallback" },
+    ["<C-n>"] = { "select_next", "show", "fallback" },
 
     ["<C-u>"] = { "scroll_documentation_up", "fallback" },
     ["<C-d>"] = { "scroll_documentation_down", "fallback" },
@@ -311,10 +308,10 @@ require("blink.cmp").setup({
   },
 })
 
----@diagnostic disable-next-line: missing-fields
-require("tabout").setup({
-  tabkey = "",
-  backwards_tabkey = "",
-  -- completion = true,
-  -- act_as_shift_tab = true,
-})
+--- ---@diagnostic disable-next-line: missing-fields
+--- require("tabout").setup({
+---   tabkey = "",
+---   backwards_tabkey = "",
+---   -- completion = true,
+---   -- act_as_shift_tab = true,
+--- })

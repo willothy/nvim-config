@@ -605,7 +605,7 @@ M.code_actions = function(options)
 end
 
 function M.setup()
-  vim.lsp.buf.code_action = M.code_actions
+  -- vim.lsp.buf.code_action = M.code_actions
 end
 
 return setmetatable(M, {

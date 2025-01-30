@@ -9,6 +9,8 @@ vim.lsp.config["tailwindcss"] = {
     "postcss.config.cjs",
     "postcss.config.mjs",
     "postcss.config.ts",
+    "vite.config.ts",
+    "package.json",
   },
   -- filetypes copied and adjusted from tailwindcss-intellisense
   filetypes = {

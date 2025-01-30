@@ -135,7 +135,7 @@ return {
       -- "giuxtaposition/blink-cmp-copilot",
       "fang2hou/blink-copilot",
 
-      "rafamadriz/friendly-snippets",
+      -- "rafamadriz/friendly-snippets",
       "Saecki/crates.nvim",
       "windwp/nvim-ts-autotag",
     },
