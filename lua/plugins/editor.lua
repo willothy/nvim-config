@@ -387,12 +387,7 @@ return {
     config = function()
       require("configs.editor.overseer")
     end,
-    cmd = {
-      "OverseerRun",
-      "OverseerRunCmd",
-      "OverseerRunOpen",
-      "OverseerRunToggle",
-    },
+    event = { "UiEnter", "VeryLazy" },
   },
   -- NAVIGATION --
   {

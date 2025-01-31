@@ -57,98 +57,72 @@ vim.api.nvim_create_user_command("OverseerFloatLast", function()
   end
 end, {})
 
-local win
-vim.api.nvim_create_user_command("OverseerFloat", function(args)
-  overseer.list_tasks()
-  local width, height, offset = 30, 30, 3
-  local buf = require("overseer.task_list").get_or_create_bufnr()
-  vim.bo[buf].filetype = "OverseerList"
-  if win and vim.api.nvim_win_is_valid(win) then
-    vim.api.nvim_win_close(win, true)
-    win = nil
-    return
-  end
-  win = require("willothy.lib.win").open(buf, {
-    relative = "editor",
-    width = width,
-    height = height,
-    row = 2,
-    col = vim.o.columns - width - offset,
-    border = "solid",
-    noautocmd = true,
-  }, true)
-  vim.api.nvim_set_hl(0, "EdgyFloatTitle", {
-    fg = require("willothy.lib.hl").get("EdgyTitle", "fg"),
-    bg = require("willothy.lib.hl").get("NormalFloat", "bg"),
-  })
-  vim.wo[win].winhl = vim
-    .iter({
-      FloatBorder = "NormalFloat",
-      WinBar = "NormalFloat",
-    })
-    :fold("", function(acc, name, hl)
-      return acc .. name .. ":" .. hl .. ","
-    end)
-    :sub(1, -2)
-  vim.wo[win].winbar = "%#EdgyFloatTitle#Overseer "
-    .. require("willothy.lib.fn").make_clickable(
-      require("willothy.lib.fn").debounce_leading(function()
-        require("overseer").run_template()
-      end, 200),
-      "󰒐"
+local float = require("snacks").win.new({
+  border = "solid",
+  relative = "editor",
+  width = 30,
+  height = 30,
+  row = 2,
+  col = function()
+    return vim.o.columns - 30 - 3
+  end,
+
+  show = false,
+  backdrop = false,
+
+  title_pos = "center",
+  title = { { " Overseer 󰒐 ", "OverseerTitle" } },
+  fixbuf = true,
+
+  on_buf = function(self)
+    overseer.list_tasks()
+    local buf = require("overseer.task_list").get_or_create_bufnr()
+    vim.bo[buf].filetype = "OverseerList"
+    self.buf = buf
+  end,
+
+  on_win = function(self)
+    self:on(
+      "VimResized",
+      vim.schedule_wrap(function()
+        self:update()
+      end),
+      {
+        buffer = self.buf,
+      }
     )
 
-  vim.keymap.set("n", "q", function()
-    vim.api.nvim_win_close(vim.api.nvim_get_current_win(), true)
-  end, { buffer = buf })
-  local group = vim.api.nvim_create_augroup("OverseerFloat", { clear = true })
-  vim.api.nvim_create_autocmd("VimResized", {
-    group = group,
-    buffer = buf,
-    callback = function()
-      if win and vim.api.nvim_win_is_valid(win) then
-        local config = vim.api.nvim_win_get_config(win)
-        config.row = 2
-        config.col = vim.o.columns - width - offset
-        vim.api.nvim_win_set_config(win, config)
-      end
-    end,
-  })
-  vim.api.nvim_create_autocmd("BufWinLeave", {
-    buffer = buf,
-    group = group,
-    callback = function()
-      vim.schedule(function()
-        if
-          win
-          and vim.api.nvim_win_is_valid(win)
-          and vim.api.nvim_buf_is_valid(buf)
-        then
-          vim.api.nvim_win_set_buf(win, buf)
-          win = nil
-        end
-      end)
-    end,
-  })
-  if args.bang then
-    vim.api.nvim_create_autocmd("BufLeave", {
-      group = group,
-      buffer = buf,
-      callback = function()
-        if win and vim.api.nvim_win_is_valid(win) then
-          vim.api.nvim_win_close(win, true)
-        end
-      end,
+    local error = vim.api.nvim_get_hl(0, {
+      name = "DiagnosticInfo",
+      link = false,
     })
-  end
-  if #args.fargs > 0 then
-    overseer
-      .new_task({
-        cmd = args.fargs,
-      })
-      :start()
-  end
-end, {
-  nargs = "*",
-  bang = true,
+    local title = vim.api.nvim_get_hl(0, {
+      name = "Normal",
+      link = false,
+    })
+    vim.api.nvim_set_hl(0, "OverseerTitle", {
+      bg = error.fg,
+      fg = title.bg,
+    })
+  end,
 })
+
+local toggle = require("snacks").toggle.new({
+  name = "Overseer Menu",
+  notify = false,
+  get = function()
+    return float:valid()
+      and float.win == require("overseer.window").get_win_id()
+  end,
+  set = vim.schedule_wrap(function(open)
+    if open == false then
+      float:hide()
+    else
+      float:show()
+    end
+  end),
+})
+
+toggle:map("<leader>uo")
+
+return toggle

@@ -94,20 +94,22 @@ docs.get = function(name)
   return get(name)
 end
 
-require("willothy.lib.fn").create_command("DiagnosticFloat", {
-  command = M.toggle,
-  subcommands = {
-    enable = {
-      execute = M.enable,
-    },
-    disable = {
-      execute = M.disable,
-    },
-    toggle = {
-      execute = M.toggle,
-    },
-  },
-})
+require("snacks").toggle
+  .new({
+    name = "Diagnostic float",
+    get = function()
+      return enabled
+    end,
+    set = function(value)
+      enabled = value
+      if enabled then
+        M.show()
+      else
+        M.hide()
+      end
+    end,
+  })
+  :map("<leader>uF")
 
 -- To create IDE-like no blinking diagnostic message with `cursor` scope. (should be paired with the callback above)
 vim.api.nvim_create_autocmd("CursorHold", {

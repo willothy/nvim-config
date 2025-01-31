@@ -552,7 +552,7 @@ wk.add({
       "<leader>to",
       function()
         require("overseer")
-        vim.cmd.OverseerFloat()
+        require("configs.editor.overseer"):toggle()
       end,
       desc = "overseer: show",
     },

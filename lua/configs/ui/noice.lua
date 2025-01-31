@@ -15,9 +15,6 @@ require("noice").setup({
   smart_move = {
     enabled = true,
   },
-  redirect = {
-    view = "fidget",
-  },
   views = {
     split = {},
     mini = {
@@ -103,8 +100,11 @@ require("noice").setup({
     },
   },
   cmdline = {
-    view = "cmdline_popup",
+    view = "cmdline",
     format = {
+      cmdline = {
+        icon = ":",
+      },
       search_down = {
         view = "cmdline",
       },

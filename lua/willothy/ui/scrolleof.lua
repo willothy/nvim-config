@@ -100,6 +100,19 @@ M.setup = function()
     end,
   })
 
+  require("snacks").toggle
+    .new({
+      name = "ScrollEOF",
+      get = function()
+        return not disabled
+      end,
+      set = function(enabled)
+        disabled = not enabled
+        check_eof_scrolloff()
+      end,
+    })
+    :map("<leader>uG")
+
   check_eof_scrolloff()
 end
 

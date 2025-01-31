@@ -3,10 +3,13 @@ return {
   {
     "folke/which-key.nvim",
     opts = {
-      delay = 5,
+      delay = 50,
       preset = "helix",
       win = {
         border = "single",
+        wo = {
+          winhl = "FloatTitle:NormalFloat",
+        },
       },
     },
     event = "VeryLazy",
@@ -205,6 +208,28 @@ return {
           names = false,
           virtualtext = "■ ",
         },
+      })
+    end,
+    init = function()
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        callback = function()
+          require("snacks").toggle
+            .new({
+              name = "Colorizer",
+              get = function()
+                return require("colorizer").is_buffer_attached(0) ~= nil
+              end,
+              set = function(enabled)
+                if enabled then
+                  require("colorizer").attach_to_buffer(0)
+                else
+                  require("colorizer").detach_from_buffer(0)
+                end
+              end,
+            })
+            :map("<leader>uc")
+        end,
       })
     end,
     cmd = "ColorizerToggle",

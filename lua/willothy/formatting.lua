@@ -140,6 +140,18 @@ conform.formatters.uncrustify = {
   end,
 }
 
+local toggle = require("snacks").toggle.new({
+  name = "Format on save",
+  get = function()
+    return not vim.g.disable_autoformat
+  end,
+  set = function(enabled)
+    vim.g.disable_autoformat = not enabled
+  end,
+})
+
+toggle:map("<leader>uf")
+
 require("willothy.lib.fn").create_command("Format", {
   desc = "Manage formatting",
   bang = true,
@@ -151,17 +163,17 @@ require("willothy.lib.fn").create_command("Format", {
   subcommands = {
     disable = {
       execute = function()
-        vim.g.disable_autoformat = true
+        toggle:set(true)
       end,
     },
     enable = {
       execute = function()
-        vim.g.disable_autoformat = false
+        toggle:set(false)
       end,
     },
     toggle = {
       execute = function()
-        vim.g.disable_autoformat = not vim.g.disable_autoformat
+        toggle:toggle()
       end,
     },
   },

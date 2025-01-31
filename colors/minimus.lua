@@ -50,6 +50,7 @@ local spec = {
   text = palette.text, -- regular text
   -- text_semilight = "#bcdaf5",
   text_light = palette.cadet_gray, -- statusline, comments, etc.
+  text_dark = palette.raisin_black, -- dark text
 
   -- separator = "#2c3354",
   separator = "#363655",
@@ -98,15 +99,18 @@ require("mini.colors")
         bg = spec.background_dark,
       },
       NormalFloatNC = {
-        link = "NormalFloat",
+        fg = spec.text,
+        bg = spec.background_dark,
       },
       FloatBorder = {
         fg = spec.separator,
         bg = spec.background_dark,
       },
       FloatTitle = {
-        fg = spec.text_light,
-        bg = spec.background_dark,
+        -- fg = spec.text_light,
+        -- bg = spec.background_dark,
+        bg = spec.diagnostic.info,
+        fg = spec.text_dark,
       },
       FloatFooter = {
         fg = spec.text_light,
@@ -175,7 +179,7 @@ require("mini.colors")
         fg = spec.text,
       },
 
-      DiagnoticInfo = {
+      DiagnosticInfo = {
         fg = spec.diagnostic.info,
         sp = spec.diagnostic.info,
       },
