@@ -385,7 +385,7 @@ return {
   {
     "stevearc/overseer.nvim",
     config = function()
-      require("configs.editor.overseer")
+      require("willothy.tasks")
     end,
     event = { "UiEnter", "VeryLazy" },
   },

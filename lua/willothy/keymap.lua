@@ -551,8 +551,7 @@ wk.add({
     {
       "<leader>to",
       function()
-        require("overseer")
-        require("configs.editor.overseer"):toggle()
+        require("willothy.tasks"):toggle()
       end,
       desc = "overseer: show",
     },
