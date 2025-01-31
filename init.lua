@@ -19,20 +19,12 @@ vim.api.nvim_create_autocmd("User", {
 
 require("lazy").setup({
   {
-    "configuration",
-    virtual = true,
-    config = function()
-      require("willothy")
-    end,
-  },
-  {
     "settings",
     virtual = true,
     lazy = false,
     config = function()
       require("willothy.settings")
     end,
-    dependencies = { "configuration" },
   },
   {
     "autocmds",
@@ -170,3 +162,4 @@ require("lazy").setup({
     },
   },
 })
+require("willothy.lib.fs").hijack_netrw()

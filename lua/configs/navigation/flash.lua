@@ -1,13 +1,5 @@
 ---@diagnostic disable-next-line: missing-fields
 require("flash").setup({
-  highlight = {
-    groups = {
-      match = "FlashMatch",
-      current = "FlashCurrent",
-      backdrop = "FlashBackdrop",
-      label = "Constant",
-    },
-  },
   modes = {
     char = {
       enabled = true,

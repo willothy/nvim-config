@@ -113,7 +113,7 @@ local opts = {
         winhighlight = "Normal:Normal",
       },
       open = function()
-        willothy.terminal.main:open()
+        require("willothy.terminal").main:open()
       end,
       filter = function(buf, win)
         if vim.bo[buf].buftype ~= "terminal" or is_float(win) then

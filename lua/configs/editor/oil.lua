@@ -10,7 +10,7 @@ oil.winbar = function()
   local width = vim.api.nvim_win_get_width(0)
   local limit = width - 2
   if string.len(path) > limit then
-    path = willothy.fs.incremental_shorten(path, limit)
+    path = require("willothy.lib.fs").incremental_shorten(path, limit)
   end
   return path .. "/"
 end

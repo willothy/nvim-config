@@ -1,11 +1,11 @@
-local icons = willothy.ui.icons
+local icons = require("willothy.ui.icons")
 
 local get_hex = require("willothy.lib.hl").get
 
 local A = function(self)
   local o = vim.deepcopy(self)
   o.hl = function()
-    local col = willothy.ui.mode.get_color()
+    local col = require("willothy.ui.mode").get_color()
     return {
       fg = col.fg,
       bg = col.fg,
@@ -52,7 +52,7 @@ local Mode = {
   A(Separator.Left),
   {
     provider = function()
-      return string.char(willothy.ui.mode.get_short_name():byte(1))
+      return string.char(require("willothy.ui.mode").get_short_name():byte(1))
     end,
     hl = function()
       local col = require("willothy.ui.mode").get_color()
@@ -113,7 +113,7 @@ local Location = {
       return string.rep(self.sbar[i], 3)
     end,
     hl = function()
-      local col = willothy.ui.mode.get_color()
+      local col = require("willothy.ui.mode").get_color()
       return {
         -- bg = get_hex("StatusLine", "bg"),
         fg = col.fg,

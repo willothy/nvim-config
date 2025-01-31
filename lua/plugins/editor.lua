@@ -18,9 +18,30 @@ return {
         config = true,
       },
     },
-    config = function()
-      require("configs.editor.comment")
-    end,
+    opts = {
+      pre_hook = function(ctx)
+        -- if ctx.range.srow == ctx.range.erow then
+        --   -- line
+        -- else
+        --   -- range
+        -- end
+
+        return require("ts-comments.comments").get(vim.bo.ft)
+          or vim.bo.commentstring
+      end,
+      toggler = { -- Normal Mode
+        line = "gcc",
+        block = "gcb",
+      },
+      opleader = { -- Visual mode
+        block = "gC",
+        line = "gc",
+      },
+      ---@diagnostic disable-next-line: missing-fields
+      extra = {
+        eol = "gc$",
+      },
+    },
     event = "VeryLazy",
   },
   {
@@ -42,8 +63,7 @@ return {
       "chrisgrieser/nvim-various-textobjs",
     },
     config = function()
-      require("configs.editor.treesitter")
-      -- pcall(vim.treesitter.start)
+      require("willothy.treesitter")
     end,
   },
   {

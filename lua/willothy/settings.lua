@@ -1,6 +1,6 @@
 local o = vim.o
 local opt = vim.opt
-local icons = willothy.ui.icons
+local icons = require("willothy.ui.icons")
 
 o.cmdheight = 0
 o.scrolloff = 16

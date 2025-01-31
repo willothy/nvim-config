@@ -100,11 +100,8 @@ require("noice").setup({
     },
   },
   cmdline = {
-    view = "cmdline",
+    view = "cmdline_popup",
     format = {
-      cmdline = {
-        icon = ":",
-      },
       search_down = {
         view = "cmdline",
       },

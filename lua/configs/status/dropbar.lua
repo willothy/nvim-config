@@ -1,5 +1,5 @@
-local icons = willothy.ui.icons
 local dropbar = require("dropbar")
+local icons = require("willothy.ui.icons")
 
 local enable = function(buf, win)
   -- if

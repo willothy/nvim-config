@@ -32,7 +32,7 @@ return {
   {
     "nvim-neotest/neotest",
     config = function()
-      require("configs.editor.neotest")
+      require("willothy.testing")
     end,
     dependencies = {
       "rouge8/neotest-rust",

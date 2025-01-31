@@ -183,7 +183,7 @@ require("blink.cmp").setup({
   appearance = {
     use_nvim_cmp_as_default = true,
     nerd_font_variant = "normal",
-    kind_icons = willothy.ui.icons.kinds,
+    kind_icons = require("willothy.ui.icons").kinds,
   },
   sources = {
     default = {
@@ -255,7 +255,7 @@ require("blink.cmp").setup({
             ellipsis = false,
             text = function(ctx)
               if ctx.item.source_name == "copilot" then
-                return willothy.ui.icons.kinds.Copilot
+                return require("willothy.ui.icons").kinds.Copilot
               end
               return ctx.kind_icon
             end,

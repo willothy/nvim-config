@@ -1,4 +1,4 @@
-local icons = willothy.ui.icons
+local icons = require("willothy.ui.icons")
 
 local signs = {
   DapBreakpoint = {

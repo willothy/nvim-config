@@ -90,7 +90,7 @@ resession.add_hook("post_load", function()
           require("oil").open(vim.api.nvim_buf_get_name(buf))
         end)
       end)
-    willothy.ui.scrolleof.check()
+    require("willothy.ui.scrolleof").check()
     -- Fixes lazy freaking out when a session is loaded and there are
     -- auto-installs being run.
     if lazy_open then
