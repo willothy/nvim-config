@@ -1,4 +1,4 @@
-vim.lsp.config.biome = {
+return {
   cmd = { "biome", "lsp-proxy" },
   filetypes = {
     "astro",

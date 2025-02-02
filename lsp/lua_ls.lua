@@ -1,4 +1,4 @@
-vim.lsp.config.lua_ls = {
+return {
   capabilties = require("willothy.lsp.capabilities").make_capabilities(),
   settings = {
     Lua = {

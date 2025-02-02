@@ -1,4 +1,4 @@
-vim.lsp.config.cmake = {
+return {
   cmd = { "cmake-language-server" },
   filetypes = { "cmake" },
   root_markers = {

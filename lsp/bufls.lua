@@ -1,4 +1,4 @@
-vim.lsp.config.bufls = {
+return {
   cmd = { "bufls", "serve" },
   filetypes = { "proto" },
   root_markers = { "buf.work.yaml", ".git" },

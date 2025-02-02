@@ -32,7 +32,7 @@ local function is_library(fname)
   end
 end
 
-vim.lsp.config.rust_analyzer = {
+return {
   cmd = { "rust-analyzer" },
   filetypes = { "rust" },
   single_file_support = true,

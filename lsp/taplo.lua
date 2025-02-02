@@ -1,4 +1,4 @@
-vim.lsp.config.taplo = {
+return {
   cmd = { "taplo", "lsp", "stdio" },
   filetypes = { "toml" },
   single_file_support = true,

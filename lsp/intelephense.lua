@@ -1,4 +1,4 @@
-vim.lsp.config.intelephense = {
+return {
   cmd = { "intelephense", "--stdio" },
   filetypes = { "php" },
   root_markers = {

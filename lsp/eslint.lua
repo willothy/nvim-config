@@ -1,4 +1,4 @@
-vim.lsp.config.eslint = {
+return {
   cmd = { "vscode-eslint-language-server", "--stdio" },
   filetypes = {
     "javascript",
