@@ -195,9 +195,23 @@ wk.add({
     {
       "<leader>fr",
       function()
+        require("snacks").picker.recent()
+      end,
+      desc = "recent",
+    },
+    {
+      "<leader>fR",
+      function()
         require("snacks").picker.resume()
       end,
       desc = "resume",
+    },
+    {
+      "<leader>fp",
+      function()
+        require("snacks").picker.projects()
+      end,
+      desc = "projects",
     },
     {
       "<leader>fz",

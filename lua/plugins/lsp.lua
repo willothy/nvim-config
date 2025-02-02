@@ -100,6 +100,11 @@ return {
     end,
     event = "VeryLazy",
   },
+  {
+    "Zeioth/garbage-day.nvim",
+    config = true,
+    event = "LspAttach",
+  },
   -- {
   --   "p00f/clangd_extensions.nvim",
   --   config = true,

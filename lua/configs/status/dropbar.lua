@@ -213,6 +213,24 @@ dropbar.setup({
   },
 })
 
-vim.ui.select = require("dropbar.utils.menu").select
+---@diagnostic disable-next-line: duplicate-set-field
+vim.ui.select = function(items, opts, on_choice)
+  local title = opts.prompt
+  if title then -- add padding
+    if not vim.startswith(title, " ") then
+      title = string.format(" %s", title)
+    end
+    if not vim.endswith(title, " ") then
+      title = string.format("%s ", title)
+    end
+  end
+  return require("dropbar.utils.menu").select(
+    items,
+    vim.tbl_deep_extend("force", opts, {
+      prompt = title,
+    }),
+    on_choice
+  )
+end
 
 vim.go.winbar = "%{%v:lua.dropbar()%}"

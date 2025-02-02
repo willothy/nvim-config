@@ -8,7 +8,7 @@ local cache = {
 }
 
 -- Invalidate the cache on colorscheme change
-vim.api.nvim_create_autocmd("Colorscheme", {
+vim.api.nvim_create_autocmd("ColorschemePre", {
   group = vim.api.nvim_create_augroup(
     "cokeline_color_cache",
     { clear = true }

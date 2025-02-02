@@ -69,6 +69,12 @@ function M.get_color()
     return cache[hl]
   end
 
+  -- If the highlight group doesn't exist, return an empty table.
+  -- We don't want to cache an empty table because it might be created later.
+  if vim.fn.hlID(hl) == 0 then
+    return {}
+  end
+
   cache[hl] = vim.api.nvim_get_hl(0, {
     name = hl,
     link = false,
@@ -87,8 +93,6 @@ function M.get_short_name()
 end
 
 local function highlight()
-  cache = {}
-
   local turquoise = "#5de4c7"
   local pale_azure = "#89ddff"
   local lemon_chiffon = "#fffac2"
@@ -108,16 +112,22 @@ end
 function M.setup()
   local group = vim.api.nvim_create_augroup("willothy/mode", { clear = true })
 
-  highlight()
-
   vim.schedule(function()
+    vim.api.nvim_set_hl(0, "CurrentMode", M.get_color())
+
+    highlight()
+
     vim.api.nvim_create_autocmd({ "ModeChanged" }, {
       group = group,
-      callback = function(_args)
-        -- local from, to = unpack(vim.split(args.match, ":"))
+      callback = function()
+        vim.api.nvim_set_hl(0, "CurrentMode", M.get_color())
+      end,
+    })
 
-        local hl = M.get_color()
-        vim.api.nvim_set_hl(0, "CurrentMode", hl)
+    vim.api.nvim_create_autocmd("ColorSchemePre", {
+      group = group,
+      callback = function()
+        cache = {}
       end,
     })
     vim.api.nvim_create_autocmd("ColorScheme", {

@@ -471,6 +471,7 @@ event.on(
     "TermEnter",
     "LspAttach",
     "ColorScheme",
+    "ColorSchemePre",
     "VeryLazy",
   },
   vim.schedule_wrap(require("willothy.lib.fn").throttle(function()

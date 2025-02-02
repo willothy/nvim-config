@@ -121,7 +121,9 @@ return {
         help = true,
       }
 
-      require("snacks").setup({
+      local Snacks = require("snacks")
+
+      Snacks.setup({
         toggle = {},
         dashboard = {
           enabled = true,
@@ -156,6 +158,11 @@ return {
                 frecency = true,
                 sort_empty = true,
               },
+            },
+            projects = {
+              confirm = function(...)
+                return Snacks.picker.actions.load_session(...)
+              end,
             },
           },
           ui_select = false,
@@ -299,6 +306,28 @@ return {
           },
         },
       })
+
+      Snacks.picker.actions.load_session = function(picker)
+        local item = picker:current()
+        picker:close()
+        if not item then
+          return
+        end
+        local dir = item.file:gsub("/", "_")
+
+        local resession = require("resession")
+
+        local function hook_fn()
+          resession.remove_hook("post_load", hook_fn)
+        end
+
+        resession.add_hook("post_load", hook_fn)
+
+        resession.load(dir, {
+          -- silence_errors = true,
+          reset = true,
+        })
+      end
     end,
   },
   {

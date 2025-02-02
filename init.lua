@@ -62,9 +62,6 @@ require("lazy").setup({
     "ui",
     virtual = true,
     event = "UiEnter",
-    dependencies = {
-      "willothy/minimus",
-    },
     config = function()
       require("willothy.ui.scrollbar").setup()
       require("willothy.ui.scrolleof").setup()
