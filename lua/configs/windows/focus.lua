@@ -19,6 +19,9 @@ local ignore_filetypes = {
   NeogitCommitMessage = true,
   OverseerList = true,
   fish = true,
+  Avante = true,
+  AvanteInput = true,
+  AvanteSelectedFiles = true,
 }
 
 local function should_disable(buf, win)

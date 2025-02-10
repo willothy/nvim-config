@@ -160,7 +160,7 @@ return {
   -- AI
   {
     "yetone/avante.nvim",
-    event = "CmdlineEnter",
+    event = "VeryLazy",
     build = "make",
     config = function()
       local function setup(key)

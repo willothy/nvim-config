@@ -114,6 +114,30 @@ return {
         end,
       })
 
+      ---@param self snacks.win
+      local function add_borders(self)
+        local win = assert(self.win)
+
+        local macro = vim.api.nvim_get_hl(0, {
+          name = "Macro",
+          link = false,
+          create = false,
+        })
+
+        local border = vim.api.nvim_get_hl(0, {
+          name = "FloatBorder",
+          link = false,
+          create = false,
+        })
+
+        vim.api.nvim_set_hl(0, "SnacksInputBorder", {
+          fg = macro.fg,
+          bg = border.bg,
+        })
+
+        vim.wo[win].winhl = "FloatBorder:SnacksInputBorder"
+      end
+
       local indent_disabled = {
         markdown = true,
         txt = true,
@@ -151,6 +175,7 @@ return {
           },
         },
         picker = {
+          prompt = "  ",
           sources = {
             files = {
               ---@diagnostic disable-next-line: missing-fields
@@ -174,18 +199,32 @@ return {
                 width = 0.8,
                 min_width = 120,
                 height = 0.8,
-                border = "single",
+                border = "none",
                 {
                   box = "vertical",
                   border = "solid",
                   title = "{title} {live} {flags}",
-                  { win = "input", height = 1, border = "bottom" },
+                  {
+                    win = "input",
+                    height = 1,
+                    border = "bottom",
+                    on_win = add_borders,
+                  },
                   { win = "list", border = "none" },
                 },
                 {
                   win = "preview",
                   title = "{preview}",
-                  border = "left",
+                  border = {
+                    " ",
+                    " ",
+                    " ",
+                    " ",
+                    " ",
+                    " ",
+                    " ",
+                    "│",
+                  },
                   width = 0.5,
                 },
               },
@@ -198,10 +237,15 @@ return {
                 height = 0.8,
                 min_height = 30,
                 box = "vertical",
-                border = "single",
+                border = "vpad",
                 title = "{title} {live} {flags}",
                 title_pos = "center",
-                { win = "input", height = 1, border = "bottom" },
+                {
+                  win = "input",
+                  height = 1,
+                  border = "bottom",
+                  on_win = add_borders,
+                },
                 { win = "list", border = "none" },
                 {
                   win = "preview",

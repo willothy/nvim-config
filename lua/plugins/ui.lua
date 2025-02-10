@@ -187,6 +187,7 @@ return {
   },
   {
     "Bekaboo/dropbar.nvim",
+    -- dir = "~/projects/lua/dropbar.nvim/",
     dependencies = {
       "nvim-telescope/telescope-fzf-native.nvim",
     },

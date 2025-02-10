@@ -104,6 +104,10 @@ require("lazy").setup({
         "0xstepit/flow.nvim",
         config = true,
       },
+      {
+        "wtfox/jellybeans.nvim",
+        config = true,
+      },
     },
   },
   "echasnovski/mini.colors",
@@ -124,6 +128,13 @@ require("lazy").setup({
   },
   dev = {
     path = "~/projects/lua/",
+  },
+  git = {
+    throttle = {
+      enabled = true,
+      rate = 10,
+      duration = 150,
+    },
   },
   pkg = {
     enabled = true,

@@ -1,5 +1,18 @@
 local wk = require("which-key")
 
+-- -- ugly hack to seamlessly lazy-load avante on <leader>a
+-- vim.keymap.set("n", "<leader>aa", function() end)
+-- vim.keymap.set("n", "<leader>a", function()
+--   vim.keymap.del("n", "<leader>a", {})
+--   vim.keymap.del("n", "<leader>aa", {})
+--   require("avante")
+--   require("which-key").show({
+--     keys = "<leader>a",
+--   })
+-- end, {
+--   nowait = true,
+-- })
+--
 wk.add({
   {
     "<leader>b",
