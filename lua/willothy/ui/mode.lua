@@ -61,11 +61,12 @@ local mode_short_names = {
 
 local cache = {}
 
-function M.get_color()
+---@param ignore_cache? boolean
+function M.get_color(ignore_cache)
   local mode = mode_names[api.nvim_get_mode().mode] or "Normal"
   local hl = mode .. "Mode"
 
-  if cache[hl] then
+  if cache[hl] and not ignore_cache then
     return cache[hl]
   end
 

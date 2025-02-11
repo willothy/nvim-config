@@ -95,7 +95,7 @@ local commands = {
   },
   Bd = {
     function()
-      require("bufdelete").bufdelete(0, true)
+      Snacks.bufdelete.delete()
       if
         vim.api.nvim_buf_get_name(0) == ""
         and vim.api.nvim_buf_line_count(0) <= 1
@@ -103,20 +103,13 @@ local commands = {
       then
         vim.bo.buflisted = false
         vim.bo.bufhidden = "wipe"
-        -- vim.bo.buftype = ""
       end
     end,
     desc = "Close the current buffer",
   },
   Bda = {
     function()
-      local bufs = {}
-      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.bo[buf].buflisted then
-          table.insert(bufs, buf)
-        end
-      end
-      require("bufdelete").bufdelete(bufs, true)
+      require("snacks").bufdelete.all()
       if
         vim.api.nvim_buf_get_name(0) == ""
         and vim.api.nvim_buf_line_count(0) <= 1
@@ -124,7 +117,6 @@ local commands = {
       then
         vim.bo.buflisted = false
         vim.bo.bufhidden = "wipe"
-        -- vim.bo.buftype = ""
       end
     end,
     desc = "Close all buffers",

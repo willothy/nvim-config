@@ -149,6 +149,7 @@ return {
 
       Snacks.setup({
         toggle = {},
+        image = {},
         dashboard = {
           enabled = true,
 

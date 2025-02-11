@@ -175,6 +175,13 @@ wk.add({
     "<leader>f",
     group = "find",
     {
+      "<leader>fi",
+      function()
+        require("snacks").picker.icons()
+      end,
+      desc = "icon",
+    },
+    {
       "<leader>ff",
       function()
         require("snacks").picker.files()
