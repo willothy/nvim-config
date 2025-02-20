@@ -10,5 +10,8 @@ vim
     return vim.fs.basename(server_config_path):match("^(.*)%.lua$")
   end)
   :each(function(server_name)
+    if server_name == "emmylua_ls" then
+      return
+    end
     vim.lsp.enable(server_name)
   end)
