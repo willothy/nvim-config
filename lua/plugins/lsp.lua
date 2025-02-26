@@ -168,7 +168,9 @@ return {
         ---@diagnostic disable-next-line: missing-fields
         require("avante").setup({
           provider = "claude",
-          claude = {},
+          claude = {
+            -- model = "claude-3-5-sonnet-20250219",
+          },
           behavior = {},
         })
         vim.cmd("highlight default link AvanteSuggestion PmenuSel")

@@ -32,9 +32,30 @@ wk.add({
       desc = ":bprev",
     },
     {
+      "<leader>bN",
+      function()
+        require("cokeline.mappings").by_step("switch", 1)
+      end,
+      desc = "swap next",
+    },
+    {
+      "<leader>bP",
+      function()
+        require("cokeline.mappings").by_step("switch", -1)
+      end,
+      desc = "swap prev",
+    },
+    {
       "<leader>bs",
       function()
         require("dropbar.api").pick(vim.v.count ~= 0 and vim.v.count or nil)
+      end,
+      desc = "dropbar select",
+    },
+    {
+      "<leader>bb",
+      function()
+        require("cokeline.mappings").pick("focus")
       end,
       desc = "dropbar select",
     },
