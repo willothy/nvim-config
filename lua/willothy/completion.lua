@@ -173,6 +173,12 @@ require("blink.cmp").setup({
     ["<C-d>"] = { "scroll_documentation_down", "fallback" },
   },
   cmdline = {
+    enabled = true,
+    completion = {
+      menu = {
+        auto_show = true,
+      },
+    },
     keymap = {
       preset = "super-tab",
       ["<Up>"] = { "fallback" },

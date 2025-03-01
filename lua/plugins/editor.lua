@@ -252,7 +252,7 @@ return {
                   win = "preview",
                   title = "{preview}",
                   height = 0.4,
-                  border = "top",
+                  -- border = "vpad",
                 },
               },
             },
