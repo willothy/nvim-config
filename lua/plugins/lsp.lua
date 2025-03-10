@@ -15,16 +15,16 @@ return {
     ft = "lua",
     config = function()
       require("lazydev").setup({
-        exclude = {
-          "~/projects/lua",
-        },
+        -- exclude = {
+        --   "~/projects/lua",
+        -- },
         integrations = {
-          lspconfig = false,
+          lspconfig = true,
         },
         library = {
           "luvit-meta/library",
           vim.env.VIMRUNTIME,
-          unpack(vim.api.nvim_get_runtime_file("lua/vim", true)),
+          unpack(vim.api.nvim_get_runtime_file("lua/*", true)),
         },
       })
     end,
@@ -139,6 +139,7 @@ return {
       "Saghen/blink.compat",
       -- "giuxtaposition/blink-cmp-copilot",
       "fang2hou/blink-copilot",
+      "Kaiser-Yang/blink-cmp-avante",
 
       -- "rafamadriz/friendly-snippets",
       "Saecki/crates.nvim",
@@ -168,10 +169,23 @@ return {
         ---@diagnostic disable-next-line: missing-fields
         require("avante").setup({
           provider = "claude",
+          disabled_tools = { "python" },
           claude = {
             -- model = "claude-3-7-sonnet-20250219",
+            -- model = "claude-3-5-sonnet-20241022",
           },
           behavior = {},
+          windows = {
+            sidebar_header = {
+              rounded = false,
+            },
+            edit = {
+              border = "solid",
+            },
+            ask = {
+              border = "solid",
+            },
+          },
         })
         vim.cmd("highlight default link AvanteSuggestion PmenuSel")
       end

@@ -48,9 +48,9 @@ local function smart_indent(cmp)
     end)
 
     return true
-  elseif col >= indent then
-    vim.schedule(require("tabout").taboutMulti)
-    return true
+    -- elseif col >= indent then
+    -- vim.schedule(require("tabout").taboutMulti)
+    -- return true
   end
 end
 
@@ -127,7 +127,14 @@ local function smart_backspace(cmp)
   end
 end
 
+local disabled_filetypes = {
+  dropbar_menu_fzf = true,
+}
+
 require("blink.cmp").setup({
+  enabled = function()
+    return disabled_filetypes[vim.bo.filetype] == nil
+  end,
   keymap = {
     ["<C-h>"] = {
       "show",
@@ -195,6 +202,7 @@ require("blink.cmp").setup({
   sources = {
     default = {
       "lsp",
+      "avante",
       "path",
       "copilot",
       "snippets",
@@ -239,6 +247,11 @@ require("blink.cmp").setup({
         module = "blink.compat.source",
         score_offset = 100,
         -- async = true,
+      },
+      avante = {
+        module = "blink-cmp-avante",
+        name = "Avante",
+        opts = {},
       },
     },
   },
