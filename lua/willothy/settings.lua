@@ -81,6 +81,8 @@ o.expandtab = true
 
 -- o.indentkeys = o.indentkeys .. ",!0\t"
 
+o.winborder = "none"
+
 opt.fillchars = {
   horiz = "─",
   horizup = "┴",

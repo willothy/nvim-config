@@ -42,9 +42,9 @@ return {
       serverStatusNotification = true,
     },
   },
-  root_dir = function(callback)
+  root_dir = function(bufnr, callback)
     coroutine.resume(coroutine.create(function()
-      local fname = vim.api.nvim_buf_get_name(0)
+      local fname = vim.api.nvim_buf_get_name(bufnr)
 
       local reuse_active = is_library(fname)
       if reuse_active then

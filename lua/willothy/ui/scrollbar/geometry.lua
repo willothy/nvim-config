@@ -94,7 +94,7 @@ function M.get_geometry(target_win)
   local common_geometry = {
     width = 1,
     row = thumb_offset,
-    col = width + get_col_offset(config.border),
+    col = width + get_col_offset(config.border) - 1,
     relative = "win",
     win = target_win,
   }
