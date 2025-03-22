@@ -11,6 +11,17 @@ function M.create_system()
   ---@type fun()|nil
   local current_effect = nil
 
+  local signals = {}
+
+  local function dispose()
+    for dependencies in pairs(signals) do
+      for effect in pairs(dependencies) do
+        dependencies[effect] = nil
+      end
+      signals[dependencies] = nil
+    end
+  end
+
   ---Run a function with dependency tracking
   ---@param effect_fn fun() Function to track dependencies for
   local function run_effect(effect_fn)
@@ -30,6 +41,8 @@ function M.create_system()
 
     ---@type table<fun(), boolean>
     local dependencies = {}
+
+    signals[dependencies] = true
 
     local function get()
       if current_effect then

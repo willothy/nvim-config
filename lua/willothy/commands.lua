@@ -95,7 +95,9 @@ local commands = {
   },
   Bd = {
     function()
-      Snacks.bufdelete.delete()
+      require("snacks").bufdelete.delete({
+        wipe = true,
+      })
       if
         vim.api.nvim_buf_get_name(0) == ""
         and vim.api.nvim_buf_line_count(0) <= 1
@@ -109,7 +111,9 @@ local commands = {
   },
   Bda = {
     function()
-      require("snacks").bufdelete.all()
+      require("snacks").bufdelete.all({
+        wipe = true,
+      })
       if
         vim.api.nvim_buf_get_name(0) == ""
         and vim.api.nvim_buf_line_count(0) <= 1
