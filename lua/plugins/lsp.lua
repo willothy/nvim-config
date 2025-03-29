@@ -24,6 +24,7 @@ return {
         library = {
           "luvit-meta/library",
           vim.env.VIMRUNTIME,
+          "~/projects/lua/lua-orm/",
           unpack(vim.api.nvim_get_runtime_file("lua/*", true)),
         },
       })

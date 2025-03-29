@@ -3,6 +3,93 @@ local autocmd = vim.api.nvim_create_autocmd
 local group =
   vim.api.nvim_create_augroup("willothy.autocmds", { clear = true })
 
+---The reason why the `FileChangedShell` event was triggered.
+---Can be used in an autocommand to decide what to do and/or what
+---to set v:fcs_choice to.
+---
+---Possible values:
+---  deleted   file no longer exists
+---  conflict  file contents, mode or timestamp was
+---            changed and buffer is modified
+---  changed   file contents has changed
+---  mode      mode of file changed
+---  time      only file timestamp changed
+---
+---@enum FileChangeReason
+local FileChangeReason = {
+  --- File no longer exists.
+  Deleted = "deleted",
+  --- File contents, mode or timestamp was changed and buffer is modified.
+  Conflict = "conflict",
+  --- File contents has changed.
+  Changed = "changed",
+  --- Mode of file changed.
+  Mode = "mode",
+  --- Only file timestamp changed.
+  Time = "time",
+}
+
+---@enum FileChangeChoice
+local FileChangeChoice = {
+  --- Reload the buffer (does not work if
+  --- the file was deleted).
+  Reload = "reload",
+  --- Reload the buffer and detect the
+  --- values for options such as
+  --- 'fileformat', 'fileencoding', 'binary'
+  --- (does not work if the file was
+  --- deleted).
+  Edit = "edit",
+  --- Ask the user what to do, as if there
+  --- was no autocommand.  Except that when
+  --- only the timestamp changed nothing
+  --- will happen.
+  Ask = "ask",
+  --- Nothing, the autocommand should do
+  --- everything that needs to be done.
+  None = "",
+}
+
+---@alias FileChangeHandler fun(ev: vim.api.keyset.create_autocmd.callback_args): FileChangeChoice
+
+---@type table<FileChangeReason, FileChangeHandler>
+local FILE_CHANGE_HANDLERS = {
+  [FileChangeReason.Deleted] = function(ev)
+    vim.notify(
+      "File deleted on disk. Buffer will be unloaded.",
+      vim.log.levels.WARN,
+      {}
+    )
+    return FileChangeChoice.None
+  end,
+  [FileChangeReason.Conflict] = function(ev)
+    if vim.bo[ev.buf].modified then
+      return FileChangeChoice.Ask
+    else
+      vim.notify(
+        "File changed on disk, but the buffer is not modified. Reloading buffer.",
+        vim.log.levels.WARN,
+        {}
+      )
+      return FileChangeChoice.Reload
+    end
+  end,
+  [FileChangeReason.Changed] = function(ev)
+    return FileChangeChoice.Reload
+  end,
+  [FileChangeReason.Mode] = function(ev)
+    vim.notify(
+      "File mode changed on disk. This may affect how the file is accessed.",
+      vim.log.levels.INFO,
+      {}
+    )
+    return FileChangeChoice.Reload
+  end,
+  [FileChangeReason.Time] = function(ev)
+    return FileChangeChoice.None
+  end,
+}
+
 local autocmds = {
   {
     "LspAttach",
@@ -72,9 +159,15 @@ local autocmds = {
     end,
   },
   {
+    "FileChangedShell",
+    callback = function(ev)
+      vim.v.fcs_choice = FILE_CHANGE_HANDLERS[vim.v.fcs_reason](ev)
+    end,
+  },
+  {
     "FileChangedShellPost",
-    callback = function()
-      vim.cmd("checktime")
+    callback = function(ev)
+      --
     end,
   },
   {

@@ -21,6 +21,42 @@ return {
     "kkharji/sqlite.lua",
     -- dir = "~/projects/lua/sqlite.lua/",
   },
+  {
+    "willothy/async-sqlite",
+
+    -- see lazy.nvim docs (`config.dev`): https://lazy.folke.io/configuration
+    dir = "~/projects/lua/async-sqlite.nvim/",
+
+    -- optional, see `lua/async-sqlite/init.lua`
+    dependencies = "saghen/blink.download",
+
+    build = "cargo build --release",
+  },
+  -- {
+  --   "willothy/qb.lua",
+  --   dir = "~/projects/lua/lua-orm/",
+  --   event = "VeryLazy",
+  --   config = function()
+  --     local qb = require("qb")
+  --
+  --     local db =
+  --       qb.connect(vim.fs.joinpath(vim.fn.stdpath("config"), "test.db"))
+  --
+  --     db:execute([[
+  --       CREATE TABLE IF NOT EXISTS users (
+  --         id INTEGER PRIMARY KEY,
+  --         name TEXT,
+  --         age INTEGER
+  --       );
+  --     ]])
+  --
+  --     local rows = db:query("SELECT * FROM users WHERE name = 'Bob'")
+  --
+  --     vim.print(rows)
+  --
+  --     -- db.table("users")
+  --   end,
+  -- },
   -- {
   --   "relua",
   --   dir = "~/projects/lua/relua/",
