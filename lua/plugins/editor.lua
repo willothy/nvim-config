@@ -321,6 +321,9 @@ return {
           notification = {
             relative = "editor",
             ft = "markdown",
+            wo = {
+              wrap = true,
+            },
             bo = {
               filetype = "markdown",
             },

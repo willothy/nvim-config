@@ -52,14 +52,67 @@ local FileChangeChoice = {
 
 ---@alias FileChangeHandler fun(ev: vim.api.keyset.create_autocmd.callback_args): FileChangeChoice
 
----@type table<FileChangeReason, FileChangeHandler>
-local FILE_CHANGE_HANDLERS = {
-  [FileChangeReason.Deleted] = function(ev)
+local function coalesce_aggregate(timeout, fn)
+  local results = {}
+  local running = false
+
+  return function(...)
+    if not running then
+      running = true
+
+      vim.defer_fn(function()
+        running = false
+
+        local complete = results
+        results = {}
+
+        fn(complete)
+      end, timeout)
+    end
+
+    table.insert(results, { ... })
+  end
+end
+
+local delete_notifier = coalesce_aggregate(250, function(results)
+  -- Aggregate results to check if multiple files were deleted
+  -- in a short time frame.
+  if #results > 1 then
     vim.notify(
-      "File deleted on disk. Buffer will be unloaded.",
+      string.format(
+        "%d file%s deleted on disk. Buffer%s will be unloaded.\n%s",
+        #results,
+        #results == 1 and "" or "s",
+        #results == 1 and "" or "s",
+        vim
+          .iter(results)
+          :map(function(result)
+            return string.format(
+              "- %s",
+              string.gsub(result[1].file, vim.pesc(vim.env.HOME), "~")
+            )
+          end)
+          :join("\n")
+      ),
       vim.log.levels.WARN,
       {}
     )
+  else
+    vim.notify(
+      string.format(
+        "File %s deleted on disk. Buffer will be unloaded.",
+        string.gsub(results[1][1].file, vim.pesc(vim.env.HOME), "~")
+      ),
+      vim.log.levels.WARN,
+      {}
+    )
+  end
+end)
+
+---@type table<FileChangeReason, FileChangeHandler>
+local FILE_CHANGE_HANDLERS = {
+  [FileChangeReason.Deleted] = function(ev)
+    delete_notifier(ev)
     return FileChangeChoice.None
   end,
   [FileChangeReason.Conflict] = function(ev)
