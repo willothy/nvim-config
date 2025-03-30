@@ -127,10 +127,10 @@ local FILE_CHANGE_HANDLERS = {
       return FileChangeChoice.Reload
     end
   end,
-  [FileChangeReason.Changed] = function(ev)
+  [FileChangeReason.Changed] = function()
     return FileChangeChoice.Reload
   end,
-  [FileChangeReason.Mode] = function(ev)
+  [FileChangeReason.Mode] = function()
     vim.notify(
       "File mode changed on disk. This may affect how the file is accessed.",
       vim.log.levels.INFO,
@@ -138,7 +138,7 @@ local FILE_CHANGE_HANDLERS = {
     )
     return FileChangeChoice.Reload
   end,
-  [FileChangeReason.Time] = function(ev)
+  [FileChangeReason.Time] = function()
     return FileChangeChoice.None
   end,
 }
@@ -215,12 +215,6 @@ local autocmds = {
     "FileChangedShell",
     callback = function(ev)
       vim.v.fcs_choice = FILE_CHANGE_HANDLERS[vim.v.fcs_reason](ev)
-    end,
-  },
-  {
-    "FileChangedShellPost",
-    callback = function(ev)
-      --
     end,
   },
   {

@@ -131,21 +131,5 @@ require("noice").setup({
   notify = {
     enabled = true,
   },
-  routes = {
-    {
-      filter = {
-        any = {
-          -- this filters messages to be shown by fidget
-          { find = "^[^%s]+%s(%d+)L, (%d+)B%s+%[w%]$" },
-        },
-      },
-      opts = {
-        stop = true,
-        skip = true, -- change to false to show
-        format = {
-          "{message}",
-        },
-      },
-    },
-  },
+  routes = {},
 })
