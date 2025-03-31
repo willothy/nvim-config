@@ -9,8 +9,8 @@ local function setup(key)
       -- model = "claude-3-5-sonnet-20241022",
     },
     behaviour = {
-      -- Whether to enable Claude Text Editor Tool Mode.
-      enable_claude_text_editor_tool_mode = true,
+      -- Whether to enable Claude Text Editor Tool Mode. Default false.
+      -- enable_claude_text_editor_tool_mode = true,
     },
     windows = {
       sidebar_header = {

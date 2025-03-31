@@ -140,8 +140,8 @@ require("lazy").setup({
     enabled = true,
     sources = {
       "lazy",
-      "rockspec",
       "packspec",
+      "rockspec",
     },
   },
   rocks = {
