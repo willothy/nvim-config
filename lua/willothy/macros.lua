@@ -203,7 +203,7 @@ function M.open_menu()
   win = require("snacks.win").new({
     position = "float",
     border = "solid",
-    title = "Macros",
+    title = " Macros ",
     title_pos = "center",
     footer = selected and (selected.sequence or selected.title) or "",
     footer_pos = "center",
