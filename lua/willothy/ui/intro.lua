@@ -280,12 +280,14 @@ local function show()
       zindex = 1,
     })
   vim.wo[bg_winid].winhl = "NormalFloat:Normal"
+  vim.wo[bg_winid].number = false
+  vim.wo[bg_winid].relativenumber = false
 
   save_opts({
     -- laststatus = 0,
     -- showtabline = 0,
-    number = false,
-    relativenumber = false,
+    -- number = false,
+    -- relativenumber = false,
     guicursor = "a:NoiceHiddenCursor",
   })
   saved_opts.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
