@@ -61,7 +61,13 @@ local float = require("snacks").win.new({
   border = "solid",
   relative = "editor",
   width = 30,
-  height = 30,
+  height = function(self)
+    if self:buf_valid() then
+      local buf_height = vim.api.nvim_buf_line_count(self.buf)
+      return math.min(buf_height, 30)
+    end
+    return 0
+  end,
   row = 2,
   col = function()
     return vim.o.columns - 30 - 3
@@ -71,7 +77,7 @@ local float = require("snacks").win.new({
   backdrop = false,
 
   title_pos = "center",
-  title = { { " Overseer 󰒐 ", "OverseerTitle" } },
+  title = { { "  Tasks ", "OverseerTitle" } },
   fixbuf = true,
 
   on_buf = function(self)
@@ -79,6 +85,15 @@ local float = require("snacks").win.new({
     local buf = require("overseer.task_list").get_or_create_bufnr()
     vim.bo[buf].filetype = "OverseerList"
     self.buf = buf
+
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "OverseerListUpdate",
+      callback = vim.schedule_wrap(function()
+        if self.buf and vim.api.nvim_buf_is_valid(self.buf) then
+          self:update()
+        end
+      end),
+    })
   end,
 
   on_win = function(self)

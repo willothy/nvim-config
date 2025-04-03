@@ -168,6 +168,8 @@ return {
             },
           },
         },
+        layout = {},
+        win = {},
         statuscolumn = {
           left = { "mark", "sign", "git" },
           right = { "fold" },
