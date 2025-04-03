@@ -29,7 +29,6 @@ require("noice").setup({
       },
       border = {
         style = "solid",
-        padding = { 0, 0 },
       },
       win_options = {
         winhighlight = {
@@ -101,7 +100,14 @@ require("noice").setup({
   },
   cmdline = {
     view = "cmdline_popup",
+    -- view = "cmdline",
     format = {
+      cmdline = {
+        pattern = "^:",
+        icon = "",
+        -- icon = ":",
+        lang = "vim",
+      },
       search_down = {
         view = "cmdline",
       },
