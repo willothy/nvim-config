@@ -4,14 +4,32 @@ vim.lsp.config("*", {
 
 require("mason").setup()
 
-vim
-  .iter(vim.api.nvim_get_runtime_file("lsp/*.lua", true))
-  :map(function(server_config_path)
-    return vim.fs.basename(server_config_path):match("^(.*)%.lua$")
-  end)
-  :each(function(server_name)
-    if server_name == "emmylua_ls" then
-      return
-    end
-    vim.lsp.enable(server_name)
-  end)
+local disabled = {
+  emmylua_ls = true,
+  -- lua_ls = true,
+}
+
+local function init()
+  vim
+    .iter(vim.api.nvim_get_runtime_file("lsp/*.lua", true))
+    :map(function(server_config_path)
+      return vim.fs.basename(server_config_path):match("^(.*)%.lua$")
+    end)
+    :each(function(server_name)
+      if disabled[server_name] then
+        return
+      end
+      vim.lsp.enable(server_name)
+    end)
+end
+
+if vim.g.did_very_lazy then
+  init()
+else
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "VeryLazy",
+    callback = vim.schedule_wrap(function()
+      init()
+    end),
+  })
+end

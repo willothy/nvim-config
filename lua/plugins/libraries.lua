@@ -32,6 +32,11 @@ return {
 
     build = "cargo build --release",
   },
+  {
+    "willothy/lua-std",
+    dir = "~/projects/lua/lua-std/",
+    config = true,
+  },
   -- {
   --   "relua",
   --   dir = "~/projects/lua/relua/",
