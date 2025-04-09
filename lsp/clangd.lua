@@ -71,7 +71,7 @@ return {
     "compile_flags.txt",
     "configure.ac", -- AutoTools
   },
-  single_file_support = true,
+  single_file_support = false,
   capabilities = {
     textDocument = {
       completion = {
