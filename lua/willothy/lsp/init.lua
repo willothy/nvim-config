@@ -24,7 +24,9 @@ local function init()
 end
 
 if vim.g.did_very_lazy then
-  init()
+  vim.schedule(function()
+    init()
+  end)
 else
   vim.api.nvim_create_autocmd("User", {
     pattern = "VeryLazy",

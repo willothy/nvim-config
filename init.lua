@@ -100,6 +100,7 @@ require("lazy").setup({
       "diegoulloao/neofusion.nvim",
       "comfysage/evergarden",
       "ray-x/aurora",
+      "S-Spektrum-M/odyssey.nvim",
       {
         "0xstepit/flow.nvim",
         config = true,
@@ -170,4 +171,5 @@ require("lazy").setup({
     },
   },
 })
+
 require("willothy.lib.fs").hijack_netrw()
