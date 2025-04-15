@@ -9,18 +9,43 @@ local disabled = {
   -- lua_ls = true,
 }
 
+local configured = {
+  "basedpyright",
+  "bashls",
+  "biome",
+  "bufls",
+  "clangd",
+  "cmake",
+  "dockerls",
+  "emmylua_ls",
+  "eslint",
+  "gleam",
+  "gopls",
+  "intelephense",
+  "jsonls",
+  "lua_ls",
+  "prismals",
+  "rust_analyzer",
+  "tailwindcss",
+  "taplo",
+  "ts_ls",
+  "zls",
+}
+
 local function init()
   vim
-    .iter(vim.api.nvim_get_runtime_file("lsp/*.lua", true))
-    :map(function(server_config_path)
-      return vim.fs.basename(server_config_path):match("^(.*)%.lua$")
-    end)
-    :each(function(server_name)
-      if disabled[server_name] then
-        return
+    .iter(configured)
+    -- :map(function(server_config_path)
+    --   return vim.fs.basename(server_config_path):match("^(.*)%.lua$")
+    -- end)
+    :each(
+      function(server_name)
+        if disabled[server_name] then
+          return
+        end
+        vim.lsp.enable(server_name)
       end
-      vim.lsp.enable(server_name)
-    end)
+    )
 end
 
 if vim.g.did_very_lazy then
