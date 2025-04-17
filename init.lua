@@ -101,6 +101,7 @@ require("lazy").setup({
       "comfysage/evergarden",
       "ray-x/aurora",
       "S-Spektrum-M/odyssey.nvim",
+      "AlexvZyl/nordic.nvim",
       {
         "0xstepit/flow.nvim",
         config = true,
