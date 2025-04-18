@@ -111,6 +111,8 @@ return {
           Snacks.toggle.dim():map("<leader>uD")
           Snacks.toggle.zoom():map("<leader>uz")
           Snacks.toggle.scroll():map("<leader>uS")
+          Snacks.toggle.profiler():map("<leader>uP")
+          Snacks.toggle.profiler_highlights():map("<leader>up")
         end,
       })
 
@@ -150,6 +152,7 @@ return {
       Snacks.setup({
         toggle = {},
         image = {},
+        profiler = {},
         dashboard = {
           enabled = true,
 
