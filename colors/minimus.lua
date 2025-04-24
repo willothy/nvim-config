@@ -167,16 +167,22 @@ require("mini.colors")
       },
 
       DiffAdd = {
-        fg = spec.diff.add,
+        -- fg = spec.diff.add,
+        bg = "#283b4d",
+        -- add = "#c8d6dc",
+        -- change = "#d5d9e4",
+        -- delete = "#ddcace",
       },
       DiffChange = {
-        fg = spec.diff.change,
+        -- fg = spec.diff.change,
+        bg = "#272d43",
       },
       DiffDelete = {
-        fg = spec.diff.delete,
+        -- fg = spec.diff.delete,
+        bg = "#3d2d3d",
       },
       DiffText = {
-        fg = spec.text,
+        -- fg = spec.text,
       },
 
       DiagnosticInfo = {
@@ -513,7 +519,7 @@ require("mini.colors")
       BlinkCmpKindEvent = { fg = palette.blue },
       BlinkCmpKindOperator = { fg = palette.blue },
       BlinkCmpKindTypeParameter = { fg = palette.blue },
-      BlinkCmpKindCopilot = { fg = palette.turquoise },
+      BlinkCmpKindCopilot = { fg = palette.red },
       BlinkCmpGhostText = { link = "Comment" },
 
       DropBarMenuHoverEntry = { link = "PmenuSel" },

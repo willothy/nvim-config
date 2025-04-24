@@ -50,7 +50,7 @@ end
 
 if vim.g.did_very_lazy then
   vim.schedule(function()
-    init()
+    init(v)
   end)
 else
   vim.api.nvim_create_autocmd("User", {

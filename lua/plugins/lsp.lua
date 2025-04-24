@@ -137,10 +137,12 @@ return {
   {
     "Saghen/blink.cmp",
     dependencies = {
-      "Saghen/blink.compat",
+      -- "Saghen/blink.compat",
       -- "giuxtaposition/blink-cmp-copilot",
       "fang2hou/blink-copilot",
-      "Kaiser-Yang/blink-cmp-avante",
+      "copilotlsp-nvim/copilot-lsp",
+
+      -- "Kaiser-Yang/blink-cmp-avante",
 
       -- "rafamadriz/friendly-snippets",
       "Saecki/crates.nvim",
@@ -161,32 +163,49 @@ return {
   },
   -- AI
   {
-    "yetone/avante.nvim",
-    event = "VeryLazy",
-    build = "make",
-    config = function()
-      require("willothy.ai")
-    end,
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-      "nvim-tree/nvim-web-devicons",
-      "zbirenbaum/copilot.lua",
-
-      -- support for image pasting
-      "HakonHarnes/img-clip.nvim",
-      "MeanderingProgrammer/render-markdown.nvim",
-    },
+    "fang2hou/blink-copilot",
+    -- "tris203/blink-copilot",
+    -- branch = "detection",
   },
   {
-    "zbirenbaum/copilot.lua",
-    opts = {
-      suggestion = {
-        auto_trigger = false,
-        hide_during_completion = true,
-      },
+    "copilotlsp-nvim/copilot-lsp",
+    dependencies = {
+      -- "tris203/blink-copilot",
+      "fang2hou/blink-copilot",
     },
+    -- dir = "~/projects/lua/copilot-lsp",
+    init = function()
+      vim.g.copilot_nes_debounce = 250
+      vim.lsp.enable("copilot")
+    end,
   },
+  -- {
+  --   "yetone/avante.nvim",
+  --   event = "VeryLazy",
+  --   build = "make",
+  --   config = function()
+  --     require("willothy.ai")
+  --   end,
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",
+  --     "MunifTanjim/nui.nvim",
+  --     "nvim-tree/nvim-web-devicons",
+  --     -- "zbirenbaum/copilot.lua",
+  --
+  --     -- support for image pasting
+  --     "HakonHarnes/img-clip.nvim",
+  --     "MeanderingProgrammer/render-markdown.nvim",
+  --   },
+  -- },
+  -- {
+  --   "zbirenbaum/copilot.lua",
+  --   opts = {
+  --     suggestion = {
+  --       auto_trigger = false,
+  --       hide_during_completion = true,
+  --     },
+  --   },
+  -- },
   {
     "kylechui/nvim-surround",
     config = true,

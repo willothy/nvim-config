@@ -28,6 +28,11 @@ local function smart_indent(cmp)
     return cmp.select_and_accept()
   end
 
+  if vim.b[vim.api.nvim_get_current_buf()].nes_state then
+    cmp.hide()
+    return require("copilot-lsp.nes").apply_pending_nes()
+  end
+
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
   local ok, indent = pcall(require("nvim-treesitter.indent").get_indent, row)
   if not ok then
@@ -148,6 +153,15 @@ require("blink.cmp").setup({
     },
     ["<C-e>"] = { "hide", "fallback" },
 
+    ["<M-Tab>"] = {
+      function(cmp)
+        if vim.b[vim.api.nvim_get_current_buf()].nes_state then
+          cmp.hide()
+          return require("copilot-lsp.nes").apply_pending_nes()
+        end
+      end,
+      "fallback",
+    },
     ["<Tab>"] = {
       smart_indent,
       "snippet_forward",
@@ -197,14 +211,14 @@ require("blink.cmp").setup({
   appearance = {
     use_nvim_cmp_as_default = true,
     nerd_font_variant = "normal",
-    kind_icons = require("willothy.ui.icons").kinds,
+    -- kind_icons = require("willothy.ui.icons").kinds,
   },
   sources = {
     default = {
-      "lsp",
-      "avante",
-      "path",
       "copilot",
+      "lsp",
+      -- "avante",
+      "path",
       "snippets",
       "buffer",
     },
@@ -218,41 +232,42 @@ require("blink.cmp").setup({
         "buffer",
       },
       lua = {
+        "copilot",
         "lazydev",
         "lsp",
         "path",
-        "copilot",
         "snippets",
         "buffer",
       },
     },
     providers = {
+      copilot = {
+        name = "Copilot",
+        module = "blink-copilot",
+        score_offset = 3,
+        async = true,
+        opts = {
+          max_completions = 2,
+          -- kind_hl = "Copilot",
+        },
+      },
       lazydev = {
         name = "LazyDev",
         module = "lazydev.integrations.blink",
-        score_offset = 100,
+        score_offset = 2,
         fallbacks = { "lsp" },
       },
-      copilot = {
-        name = "copilot",
-        module = "blink-copilot",
-        score_offset = 100,
-        async = true,
-        opts = {
-          max_completions = 1,
-        },
-      },
       crates = {
-        name = "crates",
+        name = "Crates",
         module = "blink.compat.source",
-        score_offset = 100,
+        score_offset = 2,
         -- async = true,
       },
-      avante = {
-        module = "blink-cmp-avante",
-        name = "Avante",
-        opts = {},
-      },
+      -- avante = {
+      --   module = "blink-cmp-avante",
+      --   name = "Avante",
+      --   opts = {},
+      -- },
     },
   },
   completion = {
@@ -262,7 +277,10 @@ require("blink.cmp").setup({
 
     menu = {
       draw = {
-        treesitter = { "lsp", "copilot" },
+        treesitter = {
+          "lsp",
+          "copilot",
+        },
         padding = 1,
         gap = 1,
         columns = {
@@ -274,15 +292,9 @@ require("blink.cmp").setup({
           kind_icon = {
             ellipsis = false,
             text = function(ctx)
-              if ctx.item.source_name == "copilot" then
-                return require("willothy.ui.icons").kinds.Copilot
-              end
               return ctx.kind_icon
             end,
             highlight = function(ctx)
-              if ctx.item.source_name == "copilot" then
-                return "BlinkCmpKindCopilot"
-              end
               return "BlinkCmpKind" .. ctx.kind
             end,
           },
@@ -290,16 +302,9 @@ require("blink.cmp").setup({
           kind = {
             ellipsis = false,
             text = function(ctx)
-              if ctx.item.source_name == "copilot" then
-                local name = ctx.item.source_name
-                return name:sub(1, 1):upper() .. name:sub(2) .. " "
-              end
               return ctx.kind .. " "
             end,
             highlight = function(ctx)
-              if ctx.item.source_name == "copilot" then
-                return "BlinkCmpKindCopilot"
-              end
               return "BlinkCmpKind" .. ctx.kind
             end,
           },
