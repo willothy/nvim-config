@@ -176,7 +176,7 @@ return {
     -- dir = "~/projects/lua/copilot-lsp",
     init = function()
       vim.g.copilot_nes_debounce = 250
-      vim.lsp.enable("copilot")
+      vim.lsp.enable("copilot_ls")
     end,
   },
   -- {
