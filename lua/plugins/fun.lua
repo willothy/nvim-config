@@ -22,11 +22,12 @@ return {
     config = true,
     cmd = "Nvimesweeper",
   },
+  -- -- Sound effects
   -- {
   --   "jackplus-xyz/player-one.nvim",
   --   opts = {
-  --     is_enabled = false,
-  --     theme = "crystal",
+  --     is_enabled = true,
+  --     theme = "chiptune",
   --   },
   --   event = "VeryLazy",
   -- },

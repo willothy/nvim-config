@@ -15,20 +15,21 @@
 --- @field hide fun(self: willothy.ScrollbarWin)
 --- @field _make_win fun(self: willothy.ScrollbarWin, geometry: willothy.ScrollbarGeometry, hl_group: string): number
 --- @field redraw_if_needed fun(self: willothy.ScrollbarWin)
+local ScrollbarWindow = {}
 
---- @type willothy.ScrollbarWin
---- @diagnostic disable-next-line: missing-fields
-local scrollbar_win = {}
+ScrollbarWindow.__index = ScrollbarWindow
 
-function scrollbar_win.new(opts)
-  return setmetatable(opts, { __index = scrollbar_win })
+---@param opts willothy.ScrollbarConfig
+---@return willothy.ScrollbarWin
+function ScrollbarWindow.new(opts)
+  return setmetatable(opts, ScrollbarWindow) --[[@as willothy.ScrollbarWin]]
 end
 
-function scrollbar_win:is_visible()
+function ScrollbarWindow:is_visible()
   return self.thumb_win ~= nil and vim.api.nvim_win_is_valid(self.thumb_win)
 end
 
-function scrollbar_win:show_thumb(geometry)
+function ScrollbarWindow:show_thumb(geometry)
   -- create window if it doesn't exist
   if
     self.thumb_win == nil or not vim.api.nvim_win_is_valid(self.thumb_win)
@@ -45,7 +46,7 @@ function scrollbar_win:show_thumb(geometry)
   self:redraw_if_needed()
 end
 
-function scrollbar_win:show_gutter(geometry)
+function ScrollbarWindow:show_gutter(geometry)
   if not self.enable_gutter then
     return
   end
@@ -66,7 +67,7 @@ function scrollbar_win:show_gutter(geometry)
   self:redraw_if_needed()
 end
 
-function scrollbar_win:hide_thumb()
+function ScrollbarWindow:hide_thumb()
   if self.thumb_win and vim.api.nvim_win_is_valid(self.thumb_win) then
     vim.api.nvim_win_close(self.thumb_win, true)
     self.thumb_win = nil
@@ -74,7 +75,7 @@ function scrollbar_win:hide_thumb()
   end
 end
 
-function scrollbar_win:hide_gutter()
+function ScrollbarWindow:hide_gutter()
   if self.gutter_win and vim.api.nvim_win_is_valid(self.gutter_win) then
     vim.api.nvim_win_close(self.gutter_win, true)
     self.gutter_win = nil
@@ -82,12 +83,12 @@ function scrollbar_win:hide_gutter()
   end
 end
 
-function scrollbar_win:hide()
+function ScrollbarWindow:hide()
   self:hide_thumb()
   self:hide_gutter()
 end
 
-function scrollbar_win:_make_win(geometry, hl_group)
+function ScrollbarWindow:_make_win(geometry, hl_group)
   if self.buf == nil or not vim.api.nvim_buf_is_valid(self.buf) then
     self.buf = vim.api.nvim_create_buf(false, true)
   end
@@ -97,7 +98,11 @@ function scrollbar_win:_make_win(geometry, hl_group)
     focusable = false,
     noautocmd = true,
   })
-  local win = vim.api.nvim_open_win(self.buf, false, win_config)
+  local win = vim.api.nvim_open_win(
+    self.buf,
+    false,
+    win_config --[[@as vim.api.keyset.win_config]]
+  )
   vim.api.nvim_set_option_value(
     "winhighlight",
     "Normal:" .. hl_group .. ",EndOfBuffer:" .. hl_group,
@@ -106,24 +111,17 @@ function scrollbar_win:_make_win(geometry, hl_group)
   return win
 end
 
-local redraw_queued = false
-function scrollbar_win:redraw_if_needed()
-  if redraw_queued or vim.api.nvim_get_mode().mode ~= "c" then
-    return
-  end
-
-  redraw_queued = true
+function ScrollbarWindow:redraw_if_needed()
   vim.schedule(function()
-    redraw_queued = false
     if
       self.gutter_win ~= nil and vim.api.nvim_win_is_valid(self.gutter_win)
     then
-      vim.api.nvim__redraw({ win = self.gutter_win, flush = true })
+      vim.api.nvim__redraw({ win = self.gutter_win, valid = true })
     end
     if self.thumb_win ~= nil and vim.api.nvim_win_is_valid(self.thumb_win) then
-      vim.api.nvim__redraw({ win = self.thumb_win, flush = true })
+      vim.api.nvim__redraw({ win = self.thumb_win, valid = true })
     end
   end)
 end
 
-return scrollbar_win
+return ScrollbarWindow

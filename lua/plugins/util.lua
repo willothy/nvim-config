@@ -51,6 +51,16 @@ return {
     "Saecki/crates.nvim",
     event = "BufRead Cargo.toml",
   },
+  -- -- Like crates.nvim but for package.json, but seems to be not as good yet
+  -- {
+  --   "vuki656/package-info.nvim",
+  --   event = "BufRead package.json",
+  --   opts = {
+  --     -- fallback to pnpm if auto-detection doesn't work
+  --     notifications = false,
+  --     package_manager = "pnpm",
+  --   },
+  -- },
   {
     "tzachar/highlight-undo.nvim",
     config = true,

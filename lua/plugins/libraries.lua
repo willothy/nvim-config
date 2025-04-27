@@ -21,22 +21,22 @@ return {
     "kkharji/sqlite.lua",
     -- dir = "~/projects/lua/sqlite.lua/",
   },
-  {
-    "willothy/async-sqlite",
-
-    -- see lazy.nvim docs (`config.dev`): https://lazy.folke.io/configuration
-    dir = "~/projects/lua/async-sqlite.nvim/",
-
-    -- optional, see `lua/async-sqlite/init.lua`
-    dependencies = "saghen/blink.download",
-
-    build = "cargo build --release",
-  },
-  {
-    "willothy/lua-std",
-    dir = "~/projects/lua/lua-std/",
-    config = true,
-  },
+  -- {
+  --   "willothy/async-sqlite",
+  --
+  --   -- see lazy.nvim docs (`config.dev`): https://lazy.folke.io/configuration
+  --   dir = "~/projects/lua/async-sqlite.nvim/",
+  --
+  --   -- optional, see `lua/async-sqlite/init.lua`
+  --   dependencies = "saghen/blink.download",
+  --
+  --   build = "cargo build --release",
+  -- },
+  -- {
+  --   "willothy/lua-std",
+  --   dir = "~/projects/lua/lua-std/",
+  --   config = true,
+  -- },
   -- {
   --   "relua",
   --   dir = "~/projects/lua/relua/",
@@ -60,7 +60,6 @@ return {
     "nvim-neotest/nvim-nio",
     name = "nio",
   },
-  { "nvchad/volt", lazy = true },
   -- {
   --   "willothy/libsql-lua",
   --   -- name = "libsql-lua",

@@ -7,22 +7,19 @@
 --- @field new fun(opts: willothy.ScrollbarConfig): willothy.Scrollbar
 --- @field is_visible fun(self: willothy.Scrollbar): boolean
 --- @field update fun(self: willothy.Scrollbar, target_win: number | nil)
+local Scrollbar = {}
 
---- @type willothy.Scrollbar
---- @diagnostic disable-next-line: missing-fields
-local scrollbar = {}
-
-function scrollbar.new(opts)
-  local self = setmetatable({}, { __index = scrollbar })
+function Scrollbar.new(opts)
+  local self = setmetatable({}, { __index = Scrollbar })
   self.win = require("willothy.ui.scrollbar.win").new(opts)
   return self
 end
 
-function scrollbar:is_visible()
+function Scrollbar:is_visible()
   return self.win:is_visible()
 end
 
-function scrollbar:update(target_win)
+function Scrollbar:update(target_win)
   if target_win == nil or not vim.api.nvim_win_is_valid(target_win) then
     return self.win:hide()
   end
@@ -42,36 +39,39 @@ local ScrollBarManager = {
 }
 
 function ScrollBarManager.update()
-  local old = vim
-    .iter(pairs(ScrollBarManager.bars))
-    :fold({}, function(acc, winnr)
-      acc[winnr] = true
-      return acc
-    end)
+  local tabpage = vim.api.nvim_get_current_tabpage()
+
   vim
-    .iter(vim.api.nvim_tabpage_list_wins(0))
+    .iter(vim.api.nvim_tabpage_list_wins(tabpage))
     :filter(function(win)
-      local winbuf = vim.api.nvim_win_get_buf(win)
-      return vim.bo[winbuf].buftype == ""
-        and vim.bo[winbuf].filetype ~= "noice"
-        and vim.api.nvim_win_get_config(win).zindex == nil
+      local buf = vim.api.nvim_win_get_buf(win)
+
+      -- short-circuit here to avoid creating win config objects unnecessarily
+      return vim.bo[buf].buftype == "" and vim.bo[buf].filetype ~= "noice"
+    end)
+    :filter(function(win)
+      return vim.api.nvim_win_get_config(win).relative == ""
     end)
     :each(function(win)
       if not ScrollBarManager.bars[win] then
-        local bar = scrollbar.new({
+        local bar = Scrollbar.new({
           enable_gutter = false,
         })
         ScrollBarManager.bars[win] = bar
       end
       ScrollBarManager.bars[win]:update(win)
-      old[win] = nil
     end)
-  vim.iter(pairs(old)):each(function(w)
-    if ScrollBarManager.bars[w] then
-      ScrollBarManager.bars[w]:update()
+
+  vim
+    .iter(pairs(ScrollBarManager.bars))
+    :filter(function(w)
+      return vim.api.nvim_win_is_valid(w) == false
+        or vim.api.nvim_win_get_tabpage(w) ~= tabpage
+    end)
+    :each(function(w, bar)
       ScrollBarManager.bars[w] = nil
-    end
-  end)
+      bar:update()
+    end)
 end
 
 function ScrollBarManager.clear()

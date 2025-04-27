@@ -87,15 +87,6 @@ return {
   },
   -- SIDEBARS --
   {
-    "jackMort/tide.nvim",
-    config = function()
-      require("tide").setup({
-        animation_duration = 150,
-      })
-    end,
-    event = "VeryLazy",
-  },
-  {
     "folke/trouble.nvim",
     cmd = "Trouble",
     config = function()
@@ -170,7 +161,7 @@ return {
   {
     -- "willothy/nvim-cokeline",
     "plax-00/nvim-cokeline",
-    branch = "pick-close-multiple",
+    -- branch = "pick-close-multiple",
     config = function()
       require("configs.status.cokeline")
     end,

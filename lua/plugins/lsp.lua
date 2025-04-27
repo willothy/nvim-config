@@ -133,11 +133,28 @@ return {
     end,
     event = "DiagnosticChanged",
   },
+  {
+    "boltlessengineer/sense.nvim",
+    init = function()
+      vim.g.sense_nvim = {
+        -- show hint in statuscolumn, but not in the window itself
+        presets = {
+          virtualtext = {
+            enabled = false,
+          },
+          statuscolumn = {
+            enabled = true,
+          },
+        },
+      }
+    end,
+    event = "DiagnosticChanged",
+  },
   -- COMPLETION --
   {
     "Saghen/blink.cmp",
     dependencies = {
-      -- "Saghen/blink.compat",
+      "Saghen/blink.compat",
       -- "giuxtaposition/blink-cmp-copilot",
       "fang2hou/blink-copilot",
       "copilotlsp-nvim/copilot-lsp",
@@ -163,14 +180,8 @@ return {
   },
   -- AI
   {
-    "fang2hou/blink-copilot",
-    -- "tris203/blink-copilot",
-    -- branch = "detection",
-  },
-  {
     "copilotlsp-nvim/copilot-lsp",
     dependencies = {
-      -- "tris203/blink-copilot",
       "fang2hou/blink-copilot",
     },
     -- dir = "~/projects/lua/copilot-lsp",
@@ -179,33 +190,6 @@ return {
       vim.lsp.enable("copilot_ls")
     end,
   },
-  -- {
-  --   "yetone/avante.nvim",
-  --   event = "VeryLazy",
-  --   build = "make",
-  --   config = function()
-  --     require("willothy.ai")
-  --   end,
-  --   dependencies = {
-  --     "nvim-lua/plenary.nvim",
-  --     "MunifTanjim/nui.nvim",
-  --     "nvim-tree/nvim-web-devicons",
-  --     -- "zbirenbaum/copilot.lua",
-  --
-  --     -- support for image pasting
-  --     "HakonHarnes/img-clip.nvim",
-  --     "MeanderingProgrammer/render-markdown.nvim",
-  --   },
-  -- },
-  -- {
-  --   "zbirenbaum/copilot.lua",
-  --   opts = {
-  --     suggestion = {
-  --       auto_trigger = false,
-  --       hide_during_completion = true,
-  --     },
-  --   },
-  -- },
   {
     "kylechui/nvim-surround",
     config = true,
