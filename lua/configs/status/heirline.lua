@@ -196,7 +196,7 @@ local Devicon = {
   hl = function(self)
     return { fg = self.icon_color }
   end,
-  condition = function(self)
+  condition = function()
     return package.loaded["nvim-web-devicons"] ~= nil
   end,
   update = {
@@ -342,7 +342,7 @@ local Git = (
       condition = function(self)
         return self:added() > 0
       end,
-      hl = "DiffAdd",
+      hl = "GitSignsAdd",
       Space,
     },
     {
@@ -352,7 +352,7 @@ local Git = (
       condition = function(self)
         return self:removed() > 0
       end,
-      hl = "DiffDelete",
+      hl = "GitSignsDelete",
       Space,
     },
     {
@@ -362,7 +362,7 @@ local Git = (
       condition = function(self)
         return self:modified() > 0
       end,
-      hl = "DiffChange",
+      hl = "GitSignsChange",
       Space,
     },
   })

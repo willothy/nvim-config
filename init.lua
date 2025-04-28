@@ -83,7 +83,7 @@ require("lazy").setup({
   { import = "plugins.fun" },
 
   {
-    "willothy/minimus",
+    "minimus",
     virtual = true,
     config = function()
       vim.cmd.colorscheme("minimus")

@@ -72,15 +72,24 @@ local spec = {
   },
 
   diff = {
-    add = palette.turquoise,
-    change = palette.lemon_chiffon,
-    delete = palette.red,
+    -- the foreground color of diff icons / indicators
+    icon = {
+      add = palette.turquoise,
+      change = palette.lemon_chiffon,
+      delete = palette.red,
+    },
+    -- the background color used in the actual diff display
+    inline = {
+      add = "#283b4d",
+      change = "#272d43",
+      delete = "#3d2d3d",
+    },
   },
 }
 
 require("mini.colors")
   .as_colorscheme({
-    name = "minimus2",
+    name = "minimus",
     groups = {
       Normal = {
         bg = spec.background,
@@ -167,22 +176,26 @@ require("mini.colors")
       },
 
       DiffAdd = {
-        -- fg = spec.diff.add,
-        bg = "#283b4d",
-        -- add = "#c8d6dc",
-        -- change = "#d5d9e4",
-        -- delete = "#ddcace",
+        bg = spec.diff.inline.add,
       },
       DiffChange = {
-        -- fg = spec.diff.change,
-        bg = "#272d43",
+        bg = spec.diff.inline.change,
       },
       DiffDelete = {
-        -- fg = spec.diff.delete,
-        bg = "#3d2d3d",
+        bg = spec.diff.inline.delete,
       },
       DiffText = {
         -- fg = spec.text,
+      },
+
+      DiffIconAdd = {
+        fg = spec.diff.icon.add,
+      },
+      DiffIconChange = {
+        fg = spec.diff.icon.change,
+      },
+      DiffIconDelete = {
+        fg = spec.diff.icon.delete,
       },
 
       DiagnosticInfo = {
