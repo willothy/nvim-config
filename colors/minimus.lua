@@ -52,17 +52,22 @@ local spec = {
   text_light = palette.cadet_gray, -- statusline, comments, etc.
   text_dark = palette.raisin_black, -- dark text
 
+  title = palette.turquoise,
+
   -- separator = "#2c3354",
   separator = "#363655",
 
   line_nr = "#9196c2",
   inline = "#7dacd9",
 
-  property = "#f8bacb",
-  func = "#4dccff",
-  keyword = "#629cf8",
-  operator = "#b4c2d5",
-  special = "#a0acfe",
+  syntax = {
+    identifier = palette.uranian_blue,
+    property = "#f8bacb",
+    func = "#4dccff",
+    keyword = "#629cf8",
+    operator = "#b4c2d5", -- palette.cadet_gray, -- statusline, comments, etc.
+    special = "#a0acfe",
+  },
 
   diagnostic = {
     error = "#d74947",
@@ -84,6 +89,35 @@ local spec = {
       change = "#272d43",
       delete = "#3d2d3d",
     },
+  },
+
+  kinds = {
+    Snippet = palette.mauve,
+    Keyword = palette.red,
+    Text = palette.teal,
+    Method = palette.blue,
+    Constructor = palette.blue,
+    Function = palette.blue,
+    Folder = palette.blue,
+    Module = palette.blue,
+    Constant = palette.peach,
+    Field = palette.lemon_chiffon,
+    Property = palette.lemon_chiffon,
+    Enum = palette.lemon_chiffon,
+    Unit = palette.lemon_chiffon,
+    Class = palette.yellow,
+    Variable = palette.flamingo,
+    File = palette.blue,
+    Interface = palette.lemon_chiffon,
+    Color = palette.red,
+    Reference = palette.red,
+    EnumMember = palette.red,
+    Struct = palette.blue,
+    Value = palette.peach,
+    Event = palette.blue,
+    Operator = palette.blue,
+    TypeParameter = palette.blue,
+    Copilot = palette.red,
   },
 }
 
@@ -314,19 +348,19 @@ require("mini.colors")
       },
 
       Special = {
-        fg = spec.special,
+        fg = spec.syntax.special,
       },
       SpecialChar = {
-        fg = spec.special,
+        fg = spec.syntax.special,
       },
       Tag = {
-        fg = spec.special,
+        fg = spec.syntax.special,
       },
       Delimiter = {
         fg = spec.text,
       },
       SpecialComment = {
-        fg = palette.lavender,
+        fg = spec.syntax.special,
       },
 
       Debug = {
@@ -370,17 +404,17 @@ require("mini.colors")
       Boolean = { fg = palette.maroon },
       Float = { fg = palette.maroon },
 
-      Identifier = { fg = palette.uranian_blue },
-      Function = { fg = spec.func },
+      Identifier = { fg = spec.syntax.identifier },
+      Function = { fg = spec.syntax.func },
 
-      Statement = { fg = spec.keyword },
-      Conditional = { fg = spec.keyword },
-      Repeat = { fg = spec.keyword },
-      Label = { fg = spec.keyword },
-      Exception = { fg = spec.keyword },
-      Operator = { fg = palette.cadet_gray },
-      Keyword = { fg = spec.keyword },
-      StorageClass = { fg = spec.keyword },
+      Statement = { fg = spec.syntax.keyword },
+      Conditional = { fg = spec.syntax.keyword },
+      Repeat = { fg = spec.syntax.keyword },
+      Label = { fg = spec.syntax.keyword },
+      Exception = { fg = spec.syntax.keyword },
+      Operator = { fg = spec.syntax.operator },
+      Keyword = { fg = spec.syntax.keyword },
+      StorageClass = { fg = spec.syntax.keyword },
 
       Macro = {
         fg = palette.red,
@@ -419,10 +453,10 @@ require("mini.colors")
 
       -- Treesitter
       ["@text.literal"] = {},
-      ["@string.special"] = { fg = palette.lavender },
-      ["@string.escape"] = { fg = palette.lavender },
+      ["@string.special"] = { link = "Special" },
+      ["@string.escape"] = { link = "Special" },
 
-      ["@text.title"] = { fg = palette.turquoise },
+      ["@text.title"] = { fg = spec.title },
       ["@text.strike"] = { strikethrough = true },
       ["@text.strong"] = { bold = true },
       ["@text.underline"] = { underline = true },
@@ -431,7 +465,7 @@ require("mini.colors")
       -- syn '@text.warning' { DiagnosticWarn },
       ["@text.todo"] = { link = "Todo" },
       ["@text.uri"] = { underline = true },
-      ["@text.reference"] = { fg = spec.ident },
+      ["@text.reference"] = { link = "Identifier" },
 
       ["@constant.macro"] = { link = "Macro" }, -- Define
       ["@define"] = { link = "Macro" }, -- Define
@@ -444,7 +478,7 @@ require("mini.colors")
       ["@method"] = { link = "Function" }, -- Function
       ["@namespace"] = { link = "Identifier" }, -- Identifier
       ["@structure"] = { link = "Stucture" }, -- Structure
-      ["@parameter"] = { fg = spec.ident }, -- Identifier
+      ["@parameter"] = { link = "Identifier" }, -- Identifier
       ["@field"] = { link = "Identifier" }, -- Identifier
       ["@property"] = { link = "Identifier" }, -- Identifier
       ["@variable"] = { link = "Identifier" }, -- Identifier
@@ -467,7 +501,7 @@ require("mini.colors")
       ["@lsp.type.selfTypeKeyword"] = { link = "Keyword" },
 
       -- ['@lsp.type.trait'] = { fg = p.peach },
-      ["@lsp.type.typeParameter"] = { fg = palette.lemon_chiffon },
+      ["@lsp.type.typeParameter"] = { link = "Type" },
 
       ["@lsp.type.macro"] = { link = "Macro" },
       ["@lsp.type.attribute"] = { link = "Macro" },
@@ -480,10 +514,10 @@ require("mini.colors")
 
       -- operators                                    .
       ["@lsp.type.operator"] = { link = "Operator" },
-      ["@lsp.type.property"] = { fg = spec.property },
+      ["@lsp.type.property"] = { fg = spec.syntax.property },
       ["@lsp.type.enumMember"] = { fg = palette.mauve },
-      ["@lsp.type.typeAlias"] = { fg = palette.lemon_chiffon },
-      ["@lsp.type.union"] = { fg = palette.lemon_chiffon },
+      ["@lsp.type.typeAlias"] = { link = "Type" },
+      ["@lsp.type.union"] = { link = "Type" },
 
       ["@lsp.type.builtinAttribute"] = { link = "Macro" },
 
@@ -491,10 +525,10 @@ require("mini.colors")
       ["@lsp.mod.async"] = { link = "Keyword" },
       ["@lsp.mod.callable"] = { link = "Function" },
       -- ['@lsp.mod.trait'] = { Keyword },
-      ["@lsp.typemod.variable.static"] = { fg = palette.tea_rose },
+      ["@lsp.typemod.variable.static"] = { link = "Constant" },
 
       -- sym('@comment')           { }, -- Comment
-      ["@constant.builtin"] = { fg = palette.tea_rose }, -- Special
+      ["@constant.builtin"] = { link = "Constant" }, -- Special
       -- ['@storageclass'] = { fg = p.tea_rose }, -- StorageClass
       -- sym('@function.builtin')  { }, -- Special
       -- sym('@constructor')       { }, -- Special
@@ -507,32 +541,33 @@ require("mini.colors")
       -- sym('@debug')             { }, -- Debug
       -- sym('@tag')               { }, -- Tag
 
-      BlinkCmpKindSnippet = { fg = palette.mauve },
-      BlinkCmpKindKeyword = { fg = palette.red },
-      BlinkCmpKindText = { fg = palette.teal },
-      BlinkCmpKindMethod = { fg = palette.blue },
-      BlinkCmpKindConstructor = { fg = palette.blue },
-      BlinkCmpKindFunction = { fg = palette.blue },
-      BlinkCmpKindFolder = { fg = palette.blue },
-      BlinkCmpKindModule = { fg = palette.blue },
-      BlinkCmpKindConstant = { fg = palette.peach },
-      BlinkCmpKindField = { fg = palette.lemon_chiffon },
-      BlinkCmpKindProperty = { fg = palette.lemon_chiffon },
-      BlinkCmpKindEnum = { fg = palette.lemon_chiffon },
-      BlinkCmpKindUnit = { fg = palette.lemon_chiffon },
-      BlinkCmpKindClass = { fg = palette.yellow },
-      BlinkCmpKindVariable = { fg = palette.flamingo },
-      BlinkCmpKindFile = { fg = palette.blue },
-      BlinkCmpKindInterface = { fg = palette.lemon_chiffon },
-      BlinkCmpKindColor = { fg = palette.red },
-      BlinkCmpKindReference = { fg = palette.red },
-      BlinkCmpKindEnumMember = { fg = palette.red },
-      BlinkCmpKindStruct = { fg = palette.blue },
-      BlinkCmpKindValue = { fg = palette.peach },
-      BlinkCmpKindEvent = { fg = palette.blue },
-      BlinkCmpKindOperator = { fg = palette.blue },
-      BlinkCmpKindTypeParameter = { fg = palette.blue },
-      BlinkCmpKindCopilot = { fg = palette.red },
+      BlinkCmpKindSnippet = { fg = spec.kinds.Snippet },
+      BlinkCmpKindKeyword = { fg = spec.kinds.Keyword },
+      BlinkCmpKindText = { fg = spec.kinds.Text },
+      BlinkCmpKindMethod = { fg = spec.kinds.Method },
+      BlinkCmpKindConstructor = { fg = spec.kinds.Constructor },
+      BlinkCmpKindFunction = { fg = spec.kinds.Function },
+      BlinkCmpKindFolder = { fg = spec.kinds.Folder },
+      BlinkCmpKindModule = { fg = spec.kinds.Module },
+      BlinkCmpKindConstant = { fg = spec.kinds.Constant },
+      BlinkCmpKindField = { fg = spec.kinds.Field },
+      BlinkCmpKindProperty = { fg = spec.kinds.Property },
+      BlinkCmpKindEnum = { fg = spec.kinds.Enum },
+      BlinkCmpKindUnit = { fg = spec.kinds.Unit },
+      BlinkCmpKindClass = { fg = spec.kinds.Class },
+      BlinkCmpKindVariable = { fg = spec.kinds.Variable },
+      BlinkCmpKindFile = { fg = spec.kinds.File },
+      BlinkCmpKindInterface = { fg = spec.kinds.Interface },
+      BlinkCmpKindColor = { fg = spec.kinds.Color },
+      BlinkCmpKindReference = { fg = spec.kinds.Reference },
+      BlinkCmpKindEnumMember = { fg = spec.kinds.EnumMember },
+      BlinkCmpKindStruct = { fg = spec.kinds.Struct },
+      BlinkCmpKindValue = { fg = spec.kinds.Value },
+      BlinkCmpKindEvent = { fg = spec.kinds.Event },
+      BlinkCmpKindOperator = { fg = spec.kinds.Operator },
+      BlinkCmpKindTypeParameter = { fg = spec.kinds.TypeParameter },
+      BlinkCmpKindCopilot = { fg = spec.kinds.Copilot },
+
       BlinkCmpGhostText = { link = "Comment" },
 
       DropBarMenuHoverEntry = { link = "PmenuSel" },
