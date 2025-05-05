@@ -21,6 +21,11 @@ return {
     "kkharji/sqlite.lua",
     -- dir = "~/projects/lua/sqlite.lua/",
   },
+  {
+    "willothy/llvm-nvim",
+    dir = "~/projects/lua/llm-nvim",
+    config = function() end,
+  },
   -- {
   --   "willothy/async-sqlite",
   --

@@ -65,10 +65,11 @@ local spec = {
     property = "#f8bacb",
     func = "#4dccff",
     keyword = "#629cf8",
-    operator = "#b4c2d5", -- palette.cadet_gray, -- statusline, comments, etc.
+    operator = "#b4c2d5",
     special = "#a0acfe",
   },
 
+  -- the foreground color of the diagnostic icons
   diagnostic = {
     error = "#d74947",
     warn = "#fff694",

@@ -24,11 +24,28 @@ return {
         library = {
           "luvit-meta/library",
           vim.env.VIMRUNTIME,
-          -- "~/projects/lua/lua-orm/",
-          -- unpack(vim.api.nvim_get_runtime_file("lua/*", true)),
+          "~/projects/lua/llm-nvim/",
+          -- unpack(vim.api.nvim_get_runtime_file("lua/llm/*", true)),
         },
       })
     end,
+  },
+  {
+    "davidmh/mdx.nvim",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = true,
+    lazy = false,
+  },
+  {
+    "wilothy/docsrs.nvim",
+    main = "docsrs",
+    dir = "~/projects/lua/docsrs-nvim/",
+    config = function()
+      require("docsrs").setup({})
+    end,
+    event = "VeryLazy",
   },
   {
     "nvim-neotest/neotest",
