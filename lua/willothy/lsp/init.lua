@@ -33,30 +33,20 @@ local configured = {
 }
 
 local function init()
-  vim
-    .iter(configured)
-    -- :map(function(server_config_path)
-    --   return vim.fs.basename(server_config_path):match("^(.*)%.lua$")
-    -- end)
-    :each(
-      function(server_name)
-        if disabled[server_name] then
-          return
-        end
-        vim.lsp.enable(server_name)
-      end
-    )
+  vim.iter(configured):each(vim.schedule_wrap(function(server_name)
+    if disabled[server_name] then
+      return
+    end
+    vim.lsp.enable(server_name)
+  end))
 end
 
 if vim.g.did_very_lazy then
-  vim.schedule(function()
-    init(v)
-  end)
+  vim.schedule(init)
 else
   vim.api.nvim_create_autocmd("User", {
     pattern = "VeryLazy",
-    callback = vim.schedule_wrap(function()
-      init()
-    end),
+    once = true,
+    callback = vim.schedule_wrap(init),
   })
 end

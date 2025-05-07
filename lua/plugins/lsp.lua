@@ -39,15 +39,6 @@ return {
     lazy = false,
   },
   {
-    "wilothy/docsrs.nvim",
-    main = "docsrs",
-    dir = "~/projects/lua/docsrs-nvim/",
-    config = function()
-      require("docsrs").setup({})
-    end,
-    event = "VeryLazy",
-  },
-  {
     "nvim-neotest/neotest",
     config = function()
       require("willothy.testing")
