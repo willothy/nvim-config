@@ -30,6 +30,7 @@ local configured = {
   "taplo",
   "ts_ls",
   "zls",
+  "postgres_lsp", -- supabase-community/postgres-language-server
 }
 
 local function init()
