@@ -2,6 +2,8 @@ vim.lsp.config("*", {
   capabilities = require("willothy.lsp.capabilities").make_capabilities(),
 })
 
+vim.lsp.set_log_level(vim.log.levels.OFF)
+
 require("mason").setup()
 
 local disabled = {

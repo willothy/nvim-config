@@ -137,6 +137,12 @@ local disabled_filetypes = {
 }
 
 require("blink.cmp").setup({
+  fuzzy = {
+    implementation = "rust",
+    prebuilt_binaries = {
+      download = false,
+    },
+  },
   enabled = function()
     return disabled_filetypes[vim.bo.filetype] == nil
   end,
@@ -215,40 +221,42 @@ require("blink.cmp").setup({
   },
   sources = {
     default = {
-      "copilot",
-      "lsp",
-      -- "avante",
-      "path",
-      "snippets",
       "buffer",
+      "snippets",
+      "path",
+      "lsp",
+      "copilot",
     },
     per_filetype = {
       toml = {
-        "crates",
-        "lsp",
-        "path",
-        "copilot",
-        "snippets",
         "buffer",
+        "snippets",
+        "copilot",
+        "path",
+        "lsp",
+        "crates",
       },
       lua = {
-        "copilot",
-        "lazydev",
-        "lsp",
-        "path",
-        "snippets",
         "buffer",
+        "snippets",
+        "path",
+        "lsp",
+        "lazydev",
+        "copilot",
       },
     },
     providers = {
       copilot = {
         name = "Copilot",
         module = "blink-copilot",
-        score_offset = 3,
+        score_offset = 100,
+        deduplicate = {
+          enabled = true,
+        },
         async = true,
+        max_items = 2,
         opts = {
           max_completions = 2,
-          -- kind_hl = "Copilot",
         },
       },
       lazydev = {

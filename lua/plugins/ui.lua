@@ -96,6 +96,7 @@ return {
   -- WINDOWS --
   {
     "nvim-focus/focus.nvim",
+    enabled = false,
     dependencies = {
       {
         "echasnovski/mini.animate",
