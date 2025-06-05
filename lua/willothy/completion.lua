@@ -257,7 +257,6 @@ require("blink.cmp").setup({
         max_items = 2,
         opts = {
           max_completions = 2,
-          max_items = 2,
         },
       },
       lazydev = {
