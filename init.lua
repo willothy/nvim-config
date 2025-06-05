@@ -1,3 +1,5 @@
+-- hi
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = "," -- TODO: I don't use this much. I should.
 
