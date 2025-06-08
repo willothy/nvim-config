@@ -565,6 +565,7 @@ return {
   -- GIT --
   {
     "lewis6991/gitsigns.nvim",
+    -- enabled = false,
     config = function()
       require("configs.git.gitsigns")
     end,

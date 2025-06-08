@@ -28,8 +28,9 @@ gitsigns.setup({
   },
   trouble = true,
   signcolumn = true,
+  update_debounce = 250,
   -- _extmark_signs = false,
-  on_attach = vim.schedule_wrap(function(bufnr)
-    vim.cmd.GitConflictRefresh()
-  end),
+  -- on_attach = vim.schedule_wrap(function(bufnr)
+  --   vim.cmd.GitConflictRefresh()
+  -- end),
 })

@@ -175,4 +175,10 @@ require("lazy").setup({
   },
 })
 
+-- require("snacks").profiler.start({
+--   on_stop = {
+--     highlights = false,
+--   },
+-- })
+
 require("willothy.lib.fs").hijack_netrw()
