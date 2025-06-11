@@ -22,6 +22,11 @@ return {
     config = true,
     cmd = "Nvimesweeper",
   },
+  -- {
+  --   "seandewar/actually-doom.nvim",
+  --   config = true,
+  --   cmd = "Doom",
+  -- },
   -- -- Sound effects
   -- {
   --   "jackplus-xyz/player-one.nvim",

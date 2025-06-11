@@ -1,5 +1,6 @@
 {
   "Comment.nvim": { "branch": "master", "commit": "e30b7f2008e52442154b66f7c519bfd2f1e32acb" },
+  "actually-doom.nvim": { "branch": "master", "commit": "5494d9951bf7f6d6ace5b883cc93b8afd269ee25" },
   "aurora": { "branch": "master", "commit": "8524a501e42636b8697d6630c6076058ab02de49" },
   "blink-copilot": { "branch": "main", "commit": "bdc45bbbed2ec252b3a29f4adecf031e157b5573" },
   "blink.cmp": { "branch": "main", "commit": "102db2f5996a46818661845cf283484870b60450" },
