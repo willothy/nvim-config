@@ -30,7 +30,7 @@ require("lazy").setup({
   },
   {
     "autocmds",
-    event = "VeryLazy",
+    lazy = false,
     virtual = true,
     config = function()
       require("willothy.autocmds")
@@ -46,7 +46,7 @@ require("lazy").setup({
   },
   {
     "commands",
-    event = "VeryLazy",
+    event = "CmdlineEnter",
     main = "willothy.commands",
     virtual = true,
     config = function()
@@ -95,7 +95,8 @@ require("lazy").setup({
   {
     "colorschemes",
     virtual = true,
-    event = "VeryLazy",
+    -- don't need to load until we're calling :colorscheme
+    event = "CmdlineEnter",
     dependencies = {
       "folke/tokyonight.nvim",
       "eldritch-theme/eldritch.nvim",
