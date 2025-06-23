@@ -24,7 +24,7 @@ local function check_eof_scrolloff()
   local buftype = vim.api.nvim_get_option_value("buftype", {
     scope = "local",
   })
-  if disabled_ft[filetype] or buftype ~= "" then
+  if disabled_ft[filetype] ~= nil or buftype ~= "" then
     return
   end
 

@@ -37,7 +37,7 @@ local function do_setup()
   })
 end
 
-if vim.g.did_very_lazy then
+if vim.g.did_very_lazy ~= nil then
   vim.schedule(do_setup)
 else
   vim.api.nvim_create_autocmd("User", {

@@ -1,4 +1,5 @@
 vim.lsp.config("*", {
+  ---@diagnostic disable-next-line: param-type-not-match
   capabilities = require("willothy.lsp.capabilities").make_capabilities(),
 })
 
@@ -44,7 +45,7 @@ local function init()
   end))
 end
 
-if vim.g.did_very_lazy then
+if vim.g.did_very_lazy ~= nil then
   vim.schedule(init)
 else
   vim.api.nvim_create_autocmd("User", {
