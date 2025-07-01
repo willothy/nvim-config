@@ -1,5 +1,5 @@
 vim.lsp.config("*", {
-  ---@diagnostic disable-next-line: param-type-not-match
+  ---@diagnostic disable-next-line: param-type-mismatch
   capabilities = require("willothy.lsp.capabilities").make_capabilities(),
 })
 
