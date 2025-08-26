@@ -34,6 +34,7 @@ local configured = {
   "ts_ls",
   "zls",
   "postgres_lsp", -- supabase-community/postgres-language-server
+  "protols",
 }
 
 local function init()

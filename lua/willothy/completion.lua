@@ -1,8 +1,8 @@
 require("crates").setup({
   completion = {
-    cmp = {
-      enabled = true,
-    },
+    -- cmp = {
+    --   enabled = true,
+    -- },
     crates = {
       enabled = true,
     },
@@ -249,6 +249,13 @@ require("blink.cmp").setup({
       copilot = {
         name = "Copilot",
         module = "blink-copilot",
+
+        enabled = function()
+          local flag = vim.g.blink_cmp_copilot_enabled --[[@as boolean?]]
+
+          return flag == nil or flag
+        end,
+
         score_offset = 100,
         deduplicate = {
           enabled = true,

@@ -61,17 +61,17 @@ local opts = {
     },
     json = {
       stop_after_first = true,
-      "jq",
       "prettier",
+      "jq",
+    },
+    jsonc = {
+      stop_after_first = true,
+      "prettier",
+      "jq",
     },
     toml = {
       stop_after_first = true,
       "taplo",
-      "prettier",
-    },
-    jsonc = {
-      stop_after_first = true,
-      "jq",
       "prettier",
     },
     proto = {

@@ -186,6 +186,18 @@ local commands = {
     end,
     desc = "Color picker",
   },
+  ToggleAI = {
+    function()
+      local flag = vim.g.blink_cmp_copilot_enabled
+
+      if flag == nil or flag == true then
+        vim.g.blink_cmp_copilot_enabled = false
+      else
+        vim.g.blink_cmp_copilot_enabled = true
+      end
+    end,
+    desc = "Toggle copilot",
+  },
 }
 
 for name, cmd in pairs(commands) do
