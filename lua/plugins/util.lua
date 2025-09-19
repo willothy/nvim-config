@@ -49,6 +49,34 @@ return {
   },
   {
     "Saecki/crates.nvim",
+    config = function()
+      require("crates").setup({
+        lsp = {
+          enabled = true,
+          -- on_attach = function(client, bufnr)
+          -- end,
+          actions = true,
+          completion = true,
+          hover = true,
+        },
+        completion = {
+          -- cmp = {
+          --   enabled = true,
+          -- },
+          crates = {
+            enabled = true,
+            max_results = 3,
+            min_chars = 2,
+          },
+        },
+        -- lsp = {
+        --   enabled = true,
+        --   actions = true,
+        --   completion = true,
+        --   hover = true,
+        -- },
+      })
+    end,
     event = "BufRead Cargo.toml",
   },
   -- -- Like crates.nvim but for package.json, but seems to be not as good yet
