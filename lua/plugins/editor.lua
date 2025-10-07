@@ -442,6 +442,9 @@ return {
     event = "VeryLazy",
     opts = {
       ring = { storage = "sqlite" },
+      system_clipboard = {
+        sync_with_ring = false,
+      },
     },
   },
   {
@@ -520,7 +523,7 @@ return {
   },
   {
     "willothy/flatten.nvim",
-    dir = "~/projects/lua/flatten.nvim/",
+    -- dir = "~/projects/lua/flatten.nvim/",
     lazy = false,
     priority = 1000,
     config = function()

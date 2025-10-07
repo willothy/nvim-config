@@ -1,0 +1,1 @@
+/nix/store/f4b7isjparvb35ymc7acz5mr37ckf2dk-home-manager-files/.config/nvim/plugin/nix.lua

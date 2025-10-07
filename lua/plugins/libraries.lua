@@ -4,10 +4,10 @@ return {
     "nvim-telescope/telescope-fzf-native.nvim",
     build = "make",
   },
-  {
-    "https://github.com/leafo/magick",
-    build = "rockspec",
-  },
+  -- {
+  --   "https://github.com/leafo/magick",
+  --   build = "rockspec",
+  -- },
   {
     "MunifTanjim/nui.nvim",
     -- dir = "~/projects/lua/nui.nvim/",
@@ -21,11 +21,11 @@ return {
     "kkharji/sqlite.lua",
     -- dir = "~/projects/lua/sqlite.lua/",
   },
-  {
-    "willothy/llvm-nvim",
-    dir = "~/projects/lua/llm-nvim",
-    config = function() end,
-  },
+  -- {
+  --   "willothy/llvm-nvim",
+  --   dir = "~/projects/lua/llm-nvim",
+  --   config = function() end,
+  -- },
   -- {
   --   "willothy/async-sqlite",
   --

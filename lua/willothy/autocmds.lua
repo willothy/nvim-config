@@ -225,12 +225,12 @@ local autocmds = {
       end
     end,
   },
-  {
-    "DiagnosticChanged",
-    callback = function()
-      require("sense.api").redraw()
-    end,
-  },
+  -- {
+  --   "DiagnosticChanged",
+  --   callback = function()
+  --     require("sense.api").redraw()
+  --   end,
+  -- },
   {
     { "BufRead", "BufNewFile" },
     pattern = { "*.rasi" },

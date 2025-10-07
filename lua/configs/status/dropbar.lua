@@ -1,16 +1,30 @@
 local dropbar = require("dropbar")
 local icons = require("willothy.ui.icons")
 
-local enable = function(buf, win)
-  -- if
-  --   require("cokeline.sidebar").get_win("left") == win
-  --   or require("cokeline.sidebar").get_win("right") == win
-  -- then
-  --   return false
-  -- end
-  -- if vim.wo[win].diff then
-  --   return false
-  -- end
+local enable = function(buf, win, _)
+  buf = vim._resolve_bufnr(buf)
+  if
+    not vim.api.nvim_buf_is_valid(buf)
+    or not vim.api.nvim_win_is_valid(win)
+  then
+    return false
+  end
+
+  if
+    not vim.api.nvim_buf_is_valid(buf)
+    or not vim.api.nvim_win_is_valid(win)
+    or vim.fn.win_gettype(win) ~= ""
+    or vim.wo[win].winbar ~= ""
+    or vim.bo[buf].ft == "help"
+  then
+    return false
+  end
+
+  local stat = vim.uv.fs_stat(vim.api.nvim_buf_get_name(buf))
+  if stat and stat.size > 1024 * 1024 then
+    return false
+  end
+
   local filetype = vim.bo[buf].filetype
   local disabled = {
     ["oil"] = true,
@@ -28,14 +42,56 @@ local enable = function(buf, win)
   if disabled[filetype] then
     return false
   end
-  if vim.api.nvim_win_get_config(win).zindex ~= nil then
-    return vim.bo[buf].buftype == "terminal"
-      and vim.bo[buf].filetype == "terminal"
-  end
-  return vim.bo[buf].buflisted == true
-    and vim.bo[buf].buftype == ""
-    and vim.api.nvim_buf_get_name(buf) ~= ""
+
+  -- if
+  --   vim.bo[buf].buftype == "terminal" and vim.bo[buf].filetype ~= "terminal"
+  -- then
+  --   return false
+  -- end
+
+  return vim.bo[buf].ft == "markdown"
+    or pcall(vim.treesitter.get_parser, buf)
+    or not vim.tbl_isempty(vim.lsp.get_clients({
+      bufnr = buf,
+      method = "textDocument/documentSymbol",
+    }))
 end
+
+-- local enable = function(buf, win)
+--   -- if
+--   --   require("cokeline.sidebar").get_win("left") == win
+--   --   or require("cokeline.sidebar").get_win("right") == win
+--   -- then
+--   --   return false
+--   -- end
+--   -- if vim.wo[win].diff then
+--   --   return false
+--   -- end
+--   local filetype = vim.bo[buf].filetype
+--   local disabled = {
+--     ["oil"] = true,
+--     ["trouble"] = true,
+--     ["qf"] = true,
+--     ["noice"] = true,
+--     ["dapui_scopes"] = true,
+--     ["dapui_breakpoints"] = true,
+--     ["dapui_stacks"] = true,
+--     ["dapui_watches"] = true,
+--     ["dapui_console"] = true,
+--     ["dap-repl"] = true,
+--     ["neocomposer-menu"] = true,
+--   }
+--   if disabled[filetype] then
+--     return false
+--   end
+--   if vim.api.nvim_win_get_config(win).zindex ~= nil then
+--     return vim.bo[buf].buftype == "terminal"
+--       and vim.bo[buf].filetype == "terminal"
+--   end
+--   return vim.bo[buf].buflisted == true
+--     and vim.bo[buf].buftype == ""
+--     and vim.api.nvim_buf_get_name(buf) ~= ""
+-- end
 
 local close = function()
   local menu = require("dropbar.utils").menu.get_current()
@@ -174,16 +230,14 @@ dropbar.setup({
     },
   },
   bar = {
-    general = {
-      -- enable = enable,
-      attach_events = {
-        -- "OptionSet",
-        "BufWinEnter",
-        "BufWritePost",
-        -- "FileType",
-        "BufEnter",
-        -- "TermEnter",
-      },
+    enable = enable,
+    attach_events = {
+      -- "OptionSet",
+      "BufWinEnter",
+      "BufWritePost",
+      -- "FileType",
+      "BufEnter",
+      -- "TermEnter",
     },
     padding = {
       left = 0,
@@ -233,4 +287,4 @@ vim.ui.select = function(items, opts, on_choice)
   )
 end
 
-vim.go.winbar = "%{%v:lua.dropbar()%}"
+-- vim.go.winbar = "%{%v:lua.dropbar()%}"

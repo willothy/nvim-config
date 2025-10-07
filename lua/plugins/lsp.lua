@@ -140,6 +140,7 @@ return {
   },
   {
     "boltlessengineer/sense.nvim",
+    enabled = false,
     init = function()
       vim.g.sense_nvim = {
         -- show hint in statuscolumn, but not in the window itself
@@ -194,6 +195,48 @@ return {
       vim.g.copilot_nes_debounce = 250
       vim.lsp.enable("copilot_ls")
     end,
+  },
+  {
+    "folke/sidekick.nvim",
+    config = function()
+      require("sidekick").setup({
+        nes = {
+          enabled = false,
+        },
+      })
+
+      vim.api.nvim_create_user_command("Sidekick", function(args)
+        local subcommand = args.fargs[1]
+
+        local actions = {
+          select = function()
+            require("sidekick.cli").select({})
+          end,
+          toggle = function()
+            require("sidekick.cli").toggle({})
+          end,
+          close = function()
+            require("sidekick.cli").close({})
+          end,
+        }
+
+        local fn = actions[subcommand or "toggle"]
+
+        if not fn then
+          vim.notify(
+            string.format("No such subcommand %s", subcommand),
+            vim.log.levels.WARN,
+            {}
+          )
+          return
+        end
+
+        fn()
+      end, {
+        nargs = "*",
+      })
+    end,
+    cmd = "Sidekick",
   },
   {
     "kylechui/nvim-surround",

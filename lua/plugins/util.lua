@@ -34,14 +34,14 @@ return {
     },
     cmd = "Leet",
   },
-  {
-    "AckslD/nvim-neoclip.lua",
-    opts = {
-      enable_persistent_history = true,
-      continuous_sync = true,
-    },
-    event = "VeryLazy",
-  },
+  -- {
+  --   "AckslD/nvim-neoclip.lua",
+  --   opts = {
+  --     enable_persistent_history = true,
+  --     continuous_sync = true,
+  --   },
+  --   event = "VeryLazy",
+  -- },
   {
     "rawnly/gist.nvim",
     config = true,

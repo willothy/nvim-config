@@ -101,6 +101,9 @@ opt.fillchars = {
 }
 
 vim.o.clipboard = "unnamedplus"
+vim.g.clipboard = "wl-copy"
+-- vim.o.clipboard = "unnamedplus"
+-- vim.g.clipboard = "wl-copy"
 
 -- Wezterm doesn't support OSC 52 yet :(
 --
