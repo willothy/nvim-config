@@ -33,6 +33,7 @@ local configured = {
   "zls",
   "postgres_lsp", -- supabase-community/postgres-language-server
   "protols",
+  "glsl_analyzer",
 }
 
 local function init()
