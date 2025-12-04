@@ -387,8 +387,8 @@ local Overseer = {
   end,
   init = function(self)
     self.overseer = require("overseer")
-    self.tasks = self.overseer.task_list
-    self.STATUS = self.overseer.constants.STATUS
+    self.tasks = require("overseer.task_list")
+    self.STATUS = require("overseer.constants").STATUS
   end,
   static = {
     symbols = {
@@ -439,7 +439,25 @@ local StatusLine = {
     Overseer,
   },
   Align,
+
   {
+    provider = function(self)
+      if self.status ~= nil then
+        return self.status
+      end
+      return vim.diagnostic.status()
+    end,
+    update = {
+      "DiagnosticChanged",
+      "BufEnter",
+      callback = function(self)
+        self.status = vim.diagnostic.status()
+      end,
+    },
+  },
+  Align,
+  {
+    Space,
     DAPMessages,
     Recording,
     Devicon,

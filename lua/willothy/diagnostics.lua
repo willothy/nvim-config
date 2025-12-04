@@ -36,6 +36,14 @@ vim.diagnostic.config({
   severity_sort = true,
   update_in_insert = true,
   underline = true,
+  status = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
+      [vim.diagnostic.severity.WARN] = icons.diagnostics.Warn,
+      [vim.diagnostic.severity.INFO] = icons.diagnostics.Info,
+      [vim.diagnostic.severity.HINT] = icons.diagnostics.Hint,
+    },
+  },
   signs = {
     text = {
       [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,

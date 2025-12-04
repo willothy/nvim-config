@@ -69,12 +69,17 @@ local DeviconOrUnsaved = {
     return require("cokeline.mappings").is_picking_focus()
       or require("cokeline.mappings").is_picking_close()
   end,
-  truncation = { priority = 1 },
+  truncation = {
+    priority = 1,
+  },
 }
 
 local UniquePrefix = {
   text = function(buffer)
     return buffer.unique_prefix
+  end,
+  underline = function(buffer)
+    return buffer.buf_hovered and not buffer.is_focused
   end,
   fg = groups.bg_active,
   truncation = {
@@ -90,7 +95,7 @@ local Filename = {
     return buffer.is_focused
   end,
   underline = function(buffer)
-    return buffer.is_hovered and not buffer.is_focused
+    return buffer.buf_hovered and not buffer.is_focused
   end,
   sp = function(buffer)
     --[[ if buffer.is_focused then

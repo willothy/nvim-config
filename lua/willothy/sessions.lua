@@ -47,7 +47,10 @@ resession.setup({
     if buftype ~= "" and buftype ~= "acwrite" then
       return false
     end
-    if vim.api.nvim_buf_get_name(bufnr) == "" then
+    if
+      vim.api.nvim_buf_get_name(bufnr) == ""
+      or not vim.api.nvim_buf_is_loaded(bufnr)
+    then
       return false
     end
     return true

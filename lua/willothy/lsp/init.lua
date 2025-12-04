@@ -11,6 +11,7 @@ local disabled = {
 }
 
 local configured = {
+  "wkl_ls",
   "basedpyright",
   "bashls",
   "biome",

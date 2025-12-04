@@ -48,6 +48,23 @@ return {
     cmd = { "GistCreate", "GistCreateFromFile", "GistsList" },
   },
   {
+    "vuki656/package-info.nvim",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+    },
+    config = function()
+      require("package-info").setup({
+        autostart = true,
+        notifications = false,
+      })
+      require("package-info.core").load_plugin()
+      require("package-info").show({
+        force = true,
+      })
+    end,
+    event = "BufRead package.json",
+  },
+  {
     "Saecki/crates.nvim",
     config = function()
       require("crates").setup({

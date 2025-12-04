@@ -1,0 +1,318 @@
+local M = {}
+
+-- -- Namespace for decoration provider
+-- local namespace = vim.api.nvim_create_namespace("willothy.injections")
+--
+-- -- Per-buffer cache with metatable lazy initialization
+-- local buffer_cache = setmetatable({}, {
+--   __index = function(t, bufnr)
+--     local cache = {
+--       injection_regions = {}, -- { {srow, scol, erow, ecol}, ... }
+--       last_tick = 0, -- For invalidation
+--       row_map = {}, -- { [row] = true } for O(1) lookup
+--     }
+--     rawset(t, bufnr, cache)
+--     return cache
+--   end,
+-- })
+--
+-- -- Configuration
+-- M.config = {
+--   enabled = true,
+--   overlay_priority = 250, -- Higher than semantic tokens (~200)
+-- }
+--
+-- -- ============================================================================
+-- -- Utility Functions (from treesitter.lua:86-150)
+-- -- ============================================================================
+--
+-- -- Compare (row,col) defensively
+-- local function lt(a, b)
+--   local ar, ac = tonumber(a and a[1]) or 0, tonumber(a and a[2]) or 0
+--   local br, bc = tonumber(b and b[1]) or 0, tonumber(b and b[2]) or 0
+--   if ar ~= br then
+--     return ar < br
+--   end
+--   return ac < bc
+-- end
+--
+-- -- range overlap: [a0,a1) intersects [b0,b1)
+-- local function ranges_overlap(a0, a1, b0, b1)
+--   return lt(a0, b1) and lt(b0, a1)
+-- end
+--
+-- -- Normalize included_regions() output into { {srow,scol,erow,ecol}, ... }
+-- local function normalize_regions(regs)
+--   local out = {}
+--   for _, r in ipairs(regs or {}) do
+--     if type(r) == "table" then
+--       -- Shape A: {srow, scol, erow, ecol} or {srow, scol, sbyte, erow, ecol, ebyte}
+--       if type(r[1]) == "number" then
+--         local srow, scol, erow, ecol
+--
+--         -- 6-element format: {srow, scol, sbyte, erow, ecol, ebyte}
+--         if r[6] then
+--           srow, scol, erow, ecol = r[1], r[2], r[4], r[5]
+--         -- 4-element format: {srow, scol, erow, ecol}
+--         else
+--           srow, scol, erow, ecol = r[1], r[2], r[3], r[4]
+--         end
+--
+--         if srow and scol and erow and ecol then
+--           out[#out + 1] = { srow, scol, erow, ecol }
+--         end
+--
+--       -- Shape B: { {srow,scol}, {erow,ecol} }
+--       elseif
+--         type(r[1]) == "table"
+--         and type(r[2]) == "table"
+--         and type(r[2][1]) == "number"
+--       then
+--         local srow, scol = r[1][1], r[1][2]
+--         local erow, ecol = r[2][1], r[2][2]
+--         if srow and scol and erow and ecol then
+--           out[#out + 1] = { srow, scol, erow, ecol }
+--         end
+--
+--       -- Shape C: Nested single element { {srow, scol, sbyte, erow, ecol, ebyte} }
+--       elseif
+--         type(r[1]) == "table"
+--         and #r == 1
+--         and type(r[1][1]) == "number"
+--       then
+--         local inner = r[1]
+--         local srow, scol, erow, ecol
+--
+--         -- 6-element format
+--         if inner[6] then
+--           srow, scol, erow, ecol = inner[1], inner[2], inner[4], inner[5]
+--         -- 4-element format
+--         else
+--           srow, scol, erow, ecol = inner[1], inner[2], inner[3], inner[4]
+--         end
+--
+--         if srow and scol and erow and ecol then
+--           out[#out + 1] = { srow, scol, erow, ecol }
+--         end
+--       end
+--     end
+--   end
+--   return out
+-- end
+--
+-- local function get_injection_regions(bufnr)
+--   local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
+--   if not ok or not parser then
+--     return {}
+--   end
+--
+--   -- Force parse to ensure child parsers are created
+--   local ok_parse = pcall(function()
+--     parser:parse()
+--   end)
+--
+--   if not ok_parse then
+--     return {}
+--   end
+--
+--   local regions = {}
+--   local children = parser:children()
+--
+--   if not children then
+--     return {}
+--   end
+--
+--   for lang, child in pairs(children) do
+--     local ok_regions, child_regions = pcall(function()
+--       return child:included_regions()
+--     end)
+--
+--     if ok_regions and child_regions and type(child_regions) == "table" then
+--       local norm = normalize_regions(child_regions)
+--       for _, r in ipairs(norm) do
+--         regions[#regions + 1] = r
+--       end
+--     end
+--   end
+--
+--   return regions
+-- end
+--
+-- -- ============================================================================
+-- -- Cache Management
+-- -- ============================================================================
+--
+-- local function is_valid_buffer(bufnr)
+--   return bufnr
+--     and vim.api.nvim_buf_is_valid(bufnr)
+--     and vim.api.nvim_buf_is_loaded(bufnr)
+--     and vim.bo[bufnr].buftype == ""
+-- end
+--
+-- local function build_row_map(regions)
+--   local row_map = {}
+--   for _, region in ipairs(regions) do
+--     local srow, erow = region[1], region[3]
+--     for row = srow, erow do
+--       row_map[row] = true
+--     end
+--   end
+--   return row_map
+-- end
+--
+-- local function update_cache(bufnr)
+--   local cache = buffer_cache[bufnr]
+--   local current_tick = vim.api.nvim_buf_get_changedtick(bufnr)
+--
+--   -- Cache is still valid
+--   if cache.last_tick == current_tick then
+--     return
+--   end
+--
+--   -- Get fresh injection regions
+--   local regions = get_injection_regions(bufnr)
+--   cache.injection_regions = regions
+--   cache.last_tick = current_tick
+--
+--   -- Build row map for O(1) lookups
+--   cache.row_map = build_row_map(regions)
+-- end
+--
+-- -- ============================================================================
+-- -- Decoration Provider
+-- -- ============================================================================
+--
+-- local function setup_decoration_provider()
+--   vim.api.nvim_set_decoration_provider(namespace, {
+--     on_win = function(_, winid, bufnr, topline, botline)
+--       -- Called when window needs decorations
+--       if not M.config.enabled then
+--         return false
+--       end
+--
+--       if not is_valid_buffer(bufnr) then
+--         return false
+--       end
+--
+--       -- Update cache for this buffer (lazy, checks staleness)
+--       update_cache(bufnr)
+--
+--       -- Return true to enable on_line callbacks
+--       return true
+--     end,
+--
+--     on_line = function(_, winid, bufnr, row)
+--       -- Called for each visible line during render
+--       local cache = buffer_cache[bufnr]
+--
+--       -- Fast O(1) check if this row has an injection
+--       if not cache.row_map[row] then
+--         return
+--       end
+--
+--       -- Find the specific injection region(s) for this row
+--       for _, region in ipairs(cache.injection_regions) do
+--         local srow, scol, erow, ecol =
+--           region[1], region[2], region[3], region[4]
+--
+--         if row >= srow and row <= erow then
+--           -- Determine the column range for this specific line
+--           local start_col = (row == srow) and scol or 0
+--           local end_col = (row == erow) and ecol or -1
+--
+--           -- Add high-priority extmark for this line segment
+--           pcall(vim.api.nvim_buf_set_extmark, bufnr, namespace, row, start_col, {
+--             end_row = row,
+--             end_col = end_col,
+--             priority = M.config.overlay_priority,
+--             hl_mode = "combine",
+--             ephemeral = true,
+--           })
+--         end
+--       end
+--     end,
+--   })
+-- end
+--
+-- -- ============================================================================
+-- -- Public API
+-- -- ============================================================================
+--
+-- function M.setup(opts)
+--   M.config = vim.tbl_deep_extend("force", M.config, opts or {})
+--
+--   -- Setup decoration provider once
+--   setup_decoration_provider()
+--
+--   -- Create user commands
+--   vim.api.nvim_create_user_command("InjectionsToggle", function()
+--     M.toggle()
+--     local status = M.config.enabled and "enabled" or "disabled"
+--     vim.notify("Injection priority: " .. status, vim.log.levels.INFO)
+--   end, { desc = "Toggle injection priority management" })
+--
+--   vim.api.nvim_create_user_command("InjectionsRefresh", function()
+--     M.clear_cache()
+--     vim.notify("Injection cache cleared", vim.log.levels.INFO)
+--   end, { desc = "Force refresh injection cache" })
+-- end
+--
+-- function M.toggle()
+--   M.config.enabled = not M.config.enabled
+--
+--   -- Trigger redraw to apply/remove decorations
+--   vim.cmd("redraw!")
+-- end
+--
+-- function M.clear_cache(bufnr)
+--   -- Force cache refresh on next render
+--   if bufnr then
+--     buffer_cache[bufnr] = nil
+--   else
+--     buffer_cache = setmetatable({}, getmetatable(buffer_cache))
+--   end
+--   vim.cmd("redraw!")
+-- end
+--
+-- function M.debug_info(bufnr)
+--   bufnr = bufnr or vim.api.nvim_get_current_buf()
+--   local cache = buffer_cache[bufnr]
+--
+--   -- Get live parser info
+--   local parser_info = {}
+--   local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
+--   if ok and parser then
+--     pcall(function()
+--       parser:parse()
+--     end)
+--     local children = parser:children()
+--     parser_info.has_parser = true
+--     parser_info.child_count = children and vim.tbl_count(children) or 0
+--     parser_info.child_langs = {}
+--     if children then
+--       for lang, child in pairs(children) do
+--         local regions = child:included_regions()
+--         parser_info.child_langs[lang] = {
+--           region_count = regions and #regions or 0,
+--           regions = regions,
+--         }
+--       end
+--     end
+--   else
+--     parser_info.has_parser = false
+--   end
+--
+--   return {
+--     enabled = M.config.enabled,
+--     bufnr = bufnr,
+--     is_valid = is_valid_buffer(bufnr),
+--     injection_count = #cache.injection_regions,
+--     regions = cache.injection_regions,
+--     row_map_size = vim.tbl_count(cache.row_map),
+--     last_tick = cache.last_tick,
+--     current_tick = vim.api.nvim_buf_get_changedtick(bufnr),
+--     parser_info = parser_info,
+--   }
+-- end
+
+return M
