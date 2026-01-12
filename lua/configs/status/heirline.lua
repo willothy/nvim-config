@@ -410,7 +410,7 @@ local Overseer = {
     end,
     {
       provider = function(self)
-        local tasks_by_status = self.overseer.util.tbl_group_by(
+        local tasks_by_status = require("overseer.util").tbl_group_by(
           self.tasks.list_tasks({ unique = true }),
           "status"
         )
@@ -431,12 +431,23 @@ local Overseer = {
   },
 }
 
+local OpenCode = {
+  condition = function()
+    return package.loaded["opencode"] ~= nil
+  end,
+  provider = function()
+    return require("opencode").statusline()
+  end,
+  Space,
+}
+
 local StatusLine = {
   {
     Mode,
     Space,
     Git,
     Overseer,
+    OpenCode,
   },
   Align,
 
@@ -510,3 +521,10 @@ event.on("ColorScheme", function()
   require("heirline.highlights").reset_highlights()
   require("heirline.highlights").clear_colors()
 end)
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "OpencodeEvent:*",
+  callback = function(ev)
+    require("opencode.status").update(ev.data.event)
+  end,
+})

@@ -178,6 +178,40 @@ return {
     event = "UiEnter",
   },
   {
+    "willothy/cacheline.nvim",
+    dir = "~/projects/lua/cacheline/",
+    event = "UiEnter",
+    enabled = false,
+    config = function()
+      local icons = require("willothy.ui.icons")
+      require("cacheline").setup({
+        statusline = {
+          left = {
+            require("cacheline.builtins").mode({
+              short = true,
+            }),
+            require("cacheline.builtins").git.branch({
+              icon = icons.git.branch,
+            }),
+            require("cacheline.builtins").file.name(),
+          },
+          right = {
+            require("cacheline.builtins").lsp.diagnostics({
+              icons = {
+                hint = icons.diagnostics.Hint,
+                info = icons.diagnostics.Info,
+                warn = icons.diagnostics.Warn,
+                error = icons.diagnostics.Error,
+              },
+            }),
+            require("cacheline.builtins").position.cursor(),
+          },
+        },
+      })
+      -- require("configs.status.cacheline")
+    end,
+  },
+  {
     "Bekaboo/dropbar.nvim",
     -- dir = "~/projects/lua/dropbar.nvim/",
     dependencies = {

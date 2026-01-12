@@ -613,7 +613,24 @@ wk.add({
     {
       "<leader>tr",
       function()
-        require("overseer").run_template()
+        require("overseer").run_task({}, function(task, err)
+          if err then
+            local name = task and task.name or "unknown"
+            vim.notify(
+              string.format("Failed to run task %s: %s", name, tostring(err)),
+              vim.log.levels.ERROR,
+              {}
+            )
+            return
+          end
+        end)
+
+        local overseer = require("overseer")
+
+        overseer.run_task({
+          name = "cargo run",
+          cwd = "freestyle-git",
+        })
       end,
       desc = "overseer: run",
     },

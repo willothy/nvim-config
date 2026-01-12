@@ -32,8 +32,7 @@ return {
   },
   {
     "davidmh/mdx.nvim",
-    config = true,
-    lazy = false,
+    event = { "BufRead *.mdx", "BufEnter *.mdx" },
   },
   {
     "nvim-neotest/neotest",
@@ -238,6 +237,61 @@ return {
     end,
     cmd = "Sidekick",
   },
+  {
+    "NickvanDyke/opencode.nvim",
+    dependencies = {
+      "folke/snacks.nvim",
+    },
+    config = function()
+      ---@type opencode.Opts
+      vim.g.opencode_opts = {
+        -- Your configuration, if any — see `lua/opencode/config.lua`, or "goto definition".
+      }
+
+      -- Required for `opts.events.reload`.
+      vim.o.autoread = true
+    end,
+    keys = {
+      {
+        "<C-.>",
+        function()
+          require("opencode").toggle()
+        end,
+        desc = "Toggle opencode",
+      },
+      {
+        "go",
+        function()
+          return require("opencode").operator("@this ")
+        end,
+        expr = true,
+        desc = "Add range to opencode",
+      },
+      {
+        "goo",
+        function()
+          return require("opencode").operator("@this ") .. "_"
+        end,
+        expr = true,
+        desc = "Add line to opencode",
+      },
+      {
+        "<S-C-u>",
+        function()
+          require("opencode").command("session.half.page.up")
+        end,
+        desc = "opencode half page up",
+      },
+      {
+        "<S-C-d>",
+        function()
+          require("opencode").command("session.half.page.down")
+        end,
+        desc = "opencode half page down",
+      },
+    },
+  },
+  -- SURROUNDS --
   {
     "kylechui/nvim-surround",
     config = true,
