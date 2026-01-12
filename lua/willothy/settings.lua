@@ -7,6 +7,8 @@ o.scrolloff = 16
 
 o.shell = "fish"
 
+o.termguicolors = true
+
 o.number = true
 o.relativenumber = true
 -- o.signcolumn = "yes"
@@ -101,7 +103,12 @@ opt.fillchars = {
 }
 
 vim.o.clipboard = "unnamedplus"
-vim.g.clipboard = "wl-copy"
+
+local jit = require("jit")
+
+if jit.os == "Linux" then
+  vim.g.clipboard = "wl-copy"
+end
 -- vim.o.clipboard = "unnamedplus"
 -- vim.g.clipboard = "wl-copy"
 
