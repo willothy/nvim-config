@@ -16,7 +16,7 @@
   "durable.nvim": { "branch": "main", "commit": "b40e2f44e0278d7a1bae754c05e77848ca7e468d" },
   "edgy.nvim": { "branch": "main", "commit": "8bfd2808994a988c975694122f68624b8a219f5f" },
   "eldritch.nvim": { "branch": "master", "commit": "0415fa72c348e814a7a6cc9405593a4f812fe12f" },
-  "evergarden": { "branch": "mega", "commit": "c7e1c75818f850af9bd56d964a8d10332f052c1c" },
+  "evergarden": { "branch": "mega", "commit": "27d2c7a1182f08ea17fd86b24c9833040373e89b" },
   "fidget.nvim": { "branch": "main", "commit": "64463022a1f2ff1318ab22a2ea4125ed9313a483" },
   "flash.nvim": { "branch": "main", "commit": "fcea7ff883235d9024dc41e638f164a450c14ca2" },
   "flatten.nvim": { "branch": "main", "commit": "72527798e75b5e34757491947c2cb853ce21dc0e" },
