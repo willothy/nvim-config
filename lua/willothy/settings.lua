@@ -107,8 +107,12 @@ vim.o.clipboard = "unnamedplus"
 local jit = require("jit")
 
 if jit.os == "Linux" then
-  vim.g.clipboard = "wl-copy"
+  vim.g.clipboard = "osc52"
 end
+
+-- if jit.os == "Linux" then
+--   vim.g.clipboard = "wl-copy"
+-- end
 -- vim.o.clipboard = "unnamedplus"
 -- vim.g.clipboard = "wl-copy"
 
