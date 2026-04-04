@@ -162,7 +162,7 @@ return {
       "Saghen/blink.compat",
       -- "giuxtaposition/blink-cmp-copilot",
       "fang2hou/blink-copilot",
-      "copilotlsp-nvim/copilot-lsp",
+      -- "copilotlsp-nvim/copilot-lsp",
 
       -- "Kaiser-Yang/blink-cmp-avante",
 
@@ -186,6 +186,7 @@ return {
   -- AI
   {
     "copilotlsp-nvim/copilot-lsp",
+    enabled = false,
     dependencies = {
       "fang2hou/blink-copilot",
     },

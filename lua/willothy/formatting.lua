@@ -28,30 +28,37 @@ local opts = {
     },
     javascript = {
       stop_after_first = true,
+      "biome",
       "prettier",
     },
     typescript = {
       stop_after_first = true,
+      "biome",
       "prettier",
     },
     typescriptreact = {
       stop_after_first = true,
+      "biome",
       "prettier",
     },
     tsx = {
       stop_after_first = true,
+      "biome",
       "prettier",
     },
     css = {
       stop_after_first = true,
+      "biome",
       "prettier",
     },
     scss = {
       stop_after_first = true,
+      "biome",
       "prettier",
     },
     html = {
       stop_after_first = true,
+      "biome",
       "prettier",
     },
     markdown = {
