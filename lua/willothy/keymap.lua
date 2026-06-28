@@ -686,7 +686,7 @@ wk.add({
     {
       "ge",
       function()
-        require("spider").motion("w")
+        require("spider").motion("ge")
       end,
       desc = "spider: prev end of word",
     },
