@@ -120,6 +120,15 @@ return {
     end,
   },
   {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    -- still under the archived org; main branch tracks the rewrite
+    branch = "main",
+    event = "VeryLazy",
+    config = function()
+      require("configs.editor.textobjects")
+    end,
+  },
+  {
     "jmbuhr/otter.nvim",
     ft = "markdown",
     config = function()
