@@ -15,6 +15,8 @@ vim.treesitter.language.register("git_config", "gitconfig")
 vim.treesitter.language.register("git_rebase", "gitrebase")
 vim.treesitter.language.register("javascript", "javascriptreact")
 vim.treesitter.language.register("typescript", "typescriptreact")
+-- the fork registry has no `jsonc` parser; reuse the `json` parser for it
+vim.treesitter.language.register("json", "jsonc")
 
 ts.install({
   "query",
@@ -32,7 +34,6 @@ ts.install({
   "gitignore",
   "git_rebase",
   "git_config",
-  "jsonc",
   "json",
 })
 
