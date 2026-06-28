@@ -224,7 +224,8 @@ local function show()
     "BufNew",
     "OptionSet",
     "TextChanged",
-    "BufModifiedSet",
+    -- BufModifiedSet was removed in nvim 0.13 (now OptionSet pattern=modified,
+    -- already covered above); appending it raised E474 Invalid argument.
   })
 
   local buf = vim.api.nvim_create_buf(false, true)
@@ -315,7 +316,6 @@ local function show()
   })
 
   vim.api.nvim_create_autocmd({
-    "BufModifiedSet",
     "BufReadPre",
     -- "CmdlineEnter",
     "CursorMoved",

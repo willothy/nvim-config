@@ -23,8 +23,6 @@ M.autocmd = {
   BufHidden = "BufHidden",
   --- before leaving a buffer
   BufLeave = "BufLeave",
-  --- after the 'modified' state of a buffer changes
-  BufModifiedSet = "BufModifiedSet",
   --- after creating any buffer
   BufNew = "BufNew",
   --- when creating a buffer for a new file
