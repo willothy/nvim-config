@@ -105,6 +105,10 @@ return {
   -- TREESITTER --
   {
     "nvim-treesitter/nvim-treesitter",
+    -- Pinned to classic `master`: the repo was archived 2026-04-03 and its
+    -- default branch is now the incompatible `main` rewrite. This keeps a
+    -- stable base until the deliberate migration to the community fork.
+    branch = "master",
     event = "VeryLazy",
     build = ":TSUpdate",
     -- commit = "9e1cda4e71a763ba1f1ac099498c7ce40edc6dd2",
