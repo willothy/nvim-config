@@ -60,7 +60,7 @@ end
 
 function M.debounce_leading(fn, ms)
   fn = vim.schedule_wrap(fn)
-  local timer = vim.loop.new_timer()
+  local timer = vim.uv.new_timer()
   local running = false
 
   local canary = newproxy(true)
@@ -85,7 +85,7 @@ function M.debounce_leading(fn, ms)
 end
 
 function M.debounce_trailing(fn, ms)
-  local timer = vim.loop.new_timer()
+  local timer = vim.uv.new_timer()
   local canary = newproxy(true)
 
   getmetatable(canary).__gc = function()
@@ -200,12 +200,12 @@ function M.animate(start, finish, callback, opts)
   opts = opts or {}
   local duration = opts.duration or 500
   local fps = opts.fps or 60
-  local start_time = vim.loop.now()
-  local timer = vim.loop.new_timer()
+  local start_time = vim.uv.now()
+  local timer = vim.uv.new_timer()
 
   local interval = 1000 / fps
   timer:start(10, interval, function()
-    local elapsed = vim.loop.now() - start_time
+    local elapsed = vim.uv.now() - start_time
     local t = M.clamp(0, 1, elapsed / duration)
     local v = M.interpolate(start, finish, t)
     callback(v)
@@ -404,9 +404,9 @@ end
 function M.profile(fn, iterations)
   local results = {}
   for _ = 1, iterations do
-    local start = vim.loop.hrtime()
+    local start = vim.uv.hrtime()
     fn()
-    local finish = vim.loop.hrtime()
+    local finish = vim.uv.hrtime()
     local elapsed = finish - start
     table.insert(results, elapsed)
   end
