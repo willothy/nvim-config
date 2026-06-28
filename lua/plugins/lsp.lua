@@ -160,6 +160,7 @@ return {
     "Saghen/blink.cmp",
     dependencies = {
       "Saghen/blink.compat",
+      "Saghen/blink.lib",
       -- "giuxtaposition/blink-cmp-copilot",
       "fang2hou/blink-copilot",
       -- "copilotlsp-nvim/copilot-lsp",
@@ -171,7 +172,9 @@ return {
       "windwp/nvim-ts-autotag",
     },
     event = { "InsertEnter", "CmdlineEnter" },
-    build = "cargo build --release",
+    build = function()
+      require("blink.cmp").build():pwait()
+    end,
     config = function()
       require("willothy.completion")
     end,

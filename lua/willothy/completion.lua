@@ -122,9 +122,9 @@ local disabled_filetypes = {
 require("blink.cmp").setup({
   fuzzy = {
     implementation = "rust",
-    prebuilt_binaries = {
-      download = false,
-    },
+    -- prebuilt_binaries = {
+    --   download = false,
+    -- },
   },
   enabled = function()
     return disabled_filetypes[vim.bo.filetype] == nil
