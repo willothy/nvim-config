@@ -1,5 +1,5 @@
-local statusline = require("willothy.lib.statusline")
-local state = require("willothy.core.state")
+local statusline = require("experiments.statusline_components")
+local state = require("experiments.state")
 local icons = require("willothy.ui.icons")
 
 -- Helper to get hex from highlight group

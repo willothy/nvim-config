@@ -1,7 +1,7 @@
 local M = {}
 
 -- Get or create reactive system
-local rx = require("willothy.lib.reactive").create_system()
+local rx = require("experiments.reactive").create_system()
 
 ---@class StatuslineComponent
 ---@field get fun(): string Get cached component text
@@ -125,7 +125,7 @@ function M.setup(user_config, state_module)
   config.right = user_config.right or {}
 
   -- Set statusline to call our render function
-  vim.o.statusline = "%!v:lua.require('willothy.lib.statusline').render()"
+  vim.o.statusline = "%!v:lua.require('experiments.statusline_components').render()"
 
   -- If state module provided, set up a SINGLE watcher for ALL reactive state changes
   if state_module then

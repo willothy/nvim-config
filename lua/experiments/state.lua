@@ -1,7 +1,7 @@
 local M = {}
 
 -- Create reactive system instance
-local rx = require("willothy.lib.reactive").create_system()
+local rx = require("experiments.reactive").create_system()
 M.rx = rx
 
 -- Global reactive state (flat structure for performance)

@@ -67,7 +67,6 @@ require("lazy").setup({
     config = function()
       require("willothy.ui.scrollbar").setup()
       require("willothy.ui.scrolleof").setup()
-      require("willothy.ui.code_actions").setup()
       require("willothy.ui.mode").setup()
     end,
   },

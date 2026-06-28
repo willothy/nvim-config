@@ -34,7 +34,7 @@ function M.dispatch(buf, diagnostics)
 
   timer:start(DEBOUNCE_MS, 0, vim.schedule_wrap(function()
     -- Update global diagnostic counts in reactive state
-    local state = require("willothy.core.state")
+    local state = require("experiments.state")
     local counts = { errors = 0, warnings = 0, info = 0, hints = 0 }
 
     for _, diag in ipairs(diagnostics) do
