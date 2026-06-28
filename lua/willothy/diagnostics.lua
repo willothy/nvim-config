@@ -37,12 +37,27 @@ vim.diagnostic.config({
   update_in_insert = true,
   underline = true,
   status = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
-      [vim.diagnostic.severity.WARN] = icons.diagnostics.Warn,
-      [vim.diagnostic.severity.INFO] = icons.diagnostics.Info,
-      [vim.diagnostic.severity.HINT] = icons.diagnostics.Hint,
-    },
+    -- nvim-nightly: status.format must be a `fun(counts): string`; the old
+    -- severity->text table shape is no longer accepted (silently ignored).
+    -- Consumed by heirline via vim.diagnostic.status().
+    format = function(counts)
+      counts = counts or {}
+      local sev = vim.diagnostic.severity
+      local order = {
+        { sev.ERROR, icons.diagnostics.Error },
+        { sev.WARN, icons.diagnostics.Warn },
+        { sev.INFO, icons.diagnostics.Info },
+        { sev.HINT, icons.diagnostics.Hint },
+      }
+      local parts = {}
+      for _, item in ipairs(order) do
+        local n = counts[item[1]]
+        if n and n > 0 then
+          parts[#parts + 1] = item[2] .. " " .. n
+        end
+      end
+      return table.concat(parts, " ")
+    end,
   },
   signs = {
     text = {
