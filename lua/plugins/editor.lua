@@ -104,17 +104,15 @@ return {
   },
   -- TREESITTER --
   {
-    "nvim-treesitter/nvim-treesitter",
-    -- Pinned to classic `master`: the repo was archived 2026-04-03 and its
-    -- default branch is now the incompatible `main` rewrite. This keeps a
-    -- stable base until the deliberate migration to the community fork.
-    branch = "master",
-    event = "VeryLazy",
+    "neovim-treesitter/nvim-treesitter",
+    -- Community fork: the original nvim-treesitter repo was archived 2026-04-03
+    -- and its default branch is the incompatible `main` rewrite. The fork does
+    -- not support lazy-loading, so it must load at startup.
+    branch = "main",
+    lazy = false,
     build = ":TSUpdate",
-    -- commit = "9e1cda4e71a763ba1f1ac099498c7ce40edc6dd2",
     dependencies = {
-      -- "nvim-treesitter/nvim-treesitter-textobjects",
-      -- "IndianBoy42/tree-sitter-just",
+      "neovim-treesitter/treesitter-parser-registry",
       "chrisgrieser/nvim-various-textobjs",
     },
     config = function()

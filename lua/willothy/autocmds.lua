@@ -209,19 +209,19 @@ local autocmds = {
       if vim.bo[ev.buf].buftype ~= "" then
         return
       end
-      local parsers = require("nvim-treesitter.parsers")
       local ft = vim.bo[ev.buf].filetype
-      local lang = parsers.ft_to_lang(ft)
+      local lang = vim.treesitter.language.get_lang(ft)
       if not lang then
-        vim.notify_once(
-          "No language config for filetype '" .. ft .. "'",
-          vim.log.levels.WARN,
-          {}
-        )
         return
       end
-      if parsers.has_parser(lang) then
-        vim.treesitter.start(ev.buf, lang)
+      -- start highlighting when a parser is installed for the language
+      if pcall(vim.treesitter.start, ev.buf, lang) then
+        -- use treesitter indentation only where the language ships an indents
+        -- query; otherwise leave the ftplugin's own indentexpr in place
+        if vim.treesitter.query.get(lang, "indents") then
+          vim.bo[ev.buf].indentexpr =
+            "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
       end
     end,
   },

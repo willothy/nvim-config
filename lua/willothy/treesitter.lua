@@ -1,86 +1,39 @@
----@diagnostic disable: missing-fields
--- require("tree-sitter-just").setup({})
+-- nvim-treesitter community fork (neovim-treesitter/*): the classic
+-- `require("nvim-treesitter.configs").setup{}` module system no longer
+-- exists. Parsers are installed explicitly here; highlight / indent / fold
+-- are enabled per-buffer in the FileType autocmd (see willothy/autocmds.lua).
+-- Context-aware commentstrings are handled by ts-comments.nvim (the Comment.nvim
+-- spec), so the old `context_commentstring` module config is dropped.
+-- Textobjects moved to the nvim-treesitter-textobjects plugin.
 
-require("nvim-treesitter.configs").setup({
-  -- A list of parser names, or "all"
-  ensure_installed = {
-    "query",
-    "javascript",
-    "typescript",
-    "c",
-    "go",
-    "cpp",
-    "lua",
-    "rust",
-    "bash",
-    "markdown",
-    "markdown_inline",
-    "gitcommit",
-    "gitignore",
-    "git_rebase",
-    "git_config",
-    "jsonc",
-    "json",
-  },
-  sync_install = false,
-  auto_install = true,
-  highlight = {
-    enable = true,
-    -- disable = {
-    --   "css",
-    --   "scss",
-    -- },
-    -- additional_vim_regex_highlighting = false,
-  },
-  indent = {
-    enable = true,
-  },
-  injections = { enable = true },
-  context_commentstring = {
-    config = {
-      javascript = {
-        __default = "// %s",
-        jsx_element = "{/* %s */}",
-        jsx_fragment = "{/* %s */}",
-        jsx_attribute = "// %s",
-        comment = "// %s",
-      },
-      typescript = { __default = "// %s", __multiline = "/* %s */" },
-    },
-  },
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true,
-      keymaps = {
-        ["is"] = { query = "@statement.inner", desc = "statement" },
-        ["as"] = { query = "@statement.outer", desc = "statement" },
-        ["ic"] = { query = "@class.inner", desc = "class" },
-        ["ac"] = { query = "@class.outer", desc = "class" },
-        ["iF"] = { query = "@function.inner", desc = "function" },
-        ["aF"] = { query = "@function.outer", desc = "function" },
-      },
-      selection_modes = {
-        ["@parameter.outer"] = "v",
-        -- ["@function.outer"] = "V",
-        ["@class.outer"] = "<c-v>",
-      },
-    },
-    swap = {
-      enable = true,
-    },
-    move = {
-      enable = true,
-      goto_next_start = {
-        ["]f"] = { query = "@function.outer", desc = "function" },
-        ["]c"] = { query = "@call.outer", desc = "call" },
-      },
-      goto_previous_start = {
-        ["[f"] = { query = "@function.outer", desc = "function" },
-        ["[c"] = { query = "@call.outer", desc = "call" },
-      },
-    },
-  },
+local ts = require("nvim-treesitter")
+
+-- ft -> parser-language mappings that don't match by name. Core does not
+-- register these; the classic plugin used to.
+vim.treesitter.language.register("bash", "sh")
+vim.treesitter.language.register("git_config", "gitconfig")
+vim.treesitter.language.register("git_rebase", "gitrebase")
+vim.treesitter.language.register("javascript", "javascriptreact")
+vim.treesitter.language.register("typescript", "typescriptreact")
+
+ts.install({
+  "query",
+  "javascript",
+  "typescript",
+  "c",
+  "go",
+  "cpp",
+  "lua",
+  "rust",
+  "bash",
+  "markdown",
+  "markdown_inline",
+  "gitcommit",
+  "gitignore",
+  "git_rebase",
+  "git_config",
+  "jsonc",
+  "json",
 })
 
 -- local M = {}
