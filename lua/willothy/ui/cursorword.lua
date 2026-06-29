@@ -2,10 +2,13 @@
 --
 -- Unlike vim-illuminate, highlights are NOT cleared when the cursor moves.
 -- They are cleared and re-applied atomically only when the new set is ready
--- (inside the async LSP response handler, or synchronously for the treesitter
--- fallback), so there is never a blank gap while waiting on the LSP.
+-- (inside the async LSP response handler, or synchronously for the fallbacks),
+-- so there is never a blank gap while waiting on the LSP.
 --
--- Priority: LSP textDocument/documentHighlight -> treesitter identifier match.
+-- Provider priority, first to produce a result wins:
+--   1. LSP   textDocument/documentHighlight (async, semantic)
+--   2. treesitter  same-identifier match (sync, scope-unaware)
+--   3. regex  whole-word match in the buffer (sync, works in prose/markdown)
 local M = {}
 
 local ns = vim.api.nvim_create_namespace("willothy_cursorword")
@@ -13,8 +16,8 @@ local au = vim.api.nvim_create_augroup("willothy_cursorword", { clear = true })
 
 -- debounce after the cursor stops moving (ms)
 local DELAY = 100
--- skip the treesitter fallback's full-tree walk above this many lines
-local TS_MAX_LINES = 5000
+-- skip the synchronous fallbacks' buffer scans above this many lines
+local MAX_LINES = 5000
 
 local denylist = {
   ["neo-tree"] = true,
@@ -24,14 +27,11 @@ local denylist = {
   trouble = true,
 }
 
--- documentHighlightKind -> highlight group. Kind 1 (Text) and unknown/nil map
--- to LspReferenceRead: many colorschemes (this one included) only style the
--- Read/Write groups and leave LspReferenceText invisible.
-local kind_to_hl = {
-  [1] = "LspReferenceRead",
-  [2] = "LspReferenceRead",
-  [3] = "LspReferenceWrite",
-}
+-- A single dedicated highlight group, so visibility doesn't depend on whatever
+-- (often near-invisible or undefined) LspReference* the colorscheme ships.
+-- Underline by default, like vim-illuminate. Override `WillothyCursorword` to
+-- taste (e.g. a bg or bold).
+local HL = "WillothyCursorword"
 
 -- per-buffer request sequence, so a stale async response can't overwrite a
 -- newer one
@@ -112,7 +112,7 @@ local function lsp_update(buf, win)
         scol = byte_col(buf, s.line, s.character, enc),
         erow = e.line,
         ecol = byte_col(buf, e.line, e.character, enc),
-        hl = kind_to_hl[dh.kind] or "LspReferenceRead",
+        hl = HL,
       }
     end
     apply(buf, ranges)
@@ -123,7 +123,7 @@ end
 
 ---@return boolean handled whether treesitter produced a result
 local function treesitter_update(buf, win)
-  if vim.api.nvim_buf_line_count(buf) > TS_MAX_LINES then
+  if vim.api.nvim_buf_line_count(buf) > MAX_LINES then
     return false
   end
 
@@ -156,7 +156,7 @@ local function treesitter_update(buf, win)
       if vim.treesitter.get_node_text(n, buf) == text then
         local sr, sc, er, ec = n:range()
         ranges[#ranges + 1] =
-          { srow = sr, scol = sc, erow = er, ecol = ec, hl = "LspReferenceRead" }
+          { srow = sr, scol = sc, erow = er, ecol = ec, hl = HL }
       end
     end
     for child in n:iter_children() do
@@ -166,6 +166,46 @@ local function treesitter_update(buf, win)
 
   for _, tree in pairs(parser:trees()) do
     walk(tree:root())
+  end
+
+  apply(buf, ranges)
+  return true
+end
+
+---@return boolean handled whether a word match was produced
+local function regex_update(buf, win)
+  if vim.api.nvim_buf_line_count(buf) > MAX_LINES then
+    return false
+  end
+
+  local cursor = vim.api.nvim_win_get_cursor(win)
+  local cur_line = vim.api.nvim_buf_get_lines(buf, cursor[1] - 1, cursor[1], false)[1]
+    or ""
+  local col = cursor[2]
+  -- the char under the cursor must be part of a word; this also guards against
+  -- expand("<cword>") raising E348 ("No string under cursor") on blank lines
+  if not (cur_line:sub(col + 1, col + 1)):match("[%w_]") then
+    return false
+  end
+  local ok_cword, cword = pcall(vim.fn.expand, "<cword>")
+  if not ok_cword or cword == "" or not cword:match("^[%w_]+$") then
+    return false
+  end
+
+  local pat = "%f[%w_]" .. vim.pesc(cword) .. "%f[^%w_]"
+  local ranges = {}
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  for i, line in ipairs(lines) do
+    local init = 1
+    while true do
+      local s, e = line:find(pat, init)
+      if not s then
+        break
+      end
+      ranges[#ranges + 1] =
+        { srow = i - 1, scol = s - 1, erow = i - 1, ecol = e, hl = HL }
+      init = e + 1
+    end
   end
 
   apply(buf, ranges)
@@ -186,6 +226,9 @@ local function update()
   if treesitter_update(buf, win) then
     return
   end
+  if regex_update(buf, win) then
+    return
+  end
   clear(buf)
 end
 
@@ -196,6 +239,14 @@ local function schedule()
 end
 
 function M.setup()
+  -- visible by default; `default = true` lets the user/colorscheme override it.
+  -- re-applied on ColorScheme since :colorscheme clears highlight groups.
+  local function set_hl()
+    vim.api.nvim_set_hl(0, HL, { default = true, underline = true })
+  end
+  set_hl()
+  vim.api.nvim_create_autocmd("ColorScheme", { group = au, callback = set_hl })
+
   vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
     group = au,
     callback = schedule,
