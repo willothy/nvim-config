@@ -103,8 +103,9 @@ function M.generate(name, s)
     DiffDelete = { bg = s.diff.delete },
 
     -- LSP UI
-    LspReferenceRead = { bg = s.background_dark },
-    LspReferenceWrite = { bg = s.background_dark },
+    LspReferenceText = { bg = s.background_light },
+    LspReferenceRead = { bg = s.background_light },
+    LspReferenceWrite = { bg = s.background_light },
     LspCodeLens = { fg = s.text_light },
     LspCodeLensSeparator = { fg = s.separator },
     LspSignatureActiveParameter = { fg = s.special },

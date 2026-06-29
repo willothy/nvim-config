@@ -443,8 +443,9 @@ require("mini.colors")
         fg = palette.lemon_chiffon,
       },
 
-      LspReferenceRead = { bg = palette.dark_blue },
-      LspReferenceWrite = { bg = palette.dark_blue },
+      LspReferenceText = { bg = spec.background_light },
+      LspReferenceRead = { bg = spec.background_light },
+      LspReferenceWrite = { bg = spec.background_light },
       LspCodeLens = { bg = "none", fg = palette.text },
       LspCodeLensSeparator = { bg = "none", fg = palette.cadet_gray },
       LspSignatureActiveParameter = { bg = "none", fg = palette.blue },
