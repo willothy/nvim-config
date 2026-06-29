@@ -17,6 +17,9 @@ require("murmur").setup({
   cursor_rgb = "Cursorword",
   cursor_rgb_current = "Cursorword",
   cursor_rgb_always_use_config = true,
+  -- murmur's yank-blink calls the deprecated vim.highlight.on_yank (warns on
+  -- every yank on nightly); yanky already highlights yanks via the modern API.
+  yank_blink = { enabled = false },
   callbacks = {
     function()
       if active_win and vim.api.nvim_win_is_valid(active_win) then
