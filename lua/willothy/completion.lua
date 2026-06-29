@@ -11,9 +11,9 @@ local function smart_indent(cmp)
     return cmp.select_and_accept()
   end
 
-  if vim.b[vim.api.nvim_get_current_buf()].nes_state then
+  if require("sidekick").nes_jump_or_apply() then
     cmp.hide()
-    return require("copilot-lsp.nes").apply_pending_nes()
+    return true
   end
 
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -144,9 +144,9 @@ require("blink.cmp").setup({
 
     ["<M-Tab>"] = {
       function(cmp)
-        if vim.b[vim.api.nvim_get_current_buf()].nes_state then
+        if require("sidekick").nes_jump_or_apply() then
           cmp.hide()
-          return require("copilot-lsp.nes").apply_pending_nes()
+          return true
         end
       end,
       "fallback",

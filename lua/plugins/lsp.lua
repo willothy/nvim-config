@@ -201,10 +201,11 @@ return {
   },
   {
     "folke/sidekick.nvim",
+    event = "VeryLazy",
     config = function()
       require("sidekick").setup({
         nes = {
-          enabled = false,
+          enabled = true,
         },
       })
 
@@ -239,7 +240,6 @@ return {
         nargs = "*",
       })
     end,
-    cmd = "Sidekick",
   },
   {
     "NickvanDyke/opencode.nvim",
