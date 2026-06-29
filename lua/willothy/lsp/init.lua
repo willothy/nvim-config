@@ -35,6 +35,9 @@ local configured = {
   "postgres_lsp", -- supabase-community/postgres-language-server
   "protols",
   "glsl_analyzer",
+  -- GitHub Copilot LSP: provides Next Edit Suggestions (rendered by
+  -- sidekick.nvim). Inline completion still comes from blink-copilot.
+  "copilot",
 }
 
 local function init()
