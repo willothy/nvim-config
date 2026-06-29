@@ -79,10 +79,10 @@ return {
   },
   -- SCOPE / CURSORWORD --
   {
-    "nyngwang/murmur.lua",
+    "RRethy/vim-illuminate",
     event = "VeryLazy",
     config = function()
-      require("configs.ui.murmur")
+      require("configs.ui.illuminate")
     end,
   },
   -- SIDEBARS --
