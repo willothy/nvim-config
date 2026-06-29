@@ -24,9 +24,11 @@ local denylist = {
   trouble = true,
 }
 
--- documentHighlightKind -> highlight group
+-- documentHighlightKind -> highlight group. Kind 1 (Text) and unknown/nil map
+-- to LspReferenceRead: many colorschemes (this one included) only style the
+-- Read/Write groups and leave LspReferenceText invisible.
 local kind_to_hl = {
-  [1] = "LspReferenceText",
+  [1] = "LspReferenceRead",
   [2] = "LspReferenceRead",
   [3] = "LspReferenceWrite",
 }
@@ -110,7 +112,7 @@ local function lsp_update(buf, win)
         scol = byte_col(buf, s.line, s.character, enc),
         erow = e.line,
         ecol = byte_col(buf, e.line, e.character, enc),
-        hl = kind_to_hl[dh.kind] or "LspReferenceText",
+        hl = kind_to_hl[dh.kind] or "LspReferenceRead",
       }
     end
     apply(buf, ranges)
@@ -154,7 +156,7 @@ local function treesitter_update(buf, win)
       if vim.treesitter.get_node_text(n, buf) == text then
         local sr, sc, er, ec = n:range()
         ranges[#ranges + 1] =
-          { srow = sr, scol = sc, erow = er, ecol = ec, hl = "LspReferenceText" }
+          { srow = sr, scol = sc, erow = er, ecol = ec, hl = "LspReferenceRead" }
       end
     end
     for child in n:iter_children() do
@@ -194,15 +196,6 @@ local function schedule()
 end
 
 function M.setup()
-  -- visible defaults only if the colorscheme doesn't define these
-  vim.api.nvim_set_hl(0, "LspReferenceText", { default = true, underline = true })
-  vim.api.nvim_set_hl(0, "LspReferenceRead", { default = true, underline = true })
-  vim.api.nvim_set_hl(
-    0,
-    "LspReferenceWrite",
-    { default = true, underline = true, bold = true }
-  )
-
   vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
     group = au,
     callback = schedule,
