@@ -2,12 +2,8 @@
 --
 -- On CursorHold, show a cursor-scoped `vim.diagnostic` float. Keep it open
 -- while the cursor stays on the same word (so it doesn't blink), and close it
--- when the word changes, you start editing, or leave the buffer.
---
--- Extracted from the old murmur config; no longer depends on murmur. The
--- close-on-word-change behaviour that murmur's `callbacks` used to provide is
--- reimplemented here with a native CursorMoved autocmd. Diagnostics in the
--- top-right corner are still handled separately by diagflow.
+-- when the word changes (CursorMoved), you start editing, or leave the buffer.
+-- Diagnostics in the top-right corner are still handled separately by diagflow.
 local M = {}
 
 local au =
