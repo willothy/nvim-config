@@ -65,11 +65,24 @@ require("lazy").setup({
     virtual = true,
     event = "UiEnter",
     config = function()
-      require("willothy.ui.scrollbar").setup()
-      require("willothy.ui.scrolleof").setup()
-      require("willothy.ui.mode").setup()
-      require("willothy.ui.diagnostic_float").setup()
-      require("willothy.ui.cursorword").setup()
+      -- isolate each module so one failing setup() can't abort the others
+      for _, mod in ipairs({
+        "scrollbar",
+        "scrolleof",
+        "mode",
+        "diagnostic_float",
+        "cursorword",
+      }) do
+        local ok, err = pcall(function()
+          require("willothy.ui." .. mod).setup()
+        end)
+        if not ok then
+          vim.notify(
+            ("willothy.ui.%s setup failed: %s"):format(mod, err),
+            vim.log.levels.ERROR
+          )
+        end
+      end
     end,
   },
 

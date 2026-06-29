@@ -12,10 +12,13 @@
 local M = {}
 
 local ns = vim.api.nvim_create_namespace("willothy_cursorword")
-local au = vim.api.nvim_create_augroup("willothy_cursorword", { clear = true })
+-- the augroup is (re)created inside setup(), NOT at module load: a top-level
+-- clear=true would wipe the autocmds a prior setup() registered if this file is
+-- ever re-run (module reload).
+local au
 
 -- debounce after the cursor stops moving (ms)
-local DELAY = 100
+local DELAY = 40
 -- skip the synchronous fallbacks' buffer scans above this many lines
 local MAX_LINES = 5000
 
@@ -27,11 +30,14 @@ local denylist = {
   trouble = true,
 }
 
--- A single dedicated highlight group, so visibility doesn't depend on whatever
--- (often near-invisible or undefined) LspReference* the colorscheme ships.
--- Underline by default, like vim-illuminate. Override `WillothyCursorword` to
--- taste (e.g. a bg or bold).
-local HL = "WillothyCursorword"
+-- documentHighlightKind -> highlight group. The treesitter/regex paths and
+-- unknown kinds use LspReferenceText. Style LspReference{Text,Read,Write} in
+-- your colorscheme to taste.
+local kind_to_hl = {
+  [1] = "LspReferenceText",
+  [2] = "LspReferenceRead",
+  [3] = "LspReferenceWrite",
+}
 
 -- per-buffer request sequence, so a stale async response can't overwrite a
 -- newer one
@@ -112,7 +118,7 @@ local function lsp_update(buf, win)
         scol = byte_col(buf, s.line, s.character, enc),
         erow = e.line,
         ecol = byte_col(buf, e.line, e.character, enc),
-        hl = HL,
+        hl = kind_to_hl[dh.kind] or "LspReferenceText",
       }
     end
     apply(buf, ranges)
@@ -156,7 +162,7 @@ local function treesitter_update(buf, win)
       if vim.treesitter.get_node_text(n, buf) == text then
         local sr, sc, er, ec = n:range()
         ranges[#ranges + 1] =
-          { srow = sr, scol = sc, erow = er, ecol = ec, hl = HL }
+          { srow = sr, scol = sc, erow = er, ecol = ec, hl = "LspReferenceText" }
       end
     end
     for child in n:iter_children() do
@@ -203,7 +209,7 @@ local function regex_update(buf, win)
         break
       end
       ranges[#ranges + 1] =
-        { srow = i - 1, scol = s - 1, erow = i - 1, ecol = e, hl = HL }
+        { srow = i - 1, scol = s - 1, erow = i - 1, ecol = e, hl = "LspReferenceText" }
       init = e + 1
     end
   end
@@ -219,15 +225,30 @@ local function update()
     clear(buf)
     return
   end
+  -- only highlight while the cursor is on a word character; clear on
+  -- punctuation/whitespace so a trailing char doesn't keep a word highlighted
+  local cursor = vim.api.nvim_win_get_cursor(win)
+  local line = vim.api.nvim_buf_get_lines(buf, cursor[1] - 1, cursor[1], false)[1]
+    or ""
+  if not line:sub(cursor[2] + 1, cursor[2] + 1):match("[%w_]") then
+    clear(buf)
+    return
+  end
   -- LSP takes priority; on success the highlights land later, in the handler
   if lsp_update(buf, win) then
     return
   end
-  if treesitter_update(buf, win) then
-    return
-  end
-  if regex_update(buf, win) then
-    return
+  -- no documentHighlight-capable client: only use the treesitter/regex fallback
+  -- when there's no LSP attached at all. Otherwise a client is still
+  -- initialising and will provide highlights shortly, so don't flash broad
+  -- fallback matches across the buffer during startup.
+  if #vim.lsp.get_clients({ bufnr = buf }) == 0 then
+    if treesitter_update(buf, win) then
+      return
+    end
+    if regex_update(buf, win) then
+      return
+    end
   end
   clear(buf)
 end
@@ -239,14 +260,7 @@ local function schedule()
 end
 
 function M.setup()
-  -- visible by default; `default = true` lets the user/colorscheme override it.
-  -- re-applied on ColorScheme since :colorscheme clears highlight groups.
-  local function set_hl()
-    vim.api.nvim_set_hl(0, HL, { default = true, underline = true })
-  end
-  set_hl()
-  vim.api.nvim_create_autocmd("ColorScheme", { group = au, callback = set_hl })
-
+  au = vim.api.nvim_create_augroup("willothy_cursorword", { clear = true })
   vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
     group = au,
     callback = schedule,
@@ -254,6 +268,12 @@ function M.setup()
   -- content changed -> current highlights may be stale; recompute (the apply
   -- still swaps atomically, so no flicker)
   vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
+    group = au,
+    callback = schedule,
+  })
+  -- when an LSP attaches, re-highlight so its scoped results replace any
+  -- treesitter/regex fallback that was showing while it loaded
+  vim.api.nvim_create_autocmd("LspAttach", {
     group = au,
     callback = schedule,
   })

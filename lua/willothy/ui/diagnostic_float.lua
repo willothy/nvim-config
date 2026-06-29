@@ -124,10 +124,9 @@ function M.setup()
     end
   end
 
-  -- <leader>uF toggle via snacks
-  local ok_snacks, Snacks = pcall(require, "snacks")
-  if ok_snacks then
-    Snacks.toggle
+  -- <leader>uF toggle via snacks (guarded: must not abort setup if it errors)
+  pcall(function()
+    require("snacks").toggle
       .new({
         name = "Diagnostic float",
         get = function()
@@ -143,7 +142,7 @@ function M.setup()
         end,
       })
       :map("<leader>uF")
-  end
+  end)
 
   return M
 end
