@@ -1,23 +1,39 @@
 -- IDE-like, flicker-free diagnostic popup.
 --
--- On CursorHold, show a cursor-scoped `vim.diagnostic` float. Keep it open
--- while the cursor stays on the same word (so it doesn't blink), and close it
--- when the word changes (CursorMoved), you start editing, or leave the buffer.
--- Diagnostics in the top-right corner are still handled separately by diagflow.
+-- On CursorHold, show a cursor-scoped `vim.diagnostic` float while the cursor
+-- is within a diagnostic's range. Keep it open while the cursor stays inside
+-- that range (so it doesn't blink), and close it as soon as the cursor leaves
+-- the diagnostic, starts editing, or leaves the buffer. Diagnostics in the
+-- top-right corner are still handled separately by diagflow.
 local M = {}
 
 local au =
   vim.api.nvim_create_augroup("willothy_diagnostic_float", { clear = true })
 local enabled = true
 local active_win
-local active_word
+
+-- Is the cursor inside the range of any diagnostic (i.e. over its underline)?
+local function over_diagnostic()
+  local pos = vim.api.nvim_win_get_cursor(0)
+  local lnum, col = pos[1] - 1, pos[2]
+  for _, d in ipairs(vim.diagnostic.get(0)) do
+    local end_lnum = d.end_lnum or d.lnum
+    local end_col = (d.end_col and d.end_col > d.col) and d.end_col
+      or (d.col + 1)
+    local after_start = lnum > d.lnum or (lnum == d.lnum and col >= d.col)
+    local before_end = lnum < end_lnum or (lnum == end_lnum and col < end_col)
+    if after_start and before_end then
+      return true
+    end
+  end
+  return false
+end
 
 function M.hide()
   if active_win and vim.api.nvim_win_is_valid(active_win) then
     vim.api.nvim_win_close(active_win, true)
   end
   active_win = nil
-  active_word = nil
 end
 
 function M.enable()
@@ -37,14 +53,13 @@ function M.toggle()
 end
 
 function M.show()
-  -- already showing (don't reopen -> no flicker), or disabled
-  if (active_win and vim.api.nvim_win_is_valid(active_win)) or not enabled then
-    return
-  end
-
-  -- only when the cursor is on a word
-  local word = vim.fn.expand("<cword>")
-  if word == "" then
+  -- already showing (don't reopen -> no flicker), disabled, or not over a
+  -- diagnostic
+  if
+    (active_win and vim.api.nvim_win_is_valid(active_win))
+    or not enabled
+    or not over_diagnostic()
+  then
     return
   end
 
@@ -66,7 +81,6 @@ function M.show()
     return
   end
   active_win = win
-  active_word = word
 
   vim.api.nvim_create_autocmd("WinClosed", {
     group = au,
@@ -74,7 +88,6 @@ function M.show()
     once = true,
     callback = function()
       active_win = nil
-      active_word = nil
     end,
   })
 end
@@ -87,12 +100,12 @@ function M.setup()
     callback = M.show,
   })
 
-  -- close once the cursor leaves the word the float was opened for
+  -- close as soon as the cursor leaves the diagnostic's range
   vim.api.nvim_create_autocmd("CursorMoved", {
     group = au,
     pattern = "*",
     callback = function()
-      if active_win and vim.fn.expand("<cword>") ~= active_word then
+      if active_win and not over_diagnostic() then
         M.hide()
       end
     end,
