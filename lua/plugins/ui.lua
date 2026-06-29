@@ -77,14 +77,6 @@ return {
       },
     },
   },
-  -- SCOPE / CURSORWORD --
-  {
-    "RRethy/vim-illuminate",
-    event = "VeryLazy",
-    config = function()
-      require("configs.ui.illuminate")
-    end,
-  },
   -- SIDEBARS --
   {
     "folke/trouble.nvim",

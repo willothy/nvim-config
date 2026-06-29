@@ -69,6 +69,7 @@ require("lazy").setup({
       require("willothy.ui.scrolleof").setup()
       require("willothy.ui.mode").setup()
       require("willothy.ui.diagnostic_float").setup()
+      require("willothy.ui.cursorword").setup()
     end,
   },
 
