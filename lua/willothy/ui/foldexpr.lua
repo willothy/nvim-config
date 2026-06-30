@@ -87,7 +87,7 @@ local function get_fold_matches(bufnr)
     if vim.treesitter.query.get(lang, "folds") then
       capture_name, group = "fold", "folds"
     elseif vim.treesitter.query.get(lang, "locals") then
-      capture_name, group = "scope", "locals"
+      capture_name, group = "local.scope", "locals"
     end
 
     if capture_name then
