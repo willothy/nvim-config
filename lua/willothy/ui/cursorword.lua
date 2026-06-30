@@ -50,6 +50,11 @@ local function should_highlight(buf)
 end
 
 local function clear(buf)
+  -- bump the request sequence so an in-flight LSP response is dropped instead
+  -- of re-applying a highlight after we've intentionally cleared (e.g. when the
+  -- cursor moved onto punctuation while a request for the previous word was
+  -- still pending)
+  seqs[buf] = (seqs[buf] or 0) + 1
   if vim.api.nvim_buf_is_valid(buf) then
     vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
   end
