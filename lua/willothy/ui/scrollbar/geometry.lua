@@ -11,6 +11,10 @@
 
 local M = {}
 
+-- cache the O(lines) wrapped-height computation; only content/width changes can
+-- invalidate it, so cursor moves (the common trigger) reuse it
+local height_cache = {}
+
 --- @param target_win number
 --- @return number
 local function get_win_buf_height(target_win)
@@ -22,11 +26,18 @@ local function get_win_buf_height(target_win)
   end
 
   local width = vim.api.nvim_win_get_width(target_win)
+  local tick = vim.b[buf].changedtick
+  local cached = height_cache[buf]
+  if cached and cached.tick == tick and cached.width == width then
+    return cached.height
+  end
+
   local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
   local height = 0
   for _, l in ipairs(lines) do
     height = height + math.max(1, (math.ceil(vim.fn.strwidth(l) / width)))
   end
+  height_cache[buf] = { tick = tick, width = width, height = height }
   return height
 end
 
@@ -50,6 +61,7 @@ end
 --- @param target_win number
 --- @param width number
 --- @return number
+local start_line_cache = {}
 local get_content_start_line = function(target_win, width)
   local start_line = math.max(1, vim.fn.line("w0", target_win))
   if not vim.wo[target_win].wrap then
@@ -57,6 +69,19 @@ local get_content_start_line = function(target_win, width)
   end
 
   local bufnr = vim.api.nvim_win_get_buf(target_win)
+  -- cache by (win, changedtick, top line, width): a cursor move within the same
+  -- viewport reuses it; only a scroll or edit recomputes the O(lines) loop
+  local tick = vim.b[bufnr].changedtick
+  local cached = start_line_cache[target_win]
+  if
+    cached
+    and cached.tick == tick
+    and cached.start_line == start_line
+    and cached.width == width
+  then
+    return cached.result
+  end
+
   local wrapped_start_line = 1
   for _, text in
     ipairs(vim.api.nvim_buf_get_lines(bufnr, 0, start_line - 1, false))
@@ -68,6 +93,12 @@ local get_content_start_line = function(target_win, width)
     wrapped_start_line = wrapped_start_line
       + math.max(1, math.ceil(vim.fn.strdisplaywidth(text) / width))
   end
+  start_line_cache[target_win] = {
+    tick = tick,
+    start_line = start_line,
+    width = width,
+    result = wrapped_start_line,
+  }
   return wrapped_start_line
 end
 
