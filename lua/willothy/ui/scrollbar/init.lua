@@ -7,11 +7,14 @@
 --- @field new fun(opts: willothy.ScrollbarConfig): willothy.Scrollbar
 --- @field is_visible fun(self: willothy.Scrollbar): boolean
 --- @field update fun(self: willothy.Scrollbar, target_win: number | nil)
+local ScrollbarWin = require("willothy.ui.scrollbar.win")
+local Geometry = require("willothy.ui.scrollbar.geometry")
+
 local Scrollbar = {}
 
 function Scrollbar.new(opts)
   local self = setmetatable({}, { __index = Scrollbar })
-  self.win = require("willothy.ui.scrollbar.win").new(opts)
+  self.win = ScrollbarWin.new(opts)
   return self
 end
 
@@ -24,8 +27,7 @@ function Scrollbar:update(target_win)
     return self.win:hide()
   end
 
-  local geometry =
-    require("willothy.ui.scrollbar.geometry").get_geometry(target_win)
+  local geometry = Geometry.get_geometry(target_win)
   if geometry.should_hide then
     return self.win:hide()
   end
