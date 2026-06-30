@@ -14,6 +14,10 @@ local wk = require("which-key")
 -- })
 --
 wk.add({
+  -- group labels for keys defined in plugin specs (grug-far: <leader>s,
+  -- snacks gh: <leader>g)
+  { "<leader>s", group = "search/replace" },
+  { "<leader>g", group = "git" },
   {
     "<leader>b",
     group = "buffer",
