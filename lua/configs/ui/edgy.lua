@@ -2,6 +2,10 @@ local function get_height()
   return math.floor((vim.o.lines / 3.5) + 0.5)
 end
 
+local function get_half_width()
+  return math.floor((vim.o.columns * 0.5) + 0.5)
+end
+
 ---@type table
 local View = {}
 View.__index = View
@@ -204,10 +208,13 @@ local opts = {
 }
 
 for _, pos in ipairs({ "top", "bottom", "left", "right" }) do
+  local vertical = pos == "left" or pos == "right"
   opts[pos] = opts[pos] or {}
   table.insert(opts[pos] --[[@as table]], {
     ft = "snacks_terminal",
-    size = { height = get_height },
+    -- left/right edgebars are sized by width; opencode (a right snacks terminal)
+    -- should fill half the screen rather than edgy's narrow default
+    size = vertical and { width = get_half_width } or { height = get_height },
     -- title = "%{b:snacks_terminal.id}: %{b:term_title}",
     title = "%{%v:lua.dropbar()%}: %{b:term_title}",
 
