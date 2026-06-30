@@ -29,7 +29,7 @@ local function smart_indent(cmp)
 
     vim.schedule(function()
       vim.api.nvim_buf_set_lines(0, row - 1, row, true, {
-        string.rep(" ", indent or 0) .. line:sub(col),
+        string.rep(" ", indent or 0) .. line:sub(col + 1),
       })
 
       vim.api.nvim_win_set_cursor(0, { row, math.max(0, indent) })
