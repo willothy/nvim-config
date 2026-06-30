@@ -108,7 +108,7 @@ local opts = {
       [1] = "Error",
       [2] = "Warn",
       [3] = "Info",
-      [4] = "Trace",
+      [4] = "Hint",
     }
 
     local icon = icons.diagnostics[levels[diag.severity]]
