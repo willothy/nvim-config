@@ -36,6 +36,31 @@ return {
       -- legacy_computing_symbols_support = true,
     },
   },
+  -- {
+  --   "willothy/macro-lab.nvim",
+  --   dir = "~/projects/lua/macro-lab.nvim",
+  --   config = function()
+  --     require("macro-lab").setup()
+  --   end,
+  --   event = "VeryLazy",
+  -- },
+  {
+    "willothy/rename-preview.nvim",
+    opts = {},
+    event = "LspAttach",
+  },
+  {
+    "willothy/ports.nvim",
+    cmd = "Ports",
+  },
+  {
+    "willothy/lockfile.nvim",
+    build = function()
+      require("lockfile.download").download_or_build()
+    end,
+    cmd = "LockfileDiff",
+    opts = {},
+  },
   {
     "folke/noice.nvim",
     dependencies = { "folke/snacks.nvim" },

@@ -511,12 +511,13 @@ wk.add({
     {
       "<leader>cn",
       function()
-        require("inc_rename") -- ensure increname is loaded
-        vim.api.nvim_feedkeys(
-          ":IncRename " .. vim.fn.expand("<cword>"),
-          "n",
-          true
-        )
+        require("rename-preview").rename()
+        -- require("inc_rename") -- ensure increname is loaded
+        -- vim.api.nvim_feedkeys(
+        --   ":IncRename " .. vim.fn.expand("<cword>"),
+        --   "n",
+        --   true
+        -- )
       end,
       desc = "rename",
     },
