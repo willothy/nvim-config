@@ -450,7 +450,11 @@ local function diag_child(severity, icon_key, hl_group)
       return (self.counts[severity] or 0) > 0
     end,
     provider = function(self)
-      return string.format("%s %d ", icons.diagnostics[icon_key], self.counts[severity])
+      return string.format(
+        "%s %d ",
+        icons.diagnostics[icon_key],
+        self.counts[severity]
+      )
     end,
     hl = hl_group,
   }
