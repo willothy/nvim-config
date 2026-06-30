@@ -205,39 +205,54 @@ return {
     config = function()
       require("sidekick").setup({
         nes = {
-          enabled = true,
+          -- togglable via vim.g.sidekick_nes / vim.b[buf].sidekick_nes
+          enabled = function(buf)
+            return vim.g.sidekick_nes ~= false
+              and vim.b[buf].sidekick_nes ~= false
+          end,
         },
       })
 
       vim.api.nvim_create_user_command("Sidekick", function(args)
-        local subcommand = args.fargs[1]
+        local cli = require("sidekick.cli")
 
         local actions = {
+          -- start/attach a CLI tool and show its window. cli.toggle() only
+          -- shows an already-running tool, so select() is what opens one.
           select = function()
-            require("sidekick.cli").select({})
+            cli.select()
           end,
+          -- show/hide the window of a running tool
           toggle = function()
-            require("sidekick.cli").toggle({})
+            cli.toggle({ focus = true })
+          end,
+          -- toggle focus between the editor and the CLI window
+          focus = function()
+            cli.focus()
+          end,
+          -- pick a prompt to send
+          prompt = function()
+            cli.prompt()
           end,
           close = function()
-            require("sidekick.cli").close({})
+            cli.close()
           end,
         }
 
-        local fn = actions[subcommand or "toggle"]
-
+        local fn = actions[args.fargs[1] or "select"]
         if not fn then
           vim.notify(
-            string.format("No such subcommand %s", subcommand),
-            vim.log.levels.WARN,
-            {}
+            string.format("Sidekick: no such subcommand %q", args.fargs[1]),
+            vim.log.levels.WARN
           )
           return
         end
-
         fn()
       end, {
         nargs = "*",
+        complete = function()
+          return { "select", "toggle", "focus", "prompt", "close" }
+        end,
       })
     end,
   },
