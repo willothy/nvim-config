@@ -8,6 +8,18 @@
 
 local ts = require("nvim-treesitter")
 
+-- The fork installs each language's queries into the data dir, but shared base
+-- queries that have no parser of their own (e.g. `ecma`, which typescript and
+-- javascript `; inherits:`) only ship in the plugin's bundled `runtime/queries`.
+-- That dir isn't on the runtimepath, so the inherited bases resolve to nothing
+-- and dependent languages lose most of their highlights. Add it to the rtp.
+for _, dir in ipairs(vim.api.nvim_list_runtime_paths()) do
+  if dir:match("[/\\]nvim%-treesitter$") then
+    vim.opt.rtp:prepend(dir .. "/runtime")
+    break
+  end
+end
+
 -- ft -> parser-language mappings that don't match by name. Core does not
 -- register these; the classic plugin used to.
 vim.treesitter.language.register("bash", "sh")
