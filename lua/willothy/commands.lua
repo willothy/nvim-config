@@ -161,13 +161,23 @@ local commands = {
           local kv = {}
           for _, str in ipairs(open_args) do
             local k, v = str:match("([^=]+)=(.*)")
-            kv[k] = v
+            if k then
+              kv[k] = v
+            end
           end
 
           scratch.open(kv)
         end,
       }
-      cmd[args.fargs[1]]({ unpack(args.fargs, 2) })
+      local handler = cmd[args.fargs[1]]
+      if not handler then
+        vim.notify(
+          "Scratch: unknown subcommand '" .. args.fargs[1] .. "'",
+          vim.log.levels.ERROR
+        )
+        return
+      end
+      handler({ unpack(args.fargs, 2) })
     end,
     nargs = "*",
     desc = "Open a scratch buffer",
