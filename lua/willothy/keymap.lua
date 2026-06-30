@@ -502,6 +502,13 @@ wk.add({
       },
     },
     {
+      "<leader>cm",
+      function()
+        require("willothy.lsp.parent_module").goto_parent()
+      end,
+      desc = "parent module",
+    },
+    {
       "<leader>cn",
       function()
         require("inc_rename") -- ensure increname is loaded
