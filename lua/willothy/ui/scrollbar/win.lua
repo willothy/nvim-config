@@ -19,6 +19,29 @@ local ScrollbarWindow = {}
 
 ScrollbarWindow.__index = ScrollbarWindow
 
+local NS = vim.api.nvim_create_namespace("willothy_scrollbar_thumb")
+
+-- Colours for the eighth-block thumb, derived from PmenuThumb: the block glyphs
+-- need the thumb colour as a *foreground*, plus an inverted variant (Normal-bg
+-- glyph over a thumb-coloured background) so the bottom edge can render as a
+-- top-aligned partial. A transparent window bg lets the empty part of the top
+-- edge show the buffer behind it.
+local function setup_highlights()
+  local thumb = vim.api.nvim_get_hl(0, { name = "PmenuThumb", link = false })
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+  local thumb_color = thumb.bg or thumb.fg
+  vim.api.nvim_set_hl(0, "WillothyScrollbarThumb", { fg = thumb_color })
+  vim.api.nvim_set_hl(
+    0,
+    "WillothyScrollbarThumbInv",
+    { fg = normal.bg, bg = thumb_color }
+  )
+  vim.api.nvim_set_hl(0, "WillothyScrollbarBg", { bg = "NONE" })
+end
+
+setup_highlights()
+vim.api.nvim_create_autocmd("ColorScheme", { callback = setup_highlights })
+
 ---@param opts willothy.ScrollbarConfig
 ---@return willothy.ScrollbarWin
 function ScrollbarWindow.new(opts)
@@ -30,17 +53,43 @@ function ScrollbarWindow:is_visible()
 end
 
 function ScrollbarWindow:show_thumb(geometry)
-  -- create window if it doesn't exist
-  if
-    self.thumb_win == nil or not vim.api.nvim_win_is_valid(self.thumb_win)
-  then
-    self.thumb_win = self:_make_win(geometry, "PmenuThumb")
+  -- per-thumb buffer holds the eighth-block chars; highlight each cell
+  if self.thumb_buf == nil or not vim.api.nvim_buf_is_valid(self.thumb_buf) then
+    self.thumb_buf = vim.api.nvim_create_buf(false, true)
+  end
+  vim.api.nvim_buf_set_lines(self.thumb_buf, 0, -1, false, geometry.lines)
+  vim.api.nvim_buf_clear_namespace(self.thumb_buf, NS, 0, -1)
+  for i, kind in ipairs(geometry.cell_hls) do
+    vim.api.nvim_buf_set_extmark(self.thumb_buf, NS, i - 1, 0, {
+      end_col = #geometry.lines[i],
+      hl_group = kind == "thumb_inv" and "WillothyScrollbarThumbInv"
+        or "WillothyScrollbarThumb",
+    })
+  end
+
+  local pos = {
+    relative = "win",
+    win = geometry.win,
+    width = 1,
+    height = geometry.height,
+    row = geometry.row,
+    col = geometry.col,
+    zindex = geometry.zindex,
+    border = "none",
+  }
+
+  if self.thumb_win == nil or not vim.api.nvim_win_is_valid(self.thumb_win) then
+    pos.style = "minimal"
+    pos.focusable = false
+    pos.noautocmd = true
+    self.thumb_win = vim.api.nvim_open_win(self.thumb_buf, false, pos)
+    vim.api.nvim_set_option_value(
+      "winhighlight",
+      "Normal:WillothyScrollbarBg,EndOfBuffer:WillothyScrollbarBg",
+      { win = self.thumb_win }
+    )
   else
-    -- update with the geometry
-    local thumb_existing_config = vim.api.nvim_win_get_config(self.thumb_win)
-    local thumb_config =
-      vim.tbl_deep_extend("force", thumb_existing_config, geometry)
-    vim.api.nvim_win_set_config(self.thumb_win, thumb_config)
+    vim.api.nvim_win_set_config(self.thumb_win, pos)
   end
 
   self:redraw_if_needed()

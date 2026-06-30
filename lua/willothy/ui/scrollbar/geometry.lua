@@ -11,6 +11,14 @@
 
 local M = {}
 
+-- eighth blocks: index k (1..8) = lower k/8 of the cell filled from the bottom
+local BLOCKS = { "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" }
+
+--- round to an integer eighth in [1, 8]
+local function clamp8(x)
+  return math.max(1, math.min(8, math.floor(x + 0.5)))
+end
+
 -- cache the O(lines) wrapped-height computation; only content/width changes can
 -- invalidate it, so cursor moves (the common trigger) reuse it
 local height_cache = {}
@@ -111,29 +119,65 @@ function M.get_geometry(target_win)
   local zindex = config.zindex or 30
 
   local buf_height = get_win_buf_height(target_win)
-  local thumb_height =
-    math.max(1, math.floor(height * height / buf_height + 0.5) - 1)
+  if height >= buf_height then
+    return { should_hide = true }
+  end
+
+  -- fractional thumb so its edges can land mid-cell
+  local thumb_height = math.max(1, height * height / buf_height)
 
   local start_line = get_content_start_line(target_win, width or 1)
   start_line = math.min(start_line, buf_height)
 
   local pct = (start_line - 1) / (buf_height - height)
-  local thumb_offset =
-    math.floor((pct * (math.max(height, thumb_height) - thumb_height)) + 0.5)
-  thumb_offset = math.min(thumb_offset, height - thumb_height - 1)
+  pct = math.min(1, math.max(0, pct))
+  local thumb_top = pct * (height - thumb_height)
+  local thumb_bottom = thumb_top + thumb_height
+
+  -- The float spans every row the (fractional) thumb touches; each cell's
+  -- eighth-block char encodes how much of that cell the thumb covers. Fully
+  -- covered cells are full blocks; the top edge is a bottom-aligned partial
+  -- (normal hl) and the bottom edge a top-aligned partial (inverted hl, so its
+  -- empty lower part renders in Normal-bg and the thumb is the cell background).
+  local first = math.floor(thumb_top)
+  local last = math.ceil(thumb_bottom) - 1
+  local win_row = nil
+  local lines = {}
+  local cell_hls = {}
+  for cell = first, last do
+    local top = math.max(thumb_top, cell) - cell
+    local bottom = math.min(thumb_bottom, cell + 1) - cell
+    local covered = bottom - top
+    if covered >= 0.0625 then -- skip negligible edge cells (would render blank)
+      win_row = win_row or cell
+      if covered >= 0.9375 then
+        lines[#lines + 1] = BLOCKS[8]
+        cell_hls[#cell_hls + 1] = "thumb"
+      elseif bottom >= 0.9375 then
+        lines[#lines + 1] = BLOCKS[clamp8(covered * 8)]
+        cell_hls[#cell_hls + 1] = "thumb"
+      else
+        lines[#lines + 1] = BLOCKS[clamp8((1 - bottom) * 8)]
+        cell_hls[#cell_hls + 1] = "thumb_inv"
+      end
+    end
+  end
+  win_row = win_row or first
 
   local col = width + get_col_offset(config.border) - 1
 
   return {
-    should_hide = height >= buf_height,
+    should_hide = false,
     thumb = {
       width = 1,
-      row = thumb_offset,
+      row = win_row,
       col = col,
       relative = "win",
       win = target_win,
-      height = thumb_height,
+      height = #lines,
       zindex = zindex + 2,
+      lines = lines,
+      cell_hls = cell_hls,
     },
     gutter = {
       width = 1,
