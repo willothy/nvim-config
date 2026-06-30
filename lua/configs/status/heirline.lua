@@ -431,11 +431,14 @@ local Overseer = {
 }
 
 local OpenCode = {
+  -- show only while a server is connected: opencode.events.status tracks the
+  -- url, which is set on connect and cleared on dispose
   condition = function()
-    return package.loaded["opencode"] ~= nil
+    local status = package.loaded["opencode.events.status"]
+    return status ~= nil and status.url ~= nil
   end,
   provider = function()
-    return require("opencode").statusline()
+    return require("opencode.events.status").statusline()
   end,
   Space,
 }
@@ -550,6 +553,13 @@ end)
 vim.api.nvim_create_autocmd("User", {
   pattern = "OpencodeEvent:*",
   callback = function(ev)
-    require("opencode.status").update(ev.data.event)
+    pcall(
+      require("opencode.events.status").update,
+      ev.data.event,
+      ev.data.url
+    )
+    vim.schedule(function()
+      vim.cmd.redrawstatus()
+    end)
   end,
 })
