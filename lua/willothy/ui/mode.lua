@@ -114,9 +114,11 @@ function M.setup()
   local group = vim.api.nvim_create_augroup("willothy/mode", { clear = true })
 
   vim.schedule(function()
-    vim.api.nvim_set_hl(0, "CurrentMode", M.get_color())
-
+    -- define the *Mode groups before reading them; get_color() returns {} for
+    -- an undefined group
     highlight()
+
+    vim.api.nvim_set_hl(0, "CurrentMode", M.get_color())
 
     vim.api.nvim_create_autocmd({ "ModeChanged" }, {
       group = group,
