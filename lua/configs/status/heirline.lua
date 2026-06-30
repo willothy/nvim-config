@@ -441,6 +441,42 @@ local OpenCode = {
   Space,
 }
 
+-- Colored diagnostic counts. vim.diagnostic.status() returns a plain string
+-- with no highlights, so build it ourselves: one child per severity, each with
+-- its own Diagnostic{Error,Warn,Info,Hint} group. Counts are cached on the
+-- listed events rather than recomputed every redraw.
+local function diag_child(severity, icon_key, hl_group)
+  return {
+    condition = function(self)
+      return (self.counts[severity] or 0) > 0
+    end,
+    provider = function(self)
+      return string.format("%s %d ", icons.diagnostics[icon_key], self.counts[severity])
+    end,
+    hl = hl_group,
+  }
+end
+
+local Diagnostics = {
+  update = {
+    "DiagnosticChanged",
+    "BufEnter",
+    callback = function(self)
+      self.counts = vim.diagnostic.count(0)
+    end,
+  },
+  init = function(self)
+    -- counts is unset until the first DiagnosticChanged/BufEnter fires
+    if not self.counts then
+      self.counts = vim.diagnostic.count(0)
+    end
+  end,
+  diag_child(vim.diagnostic.severity.ERROR, "errors", "DiagnosticError"),
+  diag_child(vim.diagnostic.severity.WARN, "warnings", "DiagnosticWarn"),
+  diag_child(vim.diagnostic.severity.INFO, "info", "DiagnosticInfo"),
+  diag_child(vim.diagnostic.severity.HINT, "hints", "DiagnosticHint"),
+}
+
 local StatusLine = {
   {
     Mode,
@@ -451,21 +487,7 @@ local StatusLine = {
   },
   Align,
 
-  {
-    provider = function(self)
-      if self.status ~= nil then
-        return self.status
-      end
-      return vim.diagnostic.status()
-    end,
-    update = {
-      "DiagnosticChanged",
-      "BufEnter",
-      callback = function(self)
-        self.status = vim.diagnostic.status()
-      end,
-    },
-  },
+  Diagnostics,
   Align,
   {
     Space,
