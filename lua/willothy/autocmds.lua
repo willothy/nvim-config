@@ -100,7 +100,7 @@ local delete_notifier = coalesce_aggregate(
     if #results > 1 then
       vim.notify(
         string.format(
-          "%d files deleted on disk. Buffers will be unloaded.\n%s",
+          "%d files deleted on disk. Buffers kept open.\n%s",
           #results,
           vim
             .iter(results)
@@ -118,7 +118,7 @@ local delete_notifier = coalesce_aggregate(
     elseif #results == 1 then
       vim.notify(
         string.format(
-          "File %s deleted on disk. Buffer will be unloaded.",
+          "File %s deleted on disk. Buffer kept open.",
           string.gsub(assert(results[1]).file, vim.pesc(vim.env.HOME), "~")
         ),
         vim.log.levels.WARN,
