@@ -230,38 +230,31 @@ require("willothy.lib.fn").create_command("Session", {
           local data = require("resession.files").load_json_file(filename)
           session_data[session_name] = data
         end
-        for name, data in pairs(session_data) do
-          local cwd
+        local function session_cwd(data)
           if data.tab_scoped then
-            cwd = data.tabs[1].cwd
-          else
-            cwd = data.global.cwd
+            return data.tabs[1].cwd
           end
-          local shortname = vim.fs.basename(cwd) or name
-          if shortnames[shortname] then
-            local other = shortnames[shortname]
-            local other_cwd
-            if other.tab_scoped then
-              other_cwd = other.tabs[1].cwd
-            else
-              other_cwd = other.global.cwd
-            end
-            local new_other = vim.fs.basename(
-              vim.fs.dirname(other_cwd:gsub("/$", ""))
-                or other_cwd:gsub("/$", "")
-            ) .. "/" .. shortname
-            local new_short = vim.fs.basename(
-              vim.fs.dirname(cwd):gsub("/$", "") or cwd:gsub("/$", "")
-            ) .. "/" .. shortname
+          return data.global.cwd
+        end
 
-            data.short_name = new_short
-            other.short_name = new_other
-
-            shortnames[new_short] = data
-            shortnames[new_other] = other
+        -- group every session by its cwd basename, then for any group with more
+        -- than one member prefix each with its parent directory so all members
+        -- get a distinct label (the pairwise approach only disambiguated two)
+        local by_basename = {}
+        for name, data in pairs(session_data) do
+          local basename = vim.fs.basename(session_cwd(data)) or name
+          shortnames[basename] = shortnames[basename] or {}
+          table.insert(shortnames[basename], data)
+        end
+        for basename, group in pairs(shortnames) do
+          if #group == 1 then
+            group[1].short_name = basename
           else
-            shortnames[shortname] = data
-            data.short_name = shortname
+            for _, data in ipairs(group) do
+              local cwd = session_cwd(data):gsub("/$", "")
+              local parent = vim.fs.basename(vim.fs.dirname(cwd)) or cwd
+              data.short_name = parent .. "/" .. basename
+            end
           end
         end
         select_opts.format_item = function(session_name)
