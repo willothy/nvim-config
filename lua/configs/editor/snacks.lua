@@ -63,6 +63,7 @@ local Snacks = require("snacks")
 
 Snacks.setup({
   toggle = {},
+  gh = {},
   image = {},
   profiler = {},
   dashboard = {

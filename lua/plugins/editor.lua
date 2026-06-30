@@ -140,11 +140,72 @@ return {
     config = true,
     event = "VeryLazy",
   },
+  {
+    "MagicDuck/grug-far.nvim",
+    cmd = { "GrugFar", "GrugFarWithin" },
+    opts = {},
+    keys = {
+      {
+        "<leader>sr",
+        function()
+          require("grug-far").open()
+        end,
+        desc = "search/replace (project)",
+      },
+      {
+        "<leader>sw",
+        function()
+          require("grug-far").open({
+            prefills = { search = vim.fn.expand("<cword>") },
+          })
+        end,
+        desc = "search/replace word",
+      },
+      {
+        "<leader>sr",
+        mode = "x",
+        function()
+          require("grug-far").with_visual_selection()
+        end,
+        desc = "search/replace selection",
+      },
+    },
+  },
   -- DEFAULT FEATURE EXTENSIONS --
   {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
+    keys = {
+      {
+        "<leader>gp",
+        function()
+          Snacks.picker.gh_pr()
+        end,
+        desc = "github PRs",
+      },
+      {
+        "<leader>gP",
+        function()
+          Snacks.picker.gh_pr({ state = "all" })
+        end,
+        desc = "github PRs (all)",
+      },
+      {
+        "<leader>gi",
+        function()
+          Snacks.picker.gh_issue()
+        end,
+        desc = "github issues",
+      },
+      {
+        "<leader>gI",
+        function()
+          Snacks.picker.gh_issue({ state = "all" })
+        end,
+        desc = "github issues (all)",
+      },
+    },
     config = function()
       require("configs.editor.snacks")
     end,
