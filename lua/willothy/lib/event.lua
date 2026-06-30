@@ -267,7 +267,7 @@ function M.on(event, callback, opts)
     if M.autocmd[evt] then
       table.insert(autocmds, evt)
     else
-      table.insert(usercmds, event)
+      table.insert(usercmds, evt)
     end
   end
 
