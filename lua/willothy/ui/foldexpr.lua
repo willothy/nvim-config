@@ -232,6 +232,14 @@ local function folds_levels(bufnr)
   return value
 end
 
+-- free cached fold levels when a buffer is wiped
+vim.api.nvim_create_autocmd("BufWipeout", {
+  group = vim.api.nvim_create_augroup("willothy.foldexpr", { clear = true }),
+  callback = function(args)
+    fold_cache[args.buf] = nil
+  end,
+})
+
 return function(lnum)
   lnum = lnum or vim.v.lnum
 
