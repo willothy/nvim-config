@@ -97,6 +97,7 @@ function ScrollbarWindow:_make_win(geometry, hl_group)
     style = "minimal",
     focusable = false,
     noautocmd = true,
+    border = "none",
   })
   local win = vim.api.nvim_open_win(
     self.buf,
