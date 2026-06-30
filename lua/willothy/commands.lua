@@ -73,6 +73,12 @@ local commands = {
       local buf = vim.api.nvim_get_current_buf()
       vim.api.nvim_create_autocmd("BufWritePost", {
         buffer = buf,
+        -- a per-buffer clearing augroup so re-running on the same buffer
+        -- replaces the handler instead of stacking another
+        group = vim.api.nvim_create_augroup(
+          "willothy.reload_on_save." .. buf,
+          { clear = true }
+        ),
         callback = function()
           package.loaded[mod] = nil
           require(mod)
