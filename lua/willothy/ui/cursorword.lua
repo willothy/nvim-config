@@ -90,17 +90,8 @@ local function byte_col(buf, line, character, encoding)
   return ok and col or math.min(character, #text)
 end
 
----@return boolean handled whether an LSP client took the request
-local function lsp_update(buf, win)
-  local clients = vim.lsp.get_clients({
-    bufnr = buf,
-    method = "textDocument/documentHighlight",
-  })
-  local client = clients[1]
-  if not client then
-    return false
-  end
-
+---@param client vim.lsp.Client a documentHighlight-capable client for the buffer
+local function lsp_update(buf, win, client)
   local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
   seqs[buf] = (seqs[buf] or 0) + 1
   local seq = seqs[buf]
@@ -128,8 +119,6 @@ local function lsp_update(buf, win)
     end
     apply(buf, ranges)
   end, buf)
-
-  return true
 end
 
 ---@return boolean handled whether treesitter produced a result
@@ -239,15 +228,20 @@ local function update()
     clear(buf)
     return
   end
-  -- LSP takes priority; on success the highlights land later, in the handler
-  if lsp_update(buf, win) then
-    return
+  -- one get_clients call; an LSP documentHighlight client takes priority and
+  -- its highlights land later in the handler
+  local clients = vim.lsp.get_clients({ bufnr = buf })
+  for _, client in ipairs(clients) do
+    if client:supports_method("textDocument/documentHighlight") then
+      lsp_update(buf, win, client)
+      return
+    end
   end
   -- no documentHighlight-capable client: only use the treesitter/regex fallback
   -- when there's no LSP attached at all. Otherwise a client is still
   -- initialising and will provide highlights shortly, so don't flash broad
   -- fallback matches across the buffer during startup.
-  if #vim.lsp.get_clients({ bufnr = buf }) == 0 then
+  if #clients == 0 then
     if treesitter_update(buf, win) then
       return
     end
