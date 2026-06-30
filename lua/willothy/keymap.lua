@@ -205,7 +205,8 @@ wk.add({
     {
       "<leader>ff",
       function()
-        require("snacks").picker.files()
+        require("fff").find_files()
+        -- require("snacks").picker.files()
       end,
       desc = "files",
     },
@@ -264,7 +265,8 @@ wk.add({
     {
       "<leader>fs",
       function()
-        require("snacks").picker.grep()
+        require("fff").live_grep()
+        -- require("snacks").picker.grep()
       end,
       desc = "live grep",
     },

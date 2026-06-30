@@ -211,6 +211,17 @@ return {
     end,
   },
   {
+    -- Rust-backed file/grep picker with a warm index; used for <leader>ff and
+    -- <leader>fs (faster than snacks.picker in huge repos). snacks.picker stays
+    -- the default for everything else.
+    "dmtrKovalenko/fff.nvim",
+    build = function()
+      require("fff.download").download_or_build_binary()
+    end,
+    lazy = false,
+    opts = {},
+  },
+  {
     "gbprod/yanky.nvim",
     -- enabled = false,
     dependencies = {
