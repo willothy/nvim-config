@@ -1,15 +1,15 @@
 --- @class willothy.ScrollbarConfig
 --- @field enable_gutter boolean
 
+local Geometry = require("willothy.ui.scrollbar.geometry")
+local ScrollbarWin = require("willothy.ui.scrollbar.win")
+
 --- @class willothy.Scrollbar
 --- @field win willothy.ScrollbarWin
 ---
 --- @field new fun(opts: willothy.ScrollbarConfig): willothy.Scrollbar
 --- @field is_visible fun(self: willothy.Scrollbar): boolean
 --- @field update fun(self: willothy.Scrollbar, target_win: number | nil)
-local ScrollbarWin = require("willothy.ui.scrollbar.win")
-local Geometry = require("willothy.ui.scrollbar.geometry")
-
 local Scrollbar = {}
 
 function Scrollbar.new(opts)
