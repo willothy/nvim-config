@@ -85,6 +85,28 @@ end
 
 function ScrollBarManager.setup(opts)
   ScrollBarManager.options = opts or {}
+
+  -- Coalesce updates: at most once per `interval` ms, but always a trailing
+  -- update so the thumb settles at the final position after a burst of
+  -- cursor/scroll events (rather than running a full update per event).
+  local interval = 16
+  local timer = assert((vim.uv or vim.loop).new_timer())
+  local scheduled = false
+  local function request_update()
+    if scheduled then
+      return
+    end
+    scheduled = true
+    timer:start(
+      interval,
+      0,
+      vim.schedule_wrap(function()
+        scheduled = false
+        ScrollBarManager.update()
+      end)
+    )
+  end
+
   vim.api.nvim_create_autocmd({
     "WinNew",
     "WinClosed",
@@ -94,9 +116,7 @@ function ScrollBarManager.setup(opts)
     "WinResized",
     "VimResized",
   }, {
-    callback = vim.schedule_wrap(function()
-      ScrollBarManager.update()
-    end),
+    callback = request_update,
   })
 
   vim.schedule(ScrollBarManager.update)
