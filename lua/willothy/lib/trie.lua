@@ -55,19 +55,19 @@ end
 
 ---@private
 function Trie:_remove(s, i)
-  if i == #s then
+  if i > #s then
     self.is_end = false
-    return #self.children == 0
+    return next(self.children) == nil
   end
   local ch = s:sub(i, i)
-  local next
+  local pruned = false
   if self.children[ch] then
-    next = self.children[ch]:_remove(s, i + 1)
-    if next then
+    if self.children[ch]:_remove(s, i + 1) then
       self.children[ch] = nil
+      pruned = true
     end
   end
-  return next and not self.is_end and #self.children == 0
+  return pruned and not self.is_end and next(self.children) == nil
 end
 
 function Trie:remove(s)
