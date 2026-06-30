@@ -430,19 +430,6 @@ local Overseer = {
   },
 }
 
-local OpenCode = {
-  -- show only while a server is connected: opencode.events.status tracks the
-  -- url, which is set on connect and cleared on dispose
-  condition = function()
-    local status = package.loaded["opencode.events.status"]
-    return status ~= nil and status.url ~= nil
-  end,
-  provider = function()
-    return require("opencode.events.status").statusline()
-  end,
-  Space,
-}
-
 -- Colored diagnostic counts. vim.diagnostic.status() returns a plain string
 -- with no highlights, so build it ourselves: one child per severity, each with
 -- its own Diagnostic{Error,Warn,Info,Hint} group. Counts are cached on the
@@ -489,7 +476,6 @@ local StatusLine = {
     Space,
     Git,
     Overseer,
-    OpenCode,
   },
   Align,
 
@@ -550,16 +536,3 @@ event.on("ColorScheme", function()
   require("heirline.highlights").clear_colors()
 end)
 
-vim.api.nvim_create_autocmd("User", {
-  pattern = "OpencodeEvent:*",
-  callback = function(ev)
-    pcall(
-      require("opencode.events.status").update,
-      ev.data.event,
-      ev.data.url
-    )
-    vim.schedule(function()
-      vim.cmd.redrawstatus()
-    end)
-  end,
-})
