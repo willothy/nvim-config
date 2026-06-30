@@ -235,7 +235,7 @@ end
 function M.crate_root(dir)
   local file = vim.fs.find("Cargo.toml", {
     upward = true,
-    type = "directory",
+    type = "file",
     path = dir or vim.fn.getcwd(-1),
   })[1]
   if not file then
