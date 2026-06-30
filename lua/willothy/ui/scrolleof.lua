@@ -18,6 +18,20 @@ local function check_eof_scrolloff()
   if disabled then
     return
   end
+  local win = vim.api.nvim_get_current_win()
+  local cursor_line = vim.api.nvim_win_get_cursor(win)[1]
+
+  -- Cheap check first: bail on horizontal-only moves before the option lookups
+  -- below, since in-line cursor movement is the common case.
+  if
+    last_win ~= nil
+    and last_line ~= nil
+    and last_win == win
+    and last_line == cursor_line
+  then
+    return
+  end
+
   local filetype = vim.api.nvim_get_option_value("filetype", {
     scope = "local",
   })
@@ -25,19 +39,6 @@ local function check_eof_scrolloff()
     scope = "local",
   })
   if disabled_ft[filetype] ~= nil or buftype ~= "" then
-    return
-  end
-
-  local win = vim.api.nvim_get_current_win()
-  local cursor_line = vim.api.nvim_win_get_cursor(win)[1]
-
-  -- Don't do anything if we've only moved horizontally
-  if
-    last_win ~= nil
-    and last_line ~= nil
-    and last_win == win
-    and last_line == cursor_line
-  then
     return
   end
 
