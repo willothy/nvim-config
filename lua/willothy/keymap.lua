@@ -18,6 +18,16 @@ wk.add({
   -- snacks gh: <leader>g)
   { "<leader>s", group = "search/replace" },
   { "<leader>g", group = "git" },
+  -- per-filetype run/build/test live under <localleader> (see willothy.actions
+  -- and after/ftplugin/*); the group label and panel toggle are global
+  { "<localleader>", group = "actions" },
+  {
+    "<localleader>o",
+    function()
+      require("willothy.tasks"):toggle()
+    end,
+    desc = "tasks: toggle panel",
+  },
   {
     "<leader>b",
     group = "buffer",
