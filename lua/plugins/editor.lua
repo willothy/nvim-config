@@ -143,7 +143,12 @@ return {
   {
     "MagicDuck/grug-far.nvim",
     cmd = { "GrugFar", "GrugFarWithin" },
-    opts = {},
+    opts = {
+      keymaps = {
+        -- close the grug-far window with `q` (default is <localleader>c)
+        close = { n = "q" },
+      },
+    },
     keys = {
       {
         "<leader>sr",
