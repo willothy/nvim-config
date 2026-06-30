@@ -46,7 +46,10 @@ return {
   -- },
   {
     "willothy/rename-preview.nvim",
-    opts = {},
+    -- dir = "~/projects/lua/rename-preview.nvim",
+    opts = {
+      auto_apply_no_conflicts = true,
+    },
     event = "LspAttach",
   },
   {
