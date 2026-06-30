@@ -370,8 +370,7 @@ local time_units = {
   ms = mkunit(1e6, "%fms"),
   s = mkunit(1e9, "%fs"),
   min = mkunit(60 * 1e9, function(n)
-    local val = n / (60 * 1e9)
-    return string.format("%fmin%s", val, val == 1 and "" or "s")
+    return string.format("%fmin%s", n, n == 1 and "" or "s")
   end),
   hour = mkunit(60 * 60 * 1e9, function(n)
     return string.format("%fhour%s", n, n == 1 and "" or "s")
