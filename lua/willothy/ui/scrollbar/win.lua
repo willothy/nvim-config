@@ -21,15 +21,24 @@ ScrollbarWindow.__index = ScrollbarWindow
 
 local NS = vim.api.nvim_create_namespace("willothy_scrollbar_thumb")
 
+local hls_ready = false
+
 -- Colours for the eighth-block thumb, derived from PmenuThumb: the block glyphs
 -- need the thumb colour as a *foreground*, plus an inverted variant (Normal-bg
 -- glyph over a thumb-coloured background) so the bottom edge can render as a
 -- top-aligned partial. A transparent window bg lets the empty part of the top
 -- edge show the buffer behind it.
+--
+-- Derived lazily (first show / after ColorScheme) rather than at module load,
+-- so it reads the actual colorscheme instead of whatever happens to be loaded
+-- when the scrollbar module first loads (which left these groups empty).
 local function setup_highlights()
   local thumb = vim.api.nvim_get_hl(0, { name = "PmenuThumb", link = false })
-  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
   local thumb_color = thumb.bg or thumb.fg
+  if not thumb_color then
+    return
+  end
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
   vim.api.nvim_set_hl(0, "WillothyScrollbarThumb", { fg = thumb_color })
   vim.api.nvim_set_hl(
     0,
@@ -37,10 +46,14 @@ local function setup_highlights()
     { fg = normal.bg, bg = thumb_color }
   )
   vim.api.nvim_set_hl(0, "WillothyScrollbarBg", { bg = "NONE" })
+  hls_ready = true
 end
 
-setup_highlights()
-vim.api.nvim_create_autocmd("ColorScheme", { callback = setup_highlights })
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = function()
+    hls_ready = false
+  end,
+})
 
 ---@param opts willothy.ScrollbarConfig
 ---@return willothy.ScrollbarWin
@@ -53,6 +66,10 @@ function ScrollbarWindow:is_visible()
 end
 
 function ScrollbarWindow:show_thumb(geometry)
+  if not hls_ready then
+    setup_highlights()
+  end
+
   -- per-thumb buffer holds the eighth-block chars; highlight each cell
   if self.thumb_buf == nil or not vim.api.nvim_buf_is_valid(self.thumb_buf) then
     self.thumb_buf = vim.api.nvim_create_buf(false, true)
