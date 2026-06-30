@@ -218,7 +218,7 @@ Diagnostics = {
     if buffer.diagnostics.hints > 0 then
       table.insert(text, {
         icons.diagnostics.hints .. " " .. buffer.diagnostics.hints .. " ",
-        "DiagnosticSignpint",
+        "DiagnosticSignHint",
       })
       width = width + #tostring(buffer.diagnostics.hints) + 3
     end
