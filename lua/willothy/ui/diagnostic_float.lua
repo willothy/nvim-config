@@ -18,8 +18,15 @@ local function over_diagnostic()
   local lnum, col = pos[1] - 1, pos[2]
   for _, d in ipairs(vim.diagnostic.get(0)) do
     local end_lnum = d.end_lnum or d.lnum
-    local end_col = (d.end_col and d.end_col > d.col) and d.end_col
-      or (d.col + 1)
+    -- end_col lives on end_lnum, so the > d.col extension (which widens a
+    -- zero-width diagnostic) only makes sense on a single line; for a multi-line
+    -- range use end_col directly
+    local end_col
+    if d.end_col and (end_lnum > d.lnum or d.end_col > d.col) then
+      end_col = d.end_col
+    else
+      end_col = d.col + 1
+    end
     local after_start = lnum > d.lnum or (lnum == d.lnum and col >= d.col)
     local before_end = lnum < end_lnum or (lnum == end_lnum and col < end_col)
     if after_start and before_end then
