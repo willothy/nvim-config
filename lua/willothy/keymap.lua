@@ -640,13 +640,6 @@ wk.add({
             return
           end
         end)
-
-        local overseer = require("overseer")
-
-        overseer.run_task({
-          name = "cargo run",
-          cwd = "freestyle-git",
-        })
       end,
       desc = "overseer: run",
     },
