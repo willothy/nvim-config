@@ -35,7 +35,16 @@ end
 
 require("willothy.lib.1password").read(
   "op://Personal/Anthropic API Key/credential",
-  vim.schedule_wrap(function(res)
+  vim.schedule_wrap(function(res, err)
+    -- read() yields (nil, err) when `op` is missing or the vault is locked
+    if not res then
+      vim.notify(
+        "Could not read Anthropic API key from 1Password: "
+          .. (err or "unknown error"),
+        vim.log.levels.WARN
+      )
+      return
+    end
     res = vim.trim(res)
     setup(res)
     require("durable").kv.set("anthropic-api-key", res)
