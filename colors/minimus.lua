@@ -147,7 +147,7 @@ require("mini.colors")
         bg = spec.background_dark,
       },
       FloatBorder = {
-        fg = spec.separator,
+        fg = spec.background_dark,
         bg = spec.background_dark,
       },
       FloatTitle = {
