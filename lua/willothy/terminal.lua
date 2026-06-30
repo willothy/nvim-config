@@ -121,6 +121,11 @@ function M.send_to_main(cmd)
       })
     end
 
+    -- input() returns nil when the prompt is cancelled
+    if cmd == nil then
+      return
+    end
+
     if not M.main.bufnr or not vim.api.nvim_buf_is_valid(M.main.bufnr) then
       M.main:spawn()
       a.sleep(200)
