@@ -91,26 +91,28 @@ function M.get_geometry(target_win)
     math.floor((pct * (math.max(height, thumb_height) - thumb_height)) + 0.5)
   thumb_offset = math.min(thumb_offset, height - thumb_height - 1)
 
-  local common_geometry = {
-    width = 1,
-    row = thumb_offset,
-    col = width + get_col_offset(config.border) - 1,
-    relative = "win",
-    win = target_win,
-  }
+  local col = width + get_col_offset(config.border) - 1
 
   return {
     should_hide = height >= buf_height,
-    thumb = vim.tbl_deep_extend(
-      "force",
-      common_geometry,
-      { height = thumb_height, zindex = zindex + 2 }
-    ),
-    gutter = vim.tbl_deep_extend(
-      "force",
-      common_geometry,
-      { row = 0, height = height, zindex = zindex + 1 }
-    ),
+    thumb = {
+      width = 1,
+      row = thumb_offset,
+      col = col,
+      relative = "win",
+      win = target_win,
+      height = thumb_height,
+      zindex = zindex + 2,
+    },
+    gutter = {
+      width = 1,
+      row = 0,
+      col = col,
+      relative = "win",
+      win = target_win,
+      height = height,
+      zindex = zindex + 1,
+    },
   }
 end
 
