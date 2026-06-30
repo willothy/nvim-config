@@ -10,3 +10,10 @@ bo.smartindent = false
 wo.wrap = false
 wo.number = true
 wo.relativenumber = true
+
+local actions = require("willothy.actions")
+actions.setup({
+  run = "cargo run",
+  build = "cargo build",
+  test = true,
+}, { cwd = actions.root("Cargo.toml") })

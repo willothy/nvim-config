@@ -11,3 +11,13 @@ bo.smartindent = false
 wo.wrap = false
 wo.number = true
 wo.relativenumber = true
+
+require("willothy.actions").setup({
+  run = function()
+    return "node " .. vim.fn.fnameescape(vim.fn.expand("%:p"))
+  end,
+}, {
+  cwd = function()
+    return vim.fn.expand("%:p:h")
+  end,
+})

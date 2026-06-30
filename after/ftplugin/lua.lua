@@ -8,3 +8,9 @@ bo.expandtab = true
 bo.smartindent = false
 
 wo.wrap = false
+
+require("willothy.actions").setup({
+  run = function()
+    vim.cmd.source("%")
+  end,
+})

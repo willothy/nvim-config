@@ -9,3 +9,12 @@ bo.smartindent = false
 
 wo.wrap = false
 vim.bo.syntax = "go"
+
+require("willothy.actions").setup({
+  run = "go run .",
+  build = "go build",
+}, {
+  cwd = function()
+    return vim.fn.expand("%:p:h")
+  end,
+})

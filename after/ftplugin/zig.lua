@@ -8,3 +8,9 @@ bo.expandtab = true
 bo.smartindent = false
 
 wo.wrap = false
+
+local actions = require("willothy.actions")
+actions.setup({
+  run = "zig build run",
+  build = "zig build",
+}, { cwd = actions.root("build.zig") })
