@@ -88,6 +88,12 @@ local float = require("snacks").win.new({
 
     vim.api.nvim_create_autocmd("User", {
       pattern = "OverseerListUpdate",
+      -- a clearing augroup so reopening the window replaces this handler rather
+      -- than stacking another
+      group = vim.api.nvim_create_augroup(
+        "willothy.tasks.list_update",
+        { clear = true }
+      ),
       callback = vim.schedule_wrap(function()
         if self.buf and vim.api.nvim_buf_is_valid(self.buf) then
           self:update()
