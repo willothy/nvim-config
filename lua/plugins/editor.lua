@@ -228,6 +228,10 @@ return {
       layout = {
         border = "solid",
       },
+      grep = {
+        -- default grep mode is the first in the list; <S-Tab> cycles
+        modes = { "fuzzy", "plain", "regex" },
+      },
     },
   },
   {
