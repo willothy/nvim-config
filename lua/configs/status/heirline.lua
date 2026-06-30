@@ -126,22 +126,21 @@ local Env = function(var)
   return (
     B({
       provider = function(self)
-        if not self.val then
-          self.val = os.getenv(var)
-        end
-        return (self.val and self.val ~= "") and self.val .. " " or ""
+        return self.val .. " "
       end,
+      -- hide the component unless the env var is set; lazily seed self.val so
+      -- the condition is correct on the first render too
       condition = function(self)
-        if not self.init then
-          return true
+        if self.val == nil then
+          self.val = vim.env[var] or ""
         end
-        return self.val ~= nil
+        return self.val ~= ""
       end,
       update = {
         "BufEnter",
         "DirChanged",
         callback = function(self)
-          self.val = os.getenv(var)
+          self.val = vim.env[var] or ""
         end,
       },
     })
