@@ -77,15 +77,12 @@ end
 ---@private
 function Trie:_matches(prefix, results, i)
   if i > #prefix then
-    for byte = 96, 122 do
-      local ch = string.char(byte)
-      local child = self.children[ch]
-      if child then
-        if child.is_end then
-          table.insert(results, prefix .. ch)
-        end
-        child:_matches(prefix .. ch, results, i + 1)
+    -- enumerate every child; keys may be uppercase, digits, '_', '-', '.', '/'
+    for ch, child in pairs(self.children) do
+      if child.is_end then
+        table.insert(results, prefix .. ch)
       end
+      child:_matches(prefix .. ch, results, i + 1)
     end
   else
     local ch = prefix:sub(i, i)
