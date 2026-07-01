@@ -65,6 +65,12 @@ return {
     opts = {},
   },
   {
+    "willothy/postmanlady.nvim",
+    -- dir = "~/projects/lua/postmanlady.nvim",
+    opts = {},
+    cmd = "PostmanLady",
+  },
+  {
     "folke/noice.nvim",
     dependencies = { "folke/snacks.nvim" },
     event = "UiEnter",
