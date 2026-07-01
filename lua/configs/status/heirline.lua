@@ -430,6 +430,51 @@ local Overseer = {
   },
 }
 
+-- Sidekick AI status: a pending Copilot next-edit suggestion and any attached
+-- CLI tool. status.cli() is internally cached (5s refresh) and the nes query
+-- reads stored per-buffer edits, so both are cheap to evaluate per redraw.
+local Sidekick = {
+  condition = function()
+    return package.loaded["sidekick"] ~= nil
+      or package.loaded["sidekick.status"] ~= nil
+  end,
+  {
+    -- pending next-edit suggestion (press <tab> to apply)
+    provider = function()
+      local ok, nes = pcall(require, "sidekick.nes")
+      if not ok then
+        return ""
+      end
+      local ok2, edits = pcall(nes.get, vim.api.nvim_get_current_buf())
+      local n = (ok2 and edits) and #edits or 0
+      if n == 0 then
+        return ""
+      end
+      return n > 1 and string.format("󰌵 %d ", n) or "󰌵 "
+    end,
+    hl = "DiagnosticHint",
+  },
+  {
+    -- attached CLI tool(s)
+    provider = function()
+      local ok, status = pcall(require, "sidekick.status")
+      if not ok then
+        return ""
+      end
+      local ok2, sessions = pcall(status.cli)
+      if not ok2 or not sessions or #sessions == 0 then
+        return ""
+      end
+      local names = {}
+      for _, s in ipairs(sessions) do
+        names[#names + 1] = s.tool
+      end
+      return string.format("󰚩 %s ", table.concat(names, " "))
+    end,
+    hl = "Special",
+  },
+}
+
 -- Colored diagnostic counts. vim.diagnostic.status() returns a plain string
 -- with no highlights, so build it ourselves: one child per severity, each with
 -- its own Diagnostic{Error,Warn,Info,Hint} group. Counts are cached on the
@@ -476,6 +521,7 @@ local StatusLine = {
     Space,
     Git,
     Overseer,
+    Sidekick,
   },
   Align,
 
