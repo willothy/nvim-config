@@ -139,7 +139,7 @@ return {
   },
   {
     "boltlessengineer/sense.nvim",
-    enabled = false,
+    -- enabled = false,
     init = function()
       vim.g.sense_nvim = {
         -- show hint in statuscolumn, but not in the window itself
