@@ -57,6 +57,53 @@ resession.setup({
   end,
 })
 
+-- Works around a Neovim 0.13 regression (context-switching refactor in
+-- buffer.c, July 2026): displaying a buffer that was loaded via bufload() —
+-- as resession does for every restored buffer — re-initializes its local
+-- 'fileencoding', which flags the buffer as modified despite having no
+-- edits. With 'confirm' set, the :edit that resession then issues prompts
+-- to save the untouched file. Clears the flag when the buffer provably has
+-- no real changes.
+local function clear_spurious_modified(buf)
+  if
+    not vim.api.nvim_buf_is_loaded(buf)
+    or not vim.bo[buf].modified
+    or vim.bo[buf].buftype ~= ""
+  then
+    return
+  end
+  local name = vim.api.nvim_buf_get_name(buf)
+  if name == "" or vim.fn.filereadable(name) == 0 then
+    return
+  end
+  local ok, disk = pcall(vim.fn.readfile, name)
+  if not ok then
+    return
+  end
+  if vim.bo[buf].fileformat == "dos" then
+    for i, line in ipairs(disk) do
+      disk[i] = line:gsub("\r$", "")
+    end
+  end
+  if vim.deep_equal(vim.api.nvim_buf_get_lines(buf, 0, -1, false), disk) then
+    vim.bo[buf].modified = false
+  end
+end
+
+-- Registered before resession.load() creates its per-buffer BufEnter
+-- autocmds so this runs first, clearing the flag before resession re-edits
+-- the buffer. Covers restored buffers that are first displayed after the
+-- session load itself.
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = vim.api.nvim_create_augroup(
+    "willothy/ClearSpuriousModified",
+    { clear = true }
+  ),
+  callback = function(args)
+    clear_spurious_modified(args.buf)
+  end,
+})
+
 local lazy_open = false
 
 resession.add_hook("pre_load", function()
@@ -74,6 +121,12 @@ resession.add_hook("pre_load", function()
 end)
 
 resession.add_hook("post_load", function()
+  -- Synchronous on purpose: this must run before resession's final :edit of
+  -- the current buffer, which happens right after the post_load hooks.
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    clear_spurious_modified(buf)
+  end
+
   vim.schedule(function()
     require("edgy.config").animate.enabled = true
   end)
