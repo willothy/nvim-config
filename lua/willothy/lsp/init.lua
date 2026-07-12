@@ -12,6 +12,7 @@ local disabled = {
 
 local configured = {
   "wkl_ls",
+  "sqlx_lsp",
   "basedpyright",
   "bashls",
   "biome",
