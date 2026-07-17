@@ -87,6 +87,7 @@
   "package-info.nvim": { "branch": "master", "commit": "9725099fb118bab8360e560c1219bff60763b7e1" },
   "plenary.nvim": { "branch": "master", "commit": "74b06c6c75e4eeb3108ec01852001636d85a932b" },
   "ports.nvim": { "branch": "main", "commit": "023803bdb05f5070dc1f353c9832d16b070b24f0" },
+  "postmanlady.nvim": { "branch": "main", "commit": "7ae5bb68487d7915830be81a1db5919a3fd3ddab" },
   "precognition.nvim": { "branch": "main", "commit": "683c1787d13be37fc4517f4b7488212205c95545" },
   "refactoring.nvim": { "branch": "master", "commit": "64e10d782ae5b9653558482910213b8946651456" },
   "rename-preview.nvim": { "branch": "main", "commit": "cd3e0b45096b5a742d2dfdb81e67d4b45756d132" },
