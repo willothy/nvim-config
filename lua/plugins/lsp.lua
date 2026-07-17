@@ -171,10 +171,23 @@ return {
       "Saecki/crates.nvim",
       "windwp/nvim-ts-autotag",
     },
+    version = "*",
     event = { "InsertEnter", "CmdlineEnter" },
-    build = function()
-      require("blink.cmp").build():pwait()
-    end,
+    -- build = function()
+    --   local blink = require("blink.cmp")
+    --
+    --   blink
+    --     .download()
+    --     :catch(function(err)
+    --       vim.notify(
+    --         string.format("Failed to download blink.cmp: %s", err),
+    --         vim.log.levels.WARN
+    --       )
+    --
+    --       return blink.build()
+    --     end)
+    --     :pwait()
+    -- end,
     config = function()
       require("willothy.completion")
     end,
